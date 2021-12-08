@@ -6,6 +6,7 @@
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/document.hpp>
+#include <dom/nodes/document_fragment.hpp>
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>
 
@@ -74,7 +75,7 @@ dom::helpers::node_internals::locate_a_namespace(
     else if (auto* document = dynamic_cast<nodes::document*>(node))
         return locate_a_namespace(ext::property_dynamic_cast<nodes::node*>(document->document_element), prefix);
 
-    else if (auto* document_type = dynamic_cast<nodes::document_type*>(node))
+    else if (dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::document_type*>(node))
         return nullptr;
 
     else if (auto* attribute = dynamic_cast<nodes::attr*>(node))
