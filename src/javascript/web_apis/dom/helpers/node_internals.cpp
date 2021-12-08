@@ -76,4 +76,7 @@ dom::helpers::node_internals::locate_a_namespace(
 
     else if (auto* document_type = dynamic_cast<nodes::document_type*>(node))
         return nullptr;
+
+    else if (auto* attribute = dynamic_cast<nodes::attr*>(node))
+        return locate_a_namespace(ext::property_dynamic_cast<nodes::node*>(attribute->owner_document), prefix);
 }
