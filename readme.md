@@ -1,5 +1,5 @@
 
-#SBrowser
+# SBrowser
 
 ---
 
@@ -44,9 +44,11 @@ backend, that heavily encrypts and routes traffic across the globe, ensuring pri
 
 ---
 
-##Third party libraries
+## Third party libraries
 
 - V8 - JavaScript execution
 - V8PP - Integrate c++ classes into JavaScript
 - Qt6 - Graphics Toolkit for all GUI operations
 - OpenSSL - Cryptography library
+
+---
