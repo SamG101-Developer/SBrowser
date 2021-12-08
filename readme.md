@@ -40,3 +40,13 @@ backend, that heavily encrypts and routes traffic across the globe, ensuring pri
 
 - Storage management
   - Sandbox-like environment for reading and writing files (heavy access restriction)
+
+
+---
+
+##Third party libraries
+
+- V8 - JavaScript execution
+- V8PP - Integrate c++ classes into JavaScript
+- Qt6 - Graphics Toolkit for all GUI operations
+- OpenSSL - Cryptography library
