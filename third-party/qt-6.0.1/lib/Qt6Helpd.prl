@@ -1,0 +1,4 @@
+QMAKE_PRL_BUILD_DIR = C:/qtb/bld/qttools/src/assistant/help
+QMAKE_PRL_TARGET = Qt6Helpd.lib
+QMAKE_PRL_CONFIG = shared
+QMAKE_PRL_VERSION = 6.0.1

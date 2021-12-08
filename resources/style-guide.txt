@@ -1,0 +1,99 @@
+Namespacing
+    - lower_case_underscore_format
+        - namespace dom{}
+
+    - Single definition in namespace definition
+        - namespace dom::events {class event;}
+
+    - Multiple definitions in namespace definition
+        - namespace dom::events {
+            class event;
+            class custom_event;
+        }
+
+Classes
+    - lower_case_underscore_format
+        - class event{};
+
+    - base classes constructors (class event):
+        - event() = default;
+        - event(const event& other) = default;
+        - event(event&& other) noexcept = default;
+        - event& operator=(const event& other) = default;
+        - event& operator=(event&& other) = default;
+
+        - any other constructors that require different types (ie with the string ctor)
+
+        - virtual ~event() = {<delete pointer properties>;}
+
+    - definitions layout
+        - friend classes
+        - friend methods
+        - friend functions
+
+        - public
+            - constructors
+            - destructor
+            - js_methods    \ done by specification ie dom methods & properties, then cssom methods & properties etc...
+            - js_properties /
+            - operators
+
+        - protected
+            - methods
+            - getters / setters
+            - m_attributes
+
+        - private
+            - methods
+            - getters / setters
+            - m_attributes
+
+Functions
+    - class members (definition)
+        - return_type function_name(type parameter...);
+        - listed in groups, no breaks in-between them
+            - func_group_a_1();
+            - func_group_a_1();
+
+            - func_group_b_1();
+
+    - class members (implementation) (multi params)
+
+        return_type
+        function_name(
+                type parameter_1
+                type parameter_2
+                ...) {
+
+            ...;
+        }
+
+    - class members (implementation) (single params, not grouped with multi-param methods)
+        return_type function_name(type parameter_1) {...}
+
+    - free functions (implemented on definition)
+        - always inline (always small functions)
+
+        inline return_type function_name(type parameter) {
+            ...;
+        }
+
+    - operators
+
+
+Inheritance
+    - single inheritance
+        - class derived: public base {}
+
+    - multiple inheritance
+        - class derived
+                : public base1
+                , public base2 {
+        }
+
+
+Return/Break/Continue/Goto etc
+    - One return per function (exception is guards that MUST be at the top of the function)
+    - Never use break or continue
+    - Never use goto
+    - However switch-case blocks are encouraged

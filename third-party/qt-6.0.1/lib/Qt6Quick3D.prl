@@ -1,0 +1,4 @@
+QMAKE_PRL_BUILD_DIR = C:/qtb/bld/qtquick3d/src/quick3d
+QMAKE_PRL_TARGET = Qt6Quick3D.lib
+QMAKE_PRL_CONFIG = shared
+QMAKE_PRL_VERSION = 6.0.1
