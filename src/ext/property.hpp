@@ -108,7 +108,7 @@ public:
     __forceinline property<T>& __fastcall operator<<=(const std::size_t n) {m_value <<= n; return *this;}
     __forceinline property<T>& __fastcall operator>>=(const std::size_t n) {m_value >>= n; return *this;}
 
-    __forceinline property<T> __fastcall operator&&(const T& other) const {return property<T>{m_value&& other};}
+    __forceinline property<T> __fastcall operator&&(const T& other) const {return property<T>{m_value && other};}
     __forceinline property<T> __fastcall operator||(const T& other) const {return property<T>{m_value || other};}
 
     __forceinline T __fastcall operator~() const {return ~m_value;}
@@ -120,12 +120,11 @@ public:
     __forceinline std::remove_reference_t<T> __fastcall operator*() const {return *m_value;}
 
     __forceinline bool __fastcall operator[] (const T index) const {return m_value[index];}
-    __forceinline bool __fastcall operator() () const {return m_value()     ;}
+    __forceinline bool __fastcall operator() () const {return m_value();}
 
     __forceinline std::remove_pointer_t<T> __fastcall operator*() const requires (std::is_pointer_v<T>) {return *m_value;}
 
-    // __forceinline operator bool() const {return std::is_same_v<T, std::any> ? ext::any_cast<bool>(m_value) : std::is_same_v<T, bool> ? m_value : (bool)m_value;}
-    // TODO : conflicts with operator T() when std::is_same_v<T, bool> redefinition of the conversion operator
+    __forceinline operator bool() requires (not std::is_same_v<T, bool>) {return std::is_same_v<T, std::any> ? ext::any_cast<bool>(m_value) : (bool)m_value;}
 
     std::function<void __fastcall ( )> del;
     std::function<T    __fastcall ( )> get;
