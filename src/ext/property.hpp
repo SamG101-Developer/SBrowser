@@ -35,10 +35,10 @@ namespace {
 
 template <typename T>
 class ext::property {
-    friend property<T>& __fastcall operator << (T& other, const property<T>& property) {other = property.m_value; return property;};
+    friend T __fastcall operator << (T& other, const property<T>& property) {other = property.m_value; return other;};
     friend property<T>& __fastcall operator << (property<T>& property, const T& other) {property.m_value = other; return property;};
 
-    friend property<T>& __fastcall operator << (T&& other, const property<T>& property) {other = property.m_value; return property;};
+    friend T __fastcall operator << (T&& other, const property<T>& property) {other = property.m_value; return other;};
     friend property<T>& __fastcall operator << (property<T>& property, const T&& other) {property.m_value = other; return property;};
 
     template <typename U, typename T> friend property<U> ext::property_dynamic_cast(const ext::property<T>& other);
