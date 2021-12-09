@@ -59,7 +59,7 @@ public:
     virtual __fastcall operator T() const {return get();}
     virtual void __fastcall operator=(const T& val) {set(val);}
 
-    __forceinline T __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
+    __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
     __forceinline T __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
 
     // ->*

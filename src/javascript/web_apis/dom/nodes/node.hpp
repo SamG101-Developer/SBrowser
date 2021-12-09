@@ -3,7 +3,9 @@
 #define SBROWSER_NODE_HPP
 
 #include <ext/property.hpp>
+#include <ext/map.hpp>
 #include <ext/string.hpp>
+
 #include <dom/nodes/event_target.hpp>
 
 #include <QtWidgets/QWidget>
@@ -78,6 +80,7 @@ protected accessors:
     inline virtual void set_text_content(ext::cstring& val);
 
 protected internal_methods:
+    virtual bool equals(nodes::node* other);
     QWidget* m_rendered_widget;
 
 private accessors:

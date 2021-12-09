@@ -22,7 +22,7 @@ struct dom::helpers::node_internals {
     static ext::string locate_a_namespace(nodes::node* node, ext::cstring& prefix);
     static ext::vector<nodes::element*> list_of_elements_with_qualified_name(nodes::node* descendant_element, ext::cstring& qualified_name);
     static ext::vector<nodes::element*> list_of_elements_with_namespace_and_local_name(nodes::node* node, ext::cstring& namespace_, ext::cstring& local_name);
-    static ext::vector<nodes::element*> list_of_elements_with_class_names(nodes::node* node, ext::cstring& namespace_);
+    static ext::vector<nodes::element*> list_of_elements_with_class_names(nodes::node* node, ext::cstring& class_names);
     static bool equals(nodes::node* node_1, nodes::node* node_2);
     static void adopt(nodes::node* node, nodes::document* document);
 

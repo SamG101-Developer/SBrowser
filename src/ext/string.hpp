@@ -142,7 +142,6 @@ public methods:
 
     inline bool operator!() const {return empty();}
 
-    inline bool operator==(const std::string& other) const {return m_iterable == other;}
     inline bool operator==(const ext::string& other) const {return m_iterable == other.m_iterable;}
     inline bool operator==(ext::string&& other) const {return m_iterable == other.m_iterable;}
 };

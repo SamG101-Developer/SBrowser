@@ -1,5 +1,9 @@
 #include "node_internals.hpp"
 
+#include <regex>
+
+#include <ext/set.hpp>
+
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
 #include <dom/helpers/namespaces.hpp>
@@ -9,6 +13,7 @@
 #include <dom/nodes/document_fragment.hpp>
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>
+#include <dom/nodes/text.hpp>
 
 
 template <typename T> void
@@ -101,4 +106,63 @@ dom::helpers::node_internals::list_of_elements_with_qualified_name(
             : trees::descendants(node)
                 .cast_all<nodes::element*>()
                 .filter([qualified_name](auto* descendant_element) -> bool {return descendant_element->m_qualified_name == qualified_name;});
+}
+
+
+ext::vector<dom::nodes::element*>
+dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
+        nodes::node* node,
+        ext::cstring& namespace_,
+        ext::cstring& local_name) {
+
+    return trees::descendants(node)
+            .cast_all<nodes::element*>()
+            .filter([namespace_, local_name](auto* descendant_element) -> bool {
+                return std::regex_match(descendant_element->namespace_uri, std::regex(namespace_.to_std_string())) and
+                       std::regex_match(descendant_element->local_namem, std::regex(local_name.to_std_string()));
+            });
+}
+
+
+ext::vector<dom::nodes::element*>
+dom::helpers::node_internals::list_of_elements_with_class_names(
+        nodes::node* node,
+        ext::cstring& class_names) {
+
+    auto classes = ordered_sets::ordered_set_parser(class_names);
+    if (classes.empty())
+        return {};
+
+    return trees::descendants(node)
+            .cast_all<nodes::element*>()
+            .filter([node, classes](auto* descendant_element) -> bool {
+                return node->owner_document->m_mode == "quirks"
+                        ? descendant_element->class_list->filter(&classes::contains)
+                        : descendant_element->class_list->transform(&ext::string::new_lowercase).filter(&classes::contains)
+            });
+}
+
+
+void
+dom::helpers::node_internals::adopt(
+        nodes::node* node,
+        nodes::document* document) {
+
+    nodes::document* old_document = node->owner_document;
+    if (node->parent_node) mutation_algorithms::remove(node);
+    if (document != old_document) /* TODO -> manage show inclusive descendants */ return;
+}
+
+
+void
+dom::helpers::node_internals::string_replace_all(
+        ext::cstring& string,
+        nodes::node* parent) {
+
+    if (not string.empty()) {
+        const auto* text_node = new nodes::text{};
+        text_node->data = string;
+        text_node->owner_document = parent->owner_document;
+        mutation_algorithms::replace_all(text_node, parent);
+    }
 }
