@@ -400,22 +400,25 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("ShadowRoot", v8_shadow_root)
                     .class_("Window", v8_window);
 
-            module_name = v8::String::NewFromUtf8(isolate, "window").ToLocalChecked();
+            module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
 
         case javascript::environment::modules::module_type::worker: {
             v8_module
                     .class_("EventTarget", v8_event_target);
 
-            module_name = v8::String::NewFromUtf8(isolate, "worker").ToLocalChecked();
+            module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();
         }
 
         case javascript::environment::modules::module_type::audio_worklet: {
             v8_module
                     .class_("EventTarget", v8_event_target);
 
-            module_name = v8::String::NewFromUtf8(isolate, "audio worklet").ToLocalChecked();
+            module_name = v8::String::NewFromUtf8(isolate, "AudioWorklet").ToLocalChecked();
         }
+
+        default:
+            module_name = v8::String::NewFromUtf8(isolate, "Unknown").ToLocalChecked();
     }
 
     local_context->Global()->Set(local_context, module_name, v8_module.new_instance());
