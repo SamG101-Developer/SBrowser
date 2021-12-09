@@ -143,14 +143,15 @@ public methods:
     inline bool operator!() const {return empty();}
 
     inline bool operator==(const std::string& other) const {return m_iterable == other;}
-    inline bool operator==(const char* other) const {return m_iterable.c_str() == other;}
+    inline bool operator==(const ext::string& other) const {return m_iterable == other.m_iterable;}
+    inline bool operator==(ext::string&& other) const {return m_iterable == other.m_iterable;}
 };
 
 
 template <class ...args>
 ext::string ext::concatenate_strings(args&&... strings) {
 
-    std::ostringstream stream;
+    const std::ostringstream stream;
     (stream << ... << std::forward<args>(strings));
     return ext::string{stream.str()};
 }

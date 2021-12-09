@@ -5,9 +5,9 @@
 #include <ext/string.hpp>
 
 
-inline bool operator< (const std::any& first, const std::any& second) {return &first <  &second;}
-inline bool operator> (const std::any& first, const std::any& second) {return &first >  &second;}
-inline bool operator==(const std::any& first, const std::any& second) {return &first == &second;}
+//inline bool operator< (const std::any& first, const std::any& second) {return &first <  &second;}
+//inline bool operator> (const std::any& first, const std::any& second) {return &first >  &second;}
+//inline bool operator==(const std::any& first, const std::any& second) {return &first == &second;}
 
 
 namespace ext {
