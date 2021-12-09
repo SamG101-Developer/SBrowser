@@ -29,9 +29,8 @@ struct dom::helpers::node_internals {
     static void string_replace_all(ext::cstring& string, nodes::node* parent);
     static bool is_document_available_to_user(nodes::document* document, ext::cstring&);
     static bool is_document_fully_active(nodes::document* document); // TODO -> parameter name [-1]
-    static bool is_html(nodes::element* elemnt);
+    static bool is_html(nodes::element* element);
 
-    static void update_docunent_current_readiness(nodes::document* document, ext::cstring& readiness_value);
     static bool has_active_parser(nodes::document* document);
     static ext::string advisory_information(html::elements::html_element* element);
 

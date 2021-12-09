@@ -175,3 +175,31 @@ dom::helpers::node_internals::string_replace_all(
         mutation_algorithms::replace_all(text_node, parent);
     }
 }
+
+
+bool
+dom::helpers::node_internals::is_document_fully_active(
+        nodes::document* document) {
+
+    return document->m_browsing_context
+            and document->m_browsing_context->active_document = this
+            and (is_document_fully_active(document->m_browsing_context->container_document) or not document->m_browsing_context->parent_browsing_context);
+}
+
+
+bool
+dom::helpers::node_internals::is_html(
+        nodes::element* element) {
+
+    return element->namespace_uri == "html" and element->owner_document->m_type == "html";
+}
+
+
+ext::string
+dom::helpers::node_internals::advisory_information(
+        html::elements::html_element* element) {
+
+    return element->title ? element->title : element->parent_element
+            ? advisory_information((html::elements::html_element)element->parent_element)
+            : "";
+}

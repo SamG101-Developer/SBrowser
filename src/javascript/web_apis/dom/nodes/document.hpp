@@ -231,6 +231,7 @@ private accessors:
     void set_title(ext::cstring& val);
     void set_body(html::elements::html_body_element* val);
     void set_cookie(ext::cstring& val);
+    void set_ready_state(ext::cstring& val);
 
     // cssom-view
     element* get_scrolling_element() const;

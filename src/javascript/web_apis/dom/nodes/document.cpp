@@ -3,7 +3,10 @@
 #include <ctime>
 #include <format>
 
+#include <dom/helpers/event_dispatching.hpp>
 #include <dom/helpers/exceptions.hpp>
+#include <dom/helpers/mutation_algorithms.hpp>
+#include <dom/helpers/namespaces.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
@@ -44,6 +47,7 @@ dom::nodes::document::document()
     title.set = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
     body.set = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
     cookie.set = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
+    ready_state.set = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
 
     node_name = "#document";
     url = "about:blank";
@@ -504,8 +508,7 @@ dom::nodes::document::set_body(html::elements::html_body_element* val) {
 void
 dom::nodes::document::set_cookie(ext::cstring& val) {
 
-    if (html::helpers::cookies::is_cookie_averse_document(this))
-        return;
+    if (html::helpers::cookies::is_cookie_averse_document(this)) return;
 
     helpers::exceptions::throw_v8_exception(
             "cannot set the cookie of a document that has an opaque origin",
@@ -513,6 +516,13 @@ dom::nodes::document::set_cookie(ext::cstring& val) {
             [this] -> bool {return m_origin == "opaque";});
 
     cookie << val;
+}
+
+
+void dom::nodes::document::set_ready_state(ext::cstring& val) {
+    if (ready_state == val) return;
+    // TODO : parser stuff
+    helpers::event_dispatching::fire_event<>("readyStateChange", this);
 }
 
 
