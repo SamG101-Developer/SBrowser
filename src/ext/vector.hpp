@@ -123,6 +123,8 @@ public:
         return joined;
     }
 
+    inline vector<T>& flatten() {/* TODO */}
+
     inline ext::vector<T> operator*(std::size_t multiplier) const {
         auto original = vector<string>{*this};
         auto output   = vector<string>{*this};

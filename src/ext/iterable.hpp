@@ -92,6 +92,10 @@ public:
     inline const_iterator begin() const {return m_iterable.begin();}
     inline const_iterator end()   const {return m_iterable.end();}
 
+    inline iterable<C, T>& clean() requires std::is_pointer_v<T> {
+        return remove(nullptr, true);
+    }
+
     inline bool operator not() {return empty();}
 
     inline bool operator==(const iterable<T, C>& other) {return m_iterable == other.m_iterable;}
