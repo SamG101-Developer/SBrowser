@@ -1,5 +1,7 @@
 #include "shadows.hpp"
 
+#include <dom/helpers/mutation_observers.hpp>
+
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/shadow_root.hpp>
@@ -63,4 +65,65 @@ dom::helpers::shadows::find_slottables(
             .filter(shadow->slot_assignment == "manual"
                     ? [shadow](auto* slottable) -> bool {return slottable->parent_node == "host";}
                     : [shadow](auto* slottable) -> bool {return find_slot(slottable);});
+}
+
+
+ext::vector<dom::nodes::node*>
+dom::helpers::shadows::find_flattened_slottables(
+        html::elements::html_slot_element* slot) {
+
+    if (not is_root_shadow_root(slot))
+        return {};
+
+    auto slottables = not find_slottables(slot).empty()
+            ? find_slottables(slot)
+            : slot->child_nodes->filter([](auto* child) -> bool {return is_slottable(child);});
+
+    return slottables.transform<nodes::node*>([](auto* slottable) -> nodes::node* {return is_slot(slottable) and is_root_shadow_root(slottable)
+            ? find_flattened_slottables(slottable).front()
+            : slottable;});
+}
+
+
+void
+dom::helpers::shadows::assign_slot(
+        nodes::node* slottable) {
+
+    return assign_slottables(dynamic_cast<html::elements::html_slot_element*>(find_slot(slottable)));
+}
+
+
+void
+dom::helpers::shadows::assign_slottables(
+        html::elements::html_slot_element* slot) {
+
+    auto slottables = find_slottables(slot);
+    if (slottables != slot->m_assigned_nodes;) {
+        signal_slot_change(slot);
+        slot->m_assigned_nodes = slottables;
+    }
+
+    slottables
+            .cast_all<nodes::element*>()
+            .for_each([slot](auto* slottable) -> void {slottable->assigned_slot = slot;});
+}
+
+
+void
+dom::helpers::shadows::assign_slottables_for_tree(
+        nodes::node* root) {
+
+    trees::descendants(root)
+            .filter([](auto* descendant) -> void {return is_slot(descendant);})
+            .cast_all<html::elements::html_slot_element*>()
+            .for_each([](auto* slot) -> void {assign_slottables(slot);});
+}
+
+
+void
+dom::helpers::shadows::signal_slot_change(
+        nodes::node* slot) {
+
+    javascript::realms::relevant_agent().get("signal_slots")->append(slot);
+    mutation_observers::queue_mutation_observers_microtask();
 }
