@@ -1,5 +1,7 @@
 #include "shadows.hpp"
 
+#include <javascript/environment/realms.hpp>
+
 #include <dom/helpers/mutation_observers.hpp>
 
 #include <dom/nodes/document.hpp>
@@ -124,6 +126,95 @@ void
 dom::helpers::shadows::signal_slot_change(
         nodes::node* slot) {
 
-    javascript::realms::relevant_agent().get("signal_slots")->append(slot);
+    javascript::realms::relevant_agent().get<ext::vector<html::elements::html_slot_element*>>("signal_slots").append(slot);
     mutation_observers::queue_mutation_observers_microtask();
+}
+
+
+dom::nodes::node*
+dom::helpers::shadows::shadow_including_root(
+        nodes::node* A) {
+
+    return is_root_shadow_root(A)
+            ? shadow_including_root(dynamic_cast<nodes::shadow_root*>(trees::root(A))->host)
+            : trees::root(A);
+}
+
+
+dom::nodes::event_target*
+dom::helpers::shadows::retarget(
+        nodes::event_target* A,
+        nodes::event_target* B) {
+
+    auto* node_a = dynamic_cast<nodes::node*>(A);
+    auto* node_b = dynamic_cast<nodes::node*>(B);
+
+    while (true) {
+        if (not node_a
+                or not is_shadow_root(node_a)
+                or is_shadow_including_ancestor(trees::root(node_a)), node_b)
+            return A;
+
+        A = dynamic_cast<nodes::shadow_root*>(trees::root(node_a))->host;
+    }
+}
+
+
+dom::nodes::shadow_root* dom::helpers::shadows::shadow_root(nodes::node* A) {
+    return dynamic_cast<nodes::shadow_root*>(trees::root(A));
+}
+
+
+bool dom::helpers::shadows::is_root_shadow_root(nodes::node* A) {
+    return is_shadow_root(trees::root(A));
+}
+
+
+bool dom::helpers::shadows::is_shadow_root(nodes::node* A) {
+    return dynamic_cast<nodes::shadow_root*>(A);
+}
+
+
+bool dom::helpers::shadows::is_shadow_host(nodes::node* A) {
+    return dynamic_cast<nodes::element*>(A)->shadow_root_node;
+}
+
+
+bool
+dom::helpers::shadows::is_shadow_including_descendant(
+        nodes::node* A,
+        nodes::node* B) {
+
+    return trees::descendants(A, B) or is_shadow_root(A) and is_shadow_including_descendant(dynamic_cast<nodes::shadow_root*>(A)->host, B);
+}
+
+
+bool
+dom::helpers::shadows::is_shadow_including_ancestor(
+        nodes::node* A,
+        nodes::node* B) {
+
+    return is_shadow_including_descendant(B, A);
+}
+
+
+bool
+dom::helpers::shadows::is_host_including_ancestor(
+        nodes::node* A,
+        nodes::node* B) {
+
+    return trees::is_descendant(A, B) or shadow_root(B) and shadow_root(B)->host and is_host_including_ancestor(A, shadow_root(B)->host);
+}
+
+
+bool
+dom::helpers::shadows::is_closed_shadow_hidden(
+        nodes::node* A,
+        nodes::node* B) {
+
+    auto* shadow_root_a = dynamic_cast<nodes::shadow_root*>(A);
+
+    return is_root_shadow_root(A)
+            and not is_shadow_including_ancestor(shadow_root_a, B)
+            and (shadow_root_a->mode == "closed" or is_closed_shadow_hidden(shadow_root_a->host, B));
 }

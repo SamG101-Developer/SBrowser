@@ -9,6 +9,7 @@ namespace dom {
     namespace nodes {
         class event_target;
         class node;
+        class shadow_root;
     }
 }
 
@@ -32,6 +33,7 @@ struct dom::helpers::shadows {
     static void signal_slot_change(nodes::node* slot);
     static nodes::node* shadow_including_root(nodes::node* A);
     static nodes::event_target* retarget(nodes::event_target* A, nodes::event_target* B);
+    static nodes::shadow_root* shadow_root(nodes::node* A);
 
     static bool is_root_shadow_root(nodes::node* A);
     static bool is_shadow_root(nodes::node* A);

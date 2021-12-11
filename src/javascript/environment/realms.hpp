@@ -12,21 +12,24 @@ namespace javascript::realms {
 }
 
 
-class realm {
+class javascript::realms::realm {
 public:
-    explicit realm(v8::Local<v8::Context>& context): m_context(context) {};
+    explicit realm(v8::Local<v8::Context> context): m_context(context) {};
 
-    template <typename T> T get(ext::string&& attribute_name) {
+    template <typename T> T& get(ext::string&& attribute_name) {
         return v8pp::convert<T>::from_v8(m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), attribute_name)));
     };
 
     template <typename T> void set(ext::string&& attribute_name, T new_value) {
-        v8pp::convert<T>::from_v8(m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), attribute_name))) = new_value
+        v8pp::convert<T>::from_v8(m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), attribute_name))) = new_value;
     };
 
 private:
     v8::Local<v8::Context> m_context;
 };
+
+
+javascript::realms::realm javascript::realms::relevant_agent() {return realm{v8::Isolate().GetCurrentContext()};}
 
 
 #endif //SBROWSER_REALMS_HPP
