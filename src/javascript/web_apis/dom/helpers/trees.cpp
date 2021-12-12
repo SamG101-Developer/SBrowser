@@ -1,9 +1,12 @@
 #include "trees.hpp"
 
 #include <dom/nodes/attr.hpp>
+#include <dom/nodes/cdata_section.hpp>
 #include <dom/nodes/character_data.hpp>
 #include <dom/nodes/document_type.hpp>
+#include <dom/nodes/element.hpp>
 #include <dom/nodes/node.hpp>
+#include <dom/nodes/text.hpp>
 
 
 dom::nodes::node*
@@ -70,4 +73,102 @@ unsigned long dom::helpers::trees::length(nodes::node* node_a) {
     else if(auto* character_data = dynamic_cast<nodes::character_data*>(node_a))
         return character_data->data->length();
     return node_a->child_nodes->length();
+}
+
+
+template <typename T>
+ext::vector<dom::nodes::node*>
+dom::helpers::trees::all_following(nodes::node* node_a) {
+
+    const auto index_a = index(node_a);
+    return descendants(node_a)
+            .template filter([index_a](auto* descendant_node) -> bool {return index(descendant_node) > index_a;})
+            .template cast_all<T>();
+}
+
+
+template <typename T>
+ext::vector<dom::nodes::node*>
+dom::helpers::trees::all_preceding(nodes::node* node_a) {
+
+    const auto index_a = index(node_a);
+    return descendants(node_a)
+            .template filter([index_a](auto* descendant_node) -> bool {return index(descendant_node) < index_a;})
+            .template cast_all<T>();
+}
+
+
+template <typename T>
+ext::vector<dom::nodes::node*>
+dom::helpers::trees::all_following_siblings(nodes::node* node_a) {
+
+    const auto index_a = index(node_a);
+    return node_a->parent_node->child_nodes
+            ->template filter([index_a](auto* sibling_node) -> bool {return index(sibling_node) > index_a;})
+            .template cast_all<T>();
+}
+
+
+template <typename T>
+ext::vector<dom::nodes::node*>
+dom::helpers::trees::all_preceding_siblings(nodes::node* node_a) {
+
+    const auto index_a = index(node_a);
+    return node_a->parent_node->child_nodes
+            ->template filter([index_a](auto* sibling_node) -> bool {return index(sibling_node) < index_a;})
+            .template cast_all<T>();
+}
+
+
+bool dom::helpers::trees::is_element_node(nodes::node* node_a) {
+    return dynamic_cast<nodes::element*>(node_a) != nullptr;
+}
+
+
+bool dom::helpers::trees::is_text_node(nodes::node* node_a) {
+    return dynamic_cast<nodes::text*>(node_a) != nullptr;
+}
+
+
+bool dom::helpers::trees::is_document_type_node(nodes::node* node_a) {
+    return dynamic_cast<nodes::document_type*>(node_a) != nullptr;
+}
+
+
+ext::string
+dom::helpers::trees::descendant_text_content(nodes::node* node_a) {
+
+    return descendants(node_a)
+            .template cast_all<nodes::text*>()
+            .template transform<ext::string>([](auto* descendant_text_node) -> ext::string {return descendant_text_node->data;})
+            .join();
+}
+
+
+ext::string
+dom::helpers::trees::child_text_content(nodes::node* node_a) {
+
+    return node_a->child_nodes
+            ->template cast_all<nodes::text*>()
+            .template transform<ext::string>([](auto* child_text_node) -> ext::string {return child_text_node->data;})
+            .join();
+}
+
+
+ext::vector<dom::nodes::text*> dom::helpers::trees::descendant_text_nodes(nodes::node* node_a) {
+    return descendants(node_a).template cast_all<nodes::text*>();
+}
+
+
+ext::vector<dom::nodes::text*> dom::helpers::trees::contiguous_text_nodes(nodes::node* node_a) {
+        ext::vector<nodes::node*> siblings = node_a->parent_node->child_nodes;
+
+    return ext::vector<nodes::text*>{}
+            .extend(siblings.slice(siblings.find(node_a), siblings.length()).cast_all<nodes::text*>())
+            .extend(siblings.slice(0, siblings.find(node_a)).cast_all<nodes::text*>().reversed(), 0);
+}
+
+
+bool dom::helpers::trees::is_exclusive_text_node(nodes::node* node_a) {
+    return not dynamic_cast<nodes::cdata_section*>(node_a) and dynamic_cast<nodes::text*>(node_a);
 }

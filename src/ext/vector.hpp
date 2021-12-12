@@ -125,6 +125,10 @@ public:
 
     inline vector<T>& flatten() {/* TODO */}
 
+    inline vector<T>& slice(std::size_t front_index, std::size_t back_index) const {
+        return vector<T>{this->begin() + front_index, this->begin() + back_index};
+    }
+
     inline ext::vector<T> operator*(std::size_t multiplier) const {
         auto original = vector<string>{*this};
         auto output   = vector<string>{*this};

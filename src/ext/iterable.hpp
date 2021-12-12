@@ -74,7 +74,7 @@ public:
         return *this;
     }
 
-    inline iterable<T, C>& reversed() {
+    inline iterable<T, C> reversed() {
         return iterable<T, C>{*this}.reverse();
     }
 
