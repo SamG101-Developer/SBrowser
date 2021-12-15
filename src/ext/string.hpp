@@ -20,7 +20,7 @@ const ext::vector<std::string> STRING_HEX     {"0", "1", "2", "3", "4", "5", "6"
 
 namespace ext {
     class string;
-    using cstring = const ext::string;
+    using cstring = const string;
 
     template <class ...args> using are_strings = std::conjunction<std::is_same<ext::string, args>...>;
     template <class ...args> using are_strings_v = typename are_strings<args...>::value;

@@ -2,6 +2,8 @@
 
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/exceptions.hpp>
+#include <dom/helpers/mutation_observers.hpp>
+#include <dom/helpers/node_internals.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/element.hpp>
