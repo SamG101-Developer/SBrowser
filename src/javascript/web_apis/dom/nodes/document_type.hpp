@@ -8,7 +8,7 @@ namespace dom::nodes {class document_type;}
 namespace dom::other {class dom_implementation;}
 
 
-class dom::nodes::document_type : public dom::nodes::node {
+class dom::nodes::document_type : public node {
 public constructors:
     document_type();
 

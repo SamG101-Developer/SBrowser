@@ -7,7 +7,7 @@
 namespace dom::nodes {class comment;}
 
 
-class dom::nodes::comment : public dom::nodes::character_data {
+class dom::nodes::comment : public character_data {
 public constructors:
     comment(ext::cstring& new_data = "");
 };

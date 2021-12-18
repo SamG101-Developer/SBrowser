@@ -31,7 +31,7 @@ namespace css {
 
 
 class dom::nodes::window
-        : public dom::nodes::event_target
+        : public event_target
         , public html::mixins::window_or_worker_global_scope
         , public css::cssom_view::mixins::scrollable
         , public ext::listlike<ext::string> {

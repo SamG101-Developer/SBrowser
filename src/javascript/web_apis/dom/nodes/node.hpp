@@ -22,10 +22,10 @@ namespace dom {
 }
 
 
-class dom::nodes::node : public dom::nodes::event_target {
+class dom::nodes::node : public event_target {
 
 friends
-    friend dom::helpers::mutation_observers;
+    friend struct helpers::mutation_observers;
 
 public constructors:
     node();

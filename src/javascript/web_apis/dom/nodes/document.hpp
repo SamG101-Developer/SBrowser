@@ -72,11 +72,11 @@ namespace svg::elements {class svg_script_element;}
 
 
 class dom::nodes::document
-        : public dom::nodes::node
-        , public dom::mixins::non_element_parent_node<document>
-        , public dom::mixins::parent_node<document>
-        , public dom::mixins::document_or_shadow_root<document>
-        , public dom::mixins::document_or_element<document>
+        : public node
+        , public mixins::non_element_parent_node<document>
+        , public mixins::parent_node<document>
+        , public mixins::document_or_shadow_root<document>
+        , public mixins::document_or_element<document>
         , public ext::listlike<node> {
 
 friends

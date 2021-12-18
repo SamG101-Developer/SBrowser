@@ -8,9 +8,9 @@ namespace dom::nodes {class document_fragment;}
 
 
 class dom::nodes::document_fragment
-        : public dom::nodes::node
-        , public dom::mixins::non_element_parent_node<dom::nodes::document_fragment>
-        , public dom::mixins::parent_node<dom::nodes::document_fragment> {
+        : public node
+        , public mixins::non_element_parent_node<dom::nodes::document_fragment>
+        , public mixins::parent_node<dom::nodes::document_fragment> {
 
 public constructors:
     document_fragment();

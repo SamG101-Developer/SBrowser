@@ -7,7 +7,7 @@
 namespace dom::nodes {class cdata_section;}
 
 
-class dom::nodes::cdata_section : public dom::nodes::text {
+class dom::nodes::cdata_section : public text {
 public constructors:
     cdata_section();
 };

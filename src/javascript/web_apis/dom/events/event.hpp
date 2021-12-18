@@ -2,9 +2,9 @@
 #ifndef SBROWSER_EVENT_HPP
 #define SBROWSER_EVENT_HPP
 
-#include <ext/any.hpp>
 #include <ext/decorators.hpp>
 #include <ext/property.hpp>
+#include <ext/map.hpp>
 #include <ext/string.hpp>
 
 namespace dom {

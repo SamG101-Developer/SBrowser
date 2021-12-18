@@ -26,11 +26,11 @@ namespace geometry::shapes{class dom_rect;}
 
 class dom::nodes::element
         : public node
-        , public dom::mixins::parent_node<element>
-        , public dom::mixins::non_document_type_child_node<element>
-        , public dom::mixins::child_node<element>
-        , public dom::mixins::slottable<element>
-        , public dom::mixins::document_or_element<element>
+        , public mixins::parent_node<element>
+        , public mixins::non_document_type_child_node<element>
+        , public mixins::child_node<element>
+        , public mixins::slottable<element>
+        , public mixins::document_or_element<element>
         , public css::cssom_view::mixins::scrolable<element>
         , public css::cssom_view::mixins::geometry_utils<element> {
 

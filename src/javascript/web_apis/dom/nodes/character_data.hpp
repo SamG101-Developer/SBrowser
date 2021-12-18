@@ -7,7 +7,7 @@
 namespace dom::nodes {class character_data;}
 
 
-class dom::nodes::character_data : public dom::nodes::node {
+class dom::nodes::character_data : public node {
 public constructors:
     character_data();
 

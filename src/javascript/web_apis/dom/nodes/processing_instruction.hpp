@@ -8,7 +8,7 @@ namespace dom::nodes {class processing_instruction;}
 
 
 class dom::nodes::processing_instruction
-        : public dom::nodes::character_data
+        : public character_data
         , public css::cssom::mixins::link_style {
 
 public constructors:
