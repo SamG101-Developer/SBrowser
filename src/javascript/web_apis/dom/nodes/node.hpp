@@ -49,7 +49,7 @@ public methods:
     ext::string lookup_namespace_uri(ext::cstring& prefix) const;
     unsigned short compare_document_position(node* other) const;
     dom::nodes::node* get_root_node(ext::cstring_any_map& options) const;
-    dom::nodes::node* clone_node(bool deep) const;
+    dom::nodes::node* clone_node(bool deep = false) const;
     dom::nodes::node* insert_before(node* new_node, node* child);
     dom::nodes::node* append_child(node* new_node);
     dom::nodes::node* replace_child(node* old_node, node* new_node);
@@ -70,8 +70,6 @@ public properties:
     ext::dom_property<node*> previous_sibling;
     ext::dom_property<node*> next_sibling;
 
-    virtual QWidget* render() = 0;
-
 protected accessors:
     inline virtual ext::string get_node_value() const;
     inline virtual ext::string get_text_content() const;
@@ -81,6 +79,9 @@ protected accessors:
 
 protected internal_methods:
     virtual bool equals(nodes::node* other);
+    virtual QWidget* render() {return nullptr;};
+
+protected internal_properties:
     QWidget* m_rendered_widget;
 
 private accessors:

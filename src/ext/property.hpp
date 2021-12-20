@@ -35,38 +35,41 @@ namespace {
 
 template <typename T>
 class ext::property {
+    // default setters and getters for const-references
     friend T __fastcall operator << (T& other, const property<T>& property) {other = property.m_value; return other;};
     friend property<T>& __fastcall operator << (property<T>& property, const T& other) {property.m_value = other; return property;};
 
+    // default setters and getters for temp-objects
     friend T __fastcall operator << (T&& other, const property<T>& property) {other = property.m_value; return other;};
     friend property<T>& __fastcall operator << (property<T>& property, const T&& other) {property.m_value = other; return property;};
 
+    // property casting helpers methods (friend access for internal value)
     template <typename U, typename T> friend property<U> ext::property_dynamic_cast(const ext::property<T>& other);
     template <typename U, typename T> friend property<U> ext::property_static_cast(const ext::property<T>& other);
     template <typename U, typename T> friend property<U> ext::property_const_cast(const ext::property<T>& other);
     template <typename U, typename T> friend property<U> ext::property_reinterpret_cast(const ext::property<T>& other);
 
 public:
+    // main constructor to assign the deleter, getter and setter
     property() {
         del = []() -> void {};
         get = [this]() -> T {return m_value;};
         set = [this](T val) -> void {m_value = val;};
     }
 
+    // copy constructor to copy properties between objects
     property(const property<T>& other) = default;
 
+    // deleter, getter and setter calling at the correct places
     virtual ~property() {del();}
-    virtual __fastcall operator T() const {return get();}
-    virtual void __fastcall operator=(const T& val) {set(val);}
+    __forceinline virtual __fastcall operator T() const {return get();}
+    __forceinline virtual void __fastcall operator=(const T& val) {set(val);}
 
+    // use pointer operand to access the attributes of the internal value
     __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
     __forceinline T __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
 
-    // ->*
-    // ,
-    // &
-    // ...
-
+    // boolean comparison operators against another value (property will auto-cast into T)
     __forceinline bool __fastcall operator== (const T& other) const {return m_value ==  other;}
     __forceinline bool __fastcall operator!= (const T& other) const {return m_value !=  other;}
     __forceinline bool __fastcall operator<= (const T& other) const {return m_value <=  other;}
@@ -75,6 +78,7 @@ public:
     __forceinline bool __fastcall operator>  (const T& other) const {return m_value >   other;}
     __forceinline bool __fastcall operator<=>(const T& other) const {return m_value <=> other;}
 
+    // create-arithmetic operators against another value
     __forceinline property<T> __fastcall operator+(const T& other) const {return property<T>{m_value + other};}
     __forceinline property<T> __fastcall operator-(const T& other) const {return property<T>{m_value - other};}
     __forceinline property<T> __fastcall operator*(const T& other) const {return property<T>{m_value * other};}
@@ -84,6 +88,7 @@ public:
     __forceinline bool __fastcall operator&(const T& other) const {return m_value & other;}
     __forceinline bool __fastcall operator|(const T& other) const {return m_value | other;}
 
+    // modification-arithmetic operators against another value
     __forceinline property<T>& __fastcall operator+=(const T& other) {m_value += other; return *this;}
     __forceinline property<T>& __fastcall operator-=(const T& other) {m_value -= other; return *this;}
     __forceinline property<T>& __fastcall operator*=(const T& other) {m_value *= other; return *this;}

@@ -35,6 +35,8 @@ public methods:
     void select_node_contents(nodes::node* node);
 
     short compare_boundary_points(unsigned short how, ranges::range* source_range);
+    short compare_point(nodes::node* node, unsigned long offset);
+
     nodes::document_fragment* extract_contents();
     nodes::document_fragment* clone_contents();
     nodes::document_fragment* delete_contents();
@@ -42,7 +44,23 @@ public methods:
 
     void insert_node();
     ranges::range* clone_range();
-    short compare_point(nodes::node* node, unsigned long offset);
+    bool is_point_in_range(nodes::node* node, unsigned long offset);
+    bool intersects_node(nodes::node* node);
+
+    ext::string to_json();
+
+    // cssom-view
+    ext::vector<geometry::shapes::dom_rect> get_client_rects();
+    geometry::shapes::dom_rect get_bounding_client_rect();
+
+public properties:
+    ext::dom_property<nodes::node*> common_ancestor_container;
+
+private internal_properties:
+    nodes::node* m_root;
+
+private accessors:
+    nodes::node* get_common_ancestor_container() const;
 };
 
 
