@@ -36,6 +36,9 @@ class dom::nodes::window
         , public css::cssom_view::mixins::scrollable
         , public ext::listlike<ext::string> {
 
+public constructors:
+    window();
+
 public methods:
     // current browsing context
     void close();

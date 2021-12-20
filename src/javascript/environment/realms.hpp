@@ -10,6 +10,9 @@ namespace javascript::realms {
     class realm;
     realm relevant_agent();
     realm surrounding_agent();
+    realm current_agent();
+
+    realm current_global_object();
 }
 
 

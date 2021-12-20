@@ -5,8 +5,8 @@
 
 
 dom::nodes::shadow_root::shadow_root()
-        : dom::nodes::document_fragment()
-        , dom::mixins::document_or_shadow_root<dom::nodes::shadow_root> {
+        : document_fragment()
+        , mixins::document_or_shadow_root<dom::nodes::shadow_root> {
 
     delegates_focus = false;
 }

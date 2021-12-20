@@ -2,8 +2,14 @@
 
 #include <ext/infinity.hpp>
 
+#include <dom/helpers/attributes.hpp>
+#include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/exceptions.hpp>
+#include <dom/helpers/namespaces.hpp>
+#include <dom/helpers/node_internals.hpp>
+
 #include <dom/nodes/attr.hpp>
+#include <dom/nodes/shadow_root.hpp>
 
 #include <QtCore/QObject>
 #include <QtWidgets/QWidget>
@@ -11,21 +17,21 @@
 
 dom::nodes::element::element()
         : node()
-        , dom::mixins::parent_node<element>()
-        , dom::mixins::non_document_type_child_node<element>()
-        , dom::mixins::child_node<element>()
-        , dom::mixins::slottable<element>()
-        , dom::mixins::document_or_element<element>()
+        , mixins::parent_node<element>()
+        , mixins::non_document_type_child_node<element>()
+        , mixins::child_node<element>()
+        , mixins::slottable<element>()
+        , mixins::document_or_element<element>()
         , css::cssom_view::mixins::scrolable<element>()
         , css::cssom_view::mixins::geometry_utils<element>() {
 
-    tag_name.get    = [this] {return get_tag_name();};
-    shadow_root.get = [this] {return get_shadow_root();};
-    id.set          = [this](auto&& PH1) {set_id(std::forward<decltype(PH1)>(PH1));};
+    tag_name.get = [this] {return get_tag_name();};
+    shadow_root_node.get = [this] {return get_shadow_root();};
+    id.set = [this](auto&& PH1) {set_id(std::forward<decltype(PH1)>(PH1));};
 
-    shadow_root = nullptr;
-    attributes  = new ext::vector<attr*>{};
-    class_list  = new ext::vector<ext::string>{};
+    shadow_root_node = nullptr;
+    attributes = new ext::vector<attr*>{};
+    class_list = new ext::vector<ext::string>{};
 
     m_custom_element_definition     = nullptr;
     m_custom_element_reaction_queue = {};
@@ -95,7 +101,7 @@ dom::nodes::element::get_attribute_ns(
 dom::nodes::attr*
 dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const {
 
-    return helpers::attrs::get_attribute_by_name(qualified_name, this);
+    return helpers::attributes::get_attribute_by_name(qualified_name, this);
 }
 
 
@@ -104,7 +110,7 @@ dom::nodes::element::get_attribute_node_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name) const {
 
-    return helpers::attrs::get_attribute_by_ns(namespace_, local_name, this);
+    return helpers::attributes::get_attribute_by_ns(namespace_, local_name, this);
 }
 
 
@@ -127,9 +133,9 @@ dom::nodes::element::set_attribute(
         attribute->local_name = qualified_name;
         attribute->value = value;
         attribute->owner_document = owner_document;
-        helpers::attrs::append(attribute, this);
+        helpers::attributes::append(attribute, this);
     }
-    helpers::attrs::change(attribute, value);
+    helpers::attributes::change(attribute, value);
 }
 
 
@@ -146,7 +152,7 @@ dom::nodes::element::set_attribute_ns(
             : qualified_name;
 
     // TODO : move into attr helpers namespacing (set_attribute_by_ns)
-    attr* attribute = helpers::attrs::get_attribute_by_ns(
+    attr* attribute = helpers::attributes::get_attribute_by_ns(
             namespace_,
             local_name,
             this);
@@ -158,9 +164,9 @@ dom::nodes::element::set_attribute_ns(
         attribute->local_name = local_name;
         attribute->value = value;
         attribute->owner_document = owner_document;
-        helpers::attrs::append(attribute, this);
+        helpers::attributes::append(attribute, this);
     }
-    helpers::attrs::change(attribute, value)
+    helpers::attributes::change(attribute, value);
 }
 
 
@@ -168,7 +174,7 @@ dom::nodes::attr*
 dom::nodes::element::set_attribute_node(
         attr* attribute) {
 
-    return helpers::attrs::set_attribute(attribute, this);
+    return helpers::attributes::set_attribute(attribute, this);
 }
 
 
@@ -183,7 +189,7 @@ dom::nodes::element::set_attribute_node_ns(
 void
 dom::nodes::element::remove_attribute(ext::cstring& qualified_name) {
 
-    helpers::attrs::remove_attribute_by_name(qualified_name, this);
+    helpers::attributes::remove_attribute_by_name(qualified_name, this);
 }
 
 
@@ -191,14 +197,14 @@ void dom::nodes::element::remove_attribute_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name) {
 
-    helpers::attrs::remove_attribute_by_ns(namespace_, local_name, this);
+    helpers::attributes::remove_attribute_by_ns(namespace_, local_name, this);
 }
 
 
 dom::nodes::attr*
 dom::nodes::element::remove_attribute_node(attr* attribute) {
 
-    return helpers::attrs::remove_attribute(attribute)
+    return helpers::attributes::remove_attribute(attribute)
 }
 
 
@@ -219,7 +225,7 @@ dom::nodes::element::toggle_attribute(
         ext::cstring& qualified_name,
         bool force) {
 
-    attr* attribute = helpers::attrs::get_attribute_by_name(qualified_name, this);
+    attr* attribute = helpers::attributes::get_attribute_by_name(qualified_name, this);
     return helpers::attibutes::toggle_attribute(attribute);
 }
 
@@ -230,8 +236,8 @@ dom::nodes::element::toggle_attribute_ns(
         ext::cstring& local_name,
         bool force) {
 
-    attr* attribute = helpers::attrs::get_attribute_by_ns(namespace_, local_name, this);
-    return helpers::attrs::toggle_attribute(attribute);
+    attr* attribute = helpers::attributes::get_attribute_by_ns(namespace_, local_name, this);
+    return helpers::attributes::toggle_attribute(attribute);
 }
 
 
@@ -239,8 +245,8 @@ dom::nodes::attr*
 dom::nodes::element::toggle_attribute_node(
         attr* attribute,
         bool force) {
-    
-    return helpers::attrs::toggle_attribute(attribute);
+
+    return helpers::attributes::toggle_attribute(attribute);
 }
 
 
@@ -281,8 +287,7 @@ dom::nodes::element::attach_shadow(ext::cstring_any_map& options) {
     shadow->host = this;
     shadow->delgates_focus = ext::any_cast<bool>(options.at("delegatesFocus"));
     shadow->slot_assigment = ext::any_cast<bool>(options.at("slotAssignment"));
-    shadow->available_to_internals = m_custom_element_state == internal::custom_element_state::CUSTOM
-            or m_custom_element_state == internal::custom_element_state::PRECUSTOMIZED;
+    shadow->available_to_internals = m_custom_element_state == "custom" or m_custom_element_state == "precustomized";
 
     shadow_root_node = shadow;
     return shadow;

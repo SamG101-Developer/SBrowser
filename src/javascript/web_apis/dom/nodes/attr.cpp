@@ -1,8 +1,9 @@
 #include "attr.hpp"
 
+#include <dom/helpers/attributes.hpp>
 
-dom::nodes::attr::attr()
-        : dom::nodes::node() {
+
+dom::nodes::attr::attr() : node() {
 
     node_value.get       = [this] {return get_node_value(); };
     text_content.get     = [this] {return get_text_content(); };

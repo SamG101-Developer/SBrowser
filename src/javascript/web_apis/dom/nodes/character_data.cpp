@@ -2,9 +2,9 @@
 
 
 dom::nodes::character_data::character_data()
-        : dom::nodes::node()
-        , dom::mixins::child_node<dom::nodes::character_data>()
-        , dom::mixins::non_document_type_child_node<dom::nodes::character_data>() {
+        : node()
+        , mixins::child_node<dom::nodes::character_data>()
+        , mixins::non_document_type_child_node<dom::nodes::character_data>() {
 
     length.get = [this] {get_length();};
 }

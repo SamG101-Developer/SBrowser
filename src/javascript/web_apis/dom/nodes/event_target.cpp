@@ -1,7 +1,9 @@
 #include "event_target.hpp"
 
 #include <dom/events/event.hpp>
+
 #include <dom/helpers/event_listening.hpp>
+#include <dom/helpers/exceptions.hpp>
 
 
 void
@@ -38,10 +40,10 @@ dom::nodes::event_target::dispatch_event(
 
     helpers::exceptions::throw_v8_exception(
             "event must be initialized and not dispatched in order be dispatched",
-            helpers::exceptions::INVALID_STATE_ERROR,
+            INVALID_STATE_ERR,
             [event] -> bool {return event->m_dispatch_flag or not event->m_initialized_flag;});
 
-    event->isTrusted = false;
+    event->is_trusted = false;
     return helpers::event_listening::dispatch(event, this);
 }
 

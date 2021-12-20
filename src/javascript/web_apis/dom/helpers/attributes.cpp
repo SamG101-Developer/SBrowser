@@ -1,4 +1,4 @@
-#include "attrs.hpp"
+#include "attributes.hpp"
 
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/exceptions.hpp>
@@ -10,7 +10,7 @@
 
 
 void
-dom::helpers::attrs::handle_attributes_changes(
+dom::helpers::attributes::handle_attributes_changes(
         nodes::attr* attribute,
         nodes::element* owner_element,
         ext::cstring& old_value,
@@ -28,7 +28,7 @@ dom::helpers::attrs::handle_attributes_changes(
 
 
 void
-dom::helpers::attrs::change(
+dom::helpers::attributes::change(
         nodes::attr* attribute,
         ext::cstring& new_value) {
 
@@ -38,7 +38,7 @@ dom::helpers::attrs::change(
 
 
 void
-dom::helpers::attrs::append(
+dom::helpers::attributes::append(
         nodes::attr* attribute,
         nodes::element* new_owner_element) {
 
@@ -49,7 +49,7 @@ dom::helpers::attrs::append(
 
 
 void
-dom::helpers::attrs::remove(nodes::attr* attribute) {
+dom::helpers::attributes::remove(nodes::attr* attribute) {
 
     handle_attributes_changes(attribute, attribute->owner_element, attribute->value, "");
     attribute->owner_element->attributes->remove(attribute);
@@ -59,7 +59,7 @@ dom::helpers::attrs::remove(nodes::attr* attribute) {
 
 
 void
-dom::helpers::attrs::replace(
+dom::helpers::attributes::replace(
         nodes::attr* old_attribute,
         nodes::attr* new_attribute) {
 
@@ -72,7 +72,7 @@ dom::helpers::attrs::replace(
 
 
 dom::nodes::attr*
-dom::helpers::attrs::get_attribute_by_name(
+dom::helpers::attributes::get_attribute_by_name(
         ext::cstring& qualified_name,
         nodes::element* owner_element) {
 
@@ -87,7 +87,7 @@ dom::helpers::attrs::get_attribute_by_name(
 
 
 dom::nodes::attr*
-dom::helpers::attrs::get_attribute_by_ns(
+dom::helpers::attributes::get_attribute_by_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name,
         nodes::element* owner_element) {
@@ -99,7 +99,7 @@ dom::helpers::attrs::get_attribute_by_ns(
 
 
 ext::string
-dom::helpers::attrs::get_attribute_value(
+dom::helpers::attributes::get_attribute_value(
         nodes::element* owner_element,
         ext::cstring& namespace_,
         ext::cstring& local_name) {
@@ -110,7 +110,7 @@ dom::helpers::attrs::get_attribute_value(
 
 
 dom::nodes::attr*
-dom::helpers::attrs::set_attribute(
+dom::helpers::attributes::set_attribute(
         nodes::attr* attribute,
         nodes::element* new_owner_element) {
 
@@ -132,7 +132,7 @@ dom::helpers::attrs::set_attribute(
 
 
 dom::nodes::attr*
-dom::helpers::attrs::set_attribute_value(
+dom::helpers::attributes::set_attribute_value(
         nodes::element* owner_element,
         ext::cstring& local_name,
         ext::cstring& value,
@@ -156,7 +156,7 @@ dom::helpers::attrs::set_attribute_value(
 
 
 dom::nodes::attr*
-dom::helpers::attrs::remove_attribute_by_name(
+dom::helpers::attributes::remove_attribute_by_name(
         ext::cstring& qualified_name,
         nodes::element* owner_element) {
 
@@ -169,7 +169,7 @@ dom::helpers::attrs::remove_attribute_by_name(
 
 
 dom::nodes::attr*
-dom::helpers::attrs::remove_attribute_by_ns(
+dom::helpers::attributes::remove_attribute_by_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name,
         nodes::element* owner_element) {
@@ -183,7 +183,7 @@ dom::helpers::attrs::remove_attribute_by_ns(
 
 
 void
-dom::helpers::attrs::set_existing_attribute_value(
+dom::helpers::attributes::set_existing_attribute_value(
         nodes::attr* attribute,
         ext::cstring& value) {
 

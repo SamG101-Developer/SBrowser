@@ -7,7 +7,7 @@
 
 namespace dom {
     namespace helpers {
-        struct attrs;
+        struct attributes;
         struct custom_elements;
         struct node_internals;
     }
@@ -35,7 +35,7 @@ class dom::nodes::element
         , public css::cssom_view::mixins::geometry_utils<element> {
 
 friends
-    friend struct helpers::attrs;
+    friend struct helpers::attributes;
     friend struct helpers::custom_elements;
     friend struct helpers::node_internals;
 

@@ -1,16 +1,16 @@
 #pragma once
-#ifndef SBROWSER_ATTRS_HPP
-#define SBROWSER_ATTRS_HPP
+#ifndef SBROWSER_ATTRIBUTES_HPP
+#define SBROWSER_ATTRIBUTES_HPP
 
 #include <ext/string.hpp>
 
 namespace dom {
-    namespace helpers {struct attrs;}
+    namespace helpers {struct attributes;}
     namespace nodes {class attr; class element;}
 }
 
 
-struct dom::helpers::attrs {
+struct dom::helpers::attributes {
     static void handle_attributes_changes(nodes::attr* attribute, nodes::element* owner_element, ext::cstring& old_value, ext::cstring& new_value);
 
     static void change(nodes::attr* attribute, ext::cstring& new_value);
@@ -32,4 +32,4 @@ struct dom::helpers::attrs {
 };
 
 
-#endif //SBROWSER_ATTRS_HPP
+#endif //SBROWSER_ATTRIBUTES_HPP

@@ -1,13 +1,16 @@
 #include "document_fragment.hpp"
 
+#include <dom/helpers/node_internals.hpp>
+#include <dom/helpers/trees.hpp>
+
 
 dom::nodes::document_fragment::document_fragment()
-        : dom::nodes::node()
-        , dom::mixins::non_element_parent_node()
-        , dom::mixins::parent_node() {
+        : node()
+        , mixins::non_element_parent_node()
+        , mixins::parent_node() {
 
     node_name = "#document-fragment";
-    host      = nullptr;
+    host = nullptr;
 }
 
 
