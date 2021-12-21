@@ -229,7 +229,6 @@ dom::ranges::range::extract_contents() {
         new_node = start_container;
         new_offset = start_offset;
     }
-
     else {
         auto start_container_ancestors = helpers::trees::ancestors(start_container);
         auto end_container_ancestors = helpers::trees::ancestors(end_container);
@@ -238,10 +237,64 @@ dom::ranges::range::extract_contents() {
         new_offset = helpers::trees::index(new_node) + 1;
     }
 
+    // handle text changes with the first partially contained node
     if (ext::property_dynamic_cast<nodes::text*>(first_partially_contained_child)
             or ext::property_dynamic_cast<nodes::processing_instruction*>(first_partially_contained_child)
             or ext::property_dynamic_cast<nodes::comment*>(first_partially_contained_child)) {
 
-        .
+        nodes::character_data* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
+        nodes::character_data* clone = dynamic_cast<nodes::character_data*>(start_container_character_data->clone_node());
+        clone->data = helpers::texts::substring_data(start_container_character_data, start_offset, helpers::trees::length(start_container) - start_offset);
+
+        helpers::mutation_algorithms::append(clone, fragment);
+        helpers::texts::replace_data(start_container_character_data, start_offset, helpers::trees::length(start_container) - start_offset, "");
     }
+    else {
+        nodes::node* clone = first_partially_contained_child->clone_node();
+        helpers::mutation_algorithms::append(clone, fragment);
+
+        auto* sub_range = new ranges::range{};
+        sub_range->start_container = start_container;
+        sub_range->start_offset = start_offset;
+        sub_range->end_container = first_partially_contained_child;
+        sub_range->end_offset = helpers::trees::length(first_partially_contained_child);
+
+        auto* sub_fragment = sub_range->extract_contents();
+        helpers::mutation_algorithms::append(sub_fragment, clone);
+    }
+
+    contained_children->for_each([fragment](auto* node) -> void {helpers::mutation_algorithms::append(node, fragment);});
+
+    // handle text changes with the last partially contained node
+    if (ext::property_dynamic_cast<nodes::text*>(last_partially_contained_child)
+        or ext::property_dynamic_cast<nodes::processing_instruction*>(last_partially_contained_child)
+        or ext::property_dynamic_cast<nodes::comment*>(last_partially_contained_child)) {
+
+        nodes::character_data* end_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(end_container);
+        nodes::character_data* clone = dynamic_cast<nodes::character_data*>(end_container_character_data->clone_node());
+        clone->data = helpers::texts::substring_data(end_container_character_data, 0, end_offset);
+
+        helpers::mutation_algorithms::append(clone, fragment);
+        helpers::texts::replace_data(end_container_character_data, 0, end_offset, "");
+    }
+    else {
+        nodes::node* clone = last_partially_contained_child->clone_node();
+        helpers::mutation_algorithms::append(clone, fragment);
+
+        auto* sub_range = new ranges::range{};
+        sub_range->start_container = last_partially_contained_child;
+        sub_range->start_offset = 0;
+        sub_range->end_container = end_container;
+        sub_range->end_offset = end_offset;
+
+        auto* sub_fragment = sub_range->extract_contents();
+        helpers::mutation_algorithms::append(sub_fragment, clone);
+    }
+
+    start_container = new_node;
+    start_offset = new_offset;
+    end_container = new_node;
+    end_offset = new_offset;
+
+    return fragment;
 }
