@@ -9,6 +9,8 @@ namespace dom {
     namespace nodes {class document_fragment;}
 }
 
+namespace geometry::shapes {class dom_rect;}
+
 
 class dom::ranges::range : public abstract_range {
 public constructors:
@@ -30,7 +32,8 @@ public methods:
     void set_end_before(nodes::node* node);
     void set_end_after(nodes::node* node);
 
-    void collapse(bool to_start = false);
+    void insert_node(nodes::node* node);
+    bool intersects_node(nodes::node* node);
     void select_node(nodes::node* node);
     void select_node_contents(nodes::node* node);
 
@@ -40,12 +43,11 @@ public methods:
     nodes::document_fragment* extract_contents();
     nodes::document_fragment* clone_contents();
     nodes::document_fragment* delete_contents();
-    nodes::document_fragment* surround_contents();
+    nodes::document_fragment* surround_contents(nodes::node* new_parent);
 
-    void insert_node();
+    void collapse(bool to_start = false);
     ranges::range* clone_range();
     bool is_point_in_range(nodes::node* node, unsigned long offset);
-    bool intersects_node(nodes::node* node);
 
     ext::string to_json();
 
