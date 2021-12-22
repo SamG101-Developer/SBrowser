@@ -6,6 +6,7 @@
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/document_fragment.hpp>
 #include <dom/nodes/document_type.hpp>
+#include <dom/nodes/text.hpp>
 
 #include <dom/helpers/exceptions.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
@@ -91,7 +92,7 @@ dom::ranges::range::insert_node(
             [this] -> bool {return helpers::ranges::is_textual_based_range_container(start_container);});
 
     nodes::node* reference_node;
-    nodes::node* parent_node;
+    nodes::node* parent;
     nodes::text* start_container_text = ext::property_dynamic_cast<nodes::text*>(start_container);
     unsigned long new_offset = 0;
 
@@ -99,11 +100,11 @@ dom::ranges::range::insert_node(
             ? start_container
             : start_container->child_nodes->at(start_offset);
 
-    parent_node = not reference_node
+    parent = not reference_node
             ? start_container
             : reference_node->parent_node;
 
-    helpers::mutation_algorithms::ensure_pre_insertion_validity(node, parent_node, reference_node);
+    helpers::mutation_algorithms::ensure_pre_insertion_validity(node, parent, reference_node);
     reference_node = start_container_text
             ? helpers::texts::split(start_container_text, start_offset)
             : reference_node;
@@ -114,16 +115,16 @@ dom::ranges::range::insert_node(
 
     if (node->parent_node) helpers::mutation_algorithms::remove(node);
     new_offset = not reference_node
-            ? helpers::trees::length(parent_node)
+            ? helpers::trees::length(parent)
             : helpers::trees::index(reference_node);
 
     new_offset += dynamic_cast<nodes::document_fragment*>(node)
             ? helpers::trees::length(node)
             : 1;
 
-    helpers::mutation_algorithms::pre_insert(node, parent_node, reference_node);
+    helpers::mutation_algorithms::pre_insert(node, parent, reference_node);
     if (collapsed)
-        end_container = parent_node, end_offset = new_offset;
+        end_container = parent, end_offset = new_offset;
 }
 
 
@@ -132,8 +133,19 @@ dom::ranges::range::intersects_node(
         nodes::node* node) {
 
     if (m_root != helpers::trees::root(node)) return false;
+    if (not node->parent_node) return true;
 
     nodes::node* parent = node->parent_node;
+    unsigned long offset = helpers::trees::index(node);
+
+    auto* parent_offset_node_0 = parent;
+    auto parent_offset_offset_0 = offset;
+
+    auto* parent_offset_node_1 = parent;
+    auto parent_offset_offset_1 = offset + 1;
+
+    return helpers::ranges::position_relative(parent_offset_node_0, parent_offset_offset_0, end_container, end_offset) == internal::boundary_point_comparision_position::BEFORE
+            and helpers::ranges::position_relative(parent_offset_node_1, parent_offset_offset_1, start_container, start_offset) == internal::boundary_point_comparision_position::AFTER
 }
 
 
@@ -387,4 +399,39 @@ dom::ranges::range::is_point_in_range(
         unsigned long offset) {
 
     if (m_root != helpers::trees::root(node)) return false;
+}
+
+
+ext::string
+dom::ranges::range::to_json() {
+
+    ext::string s;
+    nodes::text* start_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
+    nodes::text* end_text_node = ext::property_dynamic_cast<nodes::text*>(end_container);
+
+    if (start_container == end_container and start_text_node)
+        return start_text_node->data->substring(start_offset, end_offset - start_offset);
+
+    if (start_text_node)
+        s += start_text_node->data->substring(start_offset);
+
+    helpers::trees::descendants(m_root)
+            .filter([this](auto* descendant_node) -> bool {return helpers::ranges::contains(descendant_node, this);})
+            .cast_all<nodes::text*>()
+            .for_each([&s, this](auto* descendant_node) -> void {s += descendant_node->data->substring(start_offset);});
+
+    if (end_text_node)
+        s += end_text_node->data->substring(0, end_offset);
+
+    return s;
+}
+
+
+dom::nodes::node*
+dom::ranges::range::get_common_ancestor_container() const {
+
+    auto start_node_ancestors = helpers::trees::ancestors(start_container);
+    auto end_node_ancestors = helpers::trees::ancestors(end_container);
+
+    return start_node_ancestors.intersection(end_node_ancestors).back();
 }
