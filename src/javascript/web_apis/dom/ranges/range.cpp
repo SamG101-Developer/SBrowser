@@ -127,6 +127,16 @@ dom::ranges::range::insert_node(
 }
 
 
+bool
+dom::ranges::range::intersects_node(
+        nodes::node* node) {
+
+    if (m_root != helpers::trees::root(node)) return false;
+
+    nodes::node* parent = node->parent_node;
+}
+
+
 void
 dom::ranges::range::select_node(
         nodes::node* node) {
@@ -356,4 +366,25 @@ dom::ranges::range::collapse(
     to_start
     ? end_container = start_container
     : start_container = end_container;
+}
+
+
+dom::ranges::range*
+dom::ranges::range::clone_range() {
+
+    auto range_object = new range{};
+    range_object->start_container = start_container;
+    range_object->start_offset = start_offset;
+    range_object->end_container = end_container;
+    range_object->end_offset = end_offset;
+    return range_object;
+}
+
+
+bool
+dom::ranges::range::is_point_in_range(
+        nodes::node* node,
+        unsigned long offset) {
+
+    if (m_root != helpers::trees::root(node)) return false;
 }

@@ -8,7 +8,6 @@
 #include <ext/vector.hpp>
 
 #define readonly_setter [](T) {}
-#define setter_getter __forceinline __fastcall
 
 
 namespace ext {
@@ -26,22 +25,22 @@ namespace ext {
 
 namespace {
     template<typename T>
-    void ce_reactions(const ext::dom_property<T>& property) {};
+    void ce_reactions(const ext::dom_property<T>& property) {/* TODO */};
 
     template<typename function_t>
-    void ce_reactions(const function_t& function) requires(std::is_member_function_pointer_v<function_t>) {};
+    void ce_reactions(const function_t& function) requires(std::is_member_function_pointer_v<function_t>) {/* TODO */};
 }
 
 
 template <typename T>
 class ext::property {
-    // default setters and getters for const-references
-    friend T __fastcall operator << (T& other, const property<T>& property) {other = property.m_value; return other;};
-    friend property<T>& __fastcall operator << (property<T>& property, const T& other) {property.m_value = other; return property;};
+    // default setters and getters for const-references (override custom getter / setter)
+    friend T            __fastcall operator >> (const property<T>& property, T& other) {other = property.m_value; return other;}     // get
+    friend property<T>& __fastcall operator << (property<T>& property, const T& other) {property.m_value = other; return property;}; // set
 
-    // default setters and getters for temp-objects
-    friend T __fastcall operator << (T&& other, const property<T>& property) {other = property.m_value; return other;};
-    friend property<T>& __fastcall operator << (property<T>& property, const T&& other) {property.m_value = other; return property;};
+    // default setters and getters for temp-objects (override custom getter / setter)
+    friend T            __fastcall operator >> (const property<T>& property, T&& other) {other = property.m_value; return other;};    // get
+    friend property<T>& __fastcall operator << (property<T>& property, const T&& other) {property.m_value = other; return property;}; // set
 
     // property casting helpers methods (friend access for internal value)
     template <typename U, typename T> friend property<U> ext::property_dynamic_cast(const ext::property<T>& other);
@@ -67,7 +66,7 @@ public:
 
     // use pointer operand to access the attributes of the internal value
     __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
-    __forceinline T __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
+    __forceinline T  __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
 
     // boolean comparison operators against another value (property will auto-cast into T)
     __forceinline bool __fastcall operator== (const T& other) const {return m_value ==  other;}
@@ -131,6 +130,7 @@ public:
 
     __forceinline operator bool() requires (not std::is_same_v<T, bool>) {return std::is_same_v<T, std::any> ? ext::any_cast<bool>(m_value) : (bool)m_value;}
 
+protected:
     std::function<void __fastcall ( )> del;
     std::function<T    __fastcall ( )> get;
     std::function<void __fastcall (T)> set;
