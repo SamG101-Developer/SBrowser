@@ -28,6 +28,12 @@ public constructors:
     event(ext::cstring& event_type, ext::cstring_any_map& event_init);
     virtual ~event();
 
+public static_constants:
+    static constexpr unsigned char NONE = 0;
+    static constexpr unsigned char CAPTURING_PHASE = 1;
+    static constexpr unsigned char AT_TARGET = 2;
+    static constexpr unsigned char BUBBLING_PHASE = 3;
+
 public methods:
     void stop_propagation();
     void stop_immediate_propagation();
@@ -35,11 +41,6 @@ public methods:
     ext::vector<nodes::event_target*> composed_path();
 
 public properties:
-    static constexpr unsigned char NONE = 0;
-    static constexpr unsigned char CAPTURING_PHASE = 1;
-    static constexpr unsigned char AT_TARGET = 2;
-    static constexpr unsigned char BUBBLING_PHASE = 3;
-
     ext::dom_property<ext::string> type;
     ext::dom_property<bool> bubbles;
     ext::dom_property<bool> cancelable;

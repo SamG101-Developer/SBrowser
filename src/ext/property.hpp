@@ -20,6 +20,7 @@ namespace ext {
     template <typename U, typename T> property<U> property_static_cast(const ext::property<T>& other);
     template <typename U, typename T> property<U> property_const_cast(const ext::property<T>& other);
     template <typename U, typename T> property<U> property_reinterpret_cast(const ext::property<T>& other);
+    template <typename U, typename T> property<U> property_any_cast(const ext::property<T>& other);
 }
 
 
@@ -285,6 +286,17 @@ template <typename U, typename T>
 ext::property<U> ext::property_reinterpret_cast(const property<T>& other) {
     ext::property<U> casted_property{};
     casted_property << reinterpret_cast<U>(other.m_value);
+    casted_property.del = other.del;
+    casted_property.get = other.get;
+    casted_property.set = other.set;
+    return casted_property;
+}
+
+
+template <typename U, typename T>
+ext::property<U> ext::property_any_cast(const ext::property<T>& other) {
+    ext::property<U> casted_property;
+    casted_property << ext::any_cast<U>(other.m_value);
     casted_property.del = other.del;
     casted_property.get = other.get;
     casted_property.set = other.set;

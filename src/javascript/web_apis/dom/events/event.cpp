@@ -8,14 +8,15 @@ dom::events::event::event(ext::cstring& event_type, ext::cstring_any_map& event_
         , bubbles(ext::any_cast<bool>(event_init.at("bubbles")))
         , cancelable(ext::any_cast<bool>(event_init.at("cancelable")))
         , composed(ext::any_cast<bool>(event_init.at("composed")))
-        , target(nullptr)
-        , currentTarget(nullptr)
-        , relatedTarget(nullptr)
         , event_phase(NONE)
         , time_stamp(performance::time::dom_high_res_timestamp())
         , touch_targets(new ext::vector<nodes::event_target*>{})
         , path(new ext::vector<internal::event_path_struct*>{})
         {
+
+    target = nullptr;
+    current_target = nullptr;
+    related_target = nullptr;
 
     m_initialized_flag = true;
 }
@@ -45,7 +46,7 @@ dom::events::event::prevent_default() {
 }
 
 
-ext::vector<nodes::event_target*>
+ext::vector<dom::nodes::event_target*>
 dom::events::event::composed_path() {
 
     ext::vector<nodes::event_target*> composed_path_vector{};
@@ -88,7 +89,7 @@ dom::events::event::composed_path() {
     while (index < path_vector.length()) {
         if (path_vector.at(index)->slot_in_closed_tree) ++current_hidden_level;
         if (current_hidden_level <= max_hidden_level) composed_path_vector.append(path_vector.at(index)->invocation_target);
-        if (path_vector->at(index)->slot_in_closed_tree) {
+        if (path_vector.at(index)->slot_in_closed_tree) {
             --current_hidden_level;
             max_hidden_level = std::min(max_hidden_level, current_hidden_level);
         }

@@ -1,17 +1,22 @@
 #include "signal_aborting.hpp"
 
 #include <dom/aborting/abort_signal.hpp>
+#include <dom/helpers/event_dispatching.hpp>
 
 
-void dom::helpers::signal_aborting::signal_abort(aborting::abort_signal* signal) {
+void
+dom::helpers::signal_aborting::signal_abort(
+        aborting::abort_signal* signal,
+        std::any&& reason) {
 
     if (signal->aborted) return;
 
     signal->aborted = true;
+    signal->reason = reason;
     signal->m_abort_algorithms.for_each([](auto& algorithm) -> void {algorithm();});
     signal->m_abort_algorithms.clear();
 
-    events::fire_event<>("Abort", signal);
+    event_dispatching::fire_event<>("Abort", signal);
 }
 
 
@@ -24,8 +29,8 @@ dom::helpers::signal_aborting::follow_signal(
         return;
 
     if (parent_signal->aborted)
-        signal_abort(following_signal);
+        signal_abort(following_signal, parent_signal->reason);
 
     else
-        parent_signal->m_abort_algorithms.append([following_signal]() {signal_abort(following_signal);});
+        parent_signal->m_abort_algorithms.append([following_signal, parent_signal]() {signal_abort(following_signal, parent_signal->reason);});
 }

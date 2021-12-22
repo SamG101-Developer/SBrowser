@@ -3,6 +3,12 @@
 
 #include <javascript/environment/modules.hpp>
 
+#include <dom/aborting/abort_controller.hpp>
+#include <dom/aborting/abort_signal.hpp>
+
+#include <dom/events/event.hpp>
+#include <dom/events/custom_event.hpp>
+
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
 #include <dom/nodes/character_data.hpp>
@@ -36,6 +42,58 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     v8::Local<v8::Context> local_context = v8::Local<v8::Context>::New(isolate, persistent_context);
     local_context->Enter();
+
+    v8pp::class_<dom::aborting::abort_controller> v8_abort_controller{isolate};
+    v8_abort_controller
+            .ctor<>()
+            .function("abort", &dom::aborting::abort_controller::abort)
+            .var("signal", &dom::aborting::abort_controller::signal)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::aborting::abort_signal> v8_abort_signal{isolate};
+    v8_abort_signal
+            .inherit<dom::nodes::event_target>()
+            .function("abort", &dom::aborting::abort_signal::abort)
+            .function("throwIfAborted", &dom::aborting::abort_signal::throw_if_aborted)
+            .var("aborted", &dom::aborting::abort_signal::aborted)
+            .var("reason", &dom::aborting::abort_signal::reason)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::events::custom_event> v8_custom_event{isolate};
+    v8_custom_event
+            .ctor<ext::cstring&, ext::cstring_any_map&>()
+            .inherit<dom::events::event>()
+            .var("detail", &dom::events::custom_event::detail)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::events::event> v8_event{isolate};
+    v8_event
+            .ctor<ext::cstring&, ext::cstring_any_map&>()
+
+            .static_("NONE", &dom::events::event::NONE)
+            .static_("CAPTURING_PHASE", &dom::events::event::CAPTURING_PHASE)
+            .static_("AT_TARGET", &dom::events::event::AT_TARGET)
+            .static_("BUBBLING_PHASE", &dom::events::event::BUBBLING_PHASE)
+
+            .function("stopImmediatePropagation", &dom::events::event::stop_immediate_propagation)
+            .function("stopPropagation", &dom::events::event::stop_propagation)
+            .function("preventDefault", &dom::events::event::prevent_default)
+            .function("composedPath", &dom::events::event::composed_path)
+
+            .var("type", &dom::events::event::type)
+            .var("bubbles", &dom::events::event::bubbles)
+            .var("cancelable", &dom::events::event::cancelable)
+            .var("composed", &dom::events::event::composed)
+            .var("target", &dom::events::event::target)
+            .var("currentTarget", &dom::events::event::current_target)
+            .var("relatedTarget", &dom::events::event::related_target)
+            .var("eventPhase", &dom::events::event::event_phase)
+            .var("timeStamp", &dom::events::event::time_stamp)
+            .var("isTrusted", &dom::events::event::is_trusted)
+            .var("touchTargets", &dom::events::event::touch_targets)
+            .var("path", &dom::events::event::path)
+
+            .auto_wrap_objects();
 
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
     v8_attr
@@ -387,6 +445,9 @@ void javascript::interop::expose_cpp_to_js::expose(
     switch(module_type) {
         case javascript::environment::modules::module_type::window: {
             v8_module
+                    .class_("CustomEvent", v8_custom_event)
+                    .class_("Event", v8_event)
+
                     .class_("Attr", v8_attr)
                     .class_("CDataSection", v8_cdata_section)
                     .class_("CharacterData", v8_character_data)
@@ -396,15 +457,20 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("DocumentType", v8_document_type)
                     .class_("EventTarget", v8_event_target)
                     .class_("Node", v8_node)
-                    .class_("ProcessingInstruction", v8_node)
+                    .class_("ProcessingInstruction", v8_processing_instruction)
                     .class_("ShadowRoot", v8_shadow_root)
-                    .class_("Window", v8_window);
+                    .class_("Text", v8_text)
+                    .class_("Window", v8_window)
+                    .class_("WindowProxy", v8_window_proxy);;
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
 
         case javascript::environment::modules::module_type::worker: {
             v8_module
+                    .class_("CustomEvent", v8_custom_event)
+                    .class_("Event", v8_event)
+
                     .class_("EventTarget", v8_event_target);
 
             module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();
@@ -412,6 +478,8 @@ void javascript::interop::expose_cpp_to_js::expose(
 
         case javascript::environment::modules::module_type::audio_worklet: {
             v8_module
+                    .class_("Event", v8_event)
+
                     .class_("EventTarget", v8_event_target);
 
             module_name = v8::String::NewFromUtf8(isolate, "AudioWorklet").ToLocalChecked();

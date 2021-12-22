@@ -30,6 +30,7 @@ public constructors:
     event_target(event_target&&) noexcept = default;
     event_target& operator=(const event_target&) = default;
     event_target& operator=(event_target&&) noexcept = default;
+
     virtual ~event_target() {m_event_listeners.clear(true);};
 
 public methods:

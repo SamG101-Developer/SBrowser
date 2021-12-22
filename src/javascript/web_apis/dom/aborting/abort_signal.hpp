@@ -29,10 +29,12 @@ public constructors:
     abort_signal();
 
 public methods:
-    static abort_signal abort();
+    static abort_signal abort(std::any&& reason = ext::string{""});
+    void throw_if_aborted();
 
 public properties:
     ext::dom_property<bool> aborted;
+    ext::dom_property<std::any> reason;
 
 protected internal_properties:
     abort_signal_callbacks m_abort_algorithms;
