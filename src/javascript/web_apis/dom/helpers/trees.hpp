@@ -41,6 +41,8 @@ struct dom::helpers::trees {
     static ext::vector<nodes::text*> descendant_text_nodes(nodes::node* node_a);
     static ext::vector<nodes::text*> contiguous_text_nodes(nodes::node* node_a);
     static bool is_exclusive_text_node(nodes::node* node_a);
+
+    static nodes::node* common_ancestor(nodes::node* node_a, nodes::node* node_b);
 };
 
 

@@ -430,8 +430,5 @@ dom::ranges::range::to_json() {
 dom::nodes::node*
 dom::ranges::range::get_common_ancestor_container() const {
 
-    auto start_node_ancestors = helpers::trees::ancestors(start_container);
-    auto end_node_ancestors = helpers::trees::ancestors(end_container);
-
-    return start_node_ancestors.intersection(end_node_ancestors).back();
+    return helpers::trees::common_ancestor(start_container, end_container);
 }

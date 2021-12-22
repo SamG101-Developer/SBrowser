@@ -19,7 +19,7 @@ dom::helpers::range_internals::contains(
         nodes::node* node,
         ranges::range* range) {
 
-    return range->m_root == helpers::trees::root(node)
+    return range->m_root == trees::root(node)
             and position_relative(node, 0, range->start_container, range->start_offset) == AFTER
             and position_relative(node, trees::length(node), range->end_container, range->end_offset) == BEFORE;
 }
@@ -86,10 +86,59 @@ dom::helpers::range_internals::set_start_or_end(
 }
 
 
+dom::internal::boundary_point_comparison_position
+dom::helpers::range_internals::position_relative(
+        nodes::node* start_container,
+        unsigned long start_offset,
+        nodes::node* end_container,
+        unsigned long end_offset) {
+
+    assert(trees::root(start_container) == trees::root(end_container));
+
+    if (start_container == end_container)
+        return start_offset == end_offset ? EQUALS : start_offset < end_offset ? BEFORE : AFTER;
+
+    if (trees::is_following(start_container, end_container))
+        return static_cast<internal::boundary_point_comparison_position>(~position_relative(end_container, end_offset, start_container, start_offset));
+
+    if (trees::is_ancestor(start_container, end_container) and trees::index(trees::ancestors(end_container).item_after(start_container)) < start_offset)
+        return AFTER;
+
+    return BEFORE;
+}
+
+
+std::tuple<dom::nodes::node*, dom::nodes::node*, ext::vector<dom::nodes::node*>>
+dom::helpers::range_internals::get_range_helpers_variables(
+        ranges::range* range,
+        nodes::node* start_container,
+        nodes::node* end_container) {
+
+    auto* common_ancestor = trees::common_ancestor(start_container, end_container);
+
+    nodes::node* first_partially_contained_child = not trees::is_ancestor(start_container, end_container)
+            ? common_ancestor->child_nodes->filter([range](auto* node) -> bool {return partially_contains(node, range);}).front()
+            : nullptr;
+
+    nodes::node* last_partially_contained_child = not trees::is_ancestor(end_container, start_container)
+            ? common_ancestor->child_nodes->filter([range](auto* node) -> bool {return partially_contains(node, range);}).back()
+            : nullptr;
+
+    auto contained_children = common_ancestor->child_nodes->filter([range](auto* node) -> bool {return contains(node, range);});
+
+    exceptions::throw_v8_exception(
+            "children of the common ancestor of the start and end container of a range must be non-document_type nodes",
+            HIERARCHY_REQUEST_ERR,
+            [contained_children] -> bool {return contained_children.any_of([](auto* contained_child) -> bool {return dynamic_cast<nodes::document_type*>(contained_child);});});
+
+    return std::make_tuple(first_partially_contained_child, last_partially_contained_child, contained_children);
+}
+
+
 dom::nodes::node*
 dom::helpers::range_internals::check_parent_exists(nodes::node* node) {
 
-    helpers::exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception(
             "node must have a parent",
             INVALID_NODE_TYPE_ERR,
             [node] -> bool {return not node->parent_node;});
@@ -116,10 +165,10 @@ dom::helpers::range_internals::clone_character_data_and_append(
 
     auto* character_data = dynamic_cast<nodes::character_data*>(node);
     auto* clone = dynamic_cast<nodes::character_data*>(character_data->clone_node());
-    clone->data = helpers::texts::substring_data(character_data, start_offset, end_offset - start_offset);
+    clone->data = texts::substring_data(character_data, start_offset, end_offset - start_offset);
 
-    helpers::mutation_algorithms::append(clone, fragment);
-    if (replace) helpers::texts::replace_data(character_data, start_offset, end_offset, "");
+    mutation_algorithms::append(clone, fragment);
+    if (replace) texts::replace_data(character_data, start_offset, end_offset, "");
 
     return fragment;
 }
@@ -135,7 +184,7 @@ dom::helpers::range_internals::append_to_sub_fragment(
         unsigned long end_offset) {
 
     auto* clone = node->clone_node();
-    helpers::mutation_algorithms::append(clone, fragment);
+    mutation_algorithms::append(clone, fragment);
 
     auto* sub_range = new dom::ranges::range{};
     sub_range->start_container = start_container;
@@ -144,7 +193,7 @@ dom::helpers::range_internals::append_to_sub_fragment(
     sub_range->end_offset = end_offset;
 
     auto* sub_fragment = sub_range->extract_contents();
-    helpers::mutation_algorithms::append(sub_fragment, clone);
+    mutation_algorithms::append(sub_fragment, clone);
 }
 
 
@@ -154,11 +203,9 @@ dom::helpers::range_internals::create_new_node_and_offset(
         nodes::node* end_container,
         unsigned long start_offset) {
 
-    auto start_container_ancestors = helpers::trees::ancestors(start_container);
-    auto end_container_ancestors = helpers::trees::ancestors(end_container);
-    auto* common_ancestor = start_container_ancestors.intersection(end_container_ancestors).front();
+    auto* common_ancestor = helpers::trees::common_ancestor(start_container, end_container);
 
-    return helpers::trees::is_ancestor(start_container, end_container)
+    return trees::is_ancestor(start_container, end_container)
             ? std::make_tuple(start_container, start_offset)
-            : std::make_tuple(common_ancestor, helpers::trees::index(common_ancestor) + 1);
+            : std::make_tuple(common_ancestor, trees::index(common_ancestor) + 1);
 }

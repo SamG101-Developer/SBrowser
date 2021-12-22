@@ -155,13 +155,16 @@ dom::helpers::trees::child_text_content(nodes::node* node_a) {
 }
 
 
-ext::vector<dom::nodes::text*> dom::helpers::trees::descendant_text_nodes(nodes::node* node_a) {
+ext::vector<dom::nodes::text*>
+dom::helpers::trees::descendant_text_nodes(nodes::node* node_a) {
     return descendants(node_a).template cast_all<nodes::text*>();
 }
 
 
-ext::vector<dom::nodes::text*> dom::helpers::trees::contiguous_text_nodes(nodes::node* node_a) {
-        ext::vector<nodes::node*> siblings = node_a->parent_node->child_nodes;
+ext::vector<dom::nodes::text*>
+dom::helpers::trees::contiguous_text_nodes(nodes::node* node_a) {
+
+    ext::vector<nodes::node*> siblings = node_a->parent_node->child_nodes;
 
     return ext::vector<nodes::text*>{}
             .extend(siblings.slice(siblings.find(node_a), siblings.length()).cast_all<nodes::text*>())
@@ -172,3 +175,17 @@ ext::vector<dom::nodes::text*> dom::helpers::trees::contiguous_text_nodes(nodes:
 bool dom::helpers::trees::is_exclusive_text_node(nodes::node* node_a) {
     return not dynamic_cast<nodes::cdata_section*>(node_a) and dynamic_cast<nodes::text*>(node_a);
 }
+
+
+dom::nodes::node*
+dom::helpers::trees::common_ancestor(
+        nodes::node* node_a,
+        nodes::node* node_b) {
+
+    auto node_a_ancestors = ancestors(node_a);
+    auto node_b_ancestors = ancestors(node_b);
+    return node_a_ancestors.intersection(node_b_ancestors).back();
+}
+
+
+
