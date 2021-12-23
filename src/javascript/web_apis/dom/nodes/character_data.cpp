@@ -1,12 +1,15 @@
 #include "character_data.hpp"
 
+#include <dom/helpers/texts.hpp>
+#include <dom/helpers/trees.hpp>
+
 
 dom::nodes::character_data::character_data()
         : node()
         , mixins::child_node<dom::nodes::character_data>()
         , mixins::non_document_type_child_node<dom::nodes::character_data>() {
 
-    length.get = [this] {get_length();};
+    length.get = [this] {return get_length();};
 }
 
 

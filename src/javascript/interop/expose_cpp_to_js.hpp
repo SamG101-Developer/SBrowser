@@ -12,6 +12,7 @@
 #include <dom/mixins/child_node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
 #include <dom/mixins/document_or_shadow_root.hpp>
+#include <dom/mixins/non_document_type_child_node.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
@@ -117,6 +118,12 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("adoptedStyleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::adopted_style_sheets)
             .auto_wrap_objects();
 
+    v8pp::class_<dom::mixins::non_document_type_child_node<dom::nodes::node>> v8_non_document_type_child_node{isolate};
+    v8_non_document_type_child_node
+            .var("previousElementSibling", &dom::mixins::non_document_type_child_node<dom::nodes::node>::previous_element_sibling)
+            .var("nextElementSibling", &dom::mixins::non_document_type_child_node<dom::nodes::node>::next_element_sibling)
+            .auto_wrap_objects();
+
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
     v8_attr
             .inherit<dom::nodes::node>()
@@ -136,6 +143,7 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8_character_data
             .inherit<dom::nodes::node>()
             .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
+            .inherit<dom::mixins::non_document_type_child_node<dom::nodes::character_data>>()
 
             .function("substringData", &dom::nodes::character_data::substring_data)
             .function("appendData", &dom::nodes::character_data::append_data)
@@ -244,6 +252,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .inherit<dom::nodes::node>()
             .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
             .inherit<dom::mixins::document_or_element_node<dom::nodes::element>>()
+            .inherit<dom::mixins::non_document_type_child_node<dom::nodes::element>>()
 
             .function("hasAttributes", &dom::nodes::element::has_attributes)
             .function("hasAttribute", &dom::nodes::element::has_attribute)

@@ -4,10 +4,17 @@
 
 #include <dom/nodes/node.hpp>
 
+#include <dom/mixins/child_node.hpp>
+#include <dom/mixins/non_document_type_child_node.hpp>
+
 namespace dom::nodes {class character_data;}
 
 
-class dom::nodes::character_data : public node {
+class dom::nodes::character_data
+        : public node
+        , public mixins::child_node<character_data>
+        , public mixins::non_document_type_child_node<character_data> {
+
 public constructors:
     character_data();
 
@@ -25,7 +32,7 @@ public properties:
 private accessors:
     inline ext::string get_node_value() const override;
     inline ext::string get_text_content() const override;
-    inline unsigned long get_length() const override;
+    inline unsigned long get_length() const;
 
     inline void set_node_value(ext::cstring& val) override;
     inline void set_text_content(ext::cstring& val) override;

@@ -131,7 +131,7 @@ public:
 
     __forceinline operator bool() requires (not std::is_same_v<T, bool>) {return std::is_same_v<T, std::any> ? ext::any_cast<bool>(m_value) : (bool)m_value;}
 
-protected:
+public:
     std::function<void __fastcall ( )> del;
     std::function<T    __fastcall ( )> get;
     std::function<void __fastcall (T)> set;
