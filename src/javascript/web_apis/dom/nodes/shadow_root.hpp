@@ -3,6 +3,7 @@
 #define SBROWSER_SHADOW_ROOT_HPP
 
 #include <dom/nodes/document_fragment.hpp>
+#include <dom/mixins/document_or_shadow_root.hpp>
 
 namespace dom::nodes {class shadow_root;}
 

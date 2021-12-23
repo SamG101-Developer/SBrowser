@@ -10,6 +10,7 @@
 
 #include <dom/nodes/node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
+#include <dom/mixins/document_or_shadow_root.hpp>
 
 #include <QtWidgets/QScrollArea>
 
@@ -78,7 +79,7 @@ class dom::nodes::document
         , public mixins::non_element_parent_node<document>
         , public mixins::parent_node<document>
         , public mixins::document_or_shadow_root<document>
-        , public mixins::document_or_element<document>
+        , public mixins::document_or_element_node<document>
         , public ext::listlike<node> {
 
 friends

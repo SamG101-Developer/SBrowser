@@ -11,6 +11,7 @@
 
 #include <dom/mixins/child_node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
+#include <dom/mixins/document_or_shadow_root.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
@@ -109,6 +110,13 @@ void javascript::interop::expose_cpp_to_js::expose(
             .function("getElementsByClassName", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_class_name)
             .auto_wrap_objects();
 
+    v8pp::class_<dom::mixins::document_or_shadow_root<dom::nodes::node>> v8_document_or_shadow_root{isolate};
+    v8_document_or_shadow_root
+            .var("activeElement", &dom::mixins::document_or_shadow_root<dom::nodes::node>::active_element)
+            .var("styleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::style_sheets)
+            .var("adoptedStyleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::adopted_style_sheets)
+            .auto_wrap_objects();
+
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
     v8_attr
             .inherit<dom::nodes::node>()
@@ -150,6 +158,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .ctor<>()
             .inherit<dom::nodes::node>()
             .inherit<dom::mixins::document_or_element_node<dom::nodes::document>>()
+            .inherit<dom::mixins::document_or_shadow_root<dom::nodes::document>>()
 
             .function("createElement", &dom::nodes::document::create_element)
             .function("createElementNS", &dom::nodes::document::create_element_ns)
@@ -358,6 +367,8 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::nodes::shadow_root> v8_shadow_root{isolate};
     v8_shadow_root
             .inherit<dom::nodes::document_fragment>()
+            .inherit<dom::mixins::document_or_shadow_root<dom::nodes::shadow_root>>()
+
             .var("mode", &dom::nodes::shadow_root::mode, true)
             .var("delegatesFocus", &dom::nodes::shadow_root::delegates_focus, true)
             .var("slotAssignment", &dom::nodes::shadow_root::slot_assignment, true)
