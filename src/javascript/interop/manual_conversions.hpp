@@ -148,4 +148,8 @@ struct v8pp::convert<ext::infinity<T>> {
 };
 
 
+template <typename T>
+struct v8pp::is_wrapped_class<ext::infinity<T>> : std::false_type{};
+
+
 #endif //SBROWSER_MANUAL_CONVERSIONS_HPP

@@ -14,5 +14,5 @@ dom::aborting::abort_controller::~abort_controller() {
 
 
 void dom::aborting::abort_controller::abort(std::any&& reason) {
-    aborting::signal_abort(signal, reason);
+    helpers::signal_aborting::signal_abort(signal, reason);
 }

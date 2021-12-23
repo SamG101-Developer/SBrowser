@@ -4,10 +4,11 @@
 
 #include <limits>
 
-namespace ext {template <typename T, typename = std::is_arithmetic<T>> class infinity;}
+namespace {template <typename T> concept arithmetic = std::is_arithmetic_v<T>;}
+namespace ext {template <arithmetic T> class infinity;}
 
 
-template <typename T, typename>
+template <arithmetic T>
 struct ext::infinity {
 
     operator T() const {return std::numeric_limits<T>::infinity() * (m_positive ? 1 : -1);}

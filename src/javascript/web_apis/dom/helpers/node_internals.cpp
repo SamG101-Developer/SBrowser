@@ -203,3 +203,21 @@ dom::helpers::node_internals::advisory_information(
             ? advisory_information((html::elements::html_element)element->parent_element)
             : "";
 }
+
+
+template <typename ...nodes_or_strings>
+dom::nodes::node*
+dom::helpers::node_internals::convert_nodes_into_node(
+        nodes::document* document,
+        nodes_or_strings ...nodes) {
+
+    ext::vector<nodes::node*> converted_nodes{};
+    ext::vector{nodes...}.template for_each([&converted_nodes](auto* node) -> void {converted_nodes.append(dynamic_cast<nodes::node*>(node) ? node : new nodes::text{node});});
+
+    auto* node = converted_nodes.front();
+    if (node) return node;
+
+    node = new nodes::document_fragment{};
+    converted_nodes.template for_each([&master_node = node](auto* node) -> void {helpers::mutation_algorithms::append(node, master_node);});
+    return node;
+}

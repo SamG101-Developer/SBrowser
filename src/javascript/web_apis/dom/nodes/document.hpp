@@ -11,6 +11,7 @@
 #include <dom/nodes/node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
 #include <dom/mixins/document_or_shadow_root.hpp>
+#include <dom/mixins/non_element_parent_node.hpp>
 
 #include <QtWidgets/QScrollArea>
 

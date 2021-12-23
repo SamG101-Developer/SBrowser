@@ -7,6 +7,13 @@
 
 
 template <typename T>
+dom::mixins::non_document_type_child_node<T>::non_document_type_child_node() {
+    previous_element_sibling.get = [this] {return get_previous_element_sibling();};
+    next_element_sibling.get = [this] {return get_next_element_sibling();};
+}
+
+
+template <typename T>
 dom::nodes::element*
 dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const {
     const T* base = reinterpret_cast<const T*>(this);

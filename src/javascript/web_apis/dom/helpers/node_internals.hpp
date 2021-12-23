@@ -35,6 +35,8 @@ struct dom::helpers::node_internals {
     static ext::string advisory_information(html::elements::html_element* element);
 
     static bool document_has_style_sheets_blocking_scripts(nodes::document* document);
+
+    template <typename ...nodes_or_strings> static nodes::node* convert_nodes_into_node(nodes::document* document, nodes_or_strings... nodes);
 };
 
 

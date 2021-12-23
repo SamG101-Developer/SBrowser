@@ -5,6 +5,7 @@
 #include <dom/nodes/element.hpp>
 
 #include <dom/helpers/mutation_algorithms.hpp>
+#include <dom/helpers/node_internals.hpp>
 #include <dom/helpers/trees.hpp>
 
 
@@ -18,7 +19,7 @@ dom::mixins::child_node<T>::before(
 
     if (nodes::node* parent = base->parent_node) {
 
-        nodes::node* node = convert_nodes_into_node(base->owner_document, nodes...);
+        nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_previous_sibling = helpers::trees::all_preceding_siblings(this)
                 .filter([nodes = ext::vector{nodes...}](auto* node) -> void {return not nodes.contains(node);})
                 .front();
@@ -44,7 +45,7 @@ dom::mixins::child_node<T>::after(
 
     if (nodes::node* parent = base->parent_node) {
 
-        nodes::node* node = convert_nodes_into_node(base->owner_document, nodes...);
+        nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_next_sibling = helpers::trees::all_following_siblings(this)
                 .filter([nodes = ext::vector{nodes...}](auto* node) -> void {return not nodes.contains(node);})
                 .front();
@@ -65,7 +66,7 @@ dom::mixins::child_node<T>::replace_with(
     T* base = reinterpret_cast<T*>(this);
 
     if (nodes::node* parent = base->parent_node) {
-        nodes::node* node = convert_nodes_to_node(base->owner_document, nodes...);
+        nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_next_sibling = helpers::trees::all_following_siblings(this)
                 .filter([nodes = ext::vector{nodes...}](auto* node) -> void {return not nodes.contains(node);})
                 .front();

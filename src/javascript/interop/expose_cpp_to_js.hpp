@@ -13,6 +13,7 @@
 #include <dom/mixins/document_or_element_node.hpp>
 #include <dom/mixins/document_or_shadow_root.hpp>
 #include <dom/mixins/non_document_type_child_node.hpp>
+#include <dom/mixins/non_element_parent_node.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
@@ -124,6 +125,11 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("nextElementSibling", &dom::mixins::non_document_type_child_node<dom::nodes::node>::next_element_sibling)
             .auto_wrap_objects();
 
+    v8pp::class_<dom::mixins::non_element_parent_node<dom::nodes::node>> v8_non_element_parent_node{isolate};
+    v8_non_element_parent_node
+            .function("getElementById", &dom::mixins::non_element_parent_node<dom::nodes::node>::get_element_by_id)
+            .auto_wrap_objects();
+
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
     v8_attr
             .inherit<dom::nodes::node>()
@@ -167,6 +173,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .inherit<dom::nodes::node>()
             .inherit<dom::mixins::document_or_element_node<dom::nodes::document>>()
             .inherit<dom::mixins::document_or_shadow_root<dom::nodes::document>>()
+            .inherit<dom::mixins::non_element_parent_node<dom::nodes::document>>()
 
             .function("createElement", &dom::nodes::document::create_element)
             .function("createElementNS", &dom::nodes::document::create_element_ns)
@@ -184,10 +191,10 @@ void javascript::interop::expose_cpp_to_js::expose(
             .function("adoptNode", &dom::nodes::document::adopt_node)
 
             .function("getElementsByName", &dom::nodes::document::get_elements_by_name)
-            .function("open", &dom::nodes::document::open)
+//            .function("open", &dom::nodes::document::open)
             .function("close", &dom::nodes::document::close)
-            .function("write", &dom::nodes::document::write)
-            .function("writeln", &dom::nodes::document::writeln)
+//            .function("write", &dom::nodes::document::write)
+//            .function("writeln", &dom::nodes::document::writeln)
             .function("hasFocus", &dom::nodes::document::has_focus)
             .function("execCommand", &dom::nodes::document::exec_command)
             .function("queryCommandEnabled", &dom::nodes::document::query_command_enabled)
@@ -233,8 +240,9 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     v8pp::class_<dom::nodes::document_fragment> v8_document_fragment{isolate};
     v8_document_fragment
-            .inherit<dom::nodes::node>()
             .ctor<>()
+            .inherit<dom::nodes::node>()
+            .inherit<dom::mixins::non_element_parent_node<dom::nodes::document_fragment>>()
             .auto_wrap_objects();
 
     v8pp::class_<dom::nodes::document_type> v8_document_type{isolate};
@@ -504,7 +512,7 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("ShadowRoot", v8_shadow_root)
                     .class_("Text", v8_text)
                     .class_("Window", v8_window)
-                    .class_("WindowProxy", v8_window_proxy);;
+                    .class_("WindowProxy", v8_window_proxy);
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }

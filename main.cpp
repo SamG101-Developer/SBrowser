@@ -7,10 +7,10 @@
 #else
 
 #include <iostream>
-#include "test/test_v8.hpp"
-#include "test/test_qt.hpp"
+#include "tests/test_v8.hpp"
+#include "tests/test_qt.hpp"
 
-#include <javascript/interop/manual_conversions.hpp>
+#include <javascript/interop/expose_cpp_to_js.hpp>
 
 
 int main(int argc, char** argv) {

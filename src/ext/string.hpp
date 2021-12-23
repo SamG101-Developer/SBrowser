@@ -14,9 +14,9 @@
 #include <QtCore/QString>
 #include <v8.h>
 
-const ext::vector<std::string> STRING_BOOLEANS{"true", "false", "1", "0"};
-const ext::vector<std::string> STRING_ALPHAS  {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};
-const ext::vector<std::string> STRING_HEX     {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};
+static ext::vector<std::string> get_STRING_BOOLEANS() {return {"true", "false", "1", "0"};}
+static ext::vector<std::string> get_STRING_ALPHAS() {return {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};}
+static ext::vector<std::string> get_STRING_HEX() {return {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};}
 
 namespace ext {
     class string;
@@ -29,14 +29,13 @@ namespace ext {
 }
 
 
-class ext::string: public ext::iterable<char, std::string> {
-public friends:
+class ext::string : public ext::iterable<char, std::string> {
     friend std::ostream& operator<<(std::ostream& stream, ext::cstring& string) {
         stream << string.m_iterable;
         return stream;
     };
 
-public constructors:
+public:
     string() = default;
     string(const string&) = default;
     string(string&&) noexcept = default;
@@ -51,7 +50,7 @@ public constructors:
     string(const QString& other) {m_iterable = other.toStdString();}
     string(QString&& other) {m_iterable = std::forward<QString&>(other).toStdString();}
 
-public methods:
+public:
     inline ext::string& to_lowercase() {
         std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
         return *this;
@@ -76,12 +75,12 @@ public methods:
     }
 
     inline ext::string& ltrim() {
-        m_iterable.erase(begin(), begin() + m_iterable.find_first_not_of(" "));
+        m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(" "));
         return *this;
     }
 
     inline ext::string& rtrim() {
-        m_iterable.erase(begin() + m_iterable.find_last_not_of(" ") + 1, end());
+        m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(" ") + 1, end());
         return *this;
     }
 
@@ -109,9 +108,9 @@ public methods:
 
     inline bool is_double() const {return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c) or c == *".";});}
     inline bool is_integer() const {return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c);});}
-    inline bool is_bool() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return STRING_BOOLEANS.contains(std::string{character});});}
-    inline bool is_alpha() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return STRING_ALPHAS.contains(std::string{character});});}
-    inline bool is_hex() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return STRING_HEX.contains(std::string{character});});}
+    inline bool is_bool() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_BOOLEANS().contains(std::string{character});});}
+    inline bool is_alpha() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});}
+    inline bool is_hex() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});}
 
     inline double to_double() const {return std::stod(m_iterable);}
     inline long long to_integer() const {return std::stoll(m_iterable);}

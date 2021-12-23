@@ -13,6 +13,8 @@ namespace dom {
 template <typename T>
 class dom::mixins::non_document_type_child_node {
 public:
+    non_document_type_child_node();
+
     ext::dom_property<nodes::element*> previous_element_sibling;
     ext::dom_property<nodes::element*> next_element_sibling;
 
