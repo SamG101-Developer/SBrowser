@@ -7,7 +7,9 @@
 #include <ext/listlike.hpp>
 #include <ext/map.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
+
 #include <dom/nodes/node.hpp>
+#include <dom/mixins/document_or_element_node.hpp>
 
 #include <QtWidgets/QScrollArea>
 

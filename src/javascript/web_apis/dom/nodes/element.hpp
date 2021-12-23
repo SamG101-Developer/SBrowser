@@ -5,6 +5,8 @@
 #include <queue>
 #include <dom/nodes/node.hpp>
 
+#include <dom/mixins/child_node.hpp>
+
 namespace dom {
     namespace helpers {
         struct attributes;

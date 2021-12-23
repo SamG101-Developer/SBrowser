@@ -9,6 +9,9 @@
 #include <dom/events/event.hpp>
 #include <dom/events/custom_event.hpp>
 
+#include <dom/mixins/child_node.hpp>
+#include <dom/mixins/document_or_element_node.hpp>
+
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
 #include <dom/nodes/character_data.hpp>
@@ -95,6 +98,17 @@ void javascript::interop::expose_cpp_to_js::expose(
 
             .auto_wrap_objects();
 
+    v8pp::class_<dom::mixins::child_node<dom::nodes::node>> v8_child_node{isolate};
+    v8_child_node
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::mixins::document_or_element_node<dom::nodes::node>> v8_document_or_element_node{isolate};
+    v8_document_or_element_node
+            .function("getElementsByTagName", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_tag_name)
+            .function("getElementsByTagNameNS", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_tag_name_ns)
+            .function("getElementsByClassName", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_class_name)
+            .auto_wrap_objects();
+
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
     v8_attr
             .inherit<dom::nodes::node>()
@@ -113,6 +127,8 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::nodes::character_data> v8_character_data{isolate};
     v8_character_data
             .inherit<dom::nodes::node>()
+            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
+
             .function("substringData", &dom::nodes::character_data::substring_data)
             .function("appendData", &dom::nodes::character_data::append_data)
             .function("insertData", &dom::nodes::character_data::insert_data)
@@ -133,6 +149,8 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8_document
             .ctor<>()
             .inherit<dom::nodes::node>()
+            .inherit<dom::mixins::document_or_element_node<dom::nodes::document>>()
+
             .function("createElement", &dom::nodes::document::create_element)
             .function("createElementNS", &dom::nodes::document::create_element_ns)
             .function("createDocumentFragment", &dom::nodes::document::create_document_fragment)
@@ -205,6 +223,8 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::nodes::document_type> v8_document_type{isolate};
     v8_document_type
             .inherit<dom::nodes::node>()
+            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
+
             .var("name", &dom::nodes::document_type::name)
             .var("publicId", &dom::nodes::document_type::public_id)
             .var("systemId", &dom::nodes::document_type::system_id)
@@ -213,6 +233,9 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::nodes::element> v8_element{isolate};
     v8_element
             .inherit<dom::nodes::node>()
+            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
+            .inherit<dom::mixins::document_or_element_node<dom::nodes::element>>()
+
             .function("hasAttributes", &dom::nodes::element::has_attributes)
             .function("hasAttribute", &dom::nodes::element::has_attribute)
             .function("hasAttributeNS", &dom::nodes::element::has_attribute_ns)
