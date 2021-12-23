@@ -39,9 +39,14 @@ public:
     vector& operator=(const vector&) = default;
     vector& operator=(vector&&) noexcept = default;
 
-    template <typename iterator> vector(iterator begin, iterator end) requires (is_iterator_v<iterator>) {this->m_iterable = std::vector<T>{begin, end};}
+    template <typename iterator>
+    vector(iterator begin, iterator end) requires (is_iterator_v<iterator>) {
+        this->m_iterable = std::vector<T>{begin, end};
+    }
 
-    template <typename ...args> vector(args&&... items) {this->m_iterable = std::vector<T>{items...};}
+    template <typename ...args> vector(args&&... items) {
+        this->m_iterable = std::vector<T>{items...};
+    }
 
     virtual ~vector() {
         this->m_iterable.clear();
