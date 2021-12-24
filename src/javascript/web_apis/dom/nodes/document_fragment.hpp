@@ -4,6 +4,7 @@
 
 #include <dom/nodes/node.hpp>
 #include <dom/mixins/non_element_parent_node.hpp>
+#include <dom/mixins/parent_node.hpp>
 
 namespace dom::nodes {class document_fragment;}
 

@@ -2,6 +2,8 @@
 #ifndef SBROWSER_STRING_SWITCH_HPP
 #define SBROWSER_STRING_SWITCH_HPP
 
+#include <ext/string.hpp>
+
 
 namespace {
 
@@ -10,22 +12,21 @@ constexpr unsigned long b = 76963;
 constexpr unsigned long c = 86969;
 constexpr unsigned long d = 00037;
 
-constexpr std::size_t hashext::cstring&(const char* string) {
+constexpr size_t hash(const char* s) {
     auto h = d;
-    while (*string) {
-        h = (h * a) ^ (string[0] * b);
-        string++;
+    while (*s) {
+        h = (h * a) ^ (s[0] * b);
+        s++;
     }
 
     return h;
 }
-
 }
 
 
-#define string_switch(string) switch(hashext::cstring&(string))
-#define string_case(string)   case  (hashext::cstring&(string))
-#define string_default        default
+#define string_switch(string) switch(hash(string))
+#define string_case(string) case(hash(string))
+#define string_default default
 
 
 #endif //SBROWSER_STRING_SWITCH_HPP

@@ -5,6 +5,8 @@
 
 #include <javascript/environment/realms.hpp>
 
+#include <dom/events/event.hpp>
+
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/event_dispatching.hpp>
 #include <dom/helpers/exceptions.hpp>
@@ -18,11 +20,12 @@
 #include <dom/nodes/cdata_section.hpp>
 #include <dom/nodes/character_data.hpp>
 #include <dom/nodes/comment.hpp>
+#include <dom/nodes/document_fragment.hpp>
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/processing_instruction.hpp>
 #include <dom/nodes/text.hpp>
 
-#include <dom/events/event.hpp>
+#include <dom/other/dom_implementation.hpp>
 
 #include <dom/ranges/range.hpp>
 
@@ -66,7 +69,7 @@ dom::nodes::document::document()
 
     m_type = "xml";
     m_mode = "no-quirks";
-    m_origin = javascript::realms::surrounding_agent()->Global()->Get(javascript::realms:surrounding_agent(), "origin");
+    m_origin = javascript::realms::surrounding_agent().get<ext::cstring&>("origin");
 
     m_rendered_widget = new QScrollArea{nullptr};
     render()->setWidget(new QWidget{render()});
@@ -110,9 +113,9 @@ dom::nodes::document::create_element_ns(
 dom::nodes::document_fragment*
 dom::nodes::document::create_document_fragment() const {
 
-    auto* document_fragment = new document_fragment{};
-    document_fragment->document = this;
-    return document_fragment;
+    auto* document_fragment_node = new document_fragment{};
+    document_fragment_node->owner_document = this;
+    return document_fragment_node;
 }
 
 
@@ -131,12 +134,12 @@ dom::nodes::document::create_cdata_section_node(ext::cstring& data) const {
 
     helpers::exceptions::throw_v8_exception(
             "html documents cannot create cdata_section nodes",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
+            NOT_SUPPORTED_ERR,
             [this] -> bool {return m_type == "html";});
 
     helpers::exceptions::throw_v8_exception(
             "cdata_section data cannot contain ']]>'",
-            helpers::exceptions::INVALID_CHARACTER_ERR,
+            INVALID_CHARACTER_ERR,
             [data] -> bool {return data.contains("]]>");});
 
     auto* cdata_section_node = new cdata_section{};
@@ -163,7 +166,7 @@ dom::nodes::document::create_processing_instruction(
 
     helpers::exceptions::throw_v8_exception(
             "processing_instruction data cannot contain '?>'",
-            helpers::exceptions::INVALID_CHARACTER_ERR,
+            INVALID_CHARACTER_ERR,
             [data] -> bool {return data.contains("?>");});
 
     auto* processing_instruction_node = new processing_instruction{};
@@ -254,12 +257,12 @@ dom::nodes::document::import_node(
 
     helpers::exceptions::throw_v8_exception(
             "cannot import a document node",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
+            NOT_SUPPORTED_ERR,
             [node] -> bool {return dynamic_cast<document*>(node);});
 
     helpers::exceptions::throw_v8_exception(
             "cannot import a shadowroot node",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
+            NOT_SUPPORTED_ERR,
             [node] -> bool {return helpers::shadows::is_shadow_root(node);});
 
     return helpers::node_internals::clone(node, this, true);
@@ -271,12 +274,12 @@ dom::nodes::document::adopt_node(node* node) {
 
     helpers::exceptions::throw_v8_exception(
             "cannot adopt a document node",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
+            NOT_SUPPORTED_ERR,
             [node] -> bool {return dynamic_cast<document*>(node);});
 
     helpers::exceptions::throw_v8_exception(
             "cannot adopt a shadowroot node",
-            helpers::exceptions::HIERARCHY_REQUEST_ERR,
+            HIERARCHY_REQUEST_ERR,
             [node] -> bool {return helpers::shadows::is_shadow_root(node);});
 }
 
@@ -306,7 +309,7 @@ dom::nodes::document::open(
 
     helpers::exceptions::throw_v8_exception(
             "cannot open a non-active document",
-            helpers::exceptions::INVALID_ACCESS_ERR,
+            INVALID_ACCESS_ERR,
             [this] -> bool {return not helpers::node_internals::is_document_fully_active(this);});
 
     return html::helpers::elements::window_open_steps(this);
@@ -318,12 +321,12 @@ dom::nodes::document::close() const {
 
     helpers::exceptions::throw_v8_exception(
             "cannot close an xml document",
-            helpers::exceptions::INVALID_STATE_ERR,
+            INVALID_STATE_ERR,
             [this] -> bool {return m_type == "xml";});
 
     helpers::exceptions::throw_v8_exception(
             "cannot close a document whose dynamic-markup-counter > 0",
-            helpers::exceptions::INVALID_STATE_ERR,
+            INVALID_STATE_ERR,
             [this] -> bool {return m_throw_on_dynamic_markup_insertion_counter > 0;});
 
     // TODO
@@ -399,7 +402,7 @@ dom::nodes::document::caret_position_from_point(
 dom::nodes::event_target*
 dom::nodes::document::get_the_parent(events::event* event) {
 
-    return event->type == "load" or not m_browsing_context ? nullptr : javascript::realms::relevant_global_object();
+    return event->type == "load" or not m_browsing_context ? nullptr : &javascript::realms::relevant_global_object();
 }
 
 html::elements::html_html_element* dom::nodes::document::get_m_html_element() const {
@@ -502,12 +505,12 @@ dom::nodes::document::set_body(html::elements::html_body_element* val) {
 
     helpers::exceptions::throw_v8_exception(
             "body attribute must be a HTMLBodyElement",
-            helpers::exceptions::HIERARCHY_REQUEST_ERR,
+            HIERARCHY_REQUEST_ERR,
             [val] -> bool {return dynamic_cast<html::elements::html_body_element*>(val);});
 
     helpers::exceptions::throw_v8_exception(
             "settings a null body attribute requires a document element to be present",
-            helpers::exceptions::HIERARCHY_REQUEST_ERR,
+            HIERARCHY_REQUEST_ERR,
             [val, this] -> bool {return not val and not document_element;});
 
     helpers::mutation_algorithms::append(val, document_element);
@@ -521,7 +524,7 @@ dom::nodes::document::set_cookie(ext::cstring& val) {
 
     helpers::exceptions::throw_v8_exception(
             "cannot set the cookie of a document that has an opaque origin",
-            helpers::exceptions::SECURITY_ERR,
+            SECURITY_ERR,
             [this] -> bool {return m_origin == "opaque";});
 
     cookie << val;
@@ -537,6 +540,6 @@ void dom::nodes::document::set_ready_state(ext::cstring& val) {
 
 dom::nodes::element* dom::nodes::document::get_scrolling_element() const {
     return m_mode == "quirks" and body
-            ? body
+            ? ext::property_dynamic_cast<element*>(body)
             : dynamic_cast<element*>(helpers::trees::root(this));
 }

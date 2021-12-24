@@ -39,8 +39,8 @@ public:
     string() = default;
     string(const string&) = default;
     string(string&&) noexcept = default;
-    ext::string& operator = (const string&) = default;
-    ext::string& operator = (string&&) noexcept = default;
+    ext::string& operator=(const string&) = default;
+    ext::string& operator=(string&&) noexcept = default;
 
     string(const std::string& other) {m_iterable = other;}; // TODO
     string(std::string&& other) noexcept {m_iterable = std::forward<std::string&>(other);}
@@ -95,7 +95,7 @@ public:
         std::size_t previous_position = 0;
 
         while (true) {
-            current_position = find(*delimiter.to_string_const_char_p(), previous_position);
+            current_position = find(*delimiter.c_str(), previous_position);
             if (current_position == std::string::npos) {
                 out.append(substring(previous_position));
                 return out;
@@ -112,16 +112,23 @@ public:
     inline bool is_alpha() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});}
     inline bool is_hex() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});}
 
-    inline double to_double() const {return std::stod(m_iterable);}
-    inline long long to_integer() const {return std::stoll(m_iterable);}
-    inline bool to_bool() const {return (bool)std::stoi(m_iterable);}
+    inline constexpr double to_double() const {
+        return std::stod(m_iterable);
+    }
 
+    inline constexpr long long to_integer() const {
+        return std::stoll(m_iterable);
+    }
 
-    inline std::string to_string_std() const {
+    inline constexpr bool to_bool() const {
+        return (bool)std::stoi(m_iterable);
+    }
+
+    inline constexpr std::string to_string_std() const {
         return m_iterable;
     }
 
-    inline const char* to_string_const_char_p() const {
+    inline constexpr const char* c_str() const {
         return m_iterable.c_str();
     }
 

@@ -16,7 +16,8 @@
 #include <dom/nodes/text.hpp>
 
 
-template <typename T> void
+template <typename T>
+dom::nodes::node*
 dom::helpers::node_internals::clone(
         T* node,
         nodes::document* document,

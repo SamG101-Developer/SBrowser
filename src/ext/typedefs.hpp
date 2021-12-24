@@ -3,9 +3,9 @@
 
 #include <ext/string.hpp>
 
-#define struct_string inline static const ext::string
+#define struct_string static constexpr const char*
 
-inline bool operator==(const std::function<void()>& function_a, const std::function<void()>& function_b) const {
+inline bool operator==(const std::function<void()>& function_a, const std::function<void()>& function_b) {
     return &function_a == &function_b;
 }
 

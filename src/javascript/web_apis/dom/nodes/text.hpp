@@ -2,8 +2,10 @@
 #ifndef SBROWSER_TEXT_HPP
 #define SBROWSER_TEXT_HPP
 
-#include <QtWidgets/QLabel>
+#include <dom/mixins/slottable.hpp>
 #include <dom/nodes/character_data.hpp>
+
+#include <QtWidgets/QLabel>
 
 namespace dom::nodes {class text;}
 

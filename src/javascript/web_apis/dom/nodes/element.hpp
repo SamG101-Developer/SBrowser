@@ -6,6 +6,10 @@
 #include <dom/nodes/node.hpp>
 
 #include <dom/mixins/child_node.hpp>
+#include <dom/mixins/document_or_element_node.hpp>
+#include <dom/mixins/non_document_type_child_node.hpp>
+#include <dom/mixins/parent_node.hpp>
+#include <dom/mixins/slottable.hpp>
 
 namespace dom {
     namespace helpers {
@@ -32,8 +36,8 @@ class dom::nodes::element
         , public mixins::non_document_type_child_node<element>
         , public mixins::child_node<element>
         , public mixins::slottable<element>
-        , public mixins::document_or_element<element>
-        , public css::cssom_view::mixins::scrolable<element>
+        , public mixins::document_or_element_node<element>
+        , public css::cssom_view::mixins::scrollable<element>
         , public css::cssom_view::mixins::geometry_utils<element> {
 
 friends

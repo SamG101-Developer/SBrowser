@@ -14,6 +14,8 @@
 #include <dom/mixins/document_or_shadow_root.hpp>
 #include <dom/mixins/non_document_type_child_node.hpp>
 #include <dom/mixins/non_element_parent_node.hpp>
+#include <dom/mixins/parent_node.hpp>
+#include <dom/mixins/slottable.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
@@ -30,6 +32,9 @@
 #include <dom/nodes/text.hpp>
 #include <dom/nodes/window.hpp>
 #include <dom/nodes/window_proxy.hpp>
+
+#include <dom/other/dom_exception.hpp>
+#include <dom/other/dom_implementation.hpp>
 
 #include <v8.h>
 #include <v8pp/class.hpp>
@@ -128,6 +133,25 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::mixins::non_element_parent_node<dom::nodes::node>> v8_non_element_parent_node{isolate};
     v8_non_element_parent_node
             .function("getElementById", &dom::mixins::non_element_parent_node<dom::nodes::node>::get_element_by_id)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::mixins::parent_node<dom::nodes::node>> v8_parent_node{isolate};
+    v8_parent_node
+//            .function("prepend", &dom::mixins::parent_node<dom::nodes::node>::prepend)
+//            .function("append", &dom::mixins::parent_node<dom::nodes::node>::append)
+//            .function("replaceChildren", &dom::mixins::parent_node<dom::nodes::node>::replace_children)
+            .function("querySelector", &dom::mixins::parent_node<dom::nodes::node>::query_selector)
+            .function("querySelectorAll", &dom::mixins::parent_node<dom::nodes::node>::query_selector_all)
+
+            .var("children", &dom::mixins::parent_node<dom::nodes::node>::children)
+            .var("firstElementChild", &dom::mixins::parent_node<dom::nodes::node>::first_element_child)
+            .var("lastElementChild", &dom::mixins::parent_node<dom::nodes::node>::last_element_child)
+            .var("childElementCount", &dom::mixins::parent_node<dom::nodes::node>::child_element_count)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::mixins::slottable<dom::nodes::node>> v8_slottable{isolate};
+    v8_slottable
+            .var("assignedSlot", &dom::mixins::slottable<dom::nodes::node>::assigned_slot)
             .auto_wrap_objects();
 
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
@@ -261,6 +285,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
             .inherit<dom::mixins::document_or_element_node<dom::nodes::element>>()
             .inherit<dom::mixins::non_document_type_child_node<dom::nodes::element>>()
+            .inherit<dom::mixins::slottable<dom::nodes::element>>()
 
             .function("hasAttributes", &dom::nodes::element::has_attributes)
             .function("hasAttribute", &dom::nodes::element::has_attribute)
@@ -397,6 +422,8 @@ void javascript::interop::expose_cpp_to_js::expose(
             .ctor<>()
             .ctor<ext::cstring&>()
             .inherit<dom::nodes::character_data>()
+            .inherit<dom::mixins::slottable<dom::nodes::text>>()
+
             .function("splitText", &dom::nodes::text::split_text)
             .var("wholeText", &dom::nodes::text::whole_text, true)
             .auto_wrap_objects();
@@ -489,6 +516,56 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("[[Window]]", &dom::nodes::window_proxy::s_window)
             .auto_wrap_objects();
 
+    v8pp::class_<dom::other::dom_exception> v8_dom_exception{isolate};
+    v8_dom_exception
+            .ctor<ext::cstring&, exception_type>()
+            .var("message", &dom::other::dom_exception::message)
+            .var("type", &dom::other::dom_exception::type)
+
+            .static_("INDEX_SIZE_ERR", exception_type::INDEX_SIZE_ERR)
+            .static_("DOMSTRING_SIZE_ERR", exception_type::DOMSTRING_SIZE_ERR)
+            .static_("HIERARCHY_REQUEST_ERR", exception_type::HIERARCHY_REQUEST_ERR)
+            .static_("WRONG_DOCUMENT_ERR", exception_type::WRONG_DOCUMENT_ERR)
+            .static_("INVALID_CHARACTER_ERR", exception_type::INVALID_CHARACTER_ERR)
+            .static_("NO_DATA_ALLOWED_ERR", exception_type::NO_DATA_ALLOWED_ERR)
+            .static_("NO_MODIFICATION_ALLOWED_ERR", exception_type::NO_MODIFICATION_ALLOWED_ERR)
+            .static_("NOT_FOUND_ERR", exception_type::NOT_FOUND_ERR)
+            .static_("NOT_SUPPORTED_ERR", exception_type::NOT_SUPPORTED_ERR)
+            .static_("INUSE_ATTRIBUTE_ERR", exception_type::INUSE_ATTRIBUTE_ERR)
+            .static_("INVALID_STATE_ERR", exception_type::INVALID_STATE_ERR)
+            .static_("SYNTAX_ERR", exception_type::SYNTAX_ERR)
+            .static_("INVALID_MODIFICATION_ERR", exception_type::INVALID_MODIFICATION_ERR)
+            .static_("NAMESPACE_ERR", exception_type::NAMESPACE_ERR)
+            .static_("INVALID_ACCESS_ERR", exception_type::INVALID_ACCESS_ERR)
+            .static_("VALIDATION_ERR", exception_type::VALIDATION_ERR)
+            .static_("TYPE_MISMATCH_ERR", exception_type::TYPE_MISMATCH_ERR)
+            .static_("SECURITY_ERR", exception_type::SECURITY_ERR)
+            .static_("NETWORK_ERR", exception_type::NETWORK_ERR)
+            .static_("ABORT_ERR", exception_type::ABORT_ERR)
+            .static_("URL_MISMATCH_ERR", exception_type::URL_MISMATCH_ERR)
+            .static_("QUOTA_EXCEEDED_ERR", exception_type::QUOTA_EXCEEDED_ERR)
+            .static_("TIMEOUT_ERR", exception_type::TIMEOUT_ERR)
+            .static_("INVALID_NODE_TYPE_ERR", exception_type::INVALID_NODE_TYPE_ERR)
+            .static_("DATA_CLONE_ERR", exception_type::DATA_CLONE_ERR)
+            .static_("ENCODING_ERR", exception_type::ENCODING_ERR)
+            .static_("NOT_READABLE_ERR", exception_type::NOT_READABLE_ERR)
+            .static_("UNKNOWN_ERR", exception_type::UNKNOWN_ERR)
+            .static_("CONSTRAINT_ERR", exception_type::CONSTRAINT_ERR)
+            .static_("DATA_ERR", exception_type::DATA_ERR)
+            .static_("TRANSACTION_INACTIVE_ERR", exception_type::TRANSACTION_INACTIVE_ERR)
+            .static_("READONLY_ERR", exception_type::READONLY_ERR)
+            .static_("VERSION_ERR", exception_type::VERSION_ERR)
+            .static_("OPERATION_ERR", exception_type::OPERATION_ERR)
+            .static_("NOT_ALLOWED_ERR", exception_type::NOT_ALLOWED_ERR)
+
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::other::dom_implementation> v8_dom_implementation{isolate};
+    v8_dom_implementation
+            .function("createDocumentType", &dom::other::dom_implementation::create_document_type)
+            .function("createDocument", &dom::other::dom_implementation::create_document)
+            .function("createHTMLDocument", &dom::other::dom_implementation::create_html_document)
+            .auto_wrap_objects();
 
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;
@@ -496,6 +573,9 @@ void javascript::interop::expose_cpp_to_js::expose(
     switch(module_type) {
         case javascript::environment::modules::module_type::window: {
             v8_module
+                    .class_("AbortController", v8_abort_controller)
+                    .class_("AbortSignal", v8_abort_signal)
+
                     .class_("CustomEvent", v8_custom_event)
                     .class_("Event", v8_event)
 
@@ -512,7 +592,10 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("ShadowRoot", v8_shadow_root)
                     .class_("Text", v8_text)
                     .class_("Window", v8_window)
-                    .class_("WindowProxy", v8_window_proxy);
+                    .class_("WindowProxy", v8_window_proxy)
+
+                    .class_("DomException", v8_dom_exception)
+                    .class_("DomImplementation", v8_dom_implementation);;
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
@@ -521,8 +604,8 @@ void javascript::interop::expose_cpp_to_js::expose(
             v8_module
                     .class_("CustomEvent", v8_custom_event)
                     .class_("Event", v8_event)
-
-                    .class_("EventTarget", v8_event_target);
+                    .class_("EventTarget", v8_event_target)
+                    .class_("DomException", v8_dom_exception);
 
             module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();
         }

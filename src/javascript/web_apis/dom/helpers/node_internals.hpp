@@ -17,7 +17,7 @@ namespace html::elements {class html_element;}
 
 
 struct dom::helpers::node_internals {
-    template <typename T> static void clone(T* node, nodes::document* document = nullptr, bool deep = false) requires std::is_base_of_v<T, nodes::node>;
+    template <typename T> static dom::nodes::node* clone(T* node, nodes::document* document = nullptr, bool deep = false) requires std::is_base_of_v<T, nodes::node>;
     static ext::string locate_a_namespace_prefix(nodes::element* element, ext::cstring& namespace_);
     static ext::string locate_a_namespace(nodes::node* node, ext::cstring& prefix);
     static ext::vector<nodes::element*> list_of_elements_with_qualified_name(nodes::node* descendant_element, ext::cstring& qualified_name);
