@@ -653,7 +653,11 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("WindowProxy", v8_window_proxy)
 
                     .class_("DomException", v8_dom_exception)
-                    .class_("DomImplementation", v8_dom_implementation);;
+                    .class_("DomImplementation", v8_dom_implementation)
+
+                    .class_("AbstractRange", v8_abstract_range)
+                    .class_("Range", v8_range)
+                    .class_("StaticRange", v8_static_range);
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
