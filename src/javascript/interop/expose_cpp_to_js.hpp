@@ -36,6 +36,10 @@
 #include <dom/other/dom_exception.hpp>
 #include <dom/other/dom_implementation.hpp>
 
+#include <dom/ranges/abstract_range.hpp>
+#include <dom/ranges/range.hpp>
+#include <dom/ranges/static_range.hpp>
+
 #include <v8.h>
 #include <v8pp/class.hpp>
 #include <v8pp/module.hpp>
@@ -565,6 +569,60 @@ void javascript::interop::expose_cpp_to_js::expose(
             .function("createDocumentType", &dom::other::dom_implementation::create_document_type)
             .function("createDocument", &dom::other::dom_implementation::create_document)
             .function("createHTMLDocument", &dom::other::dom_implementation::create_html_document)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::ranges::abstract_range> v8_abstract_range{isolate};
+    v8_abstract_range
+            .var("collapsed", &dom::ranges::abstract_range::collapsed)
+            .var("startContainer", &dom::ranges::abstract_range::start_container)
+            .var("startOffset", &dom::ranges::abstract_range::start_offset)
+            .var("endContainer", &dom::ranges::abstract_range::end_container)
+            .var("endOffset", &dom::ranges::abstract_range::end_offset)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::ranges::range> v8_range{isolate};
+    v8_range
+            .ctor<>()
+            .inherit<dom::ranges::abstract_range>()
+
+            .static_("START_TO_START", dom::ranges::range::START_TO_START)
+            .static_("START_TO_END", dom::ranges::range::START_TO_END)
+            .static_("END_TO_END", dom::ranges::range::END_TO_END)
+            .static_("END_TO_START", dom::ranges::range::END_TO_START)
+
+            .function("setStart", &dom::ranges::range::set_start)
+            .function("setStartAfter", &dom::ranges::range::set_start_after)
+            .function("setStartBefore", &dom::ranges::range::set_start_before)
+
+            .function("setEnd", &dom::ranges::range::set_end)
+            .function("setEndAfter", &dom::ranges::range::set_end_after)
+            .function("setEndBefore", &dom::ranges::range::set_end_before)
+
+            .function("insertNode", &dom::ranges::range::insert_node)
+            .function("intersectsNode", &dom::ranges::range::intersects_node)
+            .function("selectNode", &dom::ranges::range::select_node)
+            .function("selectNodeContents", &dom::ranges::range::select_node_contents)
+
+            .function("compareBoundaryPoints", &dom::ranges::range::compare_boundary_points)
+            .function("comparePoint", &dom::ranges::range::compare_point)
+
+            .function("extractContents", &dom::ranges::range::extract_contents)
+            .function("cloneContents", &dom::ranges::range::clone_contents)
+            .function("deleteContents", &dom::ranges::range::delete_contents)
+            .function("surroundContents", &dom::ranges::range::surround_contents)
+
+            .function("collapse", &dom::ranges::range::collapse)
+            .function("cloneRange", &dom::ranges::range::clone_range)
+            .function("isPointInRange", &dom::ranges::range::is_point_in_range)
+
+            .function("toJSON", &dom::ranges::range::to_json)
+
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::ranges::static_range> v8_static_range{isolate};
+    v8_static_range
+            .ctor<ext::cstring_any_map&>()
+            .inherit<dom::ranges::abstract_range>()
             .auto_wrap_objects();
 
     v8pp::module v8_module{isolate};
