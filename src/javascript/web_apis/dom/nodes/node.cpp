@@ -51,7 +51,7 @@ void
 dom::nodes::node::normalize() const {
 
     for (text* text_node: helpers::trees::descendant_text_nodes(this)) {
-        std::size_t length = helpers::trees::length(text_node);
+        size_t length = helpers::trees::length(text_node);
         if (length <= 0) {
             helpers::mutation_algorithms::remove(text_node);
             continue;
@@ -295,7 +295,7 @@ void dom::nodes::node::set_parent_node(node* val) {
 
 bool dom::nodes::node::equals(nodes::node* other) {
     if (child_nodes->length() != other->child_nodes->length()) return false;
-    for (std::size_t child_index = 0; child_index < child_nodes->length(); ++child_index) {
+    for (size_t child_index = 0; child_index < child_nodes->length(); ++child_index) {
         if (not child_nodes->at(child_index)->equals(other->child_nodes->at(child_index))) return false;
     }
     return true;

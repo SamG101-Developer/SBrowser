@@ -1,3 +1,4 @@
+#include <javascript/interop/manual_conversions.hpp>
 #include <javascript/interop/expose_cpp_to_js.hpp>
 #include <javascript/environment/stages.hpp>
 
@@ -15,5 +16,3 @@ int main(int argc, char** argv) {
 
     return 0;
 }
-
-#endif

@@ -13,6 +13,7 @@
 
 #include <QtCore/QString>
 #include <v8.h>
+#include <v8pp/convert.hpp>
 
 static ext::vector<std::string> get_STRING_BOOLEANS() {return {"true", "false", "1", "0"};}
 static ext::vector<std::string> get_STRING_ALPHAS() {return {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};}
@@ -70,7 +71,7 @@ public:
         return ext::string{*this}.to_uppercase();
     }
 
-    inline ext::string substring(const std::size_t offset, const std::size_t count = std::string::npos) const {
+    inline ext::string substring(const size_t offset, const size_t count = std::string::npos) const {
         return ext::string{m_iterable.substr(offset, count)};
     }
 
@@ -89,28 +90,43 @@ public:
         return *this;
     }
 
-    inline ext::vector<ext::string> split(ext::string&& delimiter) const {
+    inline ext::vector<ext::string> split(ext::string delimiter) const {
         ext::vector<ext::string> out {};
-        std::size_t current_position = 0;
-        std::size_t previous_position = 0;
+//        size_t current_position = 0;
+//        size_t previous_position = 0;
+        return out; // TODO
 
-        while (true) {
-            current_position = find(*delimiter.c_str(), previous_position);
-            if (current_position == std::string::npos) {
-                out.append(substring(previous_position));
-                return out;
-            }
-
-            out.append(substring(previous_position, current_position - previous_position));
-            previous_position = current_position + delimiter.length();
-        }
+//        while (true) {
+//            current_position = find(*delimiter.c_str(), previous_position);
+//            if (current_position == std::string::npos) {
+//                out.append(substring(previous_position));
+//                return out;
+//            }
+//
+//            out.append(substring(previous_position, current_position - previous_position));
+//            previous_position = current_position + delimiter.length();
+//        }
     }
 
-    inline bool is_double() const {return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c) or c == *".";});}
-    inline bool is_integer() const {return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c);});}
-    inline bool is_bool() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_BOOLEANS().contains(std::string{character});});}
-    inline bool is_alpha() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});}
-    inline bool is_hex() const {return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});}
+    inline bool is_double() const {
+        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c) or c == *".";});
+    }
+
+    inline bool is_integer() const {
+        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c);});
+    }
+
+    inline bool is_bool() const {
+        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_BOOLEANS().contains(std::string{character});});
+    }
+
+    inline bool is_alpha() const {
+        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});
+    }
+
+    inline bool is_hex() const {
+        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});
+    }
 
     inline double to_double() const {
         return std::stod(m_iterable);
@@ -137,7 +153,7 @@ public:
     }
 
     inline v8::Local<v8::String> to_string_v8() const {
-        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), m_iterable.c_str()).ToLocalChecked();
+        return v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), m_iterable);
     }
 
     inline ext::string operator+(ext::cstring& other) const {return ext::string{m_iterable + other.m_iterable};}

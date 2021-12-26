@@ -2,6 +2,8 @@
 
 #include <dom/helpers/event_listening.hpp>
 
+#include <performance/time/dom_high_res_timestamp.hpp>
+
 
 dom::events::event::event(ext::cstring& event_type, ext::cstring_any_map& event_init)
         : type(event_type)

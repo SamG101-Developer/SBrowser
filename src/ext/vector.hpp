@@ -74,18 +74,18 @@ public:
         return *this;
     }
 
-    inline vector<T>& insert(const T& item, const std::size_t index) {
+    inline vector<T>& insert(const T& item, const size_t index) {
         this->m_iterable.emplace(this->begin() + index, item);
         return *this;
     }
 
-    inline vector<T>& extend(const vector<T>& other, const std::size_t index = -1) {
+    inline vector<T>& extend(const vector<T>& other, const size_t index = -1) {
         // other.reversed().for_each([this, other, index = index % this->length()](T item) -> void {insert(other, index);});
         return *this;
     }
 
-    inline vector<T>& pop(std::size_t index = -1) {
-        remove(this->at(index));
+    inline vector<T>& pop(size_t index = -1) {
+        this->remove(this->at(index));
         return *this;
     }
 
@@ -138,22 +138,22 @@ public:
 
     inline vector<T>& flatten() {/* TODO */}
 
-    inline vector<T>& slice(std::size_t front_index, std::size_t back_index) const {
+    inline vector<T>& slice(size_t front_index, size_t back_index) const {
         return vector<T>{this->begin() + front_index, this->begin() + back_index};
     }
 
-    inline ext::vector<T> operator*(std::size_t multiplier) const {
+    inline ext::vector<T> operator*(size_t multiplier) const {
         auto original = vector<string>{*this};
         auto output = vector<string>{*this};
 
-        for (std::size_t i = 0; i < multiplier; ++i) output.extend(original);
+        for (size_t i = 0; i < multiplier; ++i) output.extend(original);
         return output;
     }
 };
 
 
 template <typename iterator>
-std::size_t iterator_to_index(iterator iter) {
+size_t iterator_to_index(iterator iter) {
     return std::distance(iter.begin(), iter);
 }
 

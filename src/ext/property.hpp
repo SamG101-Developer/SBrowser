@@ -72,7 +72,7 @@ public:
     }
 
     // use pointer operand to access the attributes of the internal value
-    __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
+    __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &std::forward<T&>(get());}
     __forceinline T  __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
 
     // boolean comparison operators against another value (property will auto-cast into T)
@@ -113,14 +113,14 @@ public:
     __forceinline property<T>& __fastcall operator-() {m_value.operator-(); return *this;}
     __forceinline property<T>& __fastcall operator+() {m_value.operator+(); return *this;}
 
-    __forceinline property<T> __fastcall operator<<(const std::size_t n) const {return property<T>{m_value << n};}
-    __forceinline property<T> __fastcall operator>>(const std::size_t n) const {return property<T>{m_value >> n};}
+    __forceinline property<T> __fastcall operator<<(const size_t n) const {return property<T>{m_value << n};}
+    __forceinline property<T> __fastcall operator>>(const size_t n) const {return property<T>{m_value >> n};}
 
-    __forceinline property<T>& __fastcall operator<<=(const std::size_t n) {m_value <<= n; return *this;}
-    __forceinline property<T>& __fastcall operator>>=(const std::size_t n) {m_value >>= n; return *this;}
+    __forceinline property<T>& __fastcall operator<<=(const size_t n) {m_value <<= n; return *this;}
+    __forceinline property<T>& __fastcall operator>>=(const size_t n) {m_value >>= n; return *this;}
 
-    __forceinline property<T> __fastcall operator&&(const T& other) const {return property<T>{m_value && other};}
-    __forceinline property<T> __fastcall operator||(const T& other) const {return property<T>{m_value || other};}
+    __forceinline bool __fastcall operator&&(const T& other) const {return m_value && other;}
+    __forceinline bool __fastcall operator||(const T& other) const {return m_value || other;}
 
     __forceinline T __fastcall operator~() const {return ~m_value;}
     __forceinline bool __fastcall operator!() const {return not m_value;}
@@ -248,7 +248,7 @@ private:
     string m_initial;
     vector<css_property*> m_longhand_properties;
 
-    vector<string> extract_sub_items(string val) {
+    vector<string> extract_sub_items(cstring& val) {
         auto sub_items = val.split(" ");
         return sub_items.length() < m_longhand_properties.length()
                 ? vector<string>{sub_items.front()} * m_longhand_properties.length()

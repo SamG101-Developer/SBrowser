@@ -19,16 +19,16 @@ public:
         length.set = readonly_setter;
     }
 
-    virtual T operator[] (std::size_t index) {return m_linked_list->at(index);}
+    virtual T operator[] (size_t index) {return m_linked_list->at(index);}
     virtual T operator[] (ext::string index) {return nullptr;}
 
-    ext::property<std::size_t> length;
+    ext::property<size_t> length;
 
 protected:
     ext::vector<T>* m_linked_list;
 
 private:
-    std::size_t get_length() {return m_linked_list->length();}
+    size_t get_length() {return m_linked_list->length();}
 };
 
 #endif //SBROWSER_LISTLIKE_HPP
