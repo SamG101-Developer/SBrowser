@@ -16,11 +16,11 @@ namespace ext {
     class css_property;
     class css_shorthand_property;
 
-    template <typename U, typename T> property<U> property_dynamic_cast(const ext::property<T>& other);
-    template <typename U, typename T> property<U> property_static_cast(const ext::property<T>& other);
-    template <typename U, typename T> property<U> property_const_cast(const ext::property<T>& other);
-    template <typename U, typename T> property<U> property_reinterpret_cast(const ext::property<T>& other);
-    template <typename U, typename T> property<U> property_any_cast(const ext::property<T>& other);
+    template <typename U, typename T> U property_dynamic_cast(const ext::property<T>& other);
+    template <typename U, typename T> U property_static_cast(const ext::property<T>& other);
+    template <typename U, typename T> U property_const_cast(const ext::property<T>& other);
+    template <typename U, typename T> U property_reinterpret_cast(const ext::property<T>& other);
+    template <typename U, typename T> U property_any_cast(const ext::property<T>& other);
 }
 
 
@@ -44,10 +44,11 @@ class ext::property {
     friend property<T>& __fastcall operator<<(property<T>& property, const T&& other) {property.m_value = other; return property;}; // set
 
     // property casting helpers methods (friend access for internal value)
-    template <typename U, typename T> friend property<U> ext::property_dynamic_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend property<U> ext::property_static_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend property<U> ext::property_const_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend property<U> ext::property_reinterpret_cast(const ext::property<T>& other);
+    template <typename U, typename T> friend U ext::property_dynamic_cast(const ext::property<T>& other);
+    template <typename U, typename T> friend U ext::property_static_cast(const ext::property<T>& other);
+    template <typename U, typename T> friend U ext::property_const_cast(const ext::property<T>& other);
+    template <typename U, typename T> friend U ext::property_reinterpret_cast(const ext::property<T>& other);
+    template <typename U, typename T> friend U ext::property_any_cast(const ext::property<T>& other);
 
 public:
     // main constructor to assign the deleter, getter and setter
@@ -65,10 +66,10 @@ public:
     __forceinline virtual __fastcall operator T() const {return get();}
     __forceinline virtual property<T>& __fastcall operator=(const T& val) {set(val); return *this;}
 
-    // setter from a casted pointer value
+    // setter from a cast pointer value
     template <typename U> __forceinline property<T>& __fastcall operator=(ext::property<U>& other) { // requires(std::is_base_of_v<T, std::remove_reference<U>>)
         m_value = dynamic_cast<U>(other.m_value);
-        return this;
+        return *this;
     }
 
     // use pointer operand to access the attributes of the internal value
@@ -258,57 +259,32 @@ private:
 
 
 template <typename U, typename T>
-ext::property<U> ext::property_static_cast(const property<T>& other) {
-    ext::property<U> casted_property{};
-    casted_property << static_cast<U>(other.m_value);
-    casted_property.del = other.del;
-    casted_property.get = other.get;
-    casted_property.set = other.set;
-    return casted_property;
+U ext::property_static_cast(const property<T>& other) {
+    return static_cast<U>(other.m_value);
 }
 
 
 template <typename U, typename T>
-ext::property<U> ext::property_dynamic_cast(const property<T>& other) {
-    ext::property<U> casted_property{};
-    casted_property << dynamic_cast<U>(other.m_value);
-    casted_property.del = other.del;
-    casted_property.get = other.get;
-    casted_property.set = other.set;
-    return casted_property;
+U ext::property_dynamic_cast(const property<T>& other) {
+    return dynamic_cast<U>(other.m_value);
 }
 
 
 template <typename U, typename T>
-ext::property<U> ext::property_const_cast(const property<T>& other) {
-    ext::property<U> casted_property{};
-    casted_property << const_cast<U>(other.m_value);
-    casted_property.del = other.del;
-    casted_property.get = other.get;
-    casted_property.set = other.set;
-    return casted_property;
+U ext::property_const_cast(const property<T>& other) {
+    return const_cast<U>(other.m_value);
 }
 
 
 template <typename U, typename T>
-ext::property<U> ext::property_reinterpret_cast(const property<T>& other) {
-    ext::property<U> casted_property{};
-    casted_property << reinterpret_cast<U>(other.m_value);
-    casted_property.del = other.del;
-    casted_property.get = other.get;
-    casted_property.set = other.set;
-    return casted_property;
+U ext::property_reinterpret_cast(const property<T>& other) {
+    return reinterpret_cast<U>(other.m_value);
 }
 
 
 template <typename U, typename T>
-ext::property<U> ext::property_any_cast(const ext::property<T>& other) {
-    ext::property<U> casted_property;
-    casted_property << ext::any_cast<U>(other.m_value);
-    casted_property.del = other.del;
-    casted_property.get = other.get;
-    casted_property.set = other.set;
-    return casted_property;
+U ext::property_any_cast(const ext::property<T>& other) {
+    return ext::any_cast<U>(other.m_value);
 }
 
 

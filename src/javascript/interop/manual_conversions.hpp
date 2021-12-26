@@ -4,8 +4,7 @@
 #include <ext/any.hpp>
 #include <ext/infinity.hpp>
 #include <ext/property.hpp>
-
-#include <string>
+#include <ext/string.hpp>
 
 #include <v8pp/convert.hpp>
 
@@ -26,7 +25,7 @@ struct v8pp::convert<ext::string> {
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
         v8::EscapableHandleScope escapable_handle_scope(isolate);
-        return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, cpp_value.c_str()).ToLocalChecked());
+        return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, cpp_value.c_str(), v8::NewStringType::kNormal, cpp_value.length()).ToLocalChecked());
     }
 };
 
@@ -59,7 +58,7 @@ struct v8pp::convert<std::any> {
         else if (std::is_arithmetic_v<decltype(cpp_value.type())>)
             return escapable_handle_scope.Escape(v8pp::convert<long double>::to_v8(isolate, ext::any_cast<long double>(cpp_value)));
         else if (cpp_value.type() == typeid(bool))
-            return escapable_handle_scope.Escape(v8pp::convert<bool       >::to_v8(isolate, ext::any_cast<bool       >(cpp_value)));
+            return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, ext::any_cast<bool>(cpp_value)));
         else
             return escapable_handle_scope.Escape(v8::Object::New(isolate));
     }

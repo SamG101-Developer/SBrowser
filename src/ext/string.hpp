@@ -153,7 +153,8 @@ public:
     }
 
     inline v8::Local<v8::String> to_string_v8() const {
-        return v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), m_iterable);
+        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), c_str()).ToLocalChecked();
+        // return v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), m_iterable);
     }
 
     inline ext::string operator+(ext::cstring& other) const {return ext::string{m_iterable + other.m_iterable};}
