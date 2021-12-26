@@ -29,11 +29,12 @@ dom::nodes::element::element()
     shadow_root_node.get = [this] {return get_shadow_root();};
     id.set = [this](auto&& PH1) {set_id(std::forward<decltype(PH1)>(PH1));};
 
+    node_type = ELEMENT_NODE;
     shadow_root_node = nullptr;
     attributes = new ext::vector<attr*>{};
     class_list = new ext::vector<ext::string>{};
 
-    m_custom_element_definition     = nullptr;
+    m_custom_element_definition = nullptr;
     m_custom_element_reaction_queue = {};
 
     m_rendered_widget = new QWidget{};

@@ -13,12 +13,13 @@ dom::nodes::text::text(ext::cstring& new_data)
     whole_text.get = [this] {get_whole_text();};
     data.set = [this](auto&& PH1) {set_data(std::forward<decltype(PH1)>(PH1));};
 
+    node_type = TEXT_NODE;
+    data = new_data;
+
     m_rendered_widget = new QLabel{};
     render()->setLayout(new QVBoxLayout{m_rendered_widget});
     render()->hide();
     render()->setWordWrap(true);
-
-    data = new_data;
 }
 
 

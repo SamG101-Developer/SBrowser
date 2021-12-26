@@ -6,9 +6,10 @@
 
 dom::nodes::document_fragment::document_fragment()
         : node()
-        , mixins::non_element_parent_node()
-        , mixins::parent_node() {
+        , mixins::non_element_parent_node<document_fragment>()
+        , mixins::parent_node<document_fragment>() {
 
+    node_type = DOCUMENT_FRAGMENT_NODE;
     node_name = "#document-fragment";
     host = nullptr;
 }

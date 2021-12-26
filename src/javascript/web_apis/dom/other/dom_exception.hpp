@@ -3,6 +3,7 @@
 #define SBROWSER_DOM_EXCEPTION_HPP
 
 #include <ext/decorators.hpp>
+#include <ext/property.hpp>
 #include <ext/string.hpp>
 
 namespace dom::other {class dom_exception;}

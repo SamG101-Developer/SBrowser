@@ -55,7 +55,7 @@ public methods:
 
     ext::string to_json();
 
-    // cssom-view
+    // cssom-view TODO -> move into cssom-view mixin?
     ext::vector<geometry::shapes::dom_rect> get_client_rects();
     geometry::shapes::dom_rect get_bounding_client_rect();
 

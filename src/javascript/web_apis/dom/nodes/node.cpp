@@ -92,7 +92,7 @@ dom::nodes::node::normalize() const {
 }
 
 
-bool dom::nodes::node::has_child_nodes() const {return child_nodes->empty();}
+bool dom::nodes::node::has_child_nodes() const {return not child_nodes->empty();}
 
 bool dom::nodes::node::contains(node* other) const {return helpers::trees::is_descendant(other, this);}
 

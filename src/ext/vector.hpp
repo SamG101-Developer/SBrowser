@@ -56,6 +56,14 @@ public:
     inline T& item_before(const T& item) {return at((find(item) - 1) % this->length());}
     inline T& item_after (const T& item) {return at((find(item) + 1) % this->length());}
 
+    template <typename function> inline T& first_match(function&& func) {
+        return filter(func).front();
+    }
+
+    template <typename function> inline T& last_match(function&& func) {
+        return filter(func).back();
+    }
+
     inline vector<T>& append(const T& item) {
         this->m_iterable.emplace_back(item);
         return *this;
@@ -98,11 +106,11 @@ public:
         return *this;
     }
 
-    template <typename function> inline vector<T>& filter(function func) const {
+    template <typename function> inline vector<T>& filter(function&& func) const {
         return vector<T>{*this}.remove_if([func](const T& item) -> void {return not func(item);});
     }
 
-    template <typename U=T, typename function> inline vector<U> transform(function func) const {
+    template <typename U=T, typename function> inline vector<U> transform(function&& func) const {
         vector<U> copy{*this};
         std::transform(this->begin(), this->end(), copy.begin(), func);
         return copy;
@@ -136,7 +144,7 @@ public:
 
     inline ext::vector<T> operator*(std::size_t multiplier) const {
         auto original = vector<string>{*this};
-        auto output   = vector<string>{*this};
+        auto output = vector<string>{*this};
 
         for (std::size_t i = 0; i < multiplier; ++i) output.extend(original);
         return output;

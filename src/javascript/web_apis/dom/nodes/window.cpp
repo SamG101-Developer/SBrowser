@@ -9,10 +9,10 @@
 
 
 dom::nodes::window::window()
-    : event_target()
-    , html::mixins::window_or_worker_global_scope()
-    , css::cssom_view::mixins::scrollable()
-    , ext::listlike<ext::string>() {
+        : event_target()
+        , html::mixins::window_or_worker_global_scope()
+        , css::cssom_view::mixins::scrollable()
+        , ext::listlike<ext::string>() {
 }
 
 

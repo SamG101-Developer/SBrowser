@@ -39,6 +39,16 @@ public static_constants:
     static const unsigned short DOCUMENT_POSITION_CONTAINED_BY = 0x10;
     static const unsigned short DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20;
 
+    static const unsigned short ELEMENT_NODE = 1;
+    static const unsigned short ATTRIBUTE_NODE = 2;
+    static const unsigned short TEXT_NODE = 3;
+    static const unsigned short CDATA_SECTION_NODE = 4;
+    static const unsigned short PROCESSING_INSTRUCTION_NODE = 7;
+    static const unsigned short COMMENT_NODE = 8;
+    static const unsigned short DOCUMENT_NODE = 9;
+    static const unsigned short DOCUMENT_TYPE_NODE = 10;
+    static const unsigned short DOCUMENT_FRAGMENT_NODE = 11;
+
 public methods:
     void normalize() const;
     bool has_child_nodes() const;
@@ -56,6 +66,7 @@ public methods:
     dom::nodes::node* remove_child(node* old_node);
 
 public properties:
+    ext::dom_property<unsigned short> node_type;
     ext::dom_property<ext::string> node_name{true};
     ext::dom_property<ext::string> node_value{true};
     ext::dom_property<ext::string> text_content{true};

@@ -9,6 +9,11 @@
 #include <dom/events/event.hpp>
 #include <dom/events/custom_event.hpp>
 
+#include <dom/iterators/abstract_iterator.hpp>
+#include <dom/iterators/node_filter.hpp>
+#include <dom/iterators/node_iterator.hpp>
+#include <dom/iterators/tree_walker.hpp>
+
 #include <dom/mixins/child_node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
 #include <dom/mixins/document_or_shadow_root.hpp>
@@ -107,6 +112,61 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("isTrusted", &dom::events::event::is_trusted)
             .var("touchTargets", &dom::events::event::touch_targets)
             .var("path", &dom::events::event::path)
+
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::iterators::abstract_iterator> v8_abstract_iterator{isolate};
+    v8_abstract_iterator
+            .var("root", &dom::iterators::abstract_iterator::root)
+            .var("filter", &dom::iterators::abstract_iterator::filter)
+            .var("whatToShow", &dom::iterators::abstract_iterator::what_to_show)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::iterators::node_filter> v8_node_filter{isolate};
+    v8_node_filter
+            .static_("FILTER_ACCEPT", dom::iterators::node_filter::FILTER_ACCEPT)
+            .static_("FILTER_SKIP", dom::iterators::node_filter::FILTER_SKIP)
+            .static_("FILTER_REJECT", dom::iterators::node_filter::FILTER_REJECT)
+
+            .static_("SHOW_ALL", dom::iterators::node_filter::SHOW_ALL)
+            .static_("SHOW_ELEMENT", dom::iterators::node_filter::SHOW_ELEMENT)
+            .static_("SHOW_ATTRIBUTE", dom::iterators::node_filter::SHOW_ATTRIBUTE)
+            .static_("SHOW_TEXT", dom::iterators::node_filter::SHOW_TEXT)
+            .static_("SHOW_CDATA_SECTION", dom::iterators::node_filter::SHOW_CDATA_SECTION)
+            .static_("SHOW_PROCESSING_INSTRUCTION", dom::iterators::node_filter::SHOW_PROCESSING_INSTRUCTION)
+            .static_("SHOW_COMMENT", dom::iterators::node_filter::SHOW_COMMENT)
+            .static_("SHOW_DOCUMENT", dom::iterators::node_filter::SHOW_DOCUMENT)
+            .static_("SHOW_DOCUMENT_TYPE", dom::iterators::node_filter::SHOW_DOCUMENT_TYPE)
+            .static_("SHOW_DOCUMENT_FRAGMENT", dom::iterators::node_filter::SHOW_DOCUMENT_FRAGMENT)
+
+            .function("acceptNode", &dom::iterators::node_filter::accept_node)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::iterators::node_iterator> v8_node_iterator{isolate};
+    v8_node_iterator
+            .inherit<dom::iterators::abstract_iterator>()
+
+            .var("referenceNode", &dom::iterators::node_iterator::reference_node)
+            .var("pointerBeforeReferenceNode", &dom::iterators::node_iterator::pointer_before_reference_node)
+
+            .function("nextNode", &dom::iterators::node_iterator::next_node)
+            .function("previousNode", &dom::iterators::node_iterator::previous_node)
+
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::iterators::tree_walker> v8_tree_walker{isolate};
+    v8_tree_walker
+            .inherit<dom::iterators::abstract_iterator>()
+
+            .function("parentNode", &dom::iterators::tree_walker::parent_node)
+            .function("firstChild", &dom::iterators::tree_walker::first_child)
+            .function("lastChild", &dom::iterators::tree_walker::last_child)
+            .function("previousSibling", &dom::iterators::tree_walker::previous_sibling)
+            .function("nextSibling", &dom::iterators::tree_walker::next_sibling)
+            .function("previousNode", &dom::iterators::tree_walker::previous_node)
+            .function("nextNode", &dom::iterators::tree_walker::next_node)
+
+            .var("currentNode", &dom::iterators::tree_walker::current_node)
 
             .auto_wrap_objects();
 
@@ -617,6 +677,8 @@ void javascript::interop::expose_cpp_to_js::expose(
 
             .function("toJSON", &dom::ranges::range::to_json)
 
+            .var("commonAncestorContainer", &dom::ranges::range::common_ancestor_container)
+
             .auto_wrap_objects();
 
     v8pp::class_<dom::ranges::static_range> v8_static_range{isolate};
@@ -636,6 +698,10 @@ void javascript::interop::expose_cpp_to_js::expose(
 
                     .class_("CustomEvent", v8_custom_event)
                     .class_("Event", v8_event)
+
+                    .class_("NodeFilter", v8_node_filter)
+                    .class_("NodeIterator", v8_node_iterator)
+                    .class_("TreeWalker", v8_tree_walker)
 
                     .class_("Attr", v8_attr)
                     .class_("CDataSection", v8_cdata_section)

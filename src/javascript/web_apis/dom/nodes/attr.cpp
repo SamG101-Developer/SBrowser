@@ -12,6 +12,8 @@ dom::nodes::attr::attr() : node() {
     value.set        = [this](auto&& PH1) {set_value(std::forward<decltype(PH1)>(PH1));};
     node_value.set   = [this](auto&& PH1) {set_node_value(std::forward<decltype(PH1)>(PH1));};
     text_content.set = [this](auto&& PH1) {set_text_content(std::forward<decltype(PH1)>(PH1));};
+
+    node_type = ATTRIBUTE_NODE;
 }
 
 

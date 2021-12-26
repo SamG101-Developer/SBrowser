@@ -61,6 +61,7 @@ dom::nodes::document::document()
     cookie.set = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
     ready_state.set = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
 
+    node_type = DOCUMENT_NODE;
     node_name = "#document";
     url = "about:blank";
     content_type = "application/xml";

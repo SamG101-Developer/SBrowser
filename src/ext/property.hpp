@@ -36,12 +36,12 @@ namespace {
 template <typename T>
 class ext::property {
     // default setters and getters for const-references (override custom getter / setter)
-    friend T            __fastcall operator >> (const property<T>& property, T& other) {other = property.m_value; return other;}     // get
-    friend property<T>& __fastcall operator << (property<T>& property, const T& other) {property.m_value = other; return property;}; // set
+    friend T            __fastcall operator>>(const property<T>& property, T& other) {other = property.m_value; return other;}     // get
+    friend property<T>& __fastcall operator<<(property<T>& property, const T& other) {property.m_value = other; return property;}; // set
 
     // default setters and getters for temp-objects (override custom getter / setter)
-    friend T            __fastcall operator >> (const property<T>& property, T&& other) {other = property.m_value; return other;};    // get
-    friend property<T>& __fastcall operator << (property<T>& property, const T&& other) {property.m_value = other; return property;}; // set
+    friend T            __fastcall operator>>(const property<T>& property, T&& other) {other = property.m_value; return other;};    // get
+    friend property<T>& __fastcall operator<<(property<T>& property, const T&& other) {property.m_value = other; return property;}; // set
 
     // property casting helpers methods (friend access for internal value)
     template <typename U, typename T> friend property<U> ext::property_dynamic_cast(const ext::property<T>& other);
@@ -63,19 +63,25 @@ public:
     // deleter, getter and setter calling at the correct places
     virtual ~property() {del();}
     __forceinline virtual __fastcall operator T() const {return get();}
-    __forceinline virtual void __fastcall operator=(const T& val) {set(val);}
+    __forceinline virtual property<T>& __fastcall operator=(const T& val) {set(val); return *this;}
+
+    // setter from a casted pointer value
+    template <typename U> __forceinline property<T>& __fastcall operator=(ext::property<U>& other) { // requires(std::is_base_of_v<T, std::remove_reference<U>>)
+        m_value = dynamic_cast<U>(other.m_value);
+        return this;
+    }
 
     // use pointer operand to access the attributes of the internal value
     __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
     __forceinline T  __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
 
     // boolean comparison operators against another value (property will auto-cast into T)
-    __forceinline bool __fastcall operator== (const T& other) const {return m_value ==  other;}
-    __forceinline bool __fastcall operator!= (const T& other) const {return m_value !=  other;}
-    __forceinline bool __fastcall operator<= (const T& other) const {return m_value <=  other;}
-    __forceinline bool __fastcall operator>= (const T& other) const {return m_value >=  other;}
-    __forceinline bool __fastcall operator<  (const T& other) const {return m_value <   other;}
-    __forceinline bool __fastcall operator>  (const T& other) const {return m_value >   other;}
+    __forceinline bool __fastcall operator==(const T& other) const {return m_value == other;}
+    __forceinline bool __fastcall operator!=(const T& other) const {return m_value != other;}
+    __forceinline bool __fastcall operator<=(const T& other) const {return m_value <= other;}
+    __forceinline bool __fastcall operator>=(const T& other) const {return m_value >= other;}
+    __forceinline bool __fastcall operator<(const T& other) const {return m_value < other;}
+    __forceinline bool __fastcall operator>(const T& other) const {return m_value > other;}
     __forceinline bool __fastcall operator<=>(const T& other) const {return m_value <=> other;}
 
     // create-arithmetic operators against another value
@@ -119,8 +125,8 @@ public:
     __forceinline T __fastcall operator~() const {return ~m_value;}
     __forceinline bool __fastcall operator!() const {return not m_value;}
 
-    __forceinline T __fastcall operator=(const property<T>& other) {m_value = other.m_value; return *this;}
-    __forceinline T __fastcall operator=(property<T>&& other) noexcept {m_value = other.m_value; return *this;}
+    __forceinline property<T>& __fastcall operator=(const property<T>& other) {m_value = other.m_value; return *this;}
+    __forceinline property<T>& __fastcall operator=(property<T>&& other) noexcept {m_value = other.m_value; return *this;}
 
     __forceinline std::remove_reference_t<T> __fastcall operator*() const {return *m_value;}
 
@@ -161,9 +167,10 @@ public:
         return this->get();
     }
 
-    __forceinline void __fastcall operator=(T val) {
+    __forceinline dom_property<T>& __fastcall operator=(const T& val) override {
         if (m_ce_reactions) ce_reactions(*this);
         this->set(val);
+        return *this;
     }
 
 private:
@@ -213,7 +220,7 @@ class ext::css_shorthand_property : public ext::property<string> {
 //    };
 
 public:
-    css_shorthand_property(cstring& name)
+    explicit css_shorthand_property(cstring& name)
             : ext::property<string>()
             , m_name(name) {
     }
@@ -230,9 +237,10 @@ public:
                 .join(" ");
     }
 
-    __forceinline void __fastcall operator=(cstring& val) override {
+    __forceinline css_shorthand_property& __fastcall operator=(cstring& val) override {
         auto sub_items = extract_sub_items(val);
         m_longhand_properties.for_each([&sub_items](css_property* longhand_property) -> void {longhand_property->set(sub_items.front()); sub_items.pop(0);});
+        return *this;
     }
 
 private:
