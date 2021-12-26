@@ -39,6 +39,7 @@ dom::nodes::document::document()
         , mixins::parent_node<document>()
         , mixins::document_or_shadow_root<document>()
         , mixins::document_or_element_node<document>()
+        , xpath::xpath_evaluator()
         , ext::listlike<node*>() {
 
     compat_mode.get = [this] {return get_compat_mode();};

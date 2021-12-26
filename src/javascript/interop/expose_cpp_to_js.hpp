@@ -49,6 +49,8 @@
 #include <dom/ranges/range.hpp>
 #include <dom/ranges/static_range.hpp>
 
+#include <dom/xpath/xpath_evaluator.hpp>
+
 #include <v8.h>
 #include <v8pp/class.hpp>
 #include <v8pp/module.hpp>
@@ -286,7 +288,10 @@ void javascript::interop::expose_cpp_to_js::expose(
             .inherit<dom::nodes::node>()
             .inherit<dom::mixins::document_or_element_node<dom::nodes::document>>()
             .inherit<dom::mixins::document_or_shadow_root<dom::nodes::document>>()
+            .inherit<dom::mixins::parent_node<dom::nodes::document>>()
             .inherit<dom::mixins::non_element_parent_node<dom::nodes::document>>()
+            .inherit<dom::xpath::xpath_evaluator>()
+            .inherit<ext::listlike<dom::nodes::node*>>()
 
             .function("createElement", &dom::nodes::document::create_element)
             .function("createElementNS", &dom::nodes::document::create_element_ns)

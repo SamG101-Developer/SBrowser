@@ -13,6 +13,7 @@
 #include <dom/mixins/document_or_shadow_root.hpp>
 #include <dom/mixins/non_element_parent_node.hpp>
 #include <dom/mixins/parent_node.hpp>
+#include <dom/xpath/xpath_evaluator.hpp>
 
 #include <QtWidgets/QScrollArea>
 
@@ -82,6 +83,7 @@ class dom::nodes::document
         , public mixins::parent_node<document>
         , public mixins::document_or_shadow_root<document>
         , public mixins::document_or_element_node<document>
+        , public xpath::xpath_evaluator
         , public ext::listlike<node*> {
 
 friends
