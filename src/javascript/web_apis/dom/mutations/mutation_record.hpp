@@ -14,17 +14,17 @@ namespace dom {
 
 class dom::mutations::mutation_record {
 public: properties
-    ext::property<ext::string> type;
-    ext::property<ext::string> attribute_name;
-    ext::property<ext::string> attribute_namespace;
-    ext::property<ext::string> old_value;
+    ext::dom_property<ext::string> type;
+    ext::dom_property<ext::string> attribute_name;
+    ext::dom_property<ext::string> attribute_namespace;
+    ext::dom_property<ext::string> old_value;
 
-    ext::property<nodes::node*> target;
-    ext::property<nodes::node*> previous_sibling;
-    ext::property<nodes::node*> next_sibling;
+    ext::dom_property<nodes::node*> target;
+    ext::dom_property<nodes::node*> previous_sibling;
+    ext::dom_property<nodes::node*> next_sibling;
 
-    ext::property<ext::vector<nodes::node*>> added_nodes;
-    ext::property<ext::vector<nodes::node*>> removed_nodes;
+    ext::dom_property<ext::vector<nodes::node*>> added_nodes;
+    ext::dom_property<ext::vector<nodes::node*>> removed_nodes;
 };
 
 

@@ -44,12 +44,16 @@
 
 #include <dom/other/dom_exception.hpp>
 #include <dom/other/dom_implementation.hpp>
+#include <dom/other/xslt_processor.hpp>
+#include <dom/other/xslt_processor.hpp>
 
 #include <dom/ranges/abstract_range.hpp>
 #include <dom/ranges/range.hpp>
 #include <dom/ranges/static_range.hpp>
 
 #include <dom/xpath/xpath_evaluator.hpp>
+#include <dom/xpath/xpath_expression.hpp>
+#include <dom/xpath/xpath_result.hpp>
 
 #include <v8.h>
 #include <v8pp/class.hpp>
@@ -666,6 +670,21 @@ void javascript::interop::expose_cpp_to_js::expose(
             .function("createHTMLDocument", &dom::other::dom_implementation::create_html_document)
             .auto_wrap_objects();
 
+    v8pp::class_<dom::other::xslt_processor> v8_xslt_processor{isolate};
+    v8_xslt_processor
+            .ctor<>()
+
+            .function("importStylesheet", &dom::other::xslt_processor::import_stylesheet)
+            .function("transformToFragment", &dom::other::xslt_processor::transform_to_fragment)
+            .function("transformToDocument", &dom::other::xslt_processor::transform_to_document)
+            .function("setParameter", &dom::other::xslt_processor::set_parameter)
+            .function("getParameter", &dom::other::xslt_processor::get_parameter)
+            .function("removeParameter", &dom::other::xslt_processor::remove_parameter)
+            .function("clearParameters", &dom::other::xslt_processor::clear_parameters)
+            .function("reset", &dom::other::xslt_processor::reset)
+
+            .auto_wrap_objects();
+
     v8pp::class_<dom::ranges::abstract_range> v8_abstract_range{isolate};
     v8_abstract_range
             .var("collapsed", &dom::ranges::abstract_range::collapsed)
@@ -722,6 +741,47 @@ void javascript::interop::expose_cpp_to_js::expose(
             .inherit<dom::ranges::abstract_range>()
             .auto_wrap_objects();
 
+    v8pp::class_<dom::xpath::xpath_evaluator> v8_xpath_evaluator{isolate};
+    v8_xpath_evaluator
+            .ctor<>()
+
+            .function("createExpression", &dom::xpath::xpath_evaluator::create_expression)
+            .function("createNodeResolver", &dom::xpath::xpath_evaluator::create_expression)
+            .function("evaluate", &dom::xpath::xpath_evaluator::evaluate)
+
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::xpath::xpath_expression> v8_xpath_expression{isolate};
+    v8_xpath_expression
+            .function("evaluate", &dom::xpath::xpath_expression::evaluate)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::xpath::xpath_result> v8_xpath_result{isolate};
+    v8_xpath_result
+            .static_("ANY_TYPE", &dom::xpath::xpath_result::ANY_TYPE)
+            .static_("NUMBER_TYPE", &dom::xpath::xpath_result::NUMBER_TYPE)
+            .static_("STRING_TYPE", &dom::xpath::xpath_result::STRING_TYPE)
+            .static_("BOOLEAN_TYPE", &dom::xpath::xpath_result::BOOLEAN_TYPE)
+            .static_("UNORDERED_NODE_ITERATOR_TYPE", &dom::xpath::xpath_result::UNORDERED_NODE_ITERATOR_TYPE)
+            .static_("ORDERED_NODE_ITERATOR_TYPE", &dom::xpath::xpath_result::ORDERED_NODE_ITERATOR_TYPE)
+            .static_("UNORDERED_NODE_SNAPSHOT_TYPE", &dom::xpath::xpath_result::UNORDERED_NODE_SNAPSHOT_TYPE)
+            .static_("ORDERED_NODE_SNAPSHOT_TYPE", &dom::xpath::xpath_result::ORDERED_NODE_SNAPSHOT_TYPE)
+            .static_("ANY_UNORDERED_NODE_TYPE", &dom::xpath::xpath_result::ANY_UNORDERED_NODE_TYPE)
+            .static_("FIRST_ORDERED_NODE_TYPE", &dom::xpath::xpath_result::FIRST_ORDERED_NODE_TYPE)
+
+            .function("iteratorNext", &dom::xpath::xpath_result::iterate_next)
+            .function("snapshotLength", &dom::xpath::xpath_result::snapshot_length)
+
+            .var("resultType", &dom::xpath::xpath_result::result_type)
+            .var("numberValue", &dom::xpath::xpath_result::number_value)
+            .var("stringValue", &dom::xpath::xpath_result::string_value)
+            .var("booleanValue", &dom::xpath::xpath_result::boolean_value)
+            .var("singleNodeValue", &dom::xpath::xpath_result::single_node_value)
+            .var("invalidIteratorState", &dom::xpath::xpath_result::invalid_iterator_state)
+            .var("snapshotLength", &dom::xpath::xpath_result::snapshot_length)
+
+            .auto_wrap_objects();
+
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;
 
@@ -759,10 +819,15 @@ void javascript::interop::expose_cpp_to_js::expose(
 
                     .class_("DomException", v8_dom_exception)
                     .class_("DomImplementation", v8_dom_implementation)
+                    .class_("XSLTProcessor", v8_xslt_processor)
 
                     .class_("AbstractRange", v8_abstract_range)
                     .class_("Range", v8_range)
-                    .class_("StaticRange", v8_static_range);
+                    .class_("StaticRange", v8_static_range)
+
+                    .class_("XPathEvaluator", v8_xpath_evaluator)
+                    .class_("XPathExpression", v8_xpath_expression)
+                    .class_("XPathResult", v8_xpath_result);
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
