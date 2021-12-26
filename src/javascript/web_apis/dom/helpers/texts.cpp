@@ -67,7 +67,7 @@ dom::helpers::texts::split(
     exceptions::throw_v8_exception(
             "offset must be <= length of the node",
             INDEX_SIZE_ERR,
-            [offset, length] -> bool {return offset > length});
+            [offset, length] {return offset > length});
 
     nodes::node* parent_node = text_node->parent_node;
     nodes::text* new_text_node = new nodes::text{new_data};
@@ -113,7 +113,7 @@ dom::helpers::texts::substring_data(
     exceptions::throw_v8_exception(
             "offset must be <= length of the node",
             INDEX_SIZE_ERR,
-            [offset, length] -> bool {return offset > length});
+            [offset, length] {return offset > length});
 
     count = std::min(count, length - offset);
     ext::cstring current_data = text_node->data;

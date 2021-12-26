@@ -38,8 +38,8 @@ dom::nodes::document::document()
         , mixins::non_element_parent_node<document>()
         , mixins::parent_node<document>()
         , mixins::document_or_shadow_root<document>()
-        , mixins::document_or_element<document>()
-        , ext::listlike<node>() {
+        , mixins::document_or_element_node<document>()
+        , ext::listlike<node*>() {
 
     compat_mode.get = [this] {return get_compat_mode();};
     character_set.get = [this] {return get_character_set();};
@@ -136,12 +136,12 @@ dom::nodes::document::create_cdata_section_node(ext::cstring& data) const {
     helpers::exceptions::throw_v8_exception(
             "html documents cannot create cdata_section nodes",
             NOT_SUPPORTED_ERR,
-            [this] -> bool {return m_type == "html";});
+            [this] {return m_type == "html";});
 
     helpers::exceptions::throw_v8_exception(
             "cdata_section data cannot contain ']]>'",
             INVALID_CHARACTER_ERR,
-            [data] -> bool {return data.contains("]]>");});
+            [data] {return data.contains("]]>");});
 
     auto* cdata_section_node = new cdata_section{};
     cdata_section_node->data = data;
@@ -168,7 +168,7 @@ dom::nodes::document::create_processing_instruction(
     helpers::exceptions::throw_v8_exception(
             "processing_instruction data cannot contain '?>'",
             INVALID_CHARACTER_ERR,
-            [data] -> bool {return data.contains("?>");});
+            [data] {return data.contains("?>");});
 
     auto* processing_instruction_node = new processing_instruction{};
     processing_instruction_node->target = target;
@@ -259,12 +259,12 @@ dom::nodes::document::import_node(
     helpers::exceptions::throw_v8_exception(
             "cannot import a document node",
             NOT_SUPPORTED_ERR,
-            [node] -> bool {return dynamic_cast<document*>(node);});
+            [node] {return dynamic_cast<document*>(node);});
 
     helpers::exceptions::throw_v8_exception(
             "cannot import a shadowroot node",
             NOT_SUPPORTED_ERR,
-            [node] -> bool {return helpers::shadows::is_shadow_root(node);});
+            [node] {return helpers::shadows::is_shadow_root(node);});
 
     return helpers::node_internals::clone(node, this, true);
 }
@@ -276,12 +276,12 @@ dom::nodes::document::adopt_node(node* node) {
     helpers::exceptions::throw_v8_exception(
             "cannot adopt a document node",
             NOT_SUPPORTED_ERR,
-            [node] -> bool {return dynamic_cast<document*>(node);});
+            [node] {return dynamic_cast<document*>(node);});
 
     helpers::exceptions::throw_v8_exception(
             "cannot adopt a shadowroot node",
             HIERARCHY_REQUEST_ERR,
-            [node] -> bool {return helpers::shadows::is_shadow_root(node);});
+            [node] {return helpers::shadows::is_shadow_root(node);});
 }
 
 
@@ -290,7 +290,7 @@ dom::nodes::document::get_elements_by_name(ext::cstring& element_name) const {
 
     return helpers::trees::descendants(this)
             .cast_all<element*>()
-            .filter([element_name](element* node) -> bool {return node->get_m_qualified_name() == element_name;})
+            .filter([element_name](element* node) {return node->get_m_qualified_name() == element_name;})
             .cast_all<node*>();
 }
 
@@ -311,7 +311,7 @@ dom::nodes::document::open(
     helpers::exceptions::throw_v8_exception(
             "cannot open a non-active document",
             INVALID_ACCESS_ERR,
-            [this] -> bool {return not helpers::node_internals::is_document_fully_active(this);});
+            [this] {return not helpers::node_internals::is_document_fully_active(this);});
 
     return html::helpers::elements::window_open_steps(this);
 }
@@ -323,12 +323,12 @@ dom::nodes::document::close() const {
     helpers::exceptions::throw_v8_exception(
             "cannot close an xml document",
             INVALID_STATE_ERR,
-            [this] -> bool {return m_type == "xml";});
+            [this] {return m_type == "xml";});
 
     helpers::exceptions::throw_v8_exception(
             "cannot close a document whose dynamic-markup-counter > 0",
             INVALID_STATE_ERR,
-            [this] -> bool {return m_throw_on_dynamic_markup_insertion_counter > 0;});
+            [this] {return m_throw_on_dynamic_markup_insertion_counter > 0;});
 
     // TODO
 }
@@ -362,7 +362,7 @@ dom::nodes::document::element_from_point(
         double x,
         double y) const {
 
-    return elements_from_point(x, y).front(); // TODO -> return at first found doesn't happen currently
+    return elements_from_point(x, y).front(); // TODO at first found doesn't happen currently
 }
 
 
@@ -376,7 +376,7 @@ dom::nodes::document::elements_from_point(
 
     return helpers::trees::descendants(this)
             .cast_all<element*>()
-            .filter([x, y](element* node) -> bool {node->render()->geometry().contains(x, y);});
+            .filter([x, y](element* node) {node->render()->geometry().contains(x, y);});
 }
 
 
@@ -443,7 +443,7 @@ ext::string dom::nodes::document::get_dir() const {
 }
 
 ext::string dom::nodes::document::get_last_modified() const {
-    return "" /* TODO -> Get from header */;
+    return "" /* TODO from header */;
 }
 
 html::elements::html_body_element* dom::nodes::document::get_body() const {
@@ -471,7 +471,7 @@ ext::vector<html::elements::html_form_element*> dom::nodes::document::get_forms(
 }
 
 ext::vector<html::elements::html_script_element*> dom::nodes::document::get_scripts() {
-    return helpers::trees::descendants(this).cast_all<html::elements::html_script_element*>().filter([](auto* element) -> bool {return element->href;});
+    return helpers::trees::descendants(this).cast_all<html::elements::html_script_element*>().filter([](auto* element) {return element->href;});
 }
 
 void
@@ -507,12 +507,12 @@ dom::nodes::document::set_body(html::elements::html_body_element* val) {
     helpers::exceptions::throw_v8_exception(
             "body attribute must be a HTMLBodyElement",
             HIERARCHY_REQUEST_ERR,
-            [val] -> bool {return dynamic_cast<html::elements::html_body_element*>(val);});
+            [val] {return dynamic_cast<html::elements::html_body_element*>(val);});
 
     helpers::exceptions::throw_v8_exception(
             "settings a null body attribute requires a document element to be present",
             HIERARCHY_REQUEST_ERR,
-            [val, this] -> bool {return not val and not document_element;});
+            [val, this] {return not val and not document_element;});
 
     helpers::mutation_algorithms::append(val, document_element);
 }
@@ -526,7 +526,7 @@ dom::nodes::document::set_cookie(ext::cstring& val) {
     helpers::exceptions::throw_v8_exception(
             "cannot set the cookie of a document that has an opaque origin",
             SECURITY_ERR,
-            [this] -> bool {return m_origin == "opaque";});
+            [this] {return m_origin == "opaque";});
 
     cookie << val;
 }

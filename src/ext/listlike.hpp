@@ -10,12 +10,12 @@ namespace ext {
 }
 
 template <typename T>
-class ext::listlike<T> {
+class ext::listlike {
 public:
-    listlike(ext::vector<T>* linked_list)
+    listlike(ext::vector<T>* linked_list = {})
             : m_linked_list(linked_list) {
 
-        length.get = std::bind(&get_length, this);
+        length.get = std::bind(&listlike<T>::get_length, this);
         length.set = readonly_setter;
     }
 

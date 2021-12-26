@@ -82,11 +82,12 @@ class dom::nodes::document
         , public mixins::parent_node<document>
         , public mixins::document_or_shadow_root<document>
         , public mixins::document_or_element_node<document>
-        , public ext::listlike<node> {
+        , public ext::listlike<node*> {
 
 friends
     friend struct dom::helpers::custom_elements;
     friend struct dom::helpers::node_internals;
+    friend class dom::other::dom_implementation;
 
 public constructors:
     document();

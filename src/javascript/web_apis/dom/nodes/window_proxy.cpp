@@ -39,7 +39,7 @@ v8::PropertyDescriptor dom::nodes::window_proxy::get_own_property(v8::Local<v8::
         window_proxy* value = max_properties > 0 and index < max_properties
                 ? html::helpers::tree_child_browsing_contexts(s_window->document->m_browsing_context)
                         .at(index)
-                        .sorted(/* TODO -> custom ordering */)
+                        .sorted(/* TODO ordering */)
                 : nullptr;
 
         if (not value) {

@@ -89,7 +89,7 @@ dom::ranges::range::insert_node(
     helpers::exceptions::throw_v8_exception(
             "start container must not be a text, processing_instruction",
             HIERARCHY_REQUEST_ERR,
-            [this] -> bool {return helpers::ranges::is_textual_based_range_container(start_container);});
+            [this] {return helpers::ranges::is_textual_based_range_container(start_container);});
 
     nodes::node* reference_node;
     nodes::node* parent;
@@ -170,7 +170,7 @@ dom::ranges::range::select_node_contents(
     helpers::exceptions::throw_v8_exception(
             "node must be a non-document_fragment node",
             INVALID_NODE_TYPE_ERR,
-            [node] -> bool {return dynamic_cast<nodes::document_fragment*>(node);});
+            [node] {return dynamic_cast<nodes::document_fragment*>(node);});
 
     start_container = node;
     start_offset = 0;
@@ -187,7 +187,7 @@ dom::ranges::range::compare_boundary_points(
     helpers::exceptions::throw_v8_exception(
             "this range's root must match the source_range's root",
             WRONG_DOCUMENT_ERR,
-            [this, source_range] -> bool {return m_root == source_range->m_root;});
+            [this, source_range] {return m_root == source_range->m_root;});
 
     nodes::node* that_container;
     nodes::node* this_container;
@@ -241,17 +241,17 @@ dom::ranges::range::compare_point(
     helpers::exceptions::throw_v8_exception(
             "this range must be in the same document as the node",
             WRONG_DOCUMENT_ERR,
-            [node, this] -> bool {return m_root != helpers::trees::root(node);});
+            [node, this] {return m_root != helpers::trees::root(node);});
 
     helpers::exceptions::throw_v8_exception(
             "node must be a non-document_fragment node",
             INVALID_NODE_TYPE_ERR,
-            [node] -> bool {return dynamic_cast<nodes::document_fragment*>(node);});
+            [node] {return dynamic_cast<nodes::document_fragment*>(node);});
 
     helpers::exceptions::throw_v8_exception(
             "offset must be <= length of the node",
             INDEX_SIZE_ERR,
-            [node, offset] -> bool {return offset > helpers::trees::length(node);});
+            [node, offset] {return offset > helpers::trees::length(node);});
 
     if (helpers::range_internals::position_relative(node, offset, start_container, start_offset) == internal::boundary_point_comparidon_position::BEFORE) return -1;
     if (helpers::range_internals::position_relative(node, offset, end_container, end_offset) == internal::boundary_point_comparidon_position::AFTER) return 1;
@@ -274,7 +274,7 @@ dom::ranges::range::extract_contents() {
             ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, helpers::trees::length(start_container) - start_offset, true)
             : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, fragment, start_container, end_container, start_offset, helpers::trees::length(first_partially_contained_child));
 
-    contained_children->for_each([fragment](auto* node) -> void {helpers::mutation_algorithms::append(node, fragment);});
+    contained_children->for_each([fragment](auto* node) {helpers::mutation_algorithms::append(node, fragment);});
 
     helpers::range_internals::is_textual_based_range_container(last_partially_contained_child)
             ? helpers::range_internals::clone_character_data_and_append(end_container, fragment, 0, end_offset, true)
@@ -301,7 +301,7 @@ dom::ranges::range::clone_contents() {
             ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, helpers::trees::length(start_container) - start_offset, false)
             : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, fragment, start_container, first_partially_contained_child, start_offset, helpers::trees::length(first_partially_contained_child));
 
-    contained_children->for_each([fragment](auto* node) -> void {helpers::mutation_algorithms::append(node->clone_node(true), fragment);});
+    contained_children->for_each([fragment](auto* node) {helpers::mutation_algorithms::append(node->clone_node(true), fragment);});
 
     helpers::range_internals::is_textual_based_range_container(last_partially_contained_child)
             ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, 0, end_offset, false)
@@ -323,15 +323,15 @@ dom::ranges::range::delete_contents() {
 
     auto [new_node, new_offset] = helpers::range_internals::create_new_node_and_offset(start_container, end_container, start_offset);
     auto nodes_to_remove = helpers::trees::descendants(m_root)
-            .filter([this](auto* node) -> bool {return helpers::range_internals::contains(node, this);})
-            .filter([this](auto* node) -> bool {return not helpers::range_internals::contains(node->parent_node, this);});
+            .filter([this](auto* node) {return helpers::range_internals::contains(node, this);})
+            .filter([this](auto* node) {return not helpers::range_internals::contains(node->parent_node, this);});
 
     if (helpers::range_internals::is_textual_based_range_container(start_container)) {
         nodes::character_data* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
         helpers::texts::replace_data(start_container_character_data, start_offset, helpers::trees::length(start_container) - start_offset, "");
     }
 
-    nodes_to_remove.for_each([](auto* node) -> void {helpers::mutation_algorithms::remove(node);});
+    nodes_to_remove.for_each([](auto* node) {helpers::mutation_algorithms::remove(node);});
 
     if (helpers::range_internals::is_textual_based_range_container(end_container)) {
         nodes::character_data* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(end_container);
@@ -350,15 +350,15 @@ dom::ranges::range::surround_contents(
     helpers::exceptions::throw_v8_exception(
             "cannot surround the contents of a range that partially contains a text node",
             INVALID_STATE_ERR,
-            [this] -> bool {return not helpers::trees::descendants(m_root)
+            [this] {return not helpers::trees::descendants(m_root)
                     .cast_all<nodes::text*>()
-                    .filter([](auto* node) -> bool {return helpers::range_internals::partially_contains(node, this);})
+                    .filter([](auto* node) {return helpers::range_internals::partially_contains(node, this);})
                     .empty();});
 
     helpers::exceptions::throw_v8_exception(
             "cannot surround the contents of a range with a new parent that is a document, document_fragment or document_type",
             INVALID_NODE_TYPE_ERR,
-            [new_parent] -> bool {return dynamic_cast<nodes::document*>(new_parent)
+            [new_parent] {return dynamic_cast<nodes::document*>(new_parent)
                     or dynamic_cast<nodes::document_fragment*>(new_parent)
                     or dynamic_cast<nodes::document_type*>(new_parent);});
 
@@ -416,9 +416,9 @@ dom::ranges::range::to_json() {
         s += start_text_node->data->substring(start_offset);
 
     helpers::trees::descendants(m_root)
-            .filter([this](auto* descendant_node) -> bool {return helpers::range_internals::contains(descendant_node, this);})
+            .filter([this](auto* descendant_node) {return helpers::range_internals::contains(descendant_node, this);})
             .cast_all<nodes::text*>()
-            .for_each([&s, this](auto* descendant_node) -> void {s += descendant_node->data->substring(start_offset);});
+            .for_each([&s, this](auto* descendant_node) {s += descendant_node->data->substring(start_offset);});
 
     if (end_text_node)
         s += end_text_node->data->substring(0, end_offset);

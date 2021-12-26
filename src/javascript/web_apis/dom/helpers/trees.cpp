@@ -82,7 +82,7 @@ dom::helpers::trees::all_following(nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return descendants(node_a)
-            .template filter([index_a](auto* descendant_node) -> bool {return index(descendant_node) > index_a;})
+            .template filter([index_a](auto* descendant_node) {return index(descendant_node) > index_a;})
             .template cast_all<T>();
 }
 
@@ -93,7 +93,7 @@ dom::helpers::trees::all_preceding(nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return descendants(node_a)
-            .template filter([index_a](auto* descendant_node) -> bool {return index(descendant_node) < index_a;})
+            .template filter([index_a](auto* descendant_node) {return index(descendant_node) < index_a;})
             .template cast_all<T>();
 }
 
@@ -104,7 +104,7 @@ dom::helpers::trees::all_following_siblings(nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return node_a->parent_node->child_nodes
-            ->template filter([index_a](auto* sibling_node) -> bool {return index(sibling_node) > index_a;})
+            ->template filter([index_a](auto* sibling_node) {return index(sibling_node) > index_a;})
             .template cast_all<T>();
 }
 
@@ -115,7 +115,7 @@ dom::helpers::trees::all_preceding_siblings(nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return node_a->parent_node->child_nodes
-            ->template filter([index_a](auto* sibling_node) -> bool {return index(sibling_node) < index_a;})
+            ->template filter([index_a](auto* sibling_node) {return index(sibling_node) < index_a;})
             .template cast_all<T>();
 }
 

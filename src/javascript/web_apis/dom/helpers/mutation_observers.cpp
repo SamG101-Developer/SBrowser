@@ -23,7 +23,7 @@ void dom::helpers::mutation_observers::notify_mutation_observers() {
         mutation_observer->m_record_queue = {};
 
         for (auto* node: *mutation_observer->m_node_list)
-            node->m_registered_observer_list.remove_if([mutation_observer](auto* observer) -> bool {return observer->observer == mutation_observer;});
+            node->m_registered_observer_list.remove_if([mutation_observer](auto* observer) {return observer->observer == mutation_observer;});
 
         if (not records.empty()) {
             v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};

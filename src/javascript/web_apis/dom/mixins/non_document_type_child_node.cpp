@@ -20,7 +20,7 @@ dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() con
 
     return base->child_nodes
             ->cast_all<nodes::element*>()
-            .filter([this](auto* child) -> bool {return helpers::trees::index(child) < helpers::trees::index(base);})
+            .filter([this](auto* child) {return helpers::trees::index(child) < helpers::trees::index(base);})
             .back();
 }
 
@@ -32,7 +32,7 @@ dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const {
 
     return base->child_nodes
             ->cast_all<nodes::element*>()
-            .filter([this](auto* child) -> bool {return helpers::trees::index(child) > helpers::trees::index(base);})
+            .filter([this](auto* child) {return helpers::trees::index(child) > helpers::trees::index(base);})
             .front();
 }
 

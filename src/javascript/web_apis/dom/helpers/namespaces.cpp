@@ -22,22 +22,22 @@ dom::helpers::namespaces::validate_and_extract(
     exceptions::throw_v8_exception(
             "prefix and namespace can not both be null",
             NAMESPACE_ERR,
-            [prefix, namespace_] -> bool {return not prefix and not namespace_;});
+            [prefix, namespace_] {return not prefix and not namespace_;});
 
     exceptions::throw_v8_exception(
             "prefix and namespace don't match (xml prefix)",
             NAMESPACE_ERR,
-            [prefix, namespace_] -> bool {return prefix == "xml" and namespace_ = namespaces::XML;});
+            [prefix, namespace_] {return prefix == "xml" and namespace_ = namespaces::XML;});
 
     exceptions::throw_v8_exception(
             "prefix / qualified_name and namespace don't match (xmlns prefix / qualified_name)",
             NAMESPACE_ERR,
-            [prefix, namespace_, qualified_name] -> bool {return (prefix == "xmlns" or qualified_name == "xmlns") and namespace_ != namespaces::XMLNS;});
+            [prefix, namespace_, qualified_name] {return (prefix == "xmlns" or qualified_name == "xmlns") and namespace_ != namespaces::XMLNS;});
 
     exceptions::throw_v8_exception(
             "prefix / qualified_name and namespace don't match (xmlns prefix / qualified_name)",
             NAMESPACE_ERR,
-            [prefix, namespace_, qualified_name] -> bool {return (prefix != "xmlns" and qualified_name != "xmlns") and namespace_ == namespaces::XMLNS;});
+            [prefix, namespace_, qualified_name] {return (prefix != "xmlns" and qualified_name != "xmlns") and namespace_ == namespaces::XMLNS;});
 
     return {namespace_, prefix, local_name};
 }

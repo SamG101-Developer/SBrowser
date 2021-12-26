@@ -23,32 +23,32 @@ dom::helpers::mutation_algorithms::common_checks(
     exceptions::throw_v8_exception(
             "parent must be a document, document_fragment or element node",
             HIERARCHY_REQUEST_ERR,
-            [node] -> bool {return dynamic_cast<nodes::document*>(node) or dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::element*>(node);});
+            [node] {return dynamic_cast<nodes::document*>(node) or dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::element*>(node);});
 
     exceptions::throw_v8_exception(
             "parent can not be a host-including ancestor of node",
             HIERARCHY_REQUEST_ERR,
-            [node, parent] -> bool {return shadows::is_host_including_ancestor(node, parent);});
+            [node, parent] {return shadows::is_host_including_ancestor(node, parent);});
 
     exceptions::throw_v8_exception(
             "child's current parent does not equal parent",
             NOT_FOUND_ERR,
-            [parent, child] -> bool {return child and child->parent_node != parent;});
+            [parent, child] {return child and child->parent_node != parent;});
 
     exceptions::throw_v8_exception(
             "node must be a document_fragment, document_type, element, text, processing_instruction or comment node",
             HIERARCHY_REQUEST_ERR,
-            [node] -> bool {return not (dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::document_type*>(node) or dynamic_cast<nodes::element*>(node) or dynamic_cast<nodes::text*>(node) or dynamic_cast<nodes::processing_instruction*>(node) or dynamic_cast<nodes::comment*>(node));});
+            [node] {return not (dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::document_type*>(node) or dynamic_cast<nodes::element*>(node) or dynamic_cast<nodes::text*>(node) or dynamic_cast<nodes::processing_instruction*>(node) or dynamic_cast<nodes::comment*>(node));});
 
     exceptions::throw_v8_exception(
             "document parents can not have a text node child",
             HIERARCHY_REQUEST_ERR,
-            [node, parent] -> bool {return dynamic_cast<nodes::document*>(parent) and dynamic_cast<nodes::text*>(node);});
+            [node, parent] {return dynamic_cast<nodes::document*>(parent) and dynamic_cast<nodes::text*>(node);});
 
     exceptions::throw_v8_exception(
             "document_type nodes can not have a non-document parent",
             HIERARCHY_REQUEST_ERR,
-            [node, parent] -> bool {return dynamic_cast<nodes::document_type*>(node) and not dynamic_cast<nodes::document*>(parent);});
+            [node, parent] {return dynamic_cast<nodes::document_type*>(node) and not dynamic_cast<nodes::document*>(parent);});
 }
 
 
@@ -66,29 +66,29 @@ dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
             exceptions::throw_v8_exception(
                     "document_fragment node with a document parent cannot have > 1 element children",
                     HIERARCHY_REQUEST_ERR,
-                    [node] -> bool {return node->child_nodes->filter(&trees::is_element_node).length() > 1;});
+                    [node] {return node->child_nodes->filter(&trees::is_element_node).length() > 1;});
 
             exceptions::throw_v8_exception(
                     "document_fragment node with a document parent cannot have > 0 text node children",
                     HIERARCHY_REQUEST_ERR,
-                    [node] -> bool {return node->child_nodes->filter(&trees::is_text_node).length() > 0;});
+                    [node] {return node->child_nodes->filter(&trees::is_text_node).length() > 0;});
 
             if (node->child_nodes->filter(&trees::is_element_node).length() == 1) {
 
                 exceptions::throw_v8_exception(
                         "document_fragment node with a document parent and element child can not have an element sibling",
                         HIERARCHY_REQUEST_ERR,
-                        [parent] -> bool {return parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
+                        [parent] {return parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
 
                 exceptions::throw_v8_exception(
                         "document_fragment node with a document parent and element child can not be inserted before a document_type node",
                         HIERARCHY_REQUEST_ERR,
-                        [child] -> bool {return dynamic_cast<nodes::document_type*>(child);});
+                        [child] {return dynamic_cast<nodes::document_type*>(child);});
 
                 exceptions::throw_v8_exception(
                         "document_fragment node with a document parent and element child can not be inserted before a document_type node",
                         HIERARCHY_REQUEST_ERR,
-                        [child] -> bool {return child and not trees::all_following<nodes::document_type*>(child).empty();});
+                        [child] {return child and not trees::all_following<nodes::document_type*>(child).empty();});
             }
         }
 
@@ -97,17 +97,17 @@ dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
             exceptions::throw_v8_exception(
                     "element node with a document parent can not have > 0 element children",
                     HIERARCHY_REQUEST_ERR,
-                    [node] -> bool {return node->child_nodes->filter(&trees::is_element_node).length() > 0;});
+                    [node] {return node->child_nodes->filter(&trees::is_element_node).length() > 0;});
 
             exceptions::throw_v8_exception(
                     "element node with a document parent can not be inserted before a document type node",
                     HIERARCHY_REQUEST_ERR,
-                    [child] -> bool {return dynamic_cast<nodes::document_type*>(child);});
+                    [child] {return dynamic_cast<nodes::document_type*>(child);});
 
             exceptions::throw_v8_exception(
                     "element node with a document parent can not be inserted before a document type node",
                     HIERARCHY_REQUEST_ERR,
-                    [child] -> bool {return child and not trees::all_following<nodes::document_type*>(child).empty();});
+                    [child] {return child and not trees::all_following<nodes::document_type*>(child).empty();});
         }
 
         else if (dynamic_cast<nodes::document_type*>(node)) {
@@ -115,17 +115,17 @@ dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
             exceptions::throw_v8_exception(
                     "document_type node with a document parent can not have document_type siblings",
                     HIERARCHY_REQUEST_ERR,
-                    [parent] -> bool {return parent->child_nodes->filter(&trees::is_document_type_node);});
+                    [parent] {return parent->child_nodes->filter(&trees::is_document_type_node);});
 
             exceptions::throw_v8_exception(
                     "document_type_node with a document parent can not be inserted after any elements",
                     HIERARCHY_REQUEST_ERR,
-                    [child] -> bool {return child and not trees::all_preceding<nodes::element*>(child).emprt();});
+                    [child] {return child and not trees::all_preceding<nodes::element*>(child).emprt();});
 
             exceptions::throw_v8_exception(
                     "document_type node with a document parent can not have > 0 element children",
                     HIERARCHY_REQUEST_ERR,
-                    [child, parent] -> bool {not child and parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
+                    [child, parent] {not child and parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
         }
     }
 }
@@ -153,7 +153,7 @@ dom::helpers::mutation_algorithms::pre_remove(
     exceptions::throw_v8_exception(
             "node's current parent does not equal parent",
             NOT_FOUND_ERR,
-            [node, parent] -> bool {return node->parent_node != parent;});
+            [node, parent] {return node->parent_node != parent;});
 
     return remove(node);
 }
@@ -174,7 +174,7 @@ dom::helpers::mutation_algorithms::insert(
 
     // queue tree mutations for document fragment nodes being inserted
     if (dynamic_cast<nodes::document_fragment*>(node)) {
-        node->child_nodes->for_each([](auto* child_node) -> void {remove(child_node, true);});
+        node->child_nodes->for_each([](auto* child_node) {remove(child_node, true);});
         mutation_observers::queue_tree_mutation_record(node, {}, added_nodes, nullptr, nullptr);
     }
 
@@ -182,12 +182,12 @@ dom::helpers::mutation_algorithms::insert(
     if (child) {
         ext::vector<ranges::range*> live_ranges = javascript::realms::current_environment().get("live_ranges");
         live_ranges
-                .filter([child, parent](auto* range) -> bool {return range->start_container == parent and range->start_offset > trees::index(child);})
-                .for_each([count](auto* range) -> void {range->start_offset += count;});
+                .filter([child, parent](auto* range) {return range->start_container == parent and range->start_offset > trees::index(child);})
+                .for_each([count](auto* range) {range->start_offset += count;});
 
         live_ranges
-                .filter([child, parent](auto* range) -> bool {return range->end_container == parent and range->end_offset > trees::index(child);})
-                .for_each([count](auto* range) -> void {range->end_offset += count;});
+                .filter([child, parent](auto* range) {return range->end_container == parent and range->end_offset > trees::index(child);})
+                .for_each([count](auto* range) {range->end_offset += count;});
     }
 
     // determine the previous sibling (mutation records) and insert the node
@@ -237,24 +237,24 @@ dom::helpers::mutation_algorithms::replace(
             exceptions::throw_v8_exception(
                     "document_fragment node with a document parent can not have > 1 element child",
                     HIERARCHY_REQUEST_ERR,
-                    [node] -> bool {return node->child_nodes->filter(&trees::is_element_node).length() > 1;});
+                    [node] {return node->child_nodes->filter(&trees::is_element_node).length() > 1;});
 
             exceptions::throw_v8_exception(
                     "document_fragment node with a document parent can not have > 0 text child",
                     HIERARCHY_REQUEST_ERR,
-                    [node] -> bool {return node->child_nodes->filter(&trees::is_text_node).length() > 1;});
+                    [node] {return node->child_nodes->filter(&trees::is_text_node).length() > 1;});
 
             if (node->child_nodes->filter(&trees::is_element_node).length() == 1) {
 
                 exceptions::throw_v8_exception(
                         "document_fragment node with a document parent and element child can not have an siblings that != 'child'",
                         HIERARCHY_REQUEST_ERR,
-                        [parent, child] -> bool {return not parent->child_nodes->filter(&trees::is_element_node).remove(child).empty();});
+                        [parent, child] {return not parent->child_nodes->filter(&trees::is_element_node).remove(child).empty();});
 
                 exceptions::throw_v8_exception(
                         "document_fragment node with a document parent and element child can not have a document_type child following 'child'",
                         HIERARCHY_REQUEST_ERR,
-                        [child] -> bool {return not trees::all_following<nodes::document_type*>(child).empty();});
+                        [child] {return not trees::all_following<nodes::document_type*>(child).empty();});
             }
         }
 
@@ -263,12 +263,12 @@ dom::helpers::mutation_algorithms::replace(
             exceptions::throw_v8_exception(
                     "element node with a document parent can not have an element child that != 'child'",
                     HIERARCHY_REQUEST_ERR,
-                    [node, child] -> bool {return not node->child_nodes->filter(&trees::is_element_node).remove(child).empty();;});
+                    [node, child] {return not node->child_nodes->filter(&trees::is_element_node).remove(child).empty();;});
 
             exceptions::throw_v8_exception(
                     "element node with a document parent can not be inserted before a document type node",
                     HIERARCHY_REQUEST_ERR,
-                    [child] -> bool {return not trees::all_following<nodes::document_type*>(child).empty();});
+                    [child] {return not trees::all_following<nodes::document_type*>(child).empty();});
         }
 
         else if (dynamic_cast<nodes::document_type*>(node)) {/* TODO */}
@@ -303,20 +303,20 @@ dom::helpers::mutation_algorithms::remove(
 
     ext::vector<ranges::range*> live_ranges = javascript::realms::current_environment().get("live_ranges");
     live_ranges
-            .filter([node](auto* range) -> bool {return trees::is_descendant(range->start_container, node);})
-            .for_each([parent](auto* range) -> void {range->start_container = parent; range->start_offset = node_index;});
+            .filter([node](auto* range) {return trees::is_descendant(range->start_container, node);})
+            .for_each([parent](auto* range) {range->start_container = parent; range->start_offset = node_index;});
 
     live_ranges
-            .filter([node](auto* range) -> bool {return trees::is_descendant(range->end_container, node);})
-            .for_each([parent](auto* range) -> void {range->end_container = parent; range->end_offset = node_index;});
+            .filter([node](auto* range) {return trees::is_descendant(range->end_container, node);})
+            .for_each([parent](auto* range) {range->end_container = parent; range->end_offset = node_index;});
 
     live_ranges
-            .filter([parent, node_index](auto* range) -> bool {return range->start_container == parent and range->start_offset > node_index;})
-            .for_each([](auto* range) -> void {range->start_offset -= 1;});
+            .filter([parent, node_index](auto* range) {return range->start_container == parent and range->start_offset > node_index;})
+            .for_each([](auto* range) {range->start_offset -= 1;});
 
     live_ranges
-            .filter([parent, node_index](auto* range) -> bool {return range->end_container == parent and range->end_offset > node_index;})
-            .for_each([](auto* range) -> void {range->end_offset -= 1;});
+            .filter([parent, node_index](auto* range) {return range->end_container == parent and range->end_offset > node_index;})
+            .for_each([](auto* range) {range->end_offset -= 1;});
 
     nodes::node* old_previous_sibling = node->previous_sibling;
     nodes::node* old_next_sibling = node->next_sibling;
@@ -328,7 +328,7 @@ dom::helpers::mutation_algorithms::remove(
     if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and parent->m_assigned_nodes->empty())
         shadows::signal_slot_change(parent);
 
-    if (not trees::descendants(node)->filter([](nodes::node* child) -> bool {return shadows::is_slot(child);}).empty()) {
+    if (not trees::descendants(node)->filter([](nodes::node* child) {return shadows::is_slot(child);}).empty()) {
         shadows::assign_slottables_for_tree(trees::root(parent));
         shadows::assign_slottables_for_tree(node);
     }
@@ -368,7 +368,7 @@ dom::helpers::mutation_algorithms::replace_all(
 
     auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node}.remove(nullptr);
     auto removed_nodes = ext::vector<nodes::node*>{*parent->child_nodes};
-    parent->child_nodes->for_each([](auto* child) -> void {remove(child);});
+    parent->child_nodes->for_each([](auto* child) {remove(child);});
 
     if (node)
         insert(node, parent, nullptr, true);

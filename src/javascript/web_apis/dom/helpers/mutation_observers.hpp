@@ -4,11 +4,19 @@
 
 #include <functional>
 
+#include <ext/map.hpp>
 #include <ext/string.hpp>
 #include <ext/vector.hpp>
 
 namespace dom {
     namespace helpers {struct mutation_observers;}
+    namespace internal {
+        struct registered_observer;
+        struct transient_registered_observer;
+    }
+    namespace mutations {
+        class mutation_observer;
+    }
     namespace nodes {
         class event_target;
         class node;
@@ -32,6 +40,17 @@ public:
     static void queue_global_task(/* TODO */) {/* TODO */};
     static void queue_element_task(/* TODO */) {/* TODO */};
     static void queue_media_element_task(html::elements::html_media_element* element, steps_t&& steps);
+};
+
+
+struct dom::internal::registered_observer {
+    mutations::mutation_observer* observer;
+    ext::string_any_map options;
+};
+
+
+struct dom::internal::transient_registered_observer : public registered_observer {
+    registered_observer* source;
 };
 
 

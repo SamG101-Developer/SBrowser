@@ -47,8 +47,8 @@ dom::helpers::shadows::find_slot(
 
     auto descendant_slots = trees::descendants(shadow).cast_all<html::elements::html_slot_element*>();
     return descendant_slots.filter(shadow->slot_assignment == "manual"
-            ? [slottable](auto* slot) -> bool {return is_slot(slot) and slot->m_manually_assigned_nodes.contains(slottable);}
-            : [slottable](auto* slot) -> bool {return is_slot(slot) and slot->name == dynamic_cast<nodes::element*>(slottable)->m_name;})
+            ? [slottable](auto* slot) {return is_slot(slot) and slot->m_manually_assigned_nodes.contains(slottable);}
+            : [slottable](auto* slot) {return is_slot(slot) and slot->name == dynamic_cast<nodes::element*>(slottable)->m_name;})
             .front();
 }
 
@@ -63,10 +63,10 @@ dom::helpers::shadows::find_slottables(
         return {};
 
     return slot->m_manually_assigned
-            .filter([](auto* slottable) -> bool {return is_slottable(slottable);})
+            .filter([](auto* slottable) {return is_slottable(slottable);})
             .filter(shadow->slot_assignment == "manual"
-                    ? [shadow](auto* slottable) -> bool {return slottable->parent_node == "host";}
-                    : [shadow](auto* slottable) -> bool {return find_slot(slottable);});
+                    ? [shadow](auto* slottable) {return slottable->parent_node == "host";}
+                    : [shadow](auto* slottable) {return find_slot(slottable);});
 }
 
 
@@ -79,7 +79,7 @@ dom::helpers::shadows::find_flattened_slottables(
 
     auto slottables = not find_slottables(slot).empty()
             ? find_slottables(slot)
-            : slot->child_nodes->filter([](auto* child) -> bool {return is_slottable(child);});
+            : slot->child_nodes->filter([](auto* child) {return is_slottable(child);});
 
     return slottables.transform<nodes::node*>([](auto* slottable) -> nodes::node* {return is_slot(slottable) and is_root_shadow_root(slottable)
             ? find_flattened_slottables(slottable).front()
@@ -107,7 +107,7 @@ dom::helpers::shadows::assign_slottables(
 
     slottables
             .cast_all<nodes::element*>()
-            .for_each([slot](auto* slottable) -> void {slottable->assigned_slot = slot;});
+            .for_each([slot](auto* slottable) {slottable->assigned_slot = slot;});
 }
 
 
@@ -116,9 +116,9 @@ dom::helpers::shadows::assign_slottables_for_tree(
         nodes::node* root) {
 
     trees::descendants(root)
-            .filter([](auto* descendant) -> void {return is_slot(descendant);})
+            .filter([](auto* descendant) {return is_slot(descendant);})
             .cast_all<html::elements::html_slot_element*>()
-            .for_each([](auto* slot) -> void {assign_slottables(slot);});
+            .for_each([](auto* slot) {assign_slottables(slot);});
 }
 
 

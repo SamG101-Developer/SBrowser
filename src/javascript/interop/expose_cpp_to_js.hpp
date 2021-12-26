@@ -22,6 +22,9 @@
 #include <dom/mixins/parent_node.hpp>
 #include <dom/mixins/slottable.hpp>
 
+#include <dom/mutations/mutation_observer.hpp>
+#include <dom/mutations/mutation_record.hpp>
+
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/cdata_section.hpp>
 #include <dom/nodes/character_data.hpp>
@@ -37,6 +40,7 @@
 #include <dom/nodes/text.hpp>
 #include <dom/nodes/window.hpp>
 #include <dom/nodes/window_proxy.hpp>
+#include <dom/nodes/xml_document.hpp>
 
 #include <dom/other/dom_exception.hpp>
 #include <dom/other/dom_implementation.hpp>
@@ -216,6 +220,27 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::mixins::slottable<dom::nodes::node>> v8_slottable{isolate};
     v8_slottable
             .var("assignedSlot", &dom::mixins::slottable<dom::nodes::node>::assigned_slot)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::mutations::mutation_observer> v8_mutation_observer{isolate};
+    v8_mutation_observer
+            .ctor<dom::mutations::mutation_observer::mutation_callback&&>()
+            .function("observe", &dom::mutations::mutation_observer::observe)
+            .function("disconnect", &dom::mutations::mutation_observer::disconnect)
+            .function("takeRecords", &dom::mutations::mutation_observer::take_records)
+            .auto_wrap_objects();
+
+    v8pp::class_<dom::mutations::mutation_record> v8_mutation_record{isolate};
+    v8_mutation_record
+            .var("type", &dom::mutations::mutation_record::type)
+            .var("target", &dom::mutations::mutation_record::target)
+            .var("addedNodes", &dom::mutations::mutation_record::added_nodes)
+            .var("removedNodes", &dom::mutations::mutation_record::removed_nodes)
+            .var("previousSibling", &dom::mutations::mutation_record::previous_sibling)
+            .var("nextSibling", &dom::mutations::mutation_record::next_sibling)
+            .var("attributeName", &dom::mutations::mutation_record::attribute_name)
+            .var("attributeNamespace", &dom::mutations::mutation_record::attribute_namespace)
+            .var("oldValue", &dom::mutations::mutation_record::old_value)
             .auto_wrap_objects();
 
     v8pp::class_<dom::nodes::attr> v8_attr{isolate};
@@ -580,6 +605,11 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("[[Window]]", &dom::nodes::window_proxy::s_window)
             .auto_wrap_objects();
 
+    v8pp::class_<dom::nodes::xml_document> v8_xml_document{isolate};
+    v8_xml_document
+            .inherit<dom::nodes::document>()
+            .auto_wrap_objects();
+
     v8pp::class_<dom::other::dom_exception> v8_dom_exception{isolate};
     v8_dom_exception
             .ctor<ext::cstring&, exception_type>()
@@ -703,6 +733,9 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("NodeIterator", v8_node_iterator)
                     .class_("TreeWalker", v8_tree_walker)
 
+                    .class_("MutationObserver", v8_mutation_observer)
+                    .class_("MutationRecord", v8_mutation_record)
+
                     .class_("Attr", v8_attr)
                     .class_("CDataSection", v8_cdata_section)
                     .class_("CharacterData", v8_character_data)
@@ -717,6 +750,7 @@ void javascript::interop::expose_cpp_to_js::expose(
                     .class_("Text", v8_text)
                     .class_("Window", v8_window)
                     .class_("WindowProxy", v8_window_proxy)
+                    .class_("XmlDocument", v8_xml_document)
 
                     .class_("DomException", v8_dom_exception)
                     .class_("DomImplementation", v8_dom_implementation)

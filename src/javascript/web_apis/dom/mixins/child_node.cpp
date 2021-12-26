@@ -21,7 +21,7 @@ dom::mixins::child_node<T>::before(
 
         nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_previous_sibling = helpers::trees::all_preceding_siblings(this)
-                .filter([nodes = ext::vector{nodes...}](auto* node) -> void {return not nodes.contains(node);})
+                .filter([nodes = ext::vector{nodes...}](auto* node) {return not nodes.contains(node);})
                 .front();
 
         viable_previous_sibling = not viable_previous_sibling
@@ -47,7 +47,7 @@ dom::mixins::child_node<T>::after(
 
         nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_next_sibling = helpers::trees::all_following_siblings(this)
-                .filter([nodes = ext::vector{nodes...}](auto* node) -> void {return not nodes.contains(node);})
+                .filter([nodes = ext::vector{nodes...}](auto* node) {return not nodes.contains(node);})
                 .front();
 
         helpers::mutation_algorithms::pre_insert(node, parent, viable_next_sibling);
@@ -68,7 +68,7 @@ dom::mixins::child_node<T>::replace_with(
     if (nodes::node* parent = base->parent_node) {
         nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_next_sibling = helpers::trees::all_following_siblings(this)
-                .filter([nodes = ext::vector{nodes...}](auto* node) -> void {return not nodes.contains(node);})
+                .filter([nodes = ext::vector{nodes...}](auto* node) {return not nodes.contains(node);})
                 .front();
 
         base->parent_node == parent

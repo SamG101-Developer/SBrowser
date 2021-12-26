@@ -67,20 +67,20 @@ dom::nodes::node::normalize() const {
         auto* live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>*>("live_ranges");
         while (helpers::trees::is_exclusive_text_node(current_node)) {
             live_ranges
-                    ->filter([current_node](auto* range) -> bool {return range->start_container == current_node;})
-                    .for_each([text_node](auto* range) -> void {range->start_offset += length; range->start_container = text_node;});
+                    ->filter([current_node](auto* range) {return range->start_container == current_node;})
+                    .for_each([text_node](auto* range) {range->start_offset += length; range->start_container = text_node;});
 
             live_ranges
-                    ->filter([current_node](auto* range) -> bool {return range->end_container == current_node;})
-                    .for_each([text_node](auto* range) -> void {range->end_offset += length; range->end_container = text_node;});
+                    ->filter([current_node](auto* range) {return range->end_container == current_node;})
+                    .for_each([text_node](auto* range) {range->end_offset += length; range->end_container = text_node;});
 
             live_ranges
-                    ->filter([current_node](auto* range) -> bool {return range->start_container == current_node->parent_node;})
-                    .for_each([length, text_node](auto* range) -> void {range->start_offset = length; range->start_container = text_node;});
+                    ->filter([current_node](auto* range) {return range->start_container == current_node->parent_node;})
+                    .for_each([length, text_node](auto* range) {range->start_offset = length; range->start_container = text_node;});
 
             live_ranges
-                    ->filter([current_node](auto* range) -> bool {return range->end_container == current_node->parent_node;})
-                    .for_each([length, text_node](auto* range) -> void {range->end_offset = length; range->end_container = text_node;});
+                    ->filter([current_node](auto* range) {return range->end_container == current_node->parent_node;})
+                    .for_each([length, text_node](auto* range) {range->end_offset = length; range->end_container = text_node;});
 
             length += helpers::trees::length(current_node);
             current_node = current_node->next_sibling;
@@ -140,14 +140,14 @@ dom::nodes::node::compare_document_position(node* other) const {
     element* node_1_as_element = nullptr;
     element* node_2_as_element = nullptr;
 
-    // if other is an attr -> set attr_1 to the attribute and node_1 to the owner element
+    // if other is an attr attr_1 to the attribute and node_1 to the owner element
     if (dynamic_cast<const attr*>(node_1)) {
         const node* temp = node_1;
         node_1_as_element = attr_1->owner_element;
         attr_1 = (attr*)dynamic_cast<const attr*>(temp);
     }
 
-    // if this is an attr -> set attr_2 to the attribute and node_1 to the owner element
+    // if this is an attr attr_2 to the attribute and node_1 to the owner element
     if (dynamic_cast<const attr*>(node_2)) {
         const node* temp = node_2;
         node_2_as_element = attr_2->owner_element;
@@ -202,7 +202,7 @@ dom::nodes::node::clone_node(bool deep) const {
     helpers::exceptions::throw_v8_exception(
             "cannot clone a shadow root node",
             helpers::exceptions::NOT_SUPPORTED_ERR,
-            [this] -> bool {return helpers::shadows::is_shadow_root(this);});
+            [this] {return helpers::shadows::is_shadow_root(this);});
 
     return helpers::node_internals::clone(this, nullptr, deep);
 }
@@ -283,7 +283,7 @@ void dom::nodes::node::set_parent_node(node* val) {
         }
 
         else {
-            std::cout << "error -> unknown widget type trying to render" << std::endl;
+            std::cout << "error widget type trying to render" << std::endl;
             delete m_rendered_widget;
             return;
         }

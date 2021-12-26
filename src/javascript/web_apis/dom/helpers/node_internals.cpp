@@ -32,11 +32,11 @@ dom::helpers::node_internals::clone(
             : cloned_node = new T{*node};
 
     if (element)
-        element->attributes->for_each([node](auto* attribute) -> void {mutation_algorithms::append(clone(attribute), node->owner_document);});
+        element->attributes->for_each([node](auto* attribute) {mutation_algorithms::append(clone(attribute), node->owner_document);});
     if (not cloned_node->owner_document = dynamic_cast<nodes::document*>(cloned_node))
         cloned_node->owner_document = document;
     if (deep)
-        node->child_nodes->for_each([document](auto* child) -> void {helpers::mutation_algorithms::append(clone(child, document, true));});
+        node->child_nodes->for_each([document](auto* child) {helpers::mutation_algorithms::append(clone(child, document, true));});
 
     return cloned_node;
 }
@@ -72,7 +72,7 @@ dom::helpers::node_internals::locate_a_namespace(
         if (element->namespace_uri and element->prefix == prefix)
             return element->namespace_uri;
 
-        if (auto* front = element->attributes->filter([prefix](nodes::attr* attribute) -> bool {return (attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == prefix and attribute->prefix == "xmlns") or (attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == "xmlns" and not attribute->prefix and not prefix);}).front())
+        if (auto* front = element->attributes->filter([prefix](nodes::attr* attribute) {return (attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == prefix and attribute->prefix == "xmlns") or (attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == "xmlns" and not attribute->prefix and not prefix);}).front())
             return front->value;
 
         return node_internals::locate_a_namespace(node, prefix);
@@ -102,11 +102,11 @@ dom::helpers::node_internals::list_of_elements_with_qualified_name(
     return node->owner_document->m_type == "html"
             ? trees::descendants(node)
                 .cast_all<nodes::element*>()
-                .filter([qualified_name](auto* descendant_element) -> bool {return descendant_element->namespace_uri == "html" and descendant_element->m_qualified_name == qualified_name.new_lower_case() or descendant_element->namespace_uri != "html" and descendant_element->m_qualified_name == qualified_name;})
+                .filter([qualified_name](auto* descendant_element) {return descendant_element->namespace_uri == "html" and descendant_element->m_qualified_name == qualified_name.new_lower_case() or descendant_element->namespace_uri != "html" and descendant_element->m_qualified_name == qualified_name;})
 
             : trees::descendants(node)
                 .cast_all<nodes::element*>()
-                .filter([qualified_name](auto* descendant_element) -> bool {return descendant_element->m_qualified_name == qualified_name;});
+                .filter([qualified_name](auto* descendant_element) {return descendant_element->m_qualified_name == qualified_name;});
 }
 
 
@@ -118,7 +118,7 @@ dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
 
     return trees::descendants(node)
             .cast_all<nodes::element*>()
-            .filter([namespace_, local_name](auto* descendant_element) -> bool {
+            .filter([namespace_, local_name](auto* descendant_element) {
                 return std::regex_match(descendant_element->namespace_uri, std::regex(namespace_.to_std_string())) and
                        std::regex_match(descendant_element->local_namem, std::regex(local_name.to_std_string()));
             });
@@ -136,7 +136,7 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
 
     return trees::descendants(node)
             .cast_all<nodes::element*>()
-            .filter([node, classes](auto* descendant_element) -> bool {
+            .filter([node, classes](auto* descendant_element) {
                 return node->owner_document->m_mode == "quirks"
                         ? descendant_element->class_list->filter(&classes::contains)
                         : descendant_element->class_list->transform(&ext::string::new_lowercase).filter(&classes::contains)
@@ -160,7 +160,7 @@ dom::helpers::node_internals::adopt(
 
     nodes::document* old_document = node->owner_document;
     if (node->parent_node) mutation_algorithms::remove(node);
-    if (document != old_document) /* TODO -> manage show inclusive descendants */ return;
+    if (document != old_document) /* TODO show inclusive descendants */ return;
 }
 
 
@@ -213,12 +213,12 @@ dom::helpers::node_internals::convert_nodes_into_node(
         nodes_or_strings ...nodes) {
 
     ext::vector<nodes::node*> converted_nodes{};
-    ext::vector{nodes...}.template for_each([&converted_nodes](auto* node) -> void {converted_nodes.append(dynamic_cast<nodes::node*>(node) ? node : new nodes::text{node});});
+    ext::vector{nodes...}.template for_each([&converted_nodes](auto* node) {converted_nodes.append(dynamic_cast<nodes::node*>(node) ? node : new nodes::text{node});});
 
     auto* node = converted_nodes.front();
     if (node) return node;
 
     node = new nodes::document_fragment{};
-    converted_nodes.template for_each([&master_node = node](auto* node) -> void {helpers::mutation_algorithms::append(node, master_node);});
+    converted_nodes.template for_each([&master_node = node](auto* node) {helpers::mutation_algorithms::append(node, master_node);});
     return node;
 }

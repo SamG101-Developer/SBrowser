@@ -45,12 +45,12 @@ dom::helpers::range_internals::set_start_or_end(
     exceptions::throw_v8_exception(
             "node must be a non-document_type node",
             INVALID_NODE_TYPE_ERR,
-            [container] -> bool {return dynamic_cast<nodes::document_type*>(container);});
+            [container] {return dynamic_cast<nodes::document_type*>(container);});
 
     exceptions::throw_v8_exception(
             "offset must be <= index of the node",
             INDEX_SIZE_ERR,
-            [container, offset] -> bool {return offset > trees::index(container);});
+            [container, offset] {return offset > trees::index(container);});
 
     // set the container to the start of the range
     if (start) {
@@ -117,19 +117,19 @@ dom::helpers::range_internals::get_range_helpers_variables(
     auto* common_ancestor = trees::common_ancestor(start_container, end_container);
 
     nodes::node* first_partially_contained_child = not trees::is_ancestor(start_container, end_container)
-            ? common_ancestor->child_nodes->filter([range](auto* node) -> bool {return partially_contains(node, range);}).front()
+            ? common_ancestor->child_nodes->filter([range](auto* node) {return partially_contains(node, range);}).front()
             : nullptr;
 
     nodes::node* last_partially_contained_child = not trees::is_ancestor(end_container, start_container)
-            ? common_ancestor->child_nodes->filter([range](auto* node) -> bool {return partially_contains(node, range);}).back()
+            ? common_ancestor->child_nodes->filter([range](auto* node) {return partially_contains(node, range);}).back()
             : nullptr;
 
-    auto contained_children = common_ancestor->child_nodes->filter([range](auto* node) -> bool {return contains(node, range);});
+    auto contained_children = common_ancestor->child_nodes->filter([range](auto* node) {return contains(node, range);});
 
     exceptions::throw_v8_exception(
             "children of the common ancestor of the start and end container of a range must be non-document_type nodes",
             HIERARCHY_REQUEST_ERR,
-            [contained_children] -> bool {return contained_children.any_of([](auto* contained_child) -> bool {return dynamic_cast<nodes::document_type*>(contained_child);});});
+            [contained_children] {return contained_children.any_of([](auto* contained_child) {return dynamic_cast<nodes::document_type*>(contained_child);});});
 
     return std::make_tuple(first_partially_contained_child, last_partially_contained_child, contained_children);
 }
@@ -141,7 +141,7 @@ dom::helpers::range_internals::check_parent_exists(nodes::node* node) {
     exceptions::throw_v8_exception(
             "node must have a parent",
             INVALID_NODE_TYPE_ERR,
-            [node] -> bool {return not node->parent_node;});
+            [node] {return not node->parent_node;});
 
     return node->parent_node;
 }

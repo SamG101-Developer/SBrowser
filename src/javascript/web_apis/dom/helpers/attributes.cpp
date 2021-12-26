@@ -81,7 +81,7 @@ dom::helpers::attributes::get_attribute_by_name(
             : qualified_name;
 
     return owner_element->attributes
-            ->filter([html_qualified_name](nodes::attr* attribute) -> bool {return attribute->name == html_qualified_name;})
+            ->filter([html_qualified_name](nodes::attr* attribute) {return attribute->name == html_qualified_name;})
             .front();
 }
 
@@ -93,7 +93,7 @@ dom::helpers::attributes::get_attribute_by_ns(
         nodes::element* owner_element) {
 
     return owner_element->attributes
-            ->filter([local_name, namespace_](nodes::attr* attribute) -> bool {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
+            ->filter([local_name, namespace_](nodes::attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
             .front();
 }
 
@@ -117,7 +117,7 @@ dom::helpers::attributes::set_attribute(
     exceptions::throw_v8_exception(
             "attribute's element is non-null doesn't equal element",
             exceptions::INUSE_ATTRIBUTE_ERR,
-            [attribute, new_owner_element] -> bool {return attribute->owner_element and attribute->owner_element == new_owner_element;});
+            [attribute, new_owner_element] {return attribute->owner_element and attribute->owner_element == new_owner_element;});
 
     auto* old_attribute = get_attribute_by_ns(attribute->namespace_uri, attribute->local_name, new_owner_element);
     if (old_attribute == attribute) return nullptr;

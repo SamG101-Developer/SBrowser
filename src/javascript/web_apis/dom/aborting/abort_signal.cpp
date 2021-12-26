@@ -27,5 +27,5 @@ dom::aborting::abort_signal::throw_if_aborted() {
     helpers::exceptions::throw_v8_exception(
             ext::property_any_cast<other::dom_exception>(reason).message,
             ABORT_ERR,
-            [this] -> bool {return reason->has_value();});
+            [this] {return reason->has_value();});
 }

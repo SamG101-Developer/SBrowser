@@ -60,7 +60,7 @@ dom::nodes::element::has_attribute(ext::cstring& name) const {
             : name;
 
     return not attributes
-            ->filter([name](attr* attribute) -> bool {return attribute->name == name;})
+            ->filter([name](attr* attribute) {return attribute->name == name;})
             .empty()
 }
 
@@ -71,7 +71,7 @@ dom::nodes::element::has_attribute_ns(
         ext::cstring& local_name) const {
 
     return not namespace_
-            ->filter([namespace_, local_name](attr* attribute) -> bool {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
+            ->filter([namespace_, local_name](attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
             .empty();
 }
 
@@ -126,7 +126,7 @@ dom::nodes::element::set_attribute(
 
     // TODO : move into attr helpers namespacing (set_attribute_by_name)
     attr* attribute = attributes
-            ->filter([qualified_name](attr* attribute) -> bool {attribute->name == qualified_name;})
+            ->filter([qualified_name](attr* attribute) {attribute->name == qualified_name;})
             .front();
 
     if (not attribute) {
@@ -265,23 +265,23 @@ dom::nodes::element::attach_shadow(ext::cstring_any_map& options) {
 
     helpers::exceptions::throw_v8_exception(
             "cannot attach a shadow to a non-html namespaced element",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
-            [this] -> bool {return namespace_uri != helpers::namespaces::HTML;});
+            NOT_SUPPORTED_ERR,
+            [this] {return namespace_uri != helpers::namespaces::HTML;});
 
     helpers::exceptions::throw_v8_exception(
             local_name + " element is incompatible with shadow root attachment",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
-            [this] -> bool {return not m_local_names.contains(local_name) or not helpers::custom_elements::is_valid_custom_element_name(local_name);});
+            NOT_SUPPORTED_ERR,
+            [this] {return not m_local_names.contains(local_name) or not helpers::custom_elements::is_valid_custom_element_name(local_name);});
 
     helpers::exceptions::throw_v8_exception(
             "cannot attach a shadow root to a shadow root",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
-            [this] -> bool {return helpers::shadows::is_shadow_root(this)});
+            NOT_SUPPORTED_ERR,
+            [this] {return helpers::shadows::is_shadow_root(this)});
 
     helpers::exceptions::throw_v8_exception(
             "custom element's definition doesn't allow shadow root attachment",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
-            [this] -> bool {return helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, m_is)->disable_shadow and helpers::custom_elements::is_valid_custom_element_name(local_name) or m_is;});
+            NOT_SUPPORTED_ERR,
+            [this] {return helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, m_is)->disable_shadow and helpers::custom_elements::is_valid_custom_element_name(local_name) or m_is;});
 
     auto* shadow = new shadow_root{};
     shadow->owner_document = owner_document;
@@ -315,7 +315,7 @@ dom::nodes::element::get_bounding_client_rect() {
     if (client_rects.empty())
         return geometry::shapes::dom_rect{0, 0, 0, 0};
 
-    if (client_rects.all_of(geometry::shapes::dom_rect rect) -> bool {return rect.width == 0.0 or rect.height == 0.0;})
+    if (client_rects.all_of(geometry::shapes::dom_rect rect) {return rect.width == 0.0 or rect.height == 0.0;})
         return client_rects.front();
 
     double furthest_left = ext::infinity<double>{};

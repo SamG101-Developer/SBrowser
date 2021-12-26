@@ -41,7 +41,7 @@ dom::nodes::event_target::dispatch_event(
     helpers::exceptions::throw_v8_exception(
             "event must be initialized and not dispatched in order be dispatched",
             INVALID_STATE_ERR,
-            [event] -> bool {return event->m_dispatch_flag or not event->m_initialized_flag;});
+            [event] {return event->m_dispatch_flag or not event->m_initialized_flag;});
 
     event->is_trusted = false;
     return helpers::event_listening::dispatch(event, this);

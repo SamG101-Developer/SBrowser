@@ -2,10 +2,10 @@
 
 #include <ext/string_switch.hpp>
 
-#include <dom/nodes/document.hpp>
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/text.hpp>
+#include <dom/nodes/xml_document.hpp>
 
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
@@ -39,13 +39,13 @@ dom::other::dom_implementation::create_document_type(
 }
 
 
-dom::nodes::document*
+dom::nodes::xml_document*
 dom::other::dom_implementation::create_document(
         ext::cstring& namespace_,
         ext::cstring& qualified_name,
         nodes::document_type* document_type) {
 
-    auto* document = new nodes::document{};
+    auto* document = new nodes::xml_document{};
     auto* document_element = not qualified_name.empty()
             ? document->create_element_ns(namespace_, qualified_name)
             : nullptr;

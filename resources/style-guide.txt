@@ -97,3 +97,8 @@ Return/Break/Continue/Goto etc
     - Never use break or continue
     - Never use goto
     - However switch-case blocks are encouraged
+
+
+ext::vector<T>::for_each(...) vs for (const T& item: vector)
+    - use for_each when the value of the vector is being manipulated
+    - use for when the value of the vector is being used

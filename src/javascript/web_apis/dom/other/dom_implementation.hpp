@@ -10,6 +10,7 @@ namespace dom {
     namespace nodes {
         class document_type;
         class document;
+        class xml_document;
     }
 }
 
@@ -21,7 +22,7 @@ public: constructors
 
 public: methods
     nodes::document_type* create_document_type(ext::cstring& qualified_name, ext::cstring& public_id, ext::cstring& system_id);
-    nodes::document* create_document(ext::cstring& namespace_, ext::cstring& qualified_name, nodes::document_type* document_type = nullptr);
+    nodes::xml_document* create_document(ext::cstring& namespace_, ext::cstring& qualified_name, nodes::document_type* document_type = nullptr);
     nodes::document* create_html_document(ext::cstring& title = "");
 
 private: internal_properties

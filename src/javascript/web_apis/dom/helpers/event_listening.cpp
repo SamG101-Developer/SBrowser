@@ -40,7 +40,7 @@ dom::helpers::event_listening::add_event_listener(
     if (event_target->m_event_listeners.contains(event_listener)) return;
 
     event_target->m_event_listeners.append(event_listener);
-    if (signal) signal->m_abort_algorithms.append([event_listener, event_target] -> void {
+    if (signal) signal->m_abort_algorithms.append([event_listener, event_target] {
         remove_event_listener(event_target, event_listener);
     });
 }
@@ -52,7 +52,7 @@ dom::helpers::event_listening::remove_event_listener(
         ext::string_any_map& event_listener) {
 
     event_listener.at("removed").emplace<bool>(true);
-    event_target->m_event_listeners.remove_if([event_listener](ext::cstring_any_map& existing_listener) -> bool {
+    event_target->m_event_listeners.remove_if([event_listener](ext::cstring_any_map& existing_listener) {
         return existing_listener.at("callback") == event_listener.at("callback")
                 and existing_listener.at("type") == event_listener.at("type")
                 and existing_listener.at("capture") == event_listener.at("capture");
@@ -133,12 +133,12 @@ dom::helpers::event_listening::dispatch(
         }
 
         clear_targets_struct = event->path
-                ->filter([](auto* event_path_struct) -> bool {return event_path_struct.shadow_adjusted_target;})
+                ->filter([](auto* event_path_struct) {return event_path_struct.shadow_adjusted_target;})
                 .back();
 
         clear_targets = not ext::vector<nodes::event_target*>{clear_targets_struct.shadow_adjusted_target, clear_targets_struct.related_target}
                 .extend(clear_targets_struct.touch_targets)
-                .filter([](auto* event_target) -> bool {shadows::is_shadow_root(event_target);})
+                .filter([](auto* event_target) {shadows::is_shadow_root(event_target);})
                 .readonly_setter();
 
         for (auto* event_path_struct: *event->path) {

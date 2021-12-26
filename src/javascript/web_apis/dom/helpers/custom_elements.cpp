@@ -57,27 +57,27 @@ dom::helpers::custom_elements::create_an_element(
             exceptions::throw_v8_exception(
                     "custom element must have an empty attribute list",
                     NOT_SUPPORTED_ERR,
-                    [result] -> bool {return result->attributes->empty();});
+                    [result] {return result->attributes->empty();});
 
             exceptions::throw_v8_exception(
                     "custom element must have an empty child nodes list",
                     NOT_SUPPORTED_ERR,
-                    [result] -> bool {return result->child_nodes->empty();});
+                    [result] {return result->child_nodes->empty();});
 
             exceptions::throw_v8_exception(
                     "custom element must have a null / undefined parent",
                     NOT_SUPPORTED_ERR,
-                    [result] -> bool {return result->parent_node;});
+                    [result] {return result->parent_node;});
 
             exceptions::throw_v8_exception(
                     "custom element must have a null / undefined document",
                     NOT_SUPPORTED_ERR,
-                    [result] -> bool {return result->owner_document;});
+                    [result] {return result->owner_document;});
 
             exceptions::throw_v8_exception(
                     "custom element's local name must match local name",
                     NOT_SUPPORTED_ERR,
-                    [result, local_name] -> bool {return result->local_name != local_name;});
+                    [result, local_name] {return result->local_name != local_name;});
 
             if (exception_handler.HasCaught()) {
                 console::reporting::report_warning_to_console(exception_handler.Message()->Get());
@@ -131,7 +131,7 @@ dom::helpers::custom_elements::upgrade_element(
     exceptions::throw_v8_exception(
             "if the definition has shadows disabled, the element cannot have a shadow root",
             NOT_SUPPORTED_ERR,
-            [definition, element] -> bool {definition->disable_shadow and element->shadow_root_node;});
+            [definition, element] {definition->disable_shadow and element->shadow_root_node;});
 
     element->m_custom_element_state = "precustomized";
     auto* construction_result = new c{};
@@ -255,5 +255,5 @@ dom::helpers::custom_elements::element_interface(
         ext::cstring& local_name,
         ext::cstring& namespace_) {
 
-    return new nodes::element{}; // TODO -> different types
+    return new nodes::element{}; // TODO types
 }

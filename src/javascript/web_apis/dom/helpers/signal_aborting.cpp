@@ -13,7 +13,7 @@ dom::helpers::signal_aborting::signal_abort(
 
     signal->aborted = true;
     signal->reason = reason;
-    signal->m_abort_algorithms.for_each([](auto& algorithm) -> void {algorithm();});
+    signal->m_abort_algorithms.for_each([](auto& algorithm) {algorithm();});
     signal->m_abort_algorithms.clear();
 
     event_dispatching::fire_event<>("Abort", signal);

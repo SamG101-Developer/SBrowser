@@ -18,7 +18,7 @@ dom::helpers::traversal::filter(
     exceptions::throw_v8_exception(
             "an iterator must be inactive in order to be filtered",
             INVALID_STATE_ERR,
-            [iterator] -> bool {return iterator->m_active_flag;});
+            [iterator] {return iterator->m_active_flag;});
 
     auto n = node->node_type - 1;
     if (iterator->what_to_show &~ (2 << n))

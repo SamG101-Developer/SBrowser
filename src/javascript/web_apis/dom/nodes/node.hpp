@@ -19,6 +19,7 @@ namespace dom {
 
     namespace helpers {struct mutation_observers;}
     namespace internal {struct registered_observer;}
+    namespace mutations {class mutation_observer;}
 }
 
 
@@ -26,6 +27,7 @@ class dom::nodes::node : public event_target {
 
 friends
     friend struct helpers::mutation_observers;
+    friend class mutations::mutation_observer;
 
 public constructors:
     node();
