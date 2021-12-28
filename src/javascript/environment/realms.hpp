@@ -38,7 +38,7 @@ private:
 };
 
 
-javascript::realms::realm javascript::realms::relevant_agent() {return realm{v8::Isolate().GetCurrentContext()};}
+javascript::realms::realm javascript::realms::relevant_agent() {return realm{v8::Isolate::GetCurrent()->GetCurrentContext()};}
 
 
 #endif //SBROWSER_REALMS_HPP

@@ -91,10 +91,11 @@ public:
     }
 
     inline ext::vector<ext::string> split(ext::string delimiter) const {
-        ext::vector<ext::string> out {};
+        return {};
+//        ext::vector<ext::string> out {};
 //        size_t current_position = 0;
 //        size_t previous_position = 0;
-        return out; // TODO
+//        return out; // TODO
 
 //        while (true) {
 //            current_position = find(*delimiter.c_str(), previous_position);

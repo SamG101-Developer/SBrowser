@@ -16,8 +16,7 @@ dom::helpers::attributes::handle_attributes_changes(
         ext::cstring& old_value,
         ext::cstring& new_value) {
 
-    mutation_observers::queue_mutation_record(
-            "attributes", owner_element, attribute->local_name, attribute->namespace_uri, old_value, {}, {}, nullptr, nullptr);
+    mutation_observers::queue_mutation_record("attributes", owner_element, attribute->local_name, attribute->namespace_uri, old_value, {}, {}, nullptr, nullptr);
 
     if (owner_element->m_custom_element_state == "custom")
         custom_elements::enqueue_custom_element_callback_reaction(
@@ -116,7 +115,7 @@ dom::helpers::attributes::set_attribute(
 
     exceptions::throw_v8_exception(
             "attribute's element is non-null doesn't equal element",
-            exceptions::INUSE_ATTRIBUTE_ERR,
+            INUSE_ATTRIBUTE_ERR,
             [attribute, new_owner_element] {return attribute->owner_element and attribute->owner_element == new_owner_element;});
 
     auto* old_attribute = get_attribute_by_ns(attribute->namespace_uri, attribute->local_name, new_owner_element);

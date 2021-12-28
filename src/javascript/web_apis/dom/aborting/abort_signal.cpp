@@ -10,7 +10,7 @@ dom::aborting::abort_signal::abort_signal()
 
 dom::aborting::abort_signal
 dom::aborting::abort_signal::abort(
-        std::any&& reason) {
+        std::any reason) {
 
     reason = reason.has_value() ? reason : other::dom_exception{"", ABORT_ERR};
 
@@ -24,8 +24,8 @@ dom::aborting::abort_signal::abort(
 void
 dom::aborting::abort_signal::throw_if_aborted() {
 
-    helpers::exceptions::throw_v8_exception(
-            ext::property_any_cast<other::dom_exception>(reason).message,
-            ABORT_ERR,
-            [this] {return reason->has_value();});
+//    helpers::exceptions::throw_v8_exception(
+//            ext::property_any_cast<other::dom_exception>(reason).message,
+//            ABORT_ERR,
+//            [this] {return reason->has_value();});
 }

@@ -36,9 +36,9 @@ class dom::nodes::element
         , public mixins::non_document_type_child_node<element>
         , public mixins::child_node<element>
         , public mixins::slottable<element>
-        , public mixins::document_or_element_node<element>
-        , public css::cssom_view::mixins::scrollable<element>
-        , public css::cssom_view::mixins::geometry_utils<element> {
+        , public mixins::document_or_element_node<element> {
+//        , public css::cssom_view::mixins::scrollable<element>
+//        , public css::cssom_view::mixins::geometry_utils<element> {
 
 friends
     friend struct helpers::attributes;
@@ -86,7 +86,7 @@ public methods:
     ext::vector<node*> focusable_areas(ext::cstring_any_map& options = {});
 
     // css-pseudo
-    css::css_pseudo::elements::pseudo_element* pseudo(ext::cstring& type);
+//    css::css_pseudo::elements::pseudo_element* pseudo(ext::cstring& type); TODO
 
     // cssom-view
     ext::vector<geometry::shapes::dom_rect> get_client_rects();

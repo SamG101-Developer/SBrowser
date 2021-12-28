@@ -39,7 +39,7 @@ public:
     
     inline iterable<T, C>& remove(const T& item, bool all = false) {
         while (contains(item)) {
-            std::remove(begin(), end(), item);
+            auto r = std::remove(begin(), end(), item); // TODO : huge template warnings without 'auto r = ' ...
             if (not all) break;
         }
         return *this;

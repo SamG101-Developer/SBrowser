@@ -48,6 +48,8 @@ namespace dom {
     namespace other {class dom_implementation;}
 }
 
+namespace encoding {class encoding;}
+
 namespace html {
     namespace elements {
         class html_body_element;

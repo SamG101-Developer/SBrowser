@@ -16,7 +16,7 @@ namespace dom {
 
 
 class dom::xpath::xpath_evaluator {
-    using xpath_ns_resolver = struct{ext::string lookup_namespace_uri(ext::cstring& prefix = "");};
+    struct xpath_ns_resolver {ext::string lookup_namespace_uri(ext::cstring& prefix = "");};
 
 public: constructors
     xpath_evaluator();

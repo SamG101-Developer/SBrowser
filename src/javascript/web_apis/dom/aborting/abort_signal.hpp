@@ -29,7 +29,7 @@ public constructors:
     abort_signal();
 
 public methods:
-    static abort_signal abort(std::any&& reason = ext::string{""});
+    static abort_signal abort(std::any reason = ext::string{""});
     void throw_if_aborted();
 
 public properties:

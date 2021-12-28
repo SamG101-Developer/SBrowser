@@ -10,6 +10,7 @@
 
 namespace ext {
     template <typename T> class vector;
+    template <typename T> using cvector = const vector<T>;
     class string;
 }
 
