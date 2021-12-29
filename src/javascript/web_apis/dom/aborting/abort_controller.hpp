@@ -17,7 +17,7 @@ public constructors:
     ~abort_controller();
 
 public methods:
-    void abort(std::any&& reason);
+    void abort(ext::any&& reason);
 
 public properties:
     ext::dom_property<abort_signal*> signal;

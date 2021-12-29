@@ -73,8 +73,7 @@ public:
     }
 
     // use pointer operand to access the attributes of the internal value
-    __forceinline T* __fastcall operator->() requires (std::is_same_v<T, std::any>) {return &m_value;} // TODO : why
-    __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T> and not std::is_same_v<T, std::any>) {return &get();}
+    __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &get();}
     __forceinline T __fastcall operator->() requires (std::is_pointer_v<T>) {return get();}
 
     // boolean comparison operators against another value (property will auto-cast into T)
@@ -136,8 +135,6 @@ public:
     __forceinline bool __fastcall operator() () const {return m_value();}
 
     __forceinline std::remove_pointer_t<T> __fastcall operator*() const requires (std::is_pointer_v<T>) {return *m_value;}
-
-    __forceinline operator bool() requires (not std::is_same_v<T, bool>) {return std::is_same_v<T, std::any> ? ext::any_cast<bool>(m_value) : (bool)m_value;}
 
 public:
     std::function<void __fastcall ( )> del;

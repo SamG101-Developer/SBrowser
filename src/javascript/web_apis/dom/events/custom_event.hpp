@@ -15,7 +15,7 @@ public constructors:
     custom_event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
 
 public properties:
-    ext::dom_property<std::any> detail;
+    ext::dom_property<ext::any> detail;
 };
 
 

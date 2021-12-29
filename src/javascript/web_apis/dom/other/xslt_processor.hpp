@@ -25,8 +25,8 @@ public: methods
     nodes::document_fragment* transform_to_fragment(nodes::node* source, nodes::document* output);
     nodes::document* transform_to_document(nodes::node* source);
 
-    void set_parameter(ext::cstring& namespace_uri, ext::cstring& local_name, std::any value);
-    std::any get_parameter(ext::cstring& namespace_uri, ext::cstring& local_name);
+    void set_parameter(ext::cstring& namespace_uri, ext::cstring& local_name, ext::any value);
+    ext::any get_parameter(ext::cstring& namespace_uri, ext::cstring& local_name);
     void remove_parameter(ext::cstring& namespace_uri, ext::cstring& local_name);
     void clear_parameters();
     void reset();

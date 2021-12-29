@@ -92,7 +92,7 @@ public properties:
     ext::dom_property<html::other::bar_prop*> tool_bar;
 
     // animated types browsing context
-    ext::dom_property<std::any> opener;
+    ext::dom_property<ext::any> opener;
     ext::dom_property<unsigned long> length;
     ext::dom_property<element*> frame_element;
     ext::dom_property<window_proxy*> frames;

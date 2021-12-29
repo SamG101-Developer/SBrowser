@@ -31,8 +31,8 @@ struct v8pp::convert<ext::string> {
 
 
 template<>
-struct v8pp::convert<std::any> {
-    using from_type = std::any;
+struct v8pp::convert<ext::any> {
+    using from_type = ext::any;
     using to_type = v8::Local<v8::Value>;
 
     static bool is_valid(v8::Isolate*, v8::Local<v8::Value> value) {return not value.IsEmpty();}

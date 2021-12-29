@@ -8,6 +8,7 @@
 #include <javascript/environment/realms.hpp>
 
 #include <dom/helpers/event_dispatching.hpp>
+#include <dom/helpers/trees.hpp>
 
 #include <dom/mutations/mutation_observer.hpp>
 #include <dom/mutations/mutation_record.hpp>
