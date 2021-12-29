@@ -2,7 +2,7 @@
 #ifndef SBROWSER_EVENT_DISPATCHING_HPP
 #define SBROWSER_EVENT_DISPATCHING_HPP
 
-#include <ext/any.hpp>
+#include <ext/map.hpp>
 #include <ext/vector.hpp>
 #include <ext/string.hpp>
 

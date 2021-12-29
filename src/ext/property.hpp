@@ -282,7 +282,7 @@ U& ext::property_reinterpret_cast(const property<T>& other) {
 
 template <typename U, typename T>
 U& ext::property_any_cast(const ext::property<T>& other) {
-    return ext::any_cast<U&>(other.m_value);
+    return (U&)other.m_value;
 }
 
 

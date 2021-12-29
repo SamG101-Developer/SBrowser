@@ -7,7 +7,7 @@
 void
 dom::helpers::signal_aborting::signal_abort(
         aborting::abort_signal* signal,
-        ext::any reason) {
+        ext::cany& reason) {
 
     if (signal->aborted) return;
 

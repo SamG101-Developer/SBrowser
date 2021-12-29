@@ -14,8 +14,9 @@
 
 namespace ext {
     class any;
-    template <class T> T any_cast(ext::any value);
+    using cany = const any;
 }
+namespace {template <class T> T any_cast(ext::any value);}
 
 
 class ext::any {
@@ -26,10 +27,10 @@ public: constructors
     ext::any& operator=(const ext::any&) = default;
     ext::any& operator=(ext::any&&) noexcept = default;
 
-    explicit any(const std::any& other) : m_value(other) {};
-    explicit any(std::any&& other) noexcept : m_value(other) {};
-    ext::any& operator=(const std::any& other) {m_value = other; return *this;}
-    ext::any& operator=(std::any&& other) noexcept {m_value = other; return *this;}
+    template <typename T> any(const T& other) : m_value(other) {};
+    template <typename T> any(T&& other) noexcept : m_value(other) {};
+    template <typename T> ext::any& operator=(const T& other) {m_value = other; return *this;}
+    template <typename T> ext::any& operator=(T&& other) noexcept {m_value = other; return *this;}
 
 public: // TODO : annotation
     operator std::any() const {
@@ -38,7 +39,7 @@ public: // TODO : annotation
 
     template <typename T>
     explicit operator T() const requires (not std::is_same_v<T, std::any>) {
-        return ext::any_cast<T>(m_value);
+        return any_cast<T>(m_value);
     }
 
 public: methods
@@ -54,9 +55,21 @@ public: methods
         return ext::string{type().name()}.contains(*"* __ptr64");
     }
 
+    bool is_numeric() const {
+        return type() == typeid(unsigned char) or type() == typeid(unsigned short) or type() == typeid(unsigned int)
+                or type() == typeid(unsigned long) or type() == typeid(unsigned long long) or type() == typeid(char)
+                or type() == typeid(short) or type() == typeid(int) or type() == typeid(long) or type() == typeid(long long)
+                or type() == typeid(float) or type() == typeid(double) or type() == typeid(long double);
+    }
+
     template <typename T>
     void emplace(T&& element) {
         m_value.template emplace<T>(element);
+    }
+
+    template <typename T>
+    void emplace() {
+        m_value.template emplace<T>();
     }
 
 private: internal_properties
@@ -65,14 +78,10 @@ private: internal_properties
 
 
 template <class T>
-T ext::any_cast(ext::any value) {
-    if (value.empty() or value.type() == typeid(value))
+T any_cast(ext::any value) {
+    if (value.empty() or value.type() == typeid(void))
         return value.contains_pointer() ? nullptr : T();
-    try {
-        return std::any_cast<T>(value);
-    } catch(...) {
-        return std::any_cast<T>(std::any());
-    }
+    return value;
 }
 
 

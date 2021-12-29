@@ -12,7 +12,7 @@ dom::aborting::abort_signal
 dom::aborting::abort_signal::abort(
         ext::any reason) {
 
-    reason = reason.has_value() ? reason : other::dom_exception{"", ABORT_ERR};
+    reason = not reason.empty() ? reason : other::dom_exception{"", ABORT_ERR};
 
     abort_signal signal{};
     signal.aborted = true;

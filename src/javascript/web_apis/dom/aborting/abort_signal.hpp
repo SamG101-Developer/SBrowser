@@ -29,7 +29,7 @@ public constructors:
     abort_signal();
 
 public methods:
-    static abort_signal abort(ext::any reason = ext::string{""});
+    static abort_signal abort(ext::any reason = "");
     void throw_if_aborted();
 
 public properties:

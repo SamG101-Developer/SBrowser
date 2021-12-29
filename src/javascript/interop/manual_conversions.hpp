@@ -30,41 +30,6 @@ struct v8pp::convert<ext::string> {
 };
 
 
-template<>
-struct v8pp::convert<ext::any> {
-    using from_type = ext::any;
-    using to_type = v8::Local<v8::Value>;
-
-    static bool is_valid(v8::Isolate*, v8::Local<v8::Value> value) {return not value.IsEmpty();}
-
-    static from_type from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) {
-        if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Must be a non-null value");
-
-        v8::HandleScope handle_scope(isolate);
-        if (v8_value->IsString())
-            return from_type {v8pp::convert<ext::string>::from_v8(isolate, v8_value)};
-        else if (v8_value->IsNumber())
-            return from_type {v8pp::convert<long double>::from_v8(isolate, v8_value)};
-        else if (v8_value->IsBoolean())
-            return from_type {v8pp::convert<bool>::from_v8(isolate, v8_value)};
-        else
-            throw std::invalid_argument("Invalid type");
-    }
-
-    static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
-        v8::EscapableHandleScope escapable_handle_scope(isolate);
-        if (cpp_value.type() == typeid(ext::string))
-            return escapable_handle_scope.Escape(v8pp::convert<ext::string>::to_v8(isolate, ext::any_cast<ext::string>(cpp_value)));
-        else if (std::is_arithmetic_v<decltype(cpp_value.type())>)
-            return escapable_handle_scope.Escape(v8pp::convert<long double>::to_v8(isolate, ext::any_cast<long double>(cpp_value)));
-        else if (cpp_value.type() == typeid(bool))
-            return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, ext::any_cast<bool>(cpp_value)));
-        else
-            return escapable_handle_scope.Escape(v8::Object::New(isolate));
-    }
-};
-
-
 template <typename T>
 struct v8pp::convert<ext::dom_property<T>> {
     using from_type = T;
@@ -149,6 +114,63 @@ struct v8pp::convert<ext::infinity<T>> {
 
 template <typename T>
 struct v8pp::is_wrapped_class<ext::infinity<T>> : std::false_type{};
+
+
+template<>
+struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThis, Function, Symbol, Error, Math, RegExp, Buffers, Atomics, DataView, JSON, Promise, Generators/Functions, Reflect, Proxy, Intl., WebAssembly., Arguments
+    using from_type = ext::any;
+    using to_type = v8::Local<v8::Value>;
+
+    static bool is_valid(v8::Isolate*, v8::Local<v8::Value> value) {return true;}
+
+    static from_type from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) {
+        if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Impossible Error");
+
+        v8::HandleScope handle_scope(isolate);
+        if (v8_value->IsBoolean()) // BOOLEAN
+            return from_type{v8pp::convert<bool>::from_v8(isolate, v8_value)};
+
+        else if (v8_value->IsNull()) { // NULL
+            auto f = from_type{}; f.emplace<void>(); return f;}
+
+        else if (v8_value->IsUndefined()) // UNDEFINED
+            return from_type{};
+
+        else if (v8_value->IsNumber() or v8_value->IsBigInt()) // NUMBER
+            return from_type{v8pp::convert<long double>::from_v8(isolate, v8_value)};
+
+        else if (v8_value->IsString()) // STRING
+            return from_type{v8pp::convert<ext::string>::from_v8(isolate, v8_value)};
+
+        else // OBJECT
+            throw std::invalid_argument("Invalid type");
+    }
+
+    static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
+        v8::EscapableHandleScope escapable_handle_scope(isolate);
+        if (cpp_value.type() == typeid(bool)) // BOOLEAN
+            return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, (bool)cpp_value));
+
+        else if (cpp_value.type() == typeid(void)) // NULL
+            return escapable_handle_scope.Escape(v8::Null(isolate));
+
+        else if (cpp_value.empty()) // UNDEFINED
+            return escapable_handle_scope.Escape(v8::Undefined(isolate));
+
+        else if (cpp_value.is_numeric()) // NUMBER (no bigint, +-infinity, NaN)
+            return escapable_handle_scope.Escape(v8pp::convert<double>::to_v8(isolate, (double)cpp_value));
+
+        else if (cpp_value.type() == typeid(ext::string)) // STRING
+            return escapable_handle_scope.Escape(v8pp::convert<ext::string>::to_v8(isolate, (ext::string)cpp_value));
+
+        else if (cpp_value.type() == typeid(ext::vector<ext::any>)) // ARRAY TODO -> does this work?
+            return escapable_handle_scope.Escape(v8pp::convert<ext::vector<ext::any>>::to_v8(isolate, (ext::vector<ext::any>)cpp_value));
+
+        else // OBJECT
+            return escapable_handle_scope.Escape(v8::Object::New(isolate));
+    }
+};
+
 
 
 #endif //SBROWSER_MANUAL_CONVERSIONS_HPP

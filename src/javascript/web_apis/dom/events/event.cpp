@@ -7,14 +7,13 @@
 
 dom::events::event::event(ext::cstring& event_type, ext::cstring_any_map& event_init)
         : type(event_type)
-        , bubbles(ext::any_cast<bool>(event_init.at("bubbles")))
-        , cancelable(ext::any_cast<bool>(event_init.at("cancelable")))
-        , composed(ext::any_cast<bool>(event_init.at("composed")))
+        , bubbles(event_init.at("bubbles"))
+        , cancelable(event_init.at("cancelable"))
+        , composed(event_init.at("composed"))
         , event_phase(NONE)
         , time_stamp(performance::time::dom_high_res_timestamp())
         , touch_targets(new ext::vector<nodes::event_target*>{})
-        , path(new ext::vector<internal::event_path_struct*>{})
-        {
+        , path(new ext::vector<internal::event_path_struct*>{}) {
 
     target = nullptr;
     current_target = nullptr;

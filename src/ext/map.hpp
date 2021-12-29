@@ -9,7 +9,7 @@
 
 namespace ext {
     template <class K, class V> class map;
-    using string_any_map  = map<string, std::any>;
+    using string_any_map  = map<string, ext::any>;
     using cstring_any_map = const ext::string_any_map;
 }
 
@@ -32,7 +32,7 @@ public:
     template <typename U> inline map<K, U> cast_all() requires std::is_same_v<V, std::any> {
         map<K, U> copy;
         for (const auto& [key, value]: *this)
-            copy.at(key) = ext::any_cast<U>(value);
+            copy.at(key) = value;
         return copy;
     }
 
