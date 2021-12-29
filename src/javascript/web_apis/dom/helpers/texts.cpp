@@ -69,7 +69,7 @@ dom::helpers::texts::split(
             INDEX_SIZE_ERR,
             [offset, length] {return offset > length});
 
-    nodes::node* parent_node = text_node->parent_node;
+    nodes::node* parent_node = text_node->parent;
     nodes::text* new_text_node = new nodes::text{new_data};
     new_text_node->owner_document = text_node->owner_document;
 

@@ -4,23 +4,29 @@
 
 #include <ext/property.hpp>
 
-namespace dom::mixins {template <typename T> class slottable;}
+namespace dom {
+    namespace mixins {template <typename T> class slottable;}
+    namespace helpers {struct shadows;}
+}
 namespace html::elements {class html_slot_element;}
 
 
 template <typename T>
 class dom::mixins::slottable {
-public:
+friends
+    friend struct helpers::shadows;
+
+public: constructors
     slottable();
 
-public:
+public: properties
     ext::dom_property<html::elements::html_slot_element*> assigned_slot;
 
-private:
+private: internal_properties
     ext::string m_name;
     html::elements::html_slot_element* m_manual_slot_assignment;
 
-private:
+private: accessors
     html::elements::html_slot_element* get_assigned_slot();
 };
 

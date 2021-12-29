@@ -14,7 +14,7 @@ dom::helpers::trees::root(nodes::node* node) {
 
     if (not node) return nullptr;
 
-    while (node->parent_node) node = node->parent_node;
+    while (node->parent) node = node->parent;
     return node;
 }
 
@@ -31,8 +31,8 @@ dom::helpers::trees::descendants(nodes::node* node) {
 ext::vector<dom::nodes::node*>
 dom::helpers::trees::ancestors(nodes::node* node) {
 
-    return node->parent_node
-            ? node->parent_node
+    return node->parent
+            ? node->parent
             : node;
 }
 
@@ -48,7 +48,7 @@ bool dom::helpers::trees::is_ancestor(nodes::node* node_a, nodes::node* node_b) 
 
 
 bool dom::helpers::trees::is_sibling(nodes::node* node_a, nodes::node* node_b) {
-    return node_a->parent_node == node_b->parent_node;
+    return node_a->parent == node_b->parent;
 }
 
 
@@ -103,7 +103,7 @@ ext::vector<dom::nodes::node*>
 dom::helpers::trees::all_following_siblings(nodes::node* node_a) {
 
     const auto index_a = index(node_a);
-    return node_a->parent_node->child_nodes
+    return node_a->parent->child_nodes
             ->template filter([index_a](auto* sibling_node) {return index(sibling_node) > index_a;})
             .template cast_all<T>();
 }
@@ -114,7 +114,7 @@ ext::vector<dom::nodes::node*>
 dom::helpers::trees::all_preceding_siblings(nodes::node* node_a) {
 
     const auto index_a = index(node_a);
-    return node_a->parent_node->child_nodes
+    return node_a->parent->child_nodes
             ->template filter([index_a](auto* sibling_node) {return index(sibling_node) < index_a;})
             .template cast_all<T>();
 }
@@ -164,7 +164,7 @@ dom::helpers::trees::descendant_text_nodes(nodes::node* node_a) {
 ext::vector<dom::nodes::text*>
 dom::helpers::trees::contiguous_text_nodes(nodes::node* node_a) {
 
-    ext::vector<nodes::node*> siblings = node_a->parent_node->child_nodes;
+    ext::vector<nodes::node*> siblings = node_a->parent->child_nodes;
 
     return ext::vector<nodes::text*>{}
             .extend(siblings.slice(siblings.find(node_a), siblings.length()).cast_all<nodes::text*>())

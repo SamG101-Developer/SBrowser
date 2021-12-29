@@ -102,7 +102,7 @@ dom::ranges::range::insert_node(
 
     parent = not reference_node
             ? start_container
-            : reference_node->parent_node;
+            : reference_node->parent;
 
     helpers::mutation_algorithms::ensure_pre_insertion_validity(node, parent, reference_node);
     reference_node = start_container_text
@@ -113,7 +113,7 @@ dom::ranges::range::insert_node(
             ? reference_node->next_sibling
             : reference_node;
 
-    if (node->parent_node) helpers::mutation_algorithms::remove(node);
+    if (node->parent) helpers::mutation_algorithms::remove(node);
     new_offset = not reference_node
             ? helpers::trees::length(parent)
             : helpers::trees::index(reference_node);
@@ -133,9 +133,9 @@ dom::ranges::range::intersects_node(
         nodes::node* node) {
 
     if (m_root != helpers::trees::root(node)) return false;
-    if (not node->parent_node) return true;
+    if (not node->parent) return true;
 
-    nodes::node* parent = node->parent_node;
+    nodes::node* parent = node->parent;
     unsigned long offset = helpers::trees::index(node);
 
     auto* parent_offset_node_0 = parent;

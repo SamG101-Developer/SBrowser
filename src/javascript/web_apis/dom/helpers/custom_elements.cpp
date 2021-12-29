@@ -67,7 +67,7 @@ dom::helpers::custom_elements::create_an_element(
             exceptions::throw_v8_exception(
                     "custom element must have a null / undefined parent",
                     NOT_SUPPORTED_ERR,
-                    [result] {return result->parent_node;});
+                    [result] {return result->parent;});
 
             exceptions::throw_v8_exception(
                     "custom element must have a null / undefined document",

@@ -488,7 +488,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("baseURI", &dom::nodes::node::base_uri)
             .var("isConnected", &dom::nodes::node::is_connected)
             .var("childNodes", &dom::nodes::node::child_nodes)
-            .var("parentNode", &dom::nodes::node::parent_node)
+            .var("parentNode", &dom::nodes::node::parent)
             .var("parentElement", &dom::nodes::node::parent_element)
             .var("ownerDocument", &dom::nodes::node::owner_document)
             .var("firstChild", &dom::nodes::node::first_child)

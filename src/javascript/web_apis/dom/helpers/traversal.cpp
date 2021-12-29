@@ -102,7 +102,7 @@ dom::helpers::traversal::traverse_children(
             if (sibling)
                 node = sibling, continue_traversing = false;
 
-            nodes::node* parent = node->parent_node;
+            nodes::node* parent = node->parent;
             if (ext::vector<nodes::node*>{nullptr, iterator->root, iterator->current_node}.contains(parent))
                 return nullptr;
 
@@ -147,7 +147,7 @@ dom::helpers::traversal::traverse_siblings(
         }
     }
 
-    node = node->parent_node;
+    node = node->parent;
     if (ext::vector<nodes::node*>{nullptr, iterator->root}.contains(node))
         return nullptr;
     if (filter(node, iterator) == iterators::node_filter::FILTER_ACCEPT)
@@ -177,7 +177,7 @@ dom::helpers::traversal::traverse_node_previous(
             sibling = node->previous_sibling;
         }
 
-        if (node == iterator->root or not (node = node->parent_node))
+        if (node == iterator->root or not (node = node->parent))
             return nullptr;
 
         if (filter(node, iterator) == iterators::node_filter::FILTER_ACCEPT)
@@ -206,7 +206,7 @@ dom::helpers::traversal::traverse_node_next(
 
         while (temporary) {
             if (temporary == iterator->root) return nullptr;
-            temporary->next_sibling ? node = temporary->next_sibling : temporary = temporary->parent_node;
+            temporary->next_sibling ? node = temporary->next_sibling : temporary = temporary->parent;
         }
 
         if ((result = filter(node, iterator)) == iterators::node_filter::FILTER_ACCEPT)

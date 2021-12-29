@@ -23,7 +23,7 @@ public:
 
     template <typename T>
     inline T&
-    get(ext::string&& attribute_name) {
+    get(ext::string&& attribute_name) const {
         return v8pp::convert<T>::from_v8(m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), attribute_name)));
     };
 

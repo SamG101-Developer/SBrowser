@@ -3,10 +3,15 @@
 #include <javascript/environment/realms.hpp>
 
 #include <dom/helpers/mutation_observers.hpp>
+#include <dom/helpers/trees.hpp>
+
+#include <dom/mixins/slottable.hpp>
 
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/shadow_root.hpp>
+
+#include <html/elements/html_slot_element.hpp>
 
 
 bool dom::helpers::shadows::is_connected(nodes::node* node) {
@@ -20,12 +25,12 @@ bool dom::helpers::shadows::is_slot(nodes::node* node) {
 
 
 bool dom::helpers::shadows::is_slottable(nodes::node* node) {
-    return dynamic_cast<mixins::slottable*>(node);
+    return dynamic_cast<mixins::slottable<nodes::node>*>(node);
 }
 
 
 bool dom::helpers::shadows::is_assigned(nodes::node* node) {
-    return is_slottable(node)) and dynamic_cast<mixins::slottable*>(node)->assigned_slot;
+    return is_slottable(node) and dynamic_cast<mixins::slottable<nodes::node>*>(node)->assigned_slot;
 }
 
 
@@ -36,7 +41,7 @@ dom::helpers::shadows::find_slot(
 
     nodes::shadow_root* shadow;
 
-    if (not slottable->parent_node)
+    if (not slottable->parent)
         return nullptr;
 
     if ((shadow = dynamic_cast<nodes::element*>(slottable)->shadow_root_node) == nullptr)
@@ -46,9 +51,10 @@ dom::helpers::shadows::find_slot(
         return nullptr;
 
     auto descendant_slots = trees::descendants(shadow).cast_all<html::elements::html_slot_element*>();
-    return descendant_slots.filter(shadow->slot_assignment == "manual"
-            ? [slottable](auto* slot) {return is_slot(slot) and slot->m_manually_assigned_nodes.contains(slottable);}
-            : [slottable](auto* slot) {return is_slot(slot) and slot->name == dynamic_cast<nodes::element*>(slottable)->m_name;})
+    return descendant_slots
+            .filter(shadow->slot_assignment == "manual"
+                    ? std::function{[slottable](html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->m_manually_assigned_nodes.contains(slottable);}}
+                    : std::function{[slottable](html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->name == dynamic_cast<nodes::element*>(slottable)->m_name;}})
             .front();
 }
 
@@ -57,16 +63,16 @@ ext::vector<dom::nodes::node*>
 dom::helpers::shadows::find_slottables(
         html::elements::html_slot_element* slot) {
 
-    nodes::shadow_root* shadow;
+    auto* root = dynamic_cast<nodes::shadow_root*>(trees::root(slot));
 
-    if (not dynamic_cast<nodes::shadow_root*>(trees::root(slot)))
-        return {};
+    if (not root) return {};
 
-    return slot->m_manually_assigned
+    return slot->m_manually_assigned_nodes
             .filter([](auto* slottable) {return is_slottable(slottable);})
-            .filter(shadow->slot_assignment == "manual"
-                    ? [shadow](auto* slottable) {return slottable->parent_node == "host";}
-                    : [shadow](auto* slottable) {return find_slot(slottable);});
+            .filter(root->slot_assignment == "manual"
+                    ? std::function{[host = root->host](html::elements::html_slot_element* slottable) -> bool {return slottable->parent == host;}}
+                    : std::function{[host = root->host](html::elements::html_slot_element* slottable) -> bool {return find_slot(slottable);}})
+            .remove(nullptr, true);
 }
 
 
@@ -100,7 +106,7 @@ dom::helpers::shadows::assign_slottables(
         html::elements::html_slot_element* slot) {
 
     auto slottables = find_slottables(slot);
-    if (slottables != slot->m_assigned_nodes;) {
+    if (slottables != slot->m_assigned_nodes) {
         signal_slot_change(slot);
         slot->m_assigned_nodes = slottables;
     }
@@ -126,95 +132,96 @@ void
 dom::helpers::shadows::signal_slot_change(
         nodes::node* slot) {
 
-    javascript::realms::relevant_agent().get<ext::vector<html::elements::html_slot_element*>>("signal_slots").append(slot);
+    using html::elements::html_slot_element;
+
+    javascript::realms::relevant_agent().get<ext::vector<html_slot_element*>*>("signal_slots")->append(dynamic_cast<html_slot_element*>(slot));
     mutation_observers::queue_mutation_observers_microtask();
 }
 
 
 dom::nodes::node*
 dom::helpers::shadows::shadow_including_root(
-        nodes::node* A) {
+        nodes::node* node_a) {
 
-    return is_root_shadow_root(A)
-            ? shadow_including_root(dynamic_cast<nodes::shadow_root*>(trees::root(A))->host)
-            : trees::root(A);
+    return is_root_shadow_root(node_a)
+            ? shadow_including_root(dynamic_cast<nodes::shadow_root*>(trees::root(node_a))->host)
+            : trees::root(node_a);
 }
 
 
 dom::nodes::event_target*
 dom::helpers::shadows::retarget(
-        nodes::event_target* A,
-        nodes::event_target* B) {
+        nodes::event_target* event_target_a,
+        nodes::event_target* event_target_b) {
 
-    auto* node_a = dynamic_cast<nodes::node*>(A);
-    auto* node_b = dynamic_cast<nodes::node*>(B);
+    auto* node_a = dynamic_cast<nodes::node*>(event_target_a);
+    auto* node_b = dynamic_cast<nodes::node*>(event_target_b);
 
-    while (true) {
-        if (not node_a
-                or not is_shadow_root(node_a)
-                or is_shadow_including_ancestor(trees::root(node_a)), node_b)
-            return A;
-
-        A = dynamic_cast<nodes::shadow_root*>(trees::root(node_a))->host;
-    }
+    while (node_a and is_shadow_root(node_a) and not is_shadow_including_ancestor(trees::root(node_a), node_b))
+        node_a = dynamic_cast<nodes::shadow_root*>(trees::root(node_a))->host;
+    return node_a;
 }
 
 
-dom::nodes::shadow_root* dom::helpers::shadows::shadow_root(nodes::node* A) {
-    return dynamic_cast<nodes::shadow_root*>(trees::root(A));
+dom::nodes::shadow_root*
+dom::helpers::shadows::shadow_root(nodes::node* node_a) {
+    return dynamic_cast<nodes::shadow_root*>(trees::root(node_a));
 }
 
 
-bool dom::helpers::shadows::is_root_shadow_root(nodes::node* A) {
-    return is_shadow_root(trees::root(A));
+bool
+dom::helpers::shadows::is_root_shadow_root(nodes::node* node_a) {
+    return is_shadow_root(trees::root(node_a));
 }
 
 
-bool dom::helpers::shadows::is_shadow_root(nodes::node* A) {
-    return dynamic_cast<nodes::shadow_root*>(A);
+bool
+dom::helpers::shadows::is_shadow_root(nodes::node* node_a) {
+    return dynamic_cast<nodes::shadow_root*>(node_a);
 }
 
 
-bool dom::helpers::shadows::is_shadow_host(nodes::node* A) {
-    return dynamic_cast<nodes::element*>(A)->shadow_root_node;
+bool
+dom::helpers::shadows::is_shadow_host(nodes::node* node_a) {
+    return dynamic_cast<nodes::element*>(node_a)->shadow_root_node;
 }
 
 
 bool
 dom::helpers::shadows::is_shadow_including_descendant(
-        nodes::node* A,
-        nodes::node* B) {
+        nodes::node* node_a,
+        nodes::node* node_b) {
 
-    return trees::descendants(A, B) or is_shadow_root(A) and is_shadow_including_descendant(dynamic_cast<nodes::shadow_root*>(A)->host, B);
+    return trees::is_descendant(node_a, node_b) or is_shadow_root(node_a) and is_shadow_including_descendant(dynamic_cast<nodes::shadow_root*>(node_a)->host, node_b);
 }
 
 
 bool
 dom::helpers::shadows::is_shadow_including_ancestor(
-        nodes::node* A,
-        nodes::node* B) {
+        nodes::node* node_a,
+        nodes::node* node_b) {
 
-    return is_shadow_including_descendant(B, A);
+    return is_shadow_including_descendant(node_b, node_a);
 }
 
 
 bool
 dom::helpers::shadows::is_host_including_ancestor(
-        nodes::node* A,
-        nodes::node* B) {
+        nodes::node* node_a,
+        nodes::node* node_b) {
 
-    return trees::is_descendant(A, B) or shadow_root(B) and shadow_root(B)->host and is_host_including_ancestor(A, shadow_root(B)->host);
+    return trees::is_descendant(node_a, node_b) or shadow_root(node_b) and shadow_root(node_b)->host and is_host_including_ancestor(node_a, shadow_root(node_b)->host);
 }
 
 
 bool
 dom::helpers::shadows::is_closed_shadow_hidden(
-        nodes::node* A,
-        nodes::node* B) {
+        nodes::node* node_a,
+        nodes::node* node_b) {
 
-    auto* shadow_root_a = dynamic_cast<nodes::shadow_root*>(A);
+    auto* shadow_root_a = dynamic_cast<nodes::shadow_root*>(node_a);
 
-    return is_root_shadow_root(A)
-            and not is_shadow_including_ancestor(shadow_root_a, B)
-            and (shadow_root_a->mode == "closed" or is_closed_shadow_hidden(shadow_root_a->host, B));
+    return is_root_shadow_root(node_a)
+            and not is_shadow_including_ancestor(shadow_root_a, node_b)
+            and (shadow_root_a->mode == "closed" or is_closed_shadow_hidden(shadow_root_a->host, node_b));
 }

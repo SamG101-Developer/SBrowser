@@ -31,17 +31,17 @@ struct dom::helpers::shadows {
     static void assign_slottables_for_tree(nodes::node* descendant);
 
     static void signal_slot_change(nodes::node* slot);
-    static nodes::node* shadow_including_root(nodes::node* A);
-    static nodes::event_target* retarget(nodes::event_target* A, nodes::event_target* B);
-    static nodes::shadow_root* shadow_root(nodes::node* A);
+    static nodes::node* shadow_including_root(nodes::node* node_a);
+    static nodes::event_target* retarget(nodes::event_target* event_target_a, nodes::event_target* event_target_b);
+    static nodes::shadow_root* shadow_root(nodes::node* node_a);
 
-    static bool is_root_shadow_root(nodes::node* A);
-    static bool is_shadow_root(nodes::node* A);
-    static bool is_shadow_host(nodes::node* A);
-    static bool is_shadow_including_descendant(nodes::node* A, nodes::node* B);
-    static bool is_shadow_including_ancestor(nodes::node* A, nodes::node* B);
-    static bool is_host_including_ancestor(nodes::node* A, nodes::node* B);
-    static bool is_closed_shadow_hidden(nodes::node* A, nodes::node* B);
+    static bool is_root_shadow_root(nodes::node* node_a);
+    static bool is_shadow_root(nodes::node* node_a);
+    static bool is_shadow_host(nodes::node* node_a);
+    static bool is_shadow_including_descendant(nodes::node* node_a, nodes::node* node_b);
+    static bool is_shadow_including_ancestor(nodes::node* node_a, nodes::node* node_b);
+    static bool is_host_including_ancestor(nodes::node* node_a, nodes::node* node_b);
+    static bool is_closed_shadow_hidden(nodes::node* node_a, nodes::node* node_b);
 };
 
 

@@ -34,8 +34,8 @@ dom::nodes::node::node() : event_target() {
     previous_sibling.get = [this] {return get_previous_sibling();};
     next_sibling.get = [this] {return get_next_sibling();};
 
-    parent_node.set = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
-    parent_node << nullptr;
+    parent.set = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
+    parent << nullptr;
     child_nodes << new ext::vector<node*>{};
 
     // TODO : set the m_registered_observer_list when the type has been implemented
@@ -75,11 +75,11 @@ dom::nodes::node::normalize() const {
                     .for_each([text_node](auto* range) {range->end_offset += length; range->end_container = text_node;});
 
             live_ranges
-                    ->filter([current_node](auto* range) {return range->start_container == current_node->parent_node;})
+                    ->filter([current_node](auto* range) {return range->start_container == current_node->parent;})
                     .for_each([length, text_node](auto* range) {range->start_offset = length; range->start_container = text_node;});
 
             live_ranges
-                    ->filter([current_node](auto* range) {return range->end_container == current_node->parent_node;})
+                    ->filter([current_node](auto* range) {return range->end_container == current_node->parent;})
                     .for_each([length, text_node](auto* range) {range->end_offset = length; range->end_container = text_node;});
 
             length += helpers::trees::length(current_node);
@@ -253,17 +253,17 @@ bool dom::nodes::node::get_is_connected() const {return helpers::shadows::is_con
 ext::string dom::nodes::node::get_base_uri() const {return url::helpers::serializing::serialize_url(owner_document->base_uri);}
 dom::nodes::node* dom::nodes::node::get_first_child() const {return child_nodes->front();}
 dom::nodes::node* dom::nodes::node::get_last_child() const {return child_nodes->back();}
-dom::nodes::node* dom::nodes::node::get_previous_sibling() const {return parent_node->child_nodes->item_before(this);}
-dom::nodes::node* dom::nodes::node::get_next_sibling() const {return parent_node->child_nodes->item_after(this);}
-dom::nodes::element* dom::nodes::node::get_parent_element() const {return ext::property_dynamic_cast<element*>(parent_node);}
+dom::nodes::node* dom::nodes::node::get_previous_sibling() const {return parent->child_nodes->item_before(this);}
+dom::nodes::node* dom::nodes::node::get_next_sibling() const {return parent->child_nodes->item_after(this);}
+dom::nodes::element* dom::nodes::node::get_parent_element() const {return ext::property_dynamic_cast<element*>(parent);}
 
 void dom::nodes::node::set_parent_node(node* val) {
 
-    if (parent_node and parent_element->child_nodes->contains(this))
-        parent_node->child_nodes->remove(this);
+    if (parent and parent_element->child_nodes->contains(this))
+        parent->child_nodes->remove(this);
 
-    parent_node << val;
-    parent_node->child_nodes->append(this);
+    parent << val;
+    parent->child_nodes->append(this);
 
     if (m_rendered_widget->isWidgetType()) {
 

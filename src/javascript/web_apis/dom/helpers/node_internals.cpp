@@ -87,7 +87,7 @@ dom::helpers::node_internals::locate_a_namespace(
     else if (auto* attribute = dynamic_cast<nodes::attr*>(node))
         return locate_a_namespace(ext::property_dynamic_cast<nodes::node*>(attribute->owner_document), prefix);
 
-    return locate_a_namespace(node->parent_node, prefix);
+    return locate_a_namespace(node->parent, prefix);
 }
 
 
@@ -159,7 +159,7 @@ dom::helpers::node_internals::adopt(
         nodes::document* document) {
 
     nodes::document* old_document = node->owner_document;
-    if (node->parent_node) mutation_algorithms::remove(node);
+    if (node->parent) mutation_algorithms::remove(node);
     if (document != old_document) /* TODO show inclusive descendants */ return;
 }
 

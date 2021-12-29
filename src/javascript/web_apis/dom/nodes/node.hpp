@@ -75,7 +75,7 @@ public properties:
     ext::dom_property<ext::string> base_uri;
     ext::dom_property<bool> is_connected;
     ext::dom_property<ext::vector<node*>*> child_nodes;
-    ext::dom_property<node*> parent_node;
+    ext::dom_property<node*> parent;
     ext::dom_property<element*> parent_element;
     ext::dom_property<document*> owner_document;
     ext::dom_property<node*> first_child;

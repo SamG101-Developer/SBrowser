@@ -96,10 +96,10 @@ public:
         return remove(nullptr, true);
     }
 
-    inline bool operator not() {return empty();}
+    inline bool operator not() const {return empty();}
 
-    inline bool operator==(const iterable<T, C>& other) {return m_iterable == other.m_iterable;}
-    inline bool operator!=(const iterable<T, C>& other) {return m_iterable != other.m_iterable;}
+    inline bool operator==(const iterable<T, C>& other) const {return m_iterable == other.m_iterable;}
+    inline bool operator!=(const iterable<T, C>& other) const {return m_iterable != other.m_iterable;}
     inline operator bool() const {return not empty();}
 
 protected:

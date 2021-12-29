@@ -33,7 +33,7 @@ dom::helpers::mutation_algorithms::common_checks(
     exceptions::throw_v8_exception(
             "child's current parent does not equal parent",
             NOT_FOUND_ERR,
-            [parent, child] {return child and child->parent_node != parent;});
+            [parent, child] {return child and child->parent != parent;});
 
     exceptions::throw_v8_exception(
             "node must be a document_fragment, document_type, element, text, processing_instruction or comment node",
@@ -153,7 +153,7 @@ dom::helpers::mutation_algorithms::pre_remove(
     exceptions::throw_v8_exception(
             "node's current parent does not equal parent",
             NOT_FOUND_ERR,
-            [node, parent] {return node->parent_node != parent;});
+            [node, parent] {return node->parent != parent;});
 
     return remove(node);
 }
@@ -280,7 +280,7 @@ dom::helpers::mutation_algorithms::replace(
     ext::vector<nodes::node*> added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
     ext::vector<nodes::node*> removed_nodes {};
 
-    if (child->parent_node) {
+    if (child->parent) {
         removed_nodes = {child};
         remove(child, true);
     }
@@ -296,9 +296,9 @@ dom::helpers::mutation_algorithms::remove(
         nodes::node* node,
         bool suppress_observers_flag) {
 
-    if (not node->parent_node) return node;
+    if (not node->parent) return node;
 
-    nodes::node* parent = node->parent_node;
+    nodes::node* parent = node->parent;
     auto node_index = trees::index(node);
 
     ext::vector<ranges::range*> live_ranges = javascript::realms::current_environment().get("live_ranges");

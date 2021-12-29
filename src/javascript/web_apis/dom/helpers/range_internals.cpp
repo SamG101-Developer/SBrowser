@@ -141,9 +141,9 @@ dom::helpers::range_internals::check_parent_exists(nodes::node* node) {
     exceptions::throw_v8_exception(
             "node must have a parent",
             INVALID_NODE_TYPE_ERR,
-            [node] {return not node->parent_node;});
+            [node] {return not node->parent;});
 
-    return node->parent_node;
+    return node->parent;
 }
 
 
