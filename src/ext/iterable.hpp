@@ -3,6 +3,7 @@
 #define SBROWSER_ITERABLE_HPP
 
 #include <algorithm>
+#include <stdexcept>
 
 namespace ext {template <typename T, typename C> class iterable;}
 
@@ -25,19 +26,23 @@ public:
     inline bool empty() const {return m_iterable.empty();}
 
     inline T& front() const {
-        return empty() ? std::is_pointer_v<T> ? nullptr : T() : m_iterable.front();
+        if (empty()) throw std::out_of_range{"Cannot access front of an empty iterable"};
+        return const_cast<T&>(m_iterable.front());
     }
 
     inline T& back() const {
-        return empty() ? std::is_pointer_v<T> ? nullptr : T() : m_iterable.back();
+        if (empty()) throw std::out_of_range{"Cannot access back of an empty iterable"};
+        return const_cast<T&>(m_iterable.back());
     }
 
     inline T& at(const size_t index) const {
-        return m_iterable.at(index);
+        if (empty()) throw std::out_of_range{"Cannot access nth item of an empty iterable"};
+        return const_cast<T&>(m_iterable.at(index));
     }
 
-    inline T at_iter(const iterator& index_iterator) const {
-        return m_iterable.at(std::distance(begin(), index_iterator));
+    inline T& at_iter(iterator index_iterator) const {
+        if (empty()) throw std::out_of_range{"Cannot access nth iterator item of an empty iterable"};
+        return const_cast<T&>(m_iterable.at(*index_iterator));
     }
 
     inline size_t find(const T& object, const size_t offset = 0) const {

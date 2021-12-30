@@ -40,7 +40,7 @@ dom::helpers::custom_elements::create_an_element(
             upgrade_element(definition, result);
 
             if (exception_handler.HasCaught()) {
-                console::reporting::report_warning_to_console(exception_handler.Message()->Get());
+                // console::reporting::report_warning_to_console(exception_handler.Message()->Get()); TODO
                 result->m_custom_element_state = "failed";
             }
         }
@@ -82,7 +82,7 @@ dom::helpers::custom_elements::create_an_element(
                     [result, local_name] {return result->local_name != local_name;});
 
             if (exception_handler.HasCaught()) {
-                console::reporting::report_warning_to_console(exception_handler.Message()->Get());
+                // console::reporting::report_warning_to_console(exception_handler.Message()->Get()); TODO
 
                 result = new nodes::element{};
                 result->m_custom_element_state = "failed";

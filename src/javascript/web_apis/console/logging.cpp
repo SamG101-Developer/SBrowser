@@ -88,22 +88,22 @@ console::logging::table(
     if (ext::vector<ext::string> array = tabular_data) {
         auto indexes = ext::vector<size_t>::new_range(0, array.length());
         auto columns = ext::vector<ext::vector<ext::string>>{indexes, tabular_data};
-        helpers::format_table(columns);
+        // helpers::format_table(columns); TODO
     }
 
     // object whose properties are strings
 
     // array of arrays
     else if (ext::vector<ext::vector<ext::string>> compound_array = tabular_data) {
-        auto sizes = compound_array.transform([](const ext::vector<ext::string>& array) -> size_t {return array.length();});
-        auto max_column_count = sizes.at_iter(std::max_element(sizes.begin(), sizes.end()));
+        auto sizes = compound_array.transform<size_t>([](const ext::vector<ext::string>& array) -> size_t {return array.length();});
+        auto max_column_count = sizes.max_element();
 
         compound_array.for_each([max_column_count](ext::vector<ext::string>& array) -> void {
             for (auto i = array.length(); i <= max_column_count; ++i) array.append("");
         });
 
         auto columns = compound_array;
-        helpers::format_table(columns);
+        //helpers::format_table(columns); TODO
     }
 
     // array of objects

@@ -10,7 +10,7 @@ dom::helpers::exceptions::throw_v8_exception(
         exception_condiditional conditional) {
 
     if (conditional())
-        v8::Isolate::GetCurrent()->ThrowError(exception_message.to_string_v8());
+        v8::Isolate::GetCurrent()->ThrowError(exception_message);
 }
 
 
@@ -20,5 +20,5 @@ void dom::helpers::exceptions::throw_v8_exception(
         exception_condiditional conditional) {
 
     if (conditional())
-        v8::Isolate::GetCurrent()->ThrowException(exception_type(exception_message.to_string_v8()));
+        v8::Isolate::GetCurrent()->ThrowException(exception_type(exception_message));
 }

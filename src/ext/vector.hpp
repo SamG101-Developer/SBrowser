@@ -96,6 +96,10 @@ public:
         return *this;
     }
 
+    inline T& max_element() {
+        return this->at_iter(std::max_element(this->begin(), this->end()));
+    }
+
     template <typename function> inline bool all_of(function&& func) const {
         bool flag = true;
         for_each([&flag, func](const T& item) -> void {flag &= func(T{item});});
