@@ -55,7 +55,7 @@ dom::other::dom_implementation::create_document(
 
     document->m_origin = m_associated_document->m_origin;
 
-    string_switch(namespace_.c_str()) {
+    string_switch(namespace_.to_c_str()) {
         string_case(helpers::namespaces::HTML): document->content_type = "application/xhtml+xml";
         string_case(helpers::namespaces::SVG): document->content_type = "image/svg+xml";
         string_default: document->content_type = "application/xml";

@@ -12,5 +12,6 @@
 #define internal_slots        /* non-javascript-exposed slots              */
 #define internal_slot_methods /* non-javascript-exposed slot methods       */
 #define accessors             /* javascript getter/setters for properties  */
+#define operators             /* overrode operators                        */
 
 #endif //SBROWSER_DECORATORS_HPP

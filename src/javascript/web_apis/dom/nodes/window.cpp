@@ -78,7 +78,7 @@ dom::nodes::window::get_computed_style(
     document* doc = elem->owner_document;
     auto* object = new element{*elem};
 
-    if (not pseudo_element.empty() and pseudo_element.front() == *":")
+    if (not pseudo_element.empty() and pseudo_element.front() == ':')
         ; // TODO
 
     ext::vector<css::cssom::internal::css_declaration*> declarations{};

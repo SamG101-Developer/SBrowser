@@ -3,6 +3,8 @@
 #include <cassert>
 
 #include <dom/helpers/exceptions.hpp>
+#include <dom/helpers/namespaces.hpp>
+#include <dom/helpers/shadows.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/document.hpp>
@@ -21,7 +23,7 @@ dom::helpers::custom_elements::create_an_element(
     nodes::element* result;
     auto* definition = lookup_custom_element_definition(document, namespace_, local_name, is);
 
-    result->namespace_uri = namespaces::html;
+    result->namespace_uri = namespaces::HTML;
     result->prefix = prefix;
     result->local_name = local_name;
     result->owner_document = document;
@@ -29,7 +31,7 @@ dom::helpers::custom_elements::create_an_element(
     result->m_is = "";
 
     if (definition and definition->name != definition->local_name) {
-        result = element_interface(local_name, namespaces::html);
+        result = element_interface(local_name, namespaces::HTML);
         result->m_custom_element_state = "undefined";
         result->m_is = is;
 
@@ -52,7 +54,7 @@ dom::helpers::custom_elements::create_an_element(
 
             result = definition->constructor;
             assert(result->m_custom_element_state and result->m_custom_element_definition);
-            assert(result->namespace_uri == namespaces::html);
+            assert(result->namespace_uri == namespaces::HTML);
 
             exceptions::throw_v8_exception(
                     "custom element must have an empty attribute list",
@@ -99,7 +101,7 @@ dom::helpers::custom_elements::create_an_element(
         result->m_custom_element_state = "uncustomized";
         result->m_is = is;
 
-        if (namespace_ == namespaces::html and is_valid_custom_element_name(local_name) or is)
+        if (namespace_ == namespaces::HTML and is_valid_custom_element_name(local_name) or is)
             result->m_custom_element_state = "undefined";
     }
 
@@ -131,7 +133,7 @@ dom::helpers::custom_elements::upgrade_element(
     exceptions::throw_v8_exception(
             "if the definition has shadows disabled, the element cannot have a shadow root",
             NOT_SUPPORTED_ERR,
-            [definition, element] {definition->disable_shadow and element->shadow_root_node;});
+            [definition, element] {return definition->disable_shadow and element->shadow_root_node;});
 
     element->m_custom_element_state = "precustomized";
     auto* construction_result = new c{};
@@ -171,13 +173,13 @@ dom::helpers::custom_elements::lookup_custom_element_definition(
         ext::cstring& namespace_,
         ext::cstring& is) {
 
-    if (namespace_ != namespaces::html)
+    if (namespace_ != namespaces::HTML)
         return nullptr;
 
     if (not document->m_browsing_context)
         return nullptr;
 
-    html::custom_elements::custom_element_registry registry {};
+    html::other::custom_element_registry registry {};
     auto* definition = registry.get(local_name);
 
     if (definition

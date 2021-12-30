@@ -9,15 +9,16 @@
 #include <string>
 #include <utility>
 
+#include <ext/decorators.hpp>
 #include <ext/vector.hpp>
 
 #include <QtCore/QString>
 #include <v8.h>
 #include <v8pp/convert.hpp>
 
-static ext::vector<std::string> get_STRING_BOOLEANS() {return {"true", "false", "1", "0"};}
-static ext::vector<std::string> get_STRING_ALPHAS() {return {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};}
-static ext::vector<std::string> get_STRING_HEX() {return {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};}
+//static ext::vector<std::string> get_STRING_BOOLEANS() {return {"true", "false", "1", "0"};}
+//static ext::vector<std::string> get_STRING_ALPHAS() {return {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};}
+//static ext::vector<std::string> get_STRING_HEX() {return {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};}
 
 namespace ext {
     class string;
@@ -36,22 +37,53 @@ class ext::string : public ext::iterable<char, std::string> {
         return stream;
     };
 
-public:
+public: constructors
     string() = default;
     string(const string&) = default;
     string(string&&) noexcept = default;
-    ext::string& operator=(const string&) = default;
-    ext::string& operator=(string&&) noexcept = default;
+    string& operator=(const string&) = default;
+    string& operator=(string&&) noexcept = default;
 
-    string(const std::string& other) {m_iterable = other;}; // TODO
-    string(std::string&& other) noexcept {m_iterable = std::forward<std::string&>(other);}
+    // std::string ctors
+    string& operator=(const std::string& other) {
+        m_iterable = other;
+        return *this;
+    }
 
-    string(const char* other) {m_iterable = (std::string)other;}
+    string& operator=(std::string&& other) {
+        m_iterable = std::forward<std::string&>(other);
+        return *this;
+    }
 
-    string(const QString& other) {m_iterable = other.toStdString();}
-    string(QString&& other) {m_iterable = std::forward<QString&>(other).toStdString();}
+    // QString ctors
+    string& operator=(const QString& other) {
+        m_iterable = other.toStdString();
+        return *this;
+    }
 
-public:
+    string& operator=(QString&& other) {
+        m_iterable = std::forward<QString&>(other).toStdString();
+        return *this;
+    }
+
+    // char ctors
+    string& operator=(const char* other) {
+        m_iterable = std::string{other};
+        return *this;
+    }
+
+    string& operator=(char&& other) {
+        m_iterable = other;
+        return *this;
+    }
+
+    // v8 ctors
+    string& operator=(v8::Local<v8::String> other) {
+        m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});
+        return *this;
+    }
+
+public: methods
     inline ext::string& to_lowercase() {
         std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
         return *this;
@@ -72,7 +104,9 @@ public:
     }
 
     inline ext::string substring(const size_t offset, const size_t count = std::string::npos) const {
-        return ext::string{m_iterable.substr(offset, count)};
+        ext::string sub_string;
+        sub_string = m_iterable.substr(offset, count);
+        return sub_string;
     }
 
     inline ext::string& ltrim() {
@@ -90,62 +124,57 @@ public:
         return *this;
     }
 
-    inline ext::vector<ext::string> split(ext::string delimiter) const {
-        return {};
-//        ext::vector<ext::string> out {};
-//        size_t current_position = 0;
-//        size_t previous_position = 0;
-//        return out; // TODO
+    inline ext::vector<ext::string> split(char delimiter) const {
+        ext::vector<ext::string> out {};
+        size_t current_position = 0;
+        size_t previous_position = 0;
+        return out; // TODO
 
-//        while (true) {
-//            current_position = find(*delimiter.c_str(), previous_position);
-//            if (current_position == std::string::npos) {
-//                out.append(substring(previous_position));
-//                return out;
-//            }
+        while (true) {
+            current_position = find(delimiter, previous_position);
+            if (current_position == std::string::npos) {
+                out.append(substring(previous_position));
+                return out;
+            }
+
+            out.append(substring(previous_position, current_position - previous_position));
+            previous_position = current_position + 1;
+        }
+    }
 //
-//            out.append(substring(previous_position, current_position - previous_position));
-//            previous_position = current_position + delimiter.length();
-//        }
-    }
-
-    inline bool is_double() const {
-        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c) or c == *".";});
-    }
-
-    inline bool is_integer() const {
-        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c);});
-    }
-
-    inline bool is_bool() const {
-        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_BOOLEANS().contains(std::string{character});});
-    }
-
-    inline bool is_alpha() const {
-        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});
-    }
-
-    inline bool is_hex() const {
-        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});
-    }
+//    inline bool is_double() const {
+//        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c) or c == '.';});
+//    }
+//
+//    inline bool is_integer() const {
+//        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c);});
+//    }
+//
+//    inline bool is_bool() const {
+//        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_BOOLEANS().contains(std::string{character});});
+//    }
+//
+//    inline bool is_alpha() const {
+//        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});
+//    }
+//
+//    inline bool is_hex() const {
+//        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});
+//    }
 
     inline double to_double() const {
         return std::stod(m_iterable);
     }
 
-    inline long long to_integer() const {
-        return std::stoll(m_iterable);
+    inline int to_integer() const {
+        return std::stoi(m_iterable);
     }
 
-    inline bool to_bool() const {
-        return (bool)std::stoi(m_iterable);
-    }
-
-    inline std::string to_string_std() const {
+    inline std::string to_std_string() const {
         return m_iterable;
     }
 
-    inline const char* c_str() const {
+    inline const char* to_c_str() const {
         return m_iterable.c_str();
     }
 
@@ -154,29 +183,49 @@ public:
     }
 
     inline v8::Local<v8::String> to_string_v8() const {
-        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), c_str()).ToLocalChecked();
-        // return v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), m_iterable);
+        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), to_c_str()).ToLocalChecked();
     }
 
-    inline ext::string operator+(ext::cstring& other) const {return ext::string{m_iterable + other.m_iterable};}
-    inline ext::string& operator+=(ext::cstring& other) {m_iterable += other.m_iterable; return *this;}
+public: operators
+    inline ext::string operator+(ext::cstring& other) const {
+        ext::string new_string;
+        return new_string = m_iterable + other.m_iterable;
+    }
 
-    inline bool operator<(ext::cstring& other) const {return this < &other;}
-    inline bool operator>(ext::cstring& other) const {return this > &other;}
+    inline ext::string& operator+=(ext::cstring& other) {
+        m_iterable += other.m_iterable;
+        return *this;
+    }
 
-    inline bool operator!() const {return empty();}
+    inline bool operator<(ext::cstring& other) const {
+        return this < &other;
+    }
 
-    inline bool operator==(const ext::string& other) const {return m_iterable == other.m_iterable;}
-    inline bool operator==(ext::string&& other) const {return m_iterable == other.m_iterable;}
+    inline bool operator>(ext::cstring& other) const {
+        return this > &other;
+    }
+
+    inline bool operator!() const {
+        return empty();
+    }
+
+    inline bool operator==(const ext::string& other) const {
+        return m_iterable == other.m_iterable;
+    }
+
+    inline bool operator==(ext::string&& other) const {
+        return m_iterable == other.m_iterable;
+    }
 };
 
 
-template <class ...args>
-ext::string ext::concatenate_strings(args&&... strings) {
+template <class ...string_t>
+ext::string ext::concatenate_strings(string_t&&... strings) {
 
     const std::ostringstream stream;
-    (stream << ... << std::forward<args>(strings));
-    return ext::string{stream.str()};
+    (stream << ... << std::forward<string_t>(strings));
+    ext::string concatenation;
+    return concatenation = stream.str();
 }
 
 

@@ -52,7 +52,7 @@ public: methods
     }
 
     bool contains_pointer() const {
-        return ext::string{type().name()}.contains(*"* __ptr64");
+        return ext::string{type().name()}.contains("* __ptr64");
     }
 
     bool is_numeric() const {

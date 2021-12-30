@@ -14,9 +14,9 @@ dom::helpers::namespaces::validate_and_extract(
     ext::string prefix = "";
     ext::string local_name = qualified_name;
 
-    if (qualified_name.contains(*":")) {
-        prefix = qualified_name.substring(0, qualified_name.find(*":"));
-        local_name = qualified_name.substring(qualified_name.find(*":"), qualified_name.length());
+    if (qualified_name.contains(':')) {
+        prefix = qualified_name.substring(0, qualified_name.find(':'));
+        local_name = qualified_name.substring(qualified_name.find(':'), qualified_name.length());
     }
 
     exceptions::throw_v8_exception(

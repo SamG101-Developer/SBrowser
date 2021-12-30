@@ -43,6 +43,10 @@ public:
     inline V& at(const K& key) {
         return this->m_iterable.at(key);
     }
+
+    inline bool has_key(const K& key) {
+        return this->m_iterable.find(key) != this->m_iterable.end();
+    }
 };
 
 

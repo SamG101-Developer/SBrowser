@@ -54,6 +54,12 @@ public:
         this->m_iterable.shrink_to_fit();
     }
 
+    static ext::vector<size_t> new_range(size_t minimum, size_t maximum, size_t step = 1) {
+        ext::vector<size_t> range {};
+        for (size_t i = minimum; i < maximum; i += step) range.append(i);
+        return range;
+    }
+
     inline T& item_before(const T& item) {return at((find(item) - 1) % this->length());}
     inline T& item_after (const T& item) {return at((find(item) + 1) % this->length());}
 
