@@ -231,9 +231,10 @@ public:
     }
 
     __forceinline __fastcall operator string() const override {
-        return m_longhand_properties
+        ext::string joined;
+        return joined = m_longhand_properties
                 .transform<string>([](css_property* longhand_property) -> string {return longhand_property->get();})
-                .join(" ");
+                .join(' ');
     }
 
     __forceinline css_shorthand_property& __fastcall operator=(cstring& val) override {
@@ -247,8 +248,8 @@ private:
     string m_initial;
     vector<css_property*> m_longhand_properties;
 
-    vector<string> extract_sub_items(cstring& val) {
-        auto sub_items = val.split(" ");
+    inline vector<string> extract_sub_items(cstring& val) {
+        auto sub_items = val.split(' ');
         return sub_items.length() < m_longhand_properties.length()
                 ? vector<string>{sub_items.front()} * m_longhand_properties.length()
                 : sub_items;

@@ -1,5 +1,7 @@
 #include "logging.hpp"
 
+#include <iostream>
+
 #include <console/abstract.hpp>
 
 
@@ -121,4 +123,12 @@ console::logging::dir(
     auto object = item;
 
     abstract::printer("dir", {object}, options);
+}
+
+
+void
+console::logging::clear() {
+    while (not group_stack.empty()) group_stack.pop();
+    std::cout << std::flush;
+    system("cls");
 }

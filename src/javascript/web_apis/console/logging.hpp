@@ -2,10 +2,13 @@
 #ifndef SBROWSER_LOGGING_HPP
 #define SBROWSER_LOGGING_HPP
 
+#include <stack>
+
 #include <ext/any.hpp>
 #include <ext/string.hpp>
 
 namespace console::logging {
+    static std::stack<ext::string> group_stack;
 
     template <typename ...data_t> void assert_(bool condition, data_t&&... data);
     template <typename ...data_t> void debug(data_t&&... data);
@@ -19,6 +22,8 @@ namespace console::logging {
 
     void table(const ext::any& tabular_data, const ext::vector<ext::string>& properties_list = {});
     void dir(const ext::any& item = 0, const ext::any& options = {});
+
+    void clear();
 }
 
 

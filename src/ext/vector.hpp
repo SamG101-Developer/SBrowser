@@ -137,9 +137,9 @@ public:
         return filter(&other.contains);
     }
 
-    inline std::string join(std::string delimiter = "") {
+    inline std::string join(char delimiter = ' ') {
         std::string joined;
-        // for_each([&joined, delimiter](const T item) -> void {joined += delimiter + item;});
+        for_each([&joined, delimiter](const T item) -> void {joined += delimiter + item;});
         return joined;
     }
 

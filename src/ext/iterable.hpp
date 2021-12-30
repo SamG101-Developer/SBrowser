@@ -24,12 +24,29 @@ public:
     inline size_t length() const {return m_iterable.size();}
     inline bool empty() const {return m_iterable.empty();}
 
-    inline T& front() const {return empty() ? std::is_pointer_v<T> ? nullptr : T() : m_iterable.front();}
-    inline T& back() const {return empty() ? std::is_pointer_v<T> ? nullptr : T() : m_iterable.back();}
-    inline T& at(const size_t index) const {return m_iterable.at(index);}
-    inline T at_iter(const iterator& index_iterator) const {return m_iterable.at(std::distance(begin(), index_iterator));}
-    inline size_t find(const T& object, const size_t offset = 0) const {return std::distance(begin(), std::find(begin() + offset, end(), object));}
-    inline bool contains(const T& item) const {return begin() + find(item) != end();}
+    inline T& front() const {
+        return empty() ? std::is_pointer_v<T> ? nullptr : T() : m_iterable.front();
+    }
+
+    inline T& back() const {
+        return empty() ? std::is_pointer_v<T> ? nullptr : T() : m_iterable.back();
+    }
+
+    inline T& at(const size_t index) const {
+        return m_iterable.at(index);
+    }
+
+    inline T at_iter(const iterator& index_iterator) const {
+        return m_iterable.at(std::distance(begin(), index_iterator));
+    }
+
+    inline size_t find(const T& object, const size_t offset = 0) const {
+        return std::distance(begin(), std::find(begin() + offset, end(), object));
+    }
+
+    inline bool contains(const T& item) const {
+        return begin() + find(item) != end();
+    }
 
     inline iterable<T, C>& clear(bool delete_pointers = false) {
         m_iterable.clear();

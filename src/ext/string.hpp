@@ -44,6 +44,8 @@ public: constructors
     string& operator=(const string&) = default;
     string& operator=(string&&) noexcept = default;
 
+    string(const char* other) {m_iterable = other;}
+
     // std::string ctors
     string& operator=(const std::string& other) {
         m_iterable = other;
@@ -84,48 +86,47 @@ public: constructors
     }
 
 public: methods
-    inline ext::string& to_lowercase() {
+    inline string& to_lowercase() {
         std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
         return *this;
     }
 
-    inline ext::string& to_uppercase() {
-        std::string hello{" "};
+    inline string& to_uppercase() {
         std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::toupper(c);});
         return *this;
     }
 
-    inline ext::string& new_lowercase() const {
-        return ext::string{*this}.to_lowercase();
+    inline string& new_lowercase() const {
+        return string{*this}.to_lowercase();
     }
 
-    inline ext::string& new_uppercase() const {
-        return ext::string{*this}.to_uppercase();
+    inline string& new_uppercase() const {
+        return string{*this}.to_uppercase();
     }
 
-    inline ext::string substring(const size_t offset, const size_t count = std::string::npos) const {
-        ext::string sub_string;
+    inline string substring(const size_t offset, const size_t count = std::string::npos) const {
+        string sub_string;
         sub_string = m_iterable.substr(offset, count);
         return sub_string;
     }
 
-    inline ext::string& ltrim() {
+    inline string& ltrim() {
         m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(" "));
         return *this;
     }
 
-    inline ext::string& rtrim() {
+    inline string& rtrim() {
         m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(" ") + 1, end());
         return *this;
     }
 
-    inline ext::string& trim() {
+    inline string& trim() {
         ltrim(); rtrim();
         return *this;
     }
 
-    inline ext::vector<ext::string> split(char delimiter) const {
-        ext::vector<ext::string> out {};
+    inline ext::vector<string> split(char delimiter) const {
+        ext::vector<string> out {};
         size_t current_position = 0;
         size_t previous_position = 0;
         return out; // TODO
@@ -140,6 +141,10 @@ public: methods
             out.append(substring(previous_position, current_position - previous_position));
             previous_position = current_position + 1;
         }
+    }
+
+    bool contains(const char* item) const {
+        return m_iterable.contains(item);
     }
 //
 //    inline bool is_double() const {
@@ -162,37 +167,30 @@ public: methods
 //        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});
 //    }
 
-    inline double to_double() const {
-        return std::stod(m_iterable);
-    }
-
-    inline int to_integer() const {
-        return std::stoi(m_iterable);
-    }
-
-    inline std::string to_std_string() const {
-        return m_iterable;
-    }
-
-    inline const char* to_c_str() const {
+public: operators
+    inline operator const char*() const {
         return m_iterable.c_str();
     }
 
-    inline QString to_string_qt() const {
+    inline operator QString() const {
         return {m_iterable.c_str()};
     }
 
-    inline v8::Local<v8::String> to_string_v8() const {
-        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), to_c_str()).ToLocalChecked();
+    inline operator v8::Local<v8::String>() const {
+        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), *this).ToLocalChecked();
     }
 
-public: operators
-    inline ext::string operator+(ext::cstring& other) const {
-        ext::string new_string;
+    inline string operator+(const ext::cstring& other) const {
+        string new_string;
         return new_string = m_iterable + other.m_iterable;
     }
 
-    inline ext::string& operator+=(ext::cstring& other) {
+    inline string operator+(const char* other) const {
+        string new_string;
+        return new_string = m_iterable + other;
+    }
+
+    inline string& operator+=(ext::cstring& other) {
         m_iterable += other.m_iterable;
         return *this;
     }
@@ -209,11 +207,11 @@ public: operators
         return empty();
     }
 
-    inline bool operator==(const ext::string& other) const {
+    inline bool operator==(const string& other) const {
         return m_iterable == other.m_iterable;
     }
 
-    inline bool operator==(ext::string&& other) const {
+    inline bool operator==(string&& other) const {
         return m_iterable == other.m_iterable;
     }
 };
