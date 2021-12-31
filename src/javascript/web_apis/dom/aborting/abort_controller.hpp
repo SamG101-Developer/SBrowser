@@ -2,8 +2,8 @@
 #ifndef SBROWSER_ABORT_CONTROLLER_HPP
 #define SBROWSER_ABORT_CONTROLLER_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/property.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom::aborting {
     class abort_controller;

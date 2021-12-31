@@ -3,8 +3,8 @@
 
 #include <any>
 
-#include <ext/decorators.hpp>
-#include <ext/string.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/iterables/string.hpp>
 
 
 //inline bool operator< (const std::any& first, const std::any& second) {return &first <  &second;}

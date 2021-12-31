@@ -3,8 +3,8 @@
 #define SBROWSER_CUSTOM_ELEMENTS_HPP
 
 #include <queue>
-#include <ext/map.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace helpers {struct custom_elements;}

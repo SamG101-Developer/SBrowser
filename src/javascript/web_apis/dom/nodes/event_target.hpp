@@ -3,10 +3,10 @@
 #define SBROWSER_EVENT_TARGET_HPP
 
 #include <functional>
-#include <ext/decorators.hpp>
-#include <ext/map.hpp>
-#include <ext/string.hpp>
-#include <ext/vector.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/iterables/string.hpp>
+#include <ext/iterables/vector.hpp>
 
 namespace dom {
     namespace events {class event;}

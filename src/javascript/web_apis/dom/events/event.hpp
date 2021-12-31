@@ -2,10 +2,10 @@
 #ifndef SBROWSER_EVENT_HPP
 #define SBROWSER_EVENT_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/property.hpp>
-#include <ext/map.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/iterables/string.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace events {class event;}

@@ -6,7 +6,7 @@
 #include <vector>
 #include <string>
 
-#include <ext/iterable.hpp>
+#include <ext/iterables/iterable.hpp>
 
 namespace ext {
     template <typename T> class vector;
@@ -33,7 +33,7 @@ namespace {
 
 template <typename T>
 class ext::vector : public ext::iterable<T, std::vector<T>> {
-public:
+public: constructors
     vector() = default;
     vector(const vector&) = default;
     vector(vector&&) noexcept = default;
@@ -54,14 +54,15 @@ public:
         this->m_iterable.shrink_to_fit();
     }
 
-    static ext::vector<size_t> new_range(size_t minimum, size_t maximum, size_t step = 1) {
-        ext::vector<size_t> range {};
-        for (size_t i = minimum; i < maximum; i += step) range.append(i);
-        return range;
+public: methods
+    // element access
+    inline T& item_before(const T& item) {
+        return at((find(item) - 1) % this->length());
     }
 
-    inline T& item_before(const T& item) {return at((find(item) - 1) % this->length());}
-    inline T& item_after (const T& item) {return at((find(item) + 1) % this->length());}
+    inline T& item_after(const T& item) {
+        return at((find(item) + 1) % this->length());
+    }
 
     template <typename function> inline T& first_match(function&& func) {
         return filter(func).front();
@@ -71,6 +72,11 @@ public:
         return filter(func).back();
     }
 
+    inline vector<T>& slice(size_t front_index, size_t back_index) const {
+        return vector<T>{this->begin() + front_index, this->begin() + back_index};
+    }
+
+    // modifiers
     inline vector<T>& append(const T& item) {
         this->m_iterable.emplace_back(item);
         return *this;
@@ -87,7 +93,7 @@ public:
     }
 
     inline vector<T>& extend(const vector<T>& other, const size_t index = -1) {
-        // other.reversed().for_each([this, other, index = index % this->length()](T item) -> void {insert(other, index);});
+        other.reversed().for_each([this, other, index = index % this->length()](T&& item) -> void {insert(other, index);});
         return *this;
     }
 
@@ -100,6 +106,7 @@ public:
         return this->at_iter(std::max_element(this->begin(), this->end()));
     }
 
+    // algorithms
     template <typename function> inline bool all_of(function&& func) const {
         bool flag = true;
         for_each([&flag, func](const T& item) -> void {flag &= func(T{item});});
@@ -149,10 +156,7 @@ public:
 
     inline vector<T>& flatten() {/* TODO */}
 
-    inline vector<T>& slice(size_t front_index, size_t back_index) const {
-        return vector<T>{this->begin() + front_index, this->begin() + back_index};
-    }
-
+public: operators
     inline ext::vector<T> operator*(size_t multiplier) const {
         auto original = vector<string>{*this};
         auto output = vector<string>{*this};

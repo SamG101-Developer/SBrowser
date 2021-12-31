@@ -2,8 +2,8 @@
 #ifndef SBROWSER_EVENT_LISTENING_HPP
 #define SBROWSER_EVENT_LISTENING_HPP
 
-#include <ext/map.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace events {class event;}

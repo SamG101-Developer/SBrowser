@@ -2,9 +2,9 @@
 #ifndef SBROWSER_WINDOW_HPP
 #define SBROWSER_WINDOW_HPP
 
+#include <ext/mixins/listlike.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 #include <dom/nodes/event_target.hpp>
-#include <ext/listlike.hpp>
 
 namespace dom::nodes {
     class document;

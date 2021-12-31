@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NODE_FILTER_HPP
 #define SBROWSER_NODE_FILTER_HPP
 
-#include <ext/decorators.hpp>
+#include <ext/macros/decorators.hpp>
 
 namespace dom {
     namespace iterators {struct node_filter;}

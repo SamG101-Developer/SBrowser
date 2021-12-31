@@ -2,7 +2,7 @@
 #ifndef SBROWSER_DOCUMENT_OR_SHADOW_ROOT_HPP
 #define SBROWSER_DOCUMENT_OR_SHADOW_ROOT_HPP
 
-#include <ext/property.hpp>
+#include <ext/types/property.hpp>
 
 namespace css::cssom::style_sheets {class css_style_sheet;}
 

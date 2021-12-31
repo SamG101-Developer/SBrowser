@@ -2,8 +2,8 @@
 #ifndef SBROWSER_XPATH_EVALUATOR_HPP
 #define SBROWSER_XPATH_EVALUATOR_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
+#include <ext/macros/decorators.hpp>
 
 namespace dom {
     namespace nodes {class node;}

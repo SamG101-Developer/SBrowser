@@ -1,9 +1,9 @@
 #pragma once
-#ifndef SBROWSER_FSTREAM_HPP
-#define SBROWSER_FSTREAM_HPP
+#ifndef SBROWSER_FILES_HPP
+#define SBROWSER_FILES_HPP
 
 #include <fstream>
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 
 
 ext::string file_read(const ext::string file_path) {
@@ -15,4 +15,4 @@ ext::string file_read(const ext::string file_path) {
 }
 
 
-#endif //SBROWSER_FSTREAM_HPP
+#endif //SBROWSER_FILES_HPP

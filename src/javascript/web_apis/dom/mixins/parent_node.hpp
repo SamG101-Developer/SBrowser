@@ -2,8 +2,8 @@
 #ifndef SBROWSER_PARENT_NODE_HPP
 #define SBROWSER_PARENT_NODE_HPP
 
-#include <ext/property.hpp>
-#include <ext/vector.hpp>
+#include <ext/types/property.hpp>
+#include <ext/iterables/vector.hpp>
 
 namespace dom {
     namespace mixins {template <typename T> class parent_node;}

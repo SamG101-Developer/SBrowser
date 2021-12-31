@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NODE_INTERNALS_HPP
 #define SBROWSER_NODE_INTERNALS_HPP
 
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace helpers {struct node_internals;}

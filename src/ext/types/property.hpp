@@ -3,9 +3,9 @@
 #define SBROWSER_PROPERTY_HPP
 
 #include <functional>
-#include <ext/any.hpp>
-#include <ext/string.hpp>
-#include <ext/vector.hpp>
+#include <ext/iterables/string.hpp>
+#include <ext/iterables/vector.hpp>
+#include <ext/types/any.hpp>
 
 #define readonly_setter [](T) {}
 

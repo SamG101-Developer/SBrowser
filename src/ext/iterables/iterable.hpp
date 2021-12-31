@@ -5,12 +5,18 @@
 #include <algorithm>
 #include <stdexcept>
 
+#include <ext/macros/decorators.hpp>
+
 namespace ext {template <typename T, typename C> class iterable;}
 
 
 template <typename T, typename C>
 class ext::iterable {
-public:
+aliases
+    using iterator = typename C::iterator;
+    using const_iterator = typename C::const_iterator;
+
+public: constructors
     iterable() = default;
     iterable(const iterable<T, C>&) = default;
     iterable(iterable<T, C>&&) noexcept = default;
@@ -18,13 +24,8 @@ public:
     iterable<T, C>& operator=(iterable<T, C>&&) noexcept = default;
 
     virtual ~iterable() = default;
-    
-    using iterator       = typename C::iterator;
-    using const_iterator = typename C::const_iterator;
 
-    inline size_t length() const {return m_iterable.size();}
-    inline bool empty() const {return m_iterable.empty();}
-
+    // element access
     inline T& front() const {
         if (empty()) throw std::out_of_range{"Cannot access front of an empty iterable"};
         return const_cast<T&>(m_iterable.front());
@@ -45,14 +46,33 @@ public:
         return const_cast<T&>(m_iterable.at(*index_iterator));
     }
 
-    inline size_t find(const T& object, const size_t offset = 0) const {
-        return std::distance(begin(), std::find(begin() + offset, end(), object));
+    // iterators
+    inline iterator begin() {
+        return m_iterable.begin();
     }
 
-    inline bool contains(const T& item) const {
-        return begin() + find(item) != end();
+    inline const_iterator begin() const {
+        return m_iterable.begin();
     }
 
+    inline iterator end() {
+        return m_iterable.end();
+    }
+
+    inline const_iterator end() const {
+        return m_iterable.end();
+    }
+
+    // capacity
+    inline bool empty() const {
+        return m_iterable.empty();
+    }
+
+    inline size_t length() const {
+        return m_iterable.size();
+    }
+
+    // modifiers
     inline iterable<T, C>& clear(bool delete_pointers = false) {
         m_iterable.clear();
         m_iterable.shrink_to_fit();
@@ -67,14 +87,6 @@ public:
         return *this;
     }
 
-    inline iterable<T, C>& replace(const T& old_item, const T& new_item, bool all = false) {
-        while (contains(old_item)) {
-            std::replace(begin(), end(), old_item, new_item);
-            if (not all) break;
-        }
-        return *this;
-    }
-
     template <class function> inline iterable<T, C>& remove_if(function&& func, bool all = false) {
         while (std::find_if(begin(), end(), func) != end()) {
             std::remove_if(begin(), end(), func);
@@ -83,8 +95,16 @@ public:
         return *this;
     }
 
+    inline iterable<T, C>& replace(const T& old_item, const T& new_item, bool all = false) {
+        while (contains(old_item)) {
+            std::replace(begin(), end(), old_item, new_item);
+            if (not all) break;
+        }
+        return *this;
+    }
+
     template <class function> inline iterable<T, C>& replace_if(function&& func, const T& new_item, bool all = false) {
-        while (std::find(begin(), end(), func) != end()) {
+        while (std::find_if(begin(), end(), func) != end()) {
             std::replace_if(begin(), end(), func, new_item);
             if (not all) break;
         }
@@ -96,35 +116,51 @@ public:
         return *this;
     }
 
-    inline iterable<T, C> reversed() {
-        return iterable<T, C>{*this}.reverse();
-    }
-
     inline iterable<T, C>& sort() {
         std::sort(m_iterable.begin(), m_iterable.end());
         return *this;
     }
 
-    inline iterable<T, C>& sorted() {
-        return iterable<T, C>{*this}.sort();
-    }
-    
-    inline iterator begin() {return m_iterable.begin();}
-    inline iterator end()   {return m_iterable.end();}
-    inline const_iterator begin() const {return m_iterable.begin();}
-    inline const_iterator end()   const {return m_iterable.end();}
-
     inline iterable<C, T>& clean() requires std::is_pointer_v<T> {
         return remove(nullptr, true);
     }
 
-    inline bool operator not() const {return empty();}
+    // new iterables
+    inline iterable<T, C> reversed() {
+        return iterable<T, C>{*this}.reverse();
+    }
 
-    inline bool operator==(const iterable<T, C>& other) const {return m_iterable == other.m_iterable;}
-    inline bool operator!=(const iterable<T, C>& other) const {return m_iterable != other.m_iterable;}
-    inline operator bool() const {return not empty();}
+    inline iterable<T, C>& sorted() {
+        return iterable<T, C>{*this}.sort();
+    }
 
-protected:
+    // algorithms
+    inline size_t find(const T& object, const size_t offset = 0) const {
+        return std::distance(begin(), std::find(begin() + offset, end(), object));
+    }
+
+    inline bool contains(const T& item) const {
+        return begin() + find(item) != end();
+    }
+
+public: operators
+    inline bool operator not() const {
+        return empty();
+    }
+
+    inline bool operator==(const iterable<T, C>& other) const {
+        return m_iterable == other.m_iterable;
+    }
+
+    inline bool operator!=(const iterable<T, C>& other) const {
+        return m_iterable != other.m_iterable;
+    }
+
+    inline operator bool() const {
+        return not empty();
+    }
+
+protected: internal_properties
     C m_iterable;
 };
 

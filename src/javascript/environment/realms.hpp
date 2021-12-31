@@ -1,7 +1,7 @@
 #ifndef SBROWSER_REALMS_HPP
 #define SBROWSER_REALMS_HPP
 
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 
 #include <v8.h>
 #include <v8pp/convert.hpp>

@@ -4,9 +4,9 @@
 
 #include <functional>
 
-#include <ext/map.hpp>
-#include <ext/string.hpp>
-#include <ext/vector.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/iterables/string.hpp>
+#include <ext/iterables/vector.hpp>
 
 namespace dom {
     namespace helpers {struct mutation_observers;}

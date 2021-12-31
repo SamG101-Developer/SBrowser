@@ -2,8 +2,8 @@
 #ifndef SBROWSER_XPATH_RESULT_HPP
 #define SBROWSER_XPATH_RESULT_HPP
 
-#include <ext/decorators.hpp>|
-#include <ext/property.hpp>|
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace nodes {class node;}

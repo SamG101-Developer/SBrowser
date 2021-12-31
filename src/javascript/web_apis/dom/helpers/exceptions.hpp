@@ -5,7 +5,7 @@
 #define empty_conditional [](){return true;}
 
 #include <functional>
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 #include <dom/other/dom_exception.hpp>
 
 namespace dom::helpers {struct exceptions;}

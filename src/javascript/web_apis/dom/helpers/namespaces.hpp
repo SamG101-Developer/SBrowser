@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NAMESPACES_HPP
 #define SBROWSER_NAMESPACES_HPP
 
-#include <ext/typedefs.hpp>
+#include <ext/types/typedefs.hpp>
 
 namespace dom::helpers {struct namespaces;}
 

@@ -2,8 +2,8 @@
 #ifndef SBROWSER_DOCUMENT_OR_ELEMENT_NODE_HPP
 #define SBROWSER_DOCUMENT_OR_ELEMENT_NODE_HPP
 
-#include <ext/vector.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/vector.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace mixins {template <typename T> class document_or_element_node;}

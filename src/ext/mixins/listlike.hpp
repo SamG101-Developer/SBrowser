@@ -2,7 +2,7 @@
 #ifndef SBROWSER_LISTLIKE_HPP
 #define SBROWSER_LISTLIKE_HPP
 
-#include <ext/property.hpp>
+#include <ext/types/property.hpp>
 
 namespace ext {
     template <typename T> class vector;

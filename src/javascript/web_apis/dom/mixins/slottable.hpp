@@ -2,7 +2,7 @@
 #ifndef SBROWSER_SLOTTABLE_HPP
 #define SBROWSER_SLOTTABLE_HPP
 
-#include <ext/property.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace mixins {template <typename T> class slottable;}

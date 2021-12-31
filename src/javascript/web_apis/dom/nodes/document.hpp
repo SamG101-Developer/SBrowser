@@ -4,8 +4,8 @@
 
 #include <variant>
 
-#include <ext/listlike.hpp>
-#include <ext/map.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/mixins/listlike.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 
 #include <dom/nodes/node.hpp>

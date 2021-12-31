@@ -2,7 +2,7 @@
 
 #include <regex>
 
-#include <ext/set.hpp>
+#include <ext/iterables/set.hpp>
 
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>

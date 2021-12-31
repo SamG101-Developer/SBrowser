@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 
 
 ui::window_handling::window_handler::window_handler(
@@ -20,9 +20,9 @@ ui::window_handling::window_handler::window_handler(
     ext::string context_file_string;
     context_file_string = context_file_stream.str();
 
-    auto attributes = context_file_string.split(",");
-    auto font_attribute = attributes.at(4).split(",");
-    auto font_name = ext::string{font_attribute.at(0)}.to_string_qt();
+    auto attributes = context_file_string.split(',');
+    auto font_attribute = attributes.at(4).split(',');
+    auto font_name = QString(font_attribute.at(0));
     auto font_size = (short){font_attribute.at(1)};
 
     m_context = {

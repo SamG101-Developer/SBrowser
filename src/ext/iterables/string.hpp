@@ -9,16 +9,12 @@
 #include <string>
 #include <utility>
 
-#include <ext/decorators.hpp>
-#include <ext/vector.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/iterables/vector.hpp>
 
 #include <QtCore/QString>
 #include <v8.h>
 #include <v8pp/convert.hpp>
-
-//static ext::vector<std::string> get_STRING_BOOLEANS() {return {"true", "false", "1", "0"};}
-//static ext::vector<std::string> get_STRING_ALPHAS() {return {"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"};}
-//static ext::vector<std::string> get_STRING_HEX() {return {"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "a", "b", "c", "d", "e", "f"};}
 
 namespace ext {
     class string;
@@ -46,6 +42,17 @@ public: constructors
 
     string(const char* other) {m_iterable = other;}
 
+    // char ctors
+    string& operator=(const char* other) {
+        m_iterable = std::string{other};
+        return *this;
+    }
+
+    string& operator=(char&& other) {
+        m_iterable = other;
+        return *this;
+    }
+
     // std::string ctors
     string& operator=(const std::string& other) {
         m_iterable = other;
@@ -68,17 +75,6 @@ public: constructors
         return *this;
     }
 
-    // char ctors
-    string& operator=(const char* other) {
-        m_iterable = std::string{other};
-        return *this;
-    }
-
-    string& operator=(char&& other) {
-        m_iterable = other;
-        return *this;
-    }
-
     // v8 ctors
     string& operator=(v8::Local<v8::String> other) {
         m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});
@@ -86,6 +82,23 @@ public: constructors
     }
 
 public: methods
+    // modifiers
+    inline string& ltrim() {
+        m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(" "));
+        return *this;
+    }
+
+    inline string& rtrim() {
+        m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(" ") + 1, end());
+        return *this;
+    }
+
+    inline string& trim() {
+        ltrim(); rtrim();
+        return *this;
+    }
+
+    // algorithms
     inline string& to_lowercase() {
         std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
         return *this;
@@ -110,21 +123,6 @@ public: methods
         return sub_string;
     }
 
-    inline string& ltrim() {
-        m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(" "));
-        return *this;
-    }
-
-    inline string& rtrim() {
-        m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(" ") + 1, end());
-        return *this;
-    }
-
-    inline string& trim() {
-        ltrim(); rtrim();
-        return *this;
-    }
-
     inline ext::vector<string> split(char delimiter) const {
         ext::vector<string> out {};
         size_t current_position = 0;
@@ -146,26 +144,6 @@ public: methods
     bool contains(const char* item) const {
         return m_iterable.contains(item);
     }
-//
-//    inline bool is_double() const {
-//        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c) or c == '.';});
-//    }
-//
-//    inline bool is_integer() const {
-//        return std::all_of(begin(), end(), [](char c) -> bool {return ::isdigit(c);});
-//    }
-//
-//    inline bool is_bool() const {
-//        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_BOOLEANS().contains(std::string{character});});
-//    }
-//
-//    inline bool is_alpha() const {
-//        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_ALPHAS().contains(std::string{character});});
-//    }
-//
-//    inline bool is_hex() const {
-//        return std::all_of(m_iterable.begin(), m_iterable.end(), [](auto character) {return get_STRING_HEX().contains(std::string{character});});
-//    }
 
 public: operators
     explicit inline operator const char*() const {

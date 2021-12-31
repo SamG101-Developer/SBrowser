@@ -2,9 +2,9 @@
 #ifndef SBROWSER_MUTATION_RECORD_HPP
 #define SBROWSER_MUTATION_RECORD_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/property.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace mutations {class mutation_record;}

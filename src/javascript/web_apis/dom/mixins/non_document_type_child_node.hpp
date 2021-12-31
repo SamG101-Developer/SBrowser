@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NON_DOCUMENT_TYPE_CHILD_NODE_HPP
 #define SBROWSER_NON_DOCUMENT_TYPE_CHILD_NODE_HPP
 
-#include <ext/property.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace mixins {template <typename T> class non_document_type_child_node;}

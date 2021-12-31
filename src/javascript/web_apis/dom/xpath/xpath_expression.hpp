@@ -2,7 +2,7 @@
 #ifndef SBROWSER_XPATH_EXPRESSION_HPP
 #define SBROWSER_XPATH_EXPRESSION_HPP
 
-#include <ext/decorators.hpp>
+#include <ext/macros/decorators.hpp>
 
 namespace dom {
     namespace nodes {class node;}

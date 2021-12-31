@@ -4,7 +4,7 @@
 
 #include <tuple>
 
-#include <ext/vector.hpp>
+#include <ext/iterables/vector.hpp>
 
 namespace dom {
     namespace helpers {struct range_internals;}

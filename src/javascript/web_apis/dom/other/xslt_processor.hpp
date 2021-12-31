@@ -2,8 +2,8 @@
 #ifndef SBROWSER_XSLT_PROCESSOR_HPP
 #define SBROWSER_XSLT_PROCESSOR_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/property.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace other {class xslt_processor;}

@@ -2,8 +2,8 @@
 #ifndef SBROWSER_DOM_IMPLEMENTATION_HPP
 #define SBROWSER_DOM_IMPLEMENTATION_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/string.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace other {class dom_implementation;}

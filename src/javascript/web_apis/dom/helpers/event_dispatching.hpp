@@ -2,9 +2,9 @@
 #ifndef SBROWSER_EVENT_DISPATCHING_HPP
 #define SBROWSER_EVENT_DISPATCHING_HPP
 
-#include <ext/map.hpp>
-#include <ext/vector.hpp>
-#include <ext/string.hpp>
+#include <ext/iterables/map.hpp>
+#include <ext/iterables/vector.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace events {class event;}

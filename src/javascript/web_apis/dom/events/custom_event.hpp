@@ -2,8 +2,9 @@
 #ifndef SBROWSER_CUSTOM_EVENT_HPP
 #define SBROWSER_CUSTOM_EVENT_HPP
 
-#include <any>
-#include <ext/decorators.hpp>
+#include <ext/iterables//map.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 #include <dom/events/event.hpp>
 
 namespace dom::events {class custom_event;}

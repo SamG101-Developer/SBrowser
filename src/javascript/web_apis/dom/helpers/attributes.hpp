@@ -2,7 +2,7 @@
 #ifndef SBROWSER_ATTRIBUTES_HPP
 #define SBROWSER_ATTRIBUTES_HPP
 
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 
 namespace dom {
     namespace helpers {struct attributes;}

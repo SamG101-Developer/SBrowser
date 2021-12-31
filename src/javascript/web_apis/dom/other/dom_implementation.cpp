@@ -1,6 +1,6 @@
 #include "dom_implementation.hpp"
 
-#include <ext/string_switch.hpp>
+#include <ext/iterables/string_switch.hpp>
 
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>

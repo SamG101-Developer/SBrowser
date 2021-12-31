@@ -2,7 +2,7 @@
 #ifndef SBROWSER_ABSTRACT_HPP
 #define SBROWSER_ABSTRACT_HPP
 
-#include <ext/any.hpp>
+#include <ext/types/any.hpp>
 
 namespace console {struct abstract;}
 

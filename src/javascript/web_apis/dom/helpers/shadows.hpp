@@ -2,7 +2,7 @@
 #ifndef SBROWSER_SHADOWS_HPP
 #define SBROWSER_SHADOWS_HPP
 
-#include <ext/vector.hpp>
+#include <ext/iterables/vector.hpp>
 
 namespace dom {
     namespace helpers {struct shadows;}

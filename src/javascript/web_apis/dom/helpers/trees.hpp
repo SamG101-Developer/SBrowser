@@ -2,7 +2,7 @@
 #ifndef SBROWSER_TREES_HPP
 #define SBROWSER_TREES_HPP
 
-#include <ext/vector.hpp>
+#include <ext/iterables/vector.hpp>
 
 namespace dom {
     namespace helpers {struct trees;}

@@ -2,8 +2,8 @@
 #ifndef SBROWSER_ABORT_SIGNAL_HPP
 #define SBROWSER_ABORT_SIGNAL_HPP
 
-#include <ext/property.hpp>
-#include <ext/set.hpp>
+#include <ext/iterables/set.hpp>
+#include <ext/types/property.hpp>
 #include <dom/nodes/event_target.hpp>
 
 namespace dom {

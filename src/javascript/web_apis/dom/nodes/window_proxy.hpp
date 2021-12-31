@@ -2,7 +2,7 @@
 #ifndef SBROWSER_WINDOW_PROXY_HPP
 #define SBROWSER_WINDOW_PROXY_HPP
 
-#include <ext/decorators.hpp>
+#include <ext/macros/decorators.hpp>
 #include <v8.h>
 
 namespace dom::nodes {
