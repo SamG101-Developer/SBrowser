@@ -33,7 +33,11 @@ public: methods
         this->m_iterable.emplace(key, value);
     }
 
-    inline V& at(const K& key) const {
+    inline const V& at(const K& key) const {
+        return this->m_iterable.at(key);
+    }
+
+    inline V& at(const K& key) {
         return this->m_iterable.at(key);
     }
 

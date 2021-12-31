@@ -2,9 +2,9 @@
 #ifndef SBROWSER_NODE_HPP
 #define SBROWSER_NODE_HPP
 
-#include <ext/macros/property.hpp>
 #include <ext/iterables/map.hpp>
 #include <ext/iterables/string.hpp>
+#include <ext/types/property.hpp>
 
 #include <dom/nodes/event_target.hpp>
 

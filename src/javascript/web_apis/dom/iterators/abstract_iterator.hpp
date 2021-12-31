@@ -2,8 +2,8 @@
 #ifndef SBROWSER_ABSTRACT_ITERATOR_HPP
 #define SBROWSER_ABSTRACT_ITERATOR_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/property.hpp>
+#include <ext/macros/decorators.hpp>
+#include <ext/types/property.hpp>
 
 namespace dom {
     namespace helpers {struct traversal;}

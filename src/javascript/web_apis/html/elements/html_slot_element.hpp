@@ -21,7 +21,7 @@ public: constructors
 public: methods
     ext::vector<dom::nodes::node*> assigned_nodes(ext::cstring_any_map& options = {});
     ext::vector<dom::nodes::element*> assigned_elements(ext::cstring_any_map& options = {});
-    template <typename ...nodes> void assign(nodes... nodes);
+    template <typename ...nodes_t> void assign(nodes_t... nodes);
 
 public: properties
     ext::dom_property<ext::string> name;

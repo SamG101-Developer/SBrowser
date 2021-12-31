@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include <ext/iterables/range.hpp>
+
 #include <console/abstract.hpp>
 
 
@@ -86,7 +88,7 @@ console::logging::table(
 
     // array of strings ie ["apples", "oranges", "bananas"]
     if (ext::vector<ext::string> array = tabular_data) {
-        auto indexes = ext::vector<size_t>::new_range(0, array.length());
+        auto indexes = ext::range<size_t>{0, array.length()};
         auto columns = ext::vector<ext::vector<ext::string>>{indexes, tabular_data};
         // helpers::format_table(columns); TODO
     }

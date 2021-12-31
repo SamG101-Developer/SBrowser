@@ -79,7 +79,7 @@ public properties:
     ext::dom_property<html::other::history*> history;
     ext::dom_property<html::custom_elements::custom_element_registry*> custom_elements;
 
-    ext::dom_property<window_proxy*> window;
+    ext::dom_property<window_proxy*> window_;
     ext::dom_property<window_proxy*> self;
     ext::dom_property<document*> document;
 

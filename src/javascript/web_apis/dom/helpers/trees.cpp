@@ -23,7 +23,7 @@ ext::vector<dom::nodes::node*>
 dom::helpers::trees::descendants(nodes::node* node) {
 
     return node->child_nodes->empty()
-            ? {}
+            ? ext::vector<nodes::node*>{}
             : node->child_nodes->transform<>([](auto* child) {return descendants(child);}).flatten();
 }
 

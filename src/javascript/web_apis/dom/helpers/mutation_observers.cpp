@@ -16,6 +16,7 @@
 #include <dom/nodes/node.hpp>
 
 #include <html/elements/html_slot_element.hpp>
+#include <html/elements/html_media_element.hpp>
 
 #include <v8.h>
 
@@ -134,5 +135,5 @@ dom::helpers::mutation_observers::queue_media_element_task(
         html::elements::html_media_element* element,
         steps_t&& steps) {
 
-    queue_element_task(element->element_event_task_source, element, steps);
+    // queue_element_task(element->element_event_task_source, element, steps);
 }

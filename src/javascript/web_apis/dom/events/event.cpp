@@ -5,21 +5,28 @@
 #include <performance/time/dom_high_res_timestamp.hpp>
 
 
-dom::events::event::event(ext::cstring& event_type, ext::cstring_any_map& event_init)
-        : type(event_type)
-        , bubbles(event_init.at("bubbles"))
-        , cancelable(event_init.at("cancelable"))
-        , composed(event_init.at("composed"))
-        , event_phase(NONE)
-        , time_stamp(performance::time::dom_high_res_timestamp())
-        , touch_targets(new ext::vector<nodes::event_target*>{})
-        , path(new ext::vector<internal::event_path_struct*>{}) {
+dom::events::event::event(
+        ext::cstring& event_type,
+        ext::cstring_any_map& event_init) {
 
+    type = event_type;
+    bubbles = (bool)event_init.at("bubbles");
+    cancelable = (bool)event_init.at("cancelable");
+    composed = (bool)event_init.at("composed");
     target = nullptr;
     current_target = nullptr;
     related_target = nullptr;
+    event_phase = NONE;
+    time_stamp = performance::time::dom_high_res_timestamp();
+    touch_targets = new ext::vector<nodes::event_target*>{};
+    path = new ext::vector<internal::event_path_struct*>{};
 
+    m_stop_propagation_flag = false;
+    m_stop_immediate_propagation_flag = false;
+    m_canceled_flag = false;
+    m_in_passive_listener_flag = false;
     m_initialized_flag = true;
+    m_dispatch_flag = false;
 }
 
 

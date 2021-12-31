@@ -20,7 +20,7 @@ dom::helpers::range_internals::contains(
         ranges::range* range) {
 
     return range->m_root == trees::root(node)
-            and position_relative(node, 0, range->start_container, range->start_offset) == AFTER
+            and position_relative(node, 0, range->start_container, range->start_offset) == internal::AFTER
             and position_relative(node, trees::length(node), range->end_container, range->end_offset) == BEFORE;
 }
 

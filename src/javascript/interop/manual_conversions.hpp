@@ -25,7 +25,7 @@ struct v8pp::convert<ext::string> {
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
         v8::EscapableHandleScope escapable_handle_scope(isolate);
-        return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, cpp_value, v8::NewStringType::kNormal, cpp_value.length()).ToLocalChecked());
+        return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, (const char*)cpp_value, v8::NewStringType::kNormal, cpp_value.length()).ToLocalChecked());
     }
 };
 

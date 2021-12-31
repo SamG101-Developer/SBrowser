@@ -93,7 +93,8 @@ public: methods
     }
 
     inline vector<T>& extend(const vector<T>& other, const size_t index = -1) {
-        other.reversed().for_each([this, other, index = index % this->length()](T&& item) -> void {insert(other, index);});
+        ext::vector<T> reversed_other = other.reversed();
+        reversed_other.for_each([this, other, index = index % this->length()](const T& item) -> void {insert(item, index);});
         return *this;
     }
 

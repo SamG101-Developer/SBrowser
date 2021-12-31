@@ -3,7 +3,9 @@
 #include <functional>
 
 #include <dom/events/event.hpp>
+
 #include <dom/helpers/event_listening.hpp>
+#include <dom/helpers/shadows.hpp>
 
 #include <dom/nodes/node.hpp>
 #include <dom/nodes/shadow_root.hpp>
@@ -71,20 +73,22 @@ dom::helpers::event_dispatching::inner_invoke(
         ext::vector<ext::string_any_map>& event_listeners,
         unsigned char phase) {
 
-    for (auto& event_listener: event_listeners) {
-        if (event->type != ext::any_cast<ext::string>(event_listener.at("type"))) continue;
-        if (phase == events::event::CAPTURING_PHASE and not ext::any_cast<bool>(event_listener.at("capturing"))) continue;
-        if (phase == events::event::BUBBLING_PHASE and not ext::any_cast<bool>(event_listener.at("bubbling"))) continue;
+    using callback_t = std::function<void()>;
 
-        event->m_in_passive_listener_flag = ext::any_cast<bool>(event_listener.at("passive"));
-        auto event_listener_callback = ext::any_cast<std::function<void(nodes::event_target*, events::event*)>>(event_listener.at("callback"));
-        std::bind(event_listener_callback, event->current_target, std::placeholders::_1)(event);
+    for (auto& event_listener: event_listeners) {
+        if (event->type != (ext::string)event_listener.at("type")) continue;
+        if (phase == events::event::CAPTURING_PHASE and not (bool)event_listener.at("capturing")) continue;
+        if (phase == events::event::BUBBLING_PHASE and not (bool)event_listener.at("bubbling")) continue;
+
+        event->m_in_passive_listener_flag = (bool)event_listener.at("passive");
+        auto event_listener_callback = (callback_t)event_listener.at("callback");
+        [event_listener_callback] {event_listener_callback();}();
         event->m_in_passive_listener_flag = false;
 
-        if (ext::any_cast<bool>(event_listener.at("once")))
+        if ((bool)event_listener.at("once"))
             event->current_target->m_event_listeners.remove(event_listener);
 
-        if (ext::any_cast<bool>(event->m_stop_immediate_propagation_flag))
+        if ((bool)event->m_stop_immediate_propagation_flag)
             return;
     }
 }
@@ -98,7 +102,7 @@ dom::helpers::event_dispatching::fire_event(
         ext::cstring_any_map& init) {
 
     T* event = new T{e, init};
-    node_internals::dispatch(event, target);
+    event_listening::dispatch(event, target);
 }
 
 
@@ -108,13 +112,13 @@ dom::helpers::event_dispatching::fire_synthetic_pointer_event(
         nodes::event_target* target,
         bool not_trusted_flag) {
 
-    auto* event = new pointer_events::events::pointer_event{e, {{"bubbles", true}, {"cancelable", true}, {"composed", true}}};
-    event->is_trusted = not not_trusted_flag;
-    event->ctrl_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::ControlModifier;
-    event->shift_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::ShiftModifier;
-    event->alt_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::AltModifier;
-    event->meta_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::MetaModifier;
+//    auto* event = new pointer_events::events::pointer_event{e, {{"bubbles", true}, {"cancelable", true}, {"composed", true}}};
+//    event->is_trusted = not not_trusted_flag;
+//    event->ctrl_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::ControlModifier;
+//    event->shift_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::ShiftModifier;
+//    event->alt_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::AltModifier;
+//    event->meta_key = QGuiApplication::keyboardModifiers() & Qt::KeyboardModifier::MetaModifier;
     // TODO -> event->view
 
-    return node_internals::dispatch(event, target);
+//    return event_listening::dispatch(event, target);
 }

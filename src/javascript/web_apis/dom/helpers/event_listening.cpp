@@ -1,8 +1,15 @@
 #include "event_listening.hpp"
 
+#include <ext/types/typedefs.hpp>
+
 #include <dom/aborting/abort_signal.hpp>
+
 #include <dom/events/event.hpp>
+
 #include <dom/helpers/event_dispatching.hpp>
+#include <dom/helpers/shadows.hpp>
+#include <dom/helpers/trees.hpp>
+
 #include <dom/nodes/node.hpp>
 #include <dom/nodes/window.hpp>
 #include <dom/nodes/shadow_root.hpp>
@@ -18,13 +25,13 @@ dom::helpers::event_listening::flatten_more(
 }
 
 
-ext::string_any_map
+bool
 dom::helpers::event_listening::flatten(
         std::variant<bool, ext::string_any_map> options) {
 
     return std::holds_alternative<bool>(options)
             ? std::get<bool>(options)
-            : ext::any_cast<bool>(std::get<ext::string_any_map>(options).at("capture"));
+            : (bool)std::get<ext::string_any_map>(options).at("capture");
 }
 
 
@@ -33,16 +40,14 @@ dom::helpers::event_listening::add_event_listener(
         nodes::event_target* event_target,
         ext::string_any_map& event_listener) {
 
-    auto signal = ext::any_cast<aborting::abort_signal*>(event_listener.at("signal"));
+    auto signal = (aborting::abort_signal*)event_listener.at("signal");
 
-    if (not event_listener.at("callback").has_value()) return;
+    if (event_listener.at("callback").empty()) return;
     if (signal and signal->aborted) return;
     if (event_target->m_event_listeners.contains(event_listener)) return;
 
     event_target->m_event_listeners.append(event_listener);
-    if (signal) signal->m_abort_algorithms.append([event_listener, event_target] {
-        remove_event_listener(event_target, event_listener);
-    });
+    if (signal) signal->m_abort_algorithms.append([event_listener, event_target] {remove_event_listener(event_target, event_listener);});
 }
 
 
@@ -51,11 +56,13 @@ dom::helpers::event_listening::remove_event_listener(
         nodes::event_target* event_target,
         ext::string_any_map& event_listener) {
 
-    event_listener.at("removed").emplace<bool>(true);
+    using callback_t = std::function<void()>;
+
+    event_listener.at("removed") = true;
     event_target->m_event_listeners.remove_if([event_listener](ext::cstring_any_map& existing_listener) {
-        return existing_listener.at("callback") == event_listener.at("callback")
-                and existing_listener.at("type") == event_listener.at("type")
-                and existing_listener.at("capture") == event_listener.at("capture");
+        return (callback_t)existing_listener.at("callback") == (callback_t)event_listener.at("callback")
+                and (ext::string)existing_listener.at("type") == (ext::string)event_listener.at("type")
+                and (bool)existing_listener.at("capture") == (bool)event_listener.at("capture");
     });
 }
 
@@ -82,8 +89,11 @@ dom::helpers::event_listening::dispatch(
     nodes::event_target* slottable = nullptr;
     nodes::event_target* parent = nullptr;
     nodes::event_target* related_target = shadows::retarget(event->related_target, event_target);
+    nodes::node* parent_node = nullptr;
 
     if (event_target != related_target or event_target == event->related_target) {
+        auto* node = dynamic_cast<nodes::node*>(event_target);
+
         ext::vector<nodes::event_target*> touch_targets;
         for (nodes::event_target* touch: *event->touch_targets)
             shadows::retarget(touch, event_target);
@@ -94,52 +104,60 @@ dom::helpers::event_listening::dispatch(
 
         if (is_activation_event)
             activation_target = event_target;
-        if (shadows::is_slottable(event_target) and shadows::is_assigned(event_target))
+        if (shadows::is_slottable(node) and shadows::is_assigned(node))
             slottable = event_target;
 
         parent = event_target->get_the_parent(event);
+        parent_node = dynamic_cast<nodes::node*>(parent);
 
         while (parent) {
             if (slottable) {
-                assert(shadows::is_slot(parent));
+                assert(shadows::is_slot(parent_node));
                 slottable = nullptr;
-                slot_in_closed_tree = shadows::is_shadow_root(parent) and dynamic_cast<nodes::shadow_root*>(trees::root(parent))->mode == "closed";
+                slot_in_closed_tree = shadows::is_shadow_root(parent_node) and dynamic_cast<nodes::shadow_root*>(trees::root(parent_node))->mode == "closed";
             }
 
-            if (shadows::is_slottable(event_target) and shadows::is_assigned(event_target))
+            if (shadows::is_slottable(node) and shadows::is_assigned(node))
                 slottable = parent;
 
             related_target = shadows::retarget(event->related_target, parent);
-            touch_targets  = event->touch_targets;
+            touch_targets= *event->touch_targets;
             for (nodes::event_target* touch: touch_targets)
                 shadows::retarget(touch, parent);
 
-            if (dynamic_cast<nodes::window*>(parent) or dynamic_cast<nodes::node*>(parent) and shadows::is_shadow_including_ancestor(trees::root(event_target), parent)) {
-                if (is_activation_event and not activation_target and event->bubbles)
-                    activation_target = event_target;
+            if (dynamic_cast<nodes::window*>(parent) or parent_node and shadows::is_shadow_including_ancestor(trees::root(node), parent_node)) {
+                activation_target = is_activation_event and not activation_target and event->bubbles
+                        ? event_target
+                        : activation_target;
                 event_dispatching::append_to_event_path(event, parent, nullptr, related_target, touch_targets, slot_in_closed_tree);
             }
-            else if (parent == related_target) {
-                parent = related_target;
-            }
-            else (event_target = parent) {
-                if (is_activation_event and not activation_target)
-                    activation_target = event_target;
+
+            else if (parent == related_target)
+                parent = nullptr;
+
+            else {
+                event_target = parent;
+                activation_target = is_activation_event and not activation_target
+                        ? event_target
+                        : activation_target;
                 event_dispatching::append_to_event_path(event, parent, event_target, related_target, touch_targets, slot_in_closed_tree);
             }
 
-            if (parent) parent = parent->get_the_parent(event);
             slot_in_closed_tree = false;
+            parent = parent
+                    ? parent->get_the_parent(event)
+                    : parent;
         }
 
-        clear_targets_struct = event->path
-                ->filter([](auto* event_path_struct) {return event_path_struct.shadow_adjusted_target;})
+        clear_targets_struct = *event->path
+                ->filter([](auto* event_path_struct) {return event_path_struct->shadow_adjusted_target;})
                 .back();
 
         clear_targets = not ext::vector<nodes::event_target*>{clear_targets_struct.shadow_adjusted_target, clear_targets_struct.related_target}
                 .extend(clear_targets_struct.touch_targets)
-                .filter([](auto* event_target) {shadows::is_shadow_root(event_target);})
-                .readonly_setter();
+                .cast_all<nodes::node*>()
+                .filter([](nodes::node* node) {return shadows::is_shadow_root(node);})
+                .empty();
 
         for (auto* event_path_struct: *event->path) {
             event->event_phase = event_path_struct->shadow_adjusted_target ? events::event::AT_TARGET : events::event::CAPTURING_PHASE;
@@ -154,7 +172,7 @@ dom::helpers::event_listening::dispatch(
 
     event->event_phase = events::event::NONE;
     event->current_target = nullptr;
-    event->path.clear();
+    event->path->clear();
 
     event->m_dispatch_flag = false;
     event->m_stop_propagation_flag = false;
@@ -163,7 +181,7 @@ dom::helpers::event_listening::dispatch(
     if (clear_targets) {
         event->target = nullptr;
         event->related_target = nullptr;
-        event->touch_targets->clear()
+        event->touch_targets->clear();
     }
 
     if (activation_target and not event->m_canceled_flag)

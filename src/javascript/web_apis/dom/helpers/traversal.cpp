@@ -20,15 +20,16 @@ dom::helpers::traversal::filter(
             INVALID_STATE_ERR,
             [iterator] {return iterator->m_active_flag;});
 
-    auto n = node->node_type - 1;
-    if (iterator->what_to_show &~ (2 << n))
+    auto n = node->node_type - (unsigned short)1;
+    if (iterator->what_to_show &~ (unsigned long)(2 << n))
         return iterators::node_filter::FILTER_SKIP;
 
     iterator->m_active_flag = true;
-    auto result = webidl::ecma_script_binding::callback_interfaces::call_user_object_operation(iterator->filter, "acceptNode", ext::vector<nodes::node*>{node});
+//    auto result = webidl::ecma_script_binding::callback_interfaces::call_user_object_operation(iterator->filter, "acceptNode", ext::vector<nodes::node*>{node});
     iterator->m_active_flag = false;
 
-    return result;
+//    return result;
+    return 0;
 }
 
 

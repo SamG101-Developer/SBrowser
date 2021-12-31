@@ -1,7 +1,7 @@
 #ifndef SBROWSER_TYPEDEFS_HPP
 #define SBROWSER_TYPEDEFS_HPP
 
-#include <ext/string.hpp>
+#include <ext/iterables/string.hpp>
 
 #define struct_string inline static ext::cstring
 

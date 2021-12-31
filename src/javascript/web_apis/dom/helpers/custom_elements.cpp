@@ -179,13 +179,13 @@ dom::helpers::custom_elements::lookup_custom_element_definition(
     if (not document->m_browsing_context)
         return nullptr;
 
-    html::other::custom_element_registry registry {};
-    auto* definition = registry.get(local_name);
-
-    if (definition
-            and definition->local_name == local_name
-            and (definition->name == local_name or definition->name == is))
-        return definition;
+//    html::other::custom_element_registry registry {};
+//    auto* definition = registry.get(local_name);
+//
+//    if (definition
+//            and definition->local_name == local_name
+//            and (definition->name == local_name or definition->name == is))
+//        return definition; TODO
 
     return nullptr;
 }
