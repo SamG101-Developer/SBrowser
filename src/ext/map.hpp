@@ -36,11 +36,7 @@ public:
         return copy;
     }
 
-    inline const V& at(const K& key) const {
-        return this->m_iterable.at(key);
-    }
-
-    inline V& at(const K& key) {
+    inline V& at(const K& key) const {
         return this->m_iterable.at(key);
     }
 

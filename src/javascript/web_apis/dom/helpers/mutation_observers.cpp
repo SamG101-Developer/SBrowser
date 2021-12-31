@@ -41,7 +41,7 @@ void dom::helpers::mutation_observers::notify_mutation_observers() {
             v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
             mutation_observer->m_callback(records, mutation_observer);
 
-            if (exception_handler.HasCaught()) console::reporting::report_warning_to_console(exception_handler.Message()->Get());
+            if (exception_handler.HasCaught()) ; // TODO : console::reporting::report_warning_to_console(exception_handler.Message()->Get());
         }
     }
 
@@ -68,23 +68,24 @@ dom::helpers::mutation_observers::queue_mutation_record(
         nodes::node* previous_sibling,
         nodes::node* next_sibling) {
 
-    ext::map<mutations::mutation_record*, ext::string> interested_observers;
-    ext::vector<nodes::node*> nodes = trees::ancestors(target);
+    ext::map<mutations::mutation_observer*, ext::string> interested_observers;
+    ext::vector<nodes::node*> nodes = trees::ancestors((nodes::node*)target);
 
     for (auto* node: nodes) {
         for (auto* registered: *node->m_registered_observer_list) {
             auto options = registered->options;
+            auto attribute_filter = (ext::vector<ext::string>)options.at("attributeFilter");
 
-            if (not ((node != target and options.at("subtree") == false))
+            if (not ((node != target and not options.at("subtree")))
                     or (type == "attributes" and not options.at("attributes"))
-                    or (type == "attributes" and options.at("attributeFilter") and (not options.at("attributeFilter").contains(name) or not namespace_))
+                    or (type == "attributes" and options.at("attributeFilter") and (not attribute_filter.contains(name) or namespace_))
                     or (type == "characterData" and not options.at("characterData"))
                     or (type == "childList" and not options.at("childList"))) {
 
                 mutations::mutation_observer* mutation_observer = registered->observer;
 
-                if (not interested_observers.contains(mutation_observer))
-                    interested_observers.at(mutation_observer) = nullptr;
+                if (not interested_observers.has_key(mutation_observer))
+                    interested_observers.at(mutation_observer) = "";
 
                 if ((type == "attributes" and options.at("attributeOldValue") or type == "characterData" and options.at("characterDataOldValue")))
                     interested_observers.at(mutation_observer) = old_value;
@@ -93,17 +94,18 @@ dom::helpers::mutation_observers::queue_mutation_record(
     }
 
     for (const auto& [observer, mapped_old_value]: interested_observers) {
-        observer->m_record_queue.push(mutations::mutation_record{
-            .type = type,
-            .target = dynamic_cast<nodes::node*>(target),
-            .added_nodes = added_nodes,
-            .removed_nodes = removed_nodes,
-            .previous_sibling = previous_sibling,
-            .next_sibling = next_sibling,
-            .attribute_name = name,
-            .attribute_namespace = namespace_,
-            .old_value = mapped_old_value
-        });
+        auto mutation_record = new mutations::mutation_record{};
+        mutation_record->type = type;
+        mutation_record->attribute_name = name;
+        mutation_record->attribute_namespace = namespace_;
+        mutation_record->old_value = mapped_old_value;
+        mutation_record->target = dynamic_cast<nodes::node*>(target);
+        mutation_record->previous_sibling = previous_sibling;
+        mutation_record->next_sibling = next_sibling;
+        mutation_record->added_nodes = added_nodes;
+        mutation_record->removed_nodes = removed_nodes;
+
+        observer->m_record_queue->push(mutation_record);
     }
 
     mutation_observers::queue_mutation_observers_microtask();

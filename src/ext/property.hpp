@@ -44,11 +44,11 @@ class ext::property {
     friend property<T>& __fastcall operator<<(property<T>& property, const T&& other) {property.m_value = other; return property;}; // set
 
     // property casting helpers methods (friend access for internal value)
-    template <typename U, typename T> friend U& ext::property_dynamic_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend U& ext::property_static_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend U& ext::property_const_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend U& ext::property_reinterpret_cast(const ext::property<T>& other);
-    template <typename U, typename T> friend U& ext::property_any_cast(const ext::property<T>& other);
+//    template <typename U, typename T> friend U& ext::property_dynamic_cast(const ext::property<T>& other);
+//    template <typename U, typename T> friend U& ext::property_static_cast(const ext::property<T>& other);
+//    template <typename U, typename T> friend U& ext::property_const_cast(const ext::property<T>& other);
+//    template <typename U, typename T> friend U& ext::property_reinterpret_cast(const ext::property<T>& other);
+//    template <typename U, typename T> friend U& ext::property_any_cast(const ext::property<T>& other);
 
 public:
     // main constructor to assign the deleter, getter and setter

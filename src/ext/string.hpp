@@ -168,7 +168,7 @@ public: methods
 //    }
 
 public: operators
-    inline operator const char*() const {
+    explicit inline operator const char*() const {
         return m_iterable.c_str();
     }
 
@@ -177,7 +177,7 @@ public: operators
     }
 
     inline operator v8::Local<v8::String>() const {
-        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), *this).ToLocalChecked();
+        return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), (const char*)this).ToLocalChecked();
     }
 
     inline string operator+(const ext::cstring& other) const {
@@ -211,8 +211,8 @@ public: operators
         return m_iterable == other.m_iterable;
     }
 
-    inline bool operator==(string&& other) const {
-        return m_iterable == other.m_iterable;
+    inline bool operator==(const char* other) {
+        return m_iterable.c_str() == other;
     }
 };
 

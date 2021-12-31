@@ -13,6 +13,9 @@ namespace dom {
 
 
 class dom::mutations::mutation_record {
+public: constructors
+    mutation_record();
+
 public: properties
     ext::dom_property<ext::string> type;
     ext::dom_property<ext::string> attribute_name;
