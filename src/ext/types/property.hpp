@@ -58,6 +58,8 @@ public:
         set = [this](T val) {m_value = val;};
     }
 
+    property(T val): property(), m_value(val) {}
+
     // copy constructor to copy properties between objects
     property(const property<T>& other) = default;
 

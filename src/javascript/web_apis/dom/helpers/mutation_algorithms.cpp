@@ -1,5 +1,9 @@
 #include "mutation_algorithms.hpp"
 
+#include <javascript/environment/realms.hpp>
+
+#include <dom/mixins/slottable.hpp>
+
 #include <dom/nodes/comment.hpp>
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/document_fragment.hpp>
@@ -12,6 +16,11 @@
 
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/exceptions.hpp>
+#include <dom/helpers/shadows.hpp>
+#include <dom/helpers/trees.hpp>
+#include <dom/helpers/mutation_observers.hpp>
+
+#include <html/elements/html_slot_element.hpp>
 
 
 void
@@ -120,12 +129,12 @@ dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
             exceptions::throw_v8_exception(
                     "document_type_node with a document parent can not be inserted after any elements",
                     HIERARCHY_REQUEST_ERR,
-                    [child] {return child and not trees::all_preceding<nodes::element*>(child).emprt();});
+                    [child] {return child and not trees::all_preceding<nodes::element*>(child).empty();});
 
             exceptions::throw_v8_exception(
                     "document_type node with a document parent can not have > 0 element children",
                     HIERARCHY_REQUEST_ERR,
-                    [child, parent] {not child and parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
+                    [child, parent] {return not child and parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
         }
     }
 }
@@ -180,7 +189,7 @@ dom::helpers::mutation_algorithms::insert(
 
     // update ranges where one of the contains is the parent and the offset is after the anchor child
     if (child) {
-        ext::vector<ranges::range*> live_ranges = javascript::realms::current_environment().get("live_ranges");
+        auto live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>>("live_ranges");
         live_ranges
                 .filter([child, parent](auto* range) {return range->start_container == parent and range->start_offset > trees::index(child);})
                 .for_each([count](auto* range) {range->start_offset += count;});
@@ -199,16 +208,18 @@ dom::helpers::mutation_algorithms::insert(
         not child ? parent->child_nodes->append(node_to_add) : parent->child_nodes->insert(node_to_add, parent->child_nodes->find(child));
 
         if (shadows::is_shadow_host(parent)
-                and shadows::is_slottable(child_node)
+                and shadows::is_slottable(child)
                 and dynamic_cast<nodes::shadow_root*>(trees::root(parent))->slot_assignment == "named")
-            shadows::assign_slot(child_node);
+            shadows::assign_slot(child);
 
         if (shadows::is_root_shadow_root(parent)
                 and shadows::is_slot(parent)
-                and dynamic_cast<html::elements::html_slot_element*>(parnet)->assigned_nodes->length() <= 0)
+                and dynamic_cast<html::elements::html_slot_element*>(parent)->m_assigned_nodes->length() <= 0)
             shadows::signal_slot_change(parent);
 
-        shadows::assign_slottables_for_tree()
+        shadows::assign_slottables_for_tree(trees::root(node));
+
+        // TODO : shadow including descendants stuff here
     }
 
     if (not suppress_observers_flag)
@@ -301,14 +312,14 @@ dom::helpers::mutation_algorithms::remove(
     nodes::node* parent = node->parent;
     auto node_index = trees::index(node);
 
-    ext::vector<ranges::range*> live_ranges = javascript::realms::current_environment().get("live_ranges");
+    auto& live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>&>("live_ranges");
     live_ranges
             .filter([node](auto* range) {return trees::is_descendant(range->start_container, node);})
-            .for_each([parent](auto* range) {range->start_container = parent; range->start_offset = node_index;});
+            .for_each([node_index, parent](auto* range) {range->start_container = parent; range->start_offset = node_index;});
 
     live_ranges
             .filter([node](auto* range) {return trees::is_descendant(range->end_container, node);})
-            .for_each([parent](auto* range) {range->end_container = parent; range->end_offset = node_index;});
+            .for_each([node_index, parent](auto* range) {range->end_container = parent; range->end_offset = node_index;});
 
     live_ranges
             .filter([parent, node_index](auto* range) {return range->start_container == parent and range->start_offset > node_index;})
@@ -323,17 +334,18 @@ dom::helpers::mutation_algorithms::remove(
     parent->child_nodes->remove(node);
 
     if (shadows::is_assigned(node))
-        shadows::assign_slottables(node->assigned_slot);
+        shadows::assign_slottables(reinterpret_cast<mixins::slottable<nodes::node>*>(node)->assigned_slot);
 
-    if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and parent->m_assigned_nodes->empty())
+    if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and dynamic_cast<html::elements::html_slot_element*>(parent)->m_assigned_nodes->empty())
         shadows::signal_slot_change(parent);
 
-    if (not trees::descendants(node)->filter([](nodes::node* child) {return shadows::is_slot(child);}).empty()) {
+    if (not trees::descendants(node).filter([](nodes::node* child) {return shadows::is_slot(child);}).empty()) {
         shadows::assign_slottables_for_tree(trees::root(parent));
         shadows::assign_slottables_for_tree(node);
     }
 
-    if (nodes::element* element = dynamic_cast<nodes::element*>(node)
+    auto* element = dynamic_cast<nodes::element*>(node);
+    if (element
             and custom_elements::is_custom_node(element)
             and shadows::is_connected(parent)) {
 
@@ -343,7 +355,7 @@ dom::helpers::mutation_algorithms::remove(
     /* TODO : shadow including ancestors */
 
     for (auto* ancestor: trees::ancestors(parent)) {
-        for (auto* registered: ancestor->m_registers_observers_list) {
+        for (auto* registered: *ancestor->m_registered_observer_list) {
             auto* transient_registered_observer = new internal::transient_registered_observer{};
 
             transient_registered_observer->observer = registered->observer;

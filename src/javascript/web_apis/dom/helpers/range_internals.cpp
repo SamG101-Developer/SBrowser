@@ -21,7 +21,7 @@ dom::helpers::range_internals::contains(
 
     return range->m_root == trees::root(node)
             and position_relative(node, 0, range->start_container, range->start_offset) == internal::AFTER
-            and position_relative(node, trees::length(node), range->end_container, range->end_offset) == BEFORE;
+            and position_relative(node, trees::length(node), range->end_container, range->end_offset) == internal::BEFORE;
 }
 
 
@@ -56,7 +56,7 @@ dom::helpers::range_internals::set_start_or_end(
     if (start) {
 
         // if the node is in a different tree or indexed after the end of range then set it to the end of the range
-        if (range->m_root != trees::root(container) or position_relative(container, offset, range->end_container, range->end_offset) == AFTER) {
+        if (range->m_root != trees::root(container) or position_relative(container, offset, range->end_container, range->end_offset) == internal::AFTER) {
             range->end_container = container;
             range->end_offset = offset;
         }
@@ -72,7 +72,7 @@ dom::helpers::range_internals::set_start_or_end(
     else {
 
         // of the node is in a different tree or indexed before the start of the range then set it to the start of the range
-        if (range->m_root != trees::root(container) or position_relative(container, offset, range->start_container, range->start_offset) == BEFORE) {
+        if (range->m_root != trees::root(container) or position_relative(container, offset, range->start_container, range->start_offset) == internal::BEFORE) {
             range->start_container = container;
             range->start_offset = offset;
         }
@@ -96,15 +96,15 @@ dom::helpers::range_internals::position_relative(
     assert(trees::root(start_container) == trees::root(end_container));
 
     if (start_container == end_container)
-        return start_offset == end_offset ? EQUALS : start_offset < end_offset ? BEFORE : AFTER;
+        return start_offset == end_offset ? internal::EQUALS : start_offset < end_offset ? internal::BEFORE : internal::AFTER;
 
     if (trees::is_following(start_container, end_container))
         return static_cast<internal::boundary_point_comparison_position>(~position_relative(end_container, end_offset, start_container, start_offset));
 
     if (trees::is_ancestor(start_container, end_container) and trees::index(trees::ancestors(end_container).item_after(start_container)) < start_offset)
-        return AFTER;
+        return internal::AFTER;
 
-    return BEFORE;
+    return internal::BEFORE;
 }
 
 

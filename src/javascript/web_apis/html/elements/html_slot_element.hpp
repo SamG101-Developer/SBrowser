@@ -14,6 +14,7 @@ namespace html::elements {class html_slot_element;}
 class html::elements::html_slot_element : public html_element {
 friends
     friend struct dom::helpers::shadows;
+    friend struct dom::helpers::mutation_algorithms;
 
 public: constructors
     html_slot_element();
@@ -27,8 +28,8 @@ public: properties
     ext::dom_property<ext::string> name;
 
 private:
-    ext::vector<dom::nodes::node*> m_manually_assigned_nodes;
-    ext::vector<dom::nodes::node*> m_assigned_nodes;
+    ext::vector<dom::nodes::node*>* m_manually_assigned_nodes;
+    ext::vector<dom::nodes::node*>* m_assigned_nodes;
 };
 
 
