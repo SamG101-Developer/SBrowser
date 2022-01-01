@@ -53,7 +53,7 @@ dom::helpers::shadows::find_slot(
     auto descendant_slots = trees::descendants(shadow).cast_all<html::elements::html_slot_element*>();
     return descendant_slots
             .filter(shadow->slot_assignment == "manual"
-                    ? std::function{[slottable](html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->m_manually_assigned_nodes.contains(slottable);}}
+                    ? std::function{[slottable](html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->m_manually_assigned_nodes->contains(slottable);}}
                     : std::function{[slottable](html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->name == dynamic_cast<nodes::element*>(slottable)->m_name;}})
             .front();
 }
@@ -68,7 +68,7 @@ dom::helpers::shadows::find_slottables(
     if (not root) return {};
 
     return slot->m_manually_assigned_nodes
-            .filter([](auto* slottable) {return is_slottable(slottable);})
+            ->filter([](auto* slottable) {return is_slottable(slottable);})
             .filter(root->slot_assignment == "manual"
                     ? std::function{[host = root->host](html::elements::html_slot_element* slottable) -> bool {return slottable->parent == host;}}
                     : std::function{[host = root->host](html::elements::html_slot_element* slottable) -> bool {return find_slot(slottable);}})
@@ -106,9 +106,9 @@ dom::helpers::shadows::assign_slottables(
         html::elements::html_slot_element* slot) {
 
     auto slottables = find_slottables(slot);
-    if (slottables != slot->m_assigned_nodes) {
+    if (slottables != *slot->m_assigned_nodes) {
         signal_slot_change(slot);
-        slot->m_assigned_nodes = slottables;
+        slot->m_assigned_nodes = &slottables;
     }
 
     slottables

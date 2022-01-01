@@ -88,12 +88,12 @@ public:
     __forceinline bool __fastcall operator<=>(const T& other) const {return m_value <=> other;}
 
     // create-arithmetic operators against another value
-    __forceinline property<T> __fastcall operator+(const T& other) const {return property<T>{m_value + other};}
-    __forceinline property<T> __fastcall operator-(const T& other) const {return property<T>{m_value - other};}
-    __forceinline property<T> __fastcall operator*(const T& other) const {return property<T>{m_value * other};}
-    __forceinline property<T> __fastcall operator/(const T& other) const {return property<T>{m_value / other};}
-    __forceinline property<T> __fastcall operator%(const T& other) const {return property<T>{m_value % other};}
-    __forceinline property<T> __fastcall operator^(const T& other) const {return property<T>{m_value & other};}
+    __forceinline property<T> __fastcall operator+(const T& other) const {return property<T>{(T)(m_value + other)};}
+    __forceinline property<T> __fastcall operator-(const T& other) const {return property<T>{(T)(m_value - other)};}
+    __forceinline property<T> __fastcall operator*(const T& other) const {return property<T>{(T)(m_value * other)};}
+    __forceinline property<T> __fastcall operator/(const T& other) const {return property<T>{(T)(m_value / other)};}
+    __forceinline property<T> __fastcall operator%(const T& other) const {return property<T>{(T)(m_value % other)};}
+    __forceinline property<T> __fastcall operator^(const T& other) const {return property<T>{(T)(m_value & other)};}
     __forceinline bool __fastcall operator&(const T& other) const {return m_value & other;}
     __forceinline bool __fastcall operator|(const T& other) const {return m_value | other;}
 
