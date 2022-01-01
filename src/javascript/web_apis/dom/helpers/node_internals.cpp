@@ -7,7 +7,6 @@
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
 #include <dom/helpers/namespaces.hpp>
-#include <dom/helpers/node_internals.hpp>
 #include <dom/helpers/ordered_sets.hpp>
 #include <dom/helpers/trees.hpp>
 
@@ -19,6 +18,7 @@
 #include <dom/nodes/text.hpp>
 
 #include <html/elements/html_element.hpp>
+#include <html/helpers/document_internals.hpp>
 
 
 template <typename T>
@@ -188,7 +188,7 @@ dom::helpers::node_internals::is_document_fully_active(
         nodes::document* document) {
 
     return document->m_browsing_context
-            and document->m_browsing_context->active_document = this
+            and document->m_browsing_context->active_document == document
             and (is_document_fully_active(document->m_browsing_context->container_document) or not document->m_browsing_context->parent_browsing_context);
 }
 
