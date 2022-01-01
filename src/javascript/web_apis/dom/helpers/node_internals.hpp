@@ -10,6 +10,19 @@ namespace dom {
         class document;
         class element;
         class node;
+        class window;
+        class window_proxy;
+    }
+
+    namespace internal {
+        struct policy_container;
+        struct permissions_policy;
+        struct module_map;
+        struct cross_origin_opener_policy;
+        struct document_load_timing_information;
+        struct document_unload_timing_information;
+        struct browsing_context;
+        struct sandboxing_flags;
     }
 }
 
@@ -37,6 +50,29 @@ struct dom::helpers::node_internals {
     static bool document_has_style_sheets_blocking_scripts(nodes::document* document);
 
     template <typename ...nodes_or_strings> static nodes::node* convert_nodes_into_node(nodes::document* document, nodes_or_strings... nodes);
+};
+
+
+struct dom::internal::browsing_context {
+    nodes::window_proxy* window_proxy;
+
+    browsing_context* opener_browsing_context;
+    browsing_context* nested_browsing_context;
+    browsing_context* parent_browsing_context;
+
+    bool disowned;
+    bool is_closing;
+    bool system_focus;
+
+    ext::vector<nodes::document*> session_history;
+
+    nodes::document* container_document;
+    nodes::document* active_document;
+    nodes::window* active_window;
+
+    int virtual_browsing_context_group_id;
+    ext::string initial_url;
+    ext::string opener_origin_at_creation;
 };
 
 

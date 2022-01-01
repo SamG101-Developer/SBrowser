@@ -126,7 +126,7 @@ public: methods
     }
 
     template <typename function> inline vector<T>& filter(function&& func) const {
-        return vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
+        return (vector<T>&)vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
     }
 
     template <typename U=T, typename function> inline vector<U> transform(function&& func) const {

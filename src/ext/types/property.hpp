@@ -138,6 +138,8 @@ public:
 
     __forceinline std::remove_pointer_t<T> __fastcall operator*() const requires (std::is_pointer_v<T>) {return *m_value;}
 
+    __forceinline operator bool() requires (not std::is_same_v<T, bool>) {return (bool)m_value;}
+
 public:
     std::function<void __fastcall ( )> del;
     std::function<T    __fastcall ( )> get;

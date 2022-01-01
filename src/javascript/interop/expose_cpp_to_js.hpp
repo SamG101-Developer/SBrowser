@@ -254,7 +254,7 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     v8pp::class_<dom::mutations::mutation_observer> v8_mutation_observer{isolate};
     v8_mutation_observer
-            .ctor<dom::mutations::mutation_observer::mutation_callback&&>()
+//            .ctor<dom::mutations::mutation_observer::mutation_callback&&>()
             .function("observe", &dom::mutations::mutation_observer::observe)
             .function("disconnect", &dom::mutations::mutation_observer::disconnect)
             .function("takeRecords", &dom::mutations::mutation_observer::take_records)

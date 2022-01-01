@@ -7,6 +7,9 @@
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
 #include <dom/helpers/namespaces.hpp>
+#include <dom/helpers/node_internals.hpp>
+#include <dom/helpers/ordered_sets.hpp>
+#include <dom/helpers/trees.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/document.hpp>
@@ -14,6 +17,8 @@
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/text.hpp>
+
+#include <html/elements/html_element.hpp>
 
 
 template <typename T>
@@ -33,7 +38,7 @@ dom::helpers::node_internals::clone(
 
     if (element)
         element->attributes->for_each([node](auto* attribute) {mutation_algorithms::append(clone(attribute), node->owner_document);});
-    if (not cloned_node->owner_document = dynamic_cast<nodes::document*>(cloned_node))
+    if (not (cloned_node->owner_document = dynamic_cast<nodes::document*>(cloned_node)))
         cloned_node->owner_document = document;
     if (deep)
         node->child_nodes->for_each([document](auto* child) {helpers::mutation_algorithms::append(clone(child, document, true));});
@@ -79,7 +84,7 @@ dom::helpers::node_internals::locate_a_namespace(
     }
 
     else if (auto* document = dynamic_cast<nodes::document*>(node))
-        return locate_a_namespace(ext::property_dynamic_cast<nodes::node>(document->document_element), prefix);
+        return locate_a_namespace(ext::property_dynamic_cast<nodes::node*>(document->document_element), prefix);
 
     else if (dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::document_type*>(node))
         return nullptr;
@@ -102,7 +107,7 @@ dom::helpers::node_internals::list_of_elements_with_qualified_name(
     return node->owner_document->m_type == "html"
             ? trees::descendants(node)
                 .cast_all<nodes::element*>()
-                .filter([qualified_name](auto* descendant_element) {return descendant_element->namespace_uri == "html" and descendant_element->m_qualified_name == qualified_name.new_lower_case() or descendant_element->namespace_uri != "html" and descendant_element->m_qualified_name == qualified_name;})
+                .filter([qualified_name](auto* descendant_element) {return descendant_element->namespace_uri == "html" and descendant_element->m_qualified_name == qualified_name.new_lowercase() or descendant_element->namespace_uri != "html" and descendant_element->m_qualified_name == qualified_name;})
 
             : trees::descendants(node)
                 .cast_all<nodes::element*>()
@@ -119,8 +124,8 @@ dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
     return trees::descendants(node)
             .cast_all<nodes::element*>()
             .filter([namespace_, local_name](auto* descendant_element) {
-                return std::regex_match(descendant_element->namespace_uri, std::regex(namespace_.to_std_string())) and
-                       std::regex_match(descendant_element->local_namem, std::regex(local_name.to_std_string()));
+                return std::regex_match(descendant_element->namespace_uri, std::regex((const char*)namespace_)) and
+                       std::regex_match(descendant_element->local_namem, std::regex((const char*)local_name));
             });
 }
 
@@ -138,8 +143,8 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
             .cast_all<nodes::element*>()
             .filter([node, classes](auto* descendant_element) {
                 return node->owner_document->m_mode == "quirks"
-                        ? descendant_element->class_list->filter(&classes::contains)
-                        : descendant_element->class_list->transform(&ext::string::new_lowercase).filter(&classes::contains)
+                        ? descendant_element->class_list->filter(&ext::set<ext::string>::contains)
+                        : descendant_element->class_list->transform(&ext::string::new_lowercase).filter(&ext::set<ext::string>::contains);
             });
 }
 
@@ -170,7 +175,7 @@ dom::helpers::node_internals::string_replace_all(
         nodes::node* parent) {
 
     if (not string.empty()) {
-        const auto* text_node = new nodes::text{};
+        auto* text_node = new nodes::text{};
         text_node->data = string;
         text_node->owner_document = parent->owner_document;
         mutation_algorithms::replace_all(text_node, parent);
@@ -201,7 +206,7 @@ dom::helpers::node_internals::advisory_information(
         html::elements::html_element* element) {
 
     return element->title ? element->title : element->parent_element
-            ? advisory_information((html::elements::html_element)element->parent_element)
+            ? advisory_information(ext::property_dynamic_cast<html::elements::html_element*>(element->parent_element))
             : "";
 }
 
