@@ -2,11 +2,14 @@
 #ifndef SBROWSER_STAGES_HPP
 #define SBROWSER_STAGES_HPP
 
-#include <v8.h>
+#include <iostream>
 
 #include <javascript/interop/expose_cpp_to_js.hpp>
 
-namespace {static std::unique_ptr<v8::Platform> platform;}
+#include <v8.h>
+#include <libplatform/libplatform.h>
+
+namespace {std::unique_ptr<v8::Platform> platform;}
 
 namespace javascript::environment {
     namespace modules {enum module_type;}

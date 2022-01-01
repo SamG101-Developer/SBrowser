@@ -40,14 +40,16 @@ dom::helpers::event_listening::add_event_listener(
         nodes::event_target* event_target,
         ext::string_any_map& event_listener) {
 
-    auto signal = (aborting::abort_signal*)event_listener.at("signal");
+    auto* signal = (aborting::abort_signal*)event_listener.at("signal");
 
     if (event_listener.at("callback").empty()) return;
     if (signal and signal->aborted) return;
     if (event_target->m_event_listeners.contains(event_listener)) return;
 
     event_target->m_event_listeners.append(event_listener);
-    if (signal) signal->m_abort_algorithms.append([event_listener, event_target] {remove_event_listener(event_target, event_listener);});
+
+    if (signal)
+        signal->m_abort_algorithms.append([&event_listener, event_target] {remove_event_listener(event_target, event_listener);});
 }
 
 
@@ -71,7 +73,7 @@ void
 dom::helpers::event_listening::remove_all_event_listeners(
         nodes::event_target* event_target) {
 
-    for (const ext::string_any_map& event_listener: event_target->m_event_listeners)
+    for (ext::string_any_map& event_listener: event_target->m_event_listeners)
         remove_event_listener(event_target, event_listener);
 }
 

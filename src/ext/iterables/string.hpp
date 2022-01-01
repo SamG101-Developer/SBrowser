@@ -123,6 +123,10 @@ public: methods
         return sub_string;
     }
 
+    inline string replace(size_t offset, size_t count, ext::cstring& replacement) {
+        m_iterable.replace(offset, count, replacement);
+    }
+
     inline ext::vector<string> split(char delimiter) const {
         ext::vector<string> out {};
         size_t current_position = 0;

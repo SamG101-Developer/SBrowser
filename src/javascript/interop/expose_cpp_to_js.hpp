@@ -79,17 +79,17 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     v8pp::class_<javascript::interop::special_objects::javascript_namespace> v8_console{isolate};
     v8_console
-            .static_("assert", &console::logging::assert_)
-            .static_("clear", &console::logging::clear)
-            .static_("debug", &console::logging::debug)
-            .static_("error", &console::logging::error)
-            .static_("info", &console::logging::info)
-            .static_("log", &console::logging::log)
-            .static_("table", &console::logging::table)
-            .static_("trace", &console::logging::trace)
-            .static_("warn", &console::logging::warn)
-            .static_("dir", &console::logging::dir)
-            .static_("dirXml", &console::logging::dir_xml)
+//            .static_("assert", &console::logging::assert_)
+//            .static_("clear", &console::logging::clear)
+//            .static_("debug", &console::logging::debug)
+//            .static_("error", &console::logging::error)
+//            .static_("info", &console::logging::info)
+//            .static_("log", &console::logging::log)
+//            .static_("table", &console::logging::table)
+//            .static_("trace", &console::logging::trace)
+//            .static_("warn", &console::logging::warn)
+//            .static_("dir", &console::logging::dir)
+//            .static_("dirXml", &console::logging::dir_xml)
 
             .static_("count", &console::counting::count)
             .static_("countReset", &console::counting::count_reset)
@@ -583,7 +583,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("history", &dom::nodes::window::history)
             .var("customElements", &dom::nodes::window::custom_elements)
 
-            .var("window", &dom::nodes::window::window)
+            .var("window", &dom::nodes::window::window_)
             .var("self", &dom::nodes::window::self)
             .var("ownerDocument", &dom::nodes::window::document)
 
@@ -851,7 +851,9 @@ void javascript::interop::expose_cpp_to_js::expose(
 
                     .class_("XPathEvaluator", v8_xpath_evaluator)
                     .class_("XPathExpression", v8_xpath_expression)
-                    .class_("XPathResult", v8_xpath_result);
+                    .class_("XPathResult", v8_xpath_result)
+
+                    .class_("Console", v8_console);
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }

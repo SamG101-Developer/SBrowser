@@ -11,6 +11,8 @@
 
 #include <dom/nodes/text.hpp>
 
+#include <dom/ranges/range.hpp>
+
 
 void
 dom::helpers::texts::replace_data(
@@ -29,9 +31,9 @@ dom::helpers::texts::replace_data(
 
     mutation_observers::queue_mutation_record("characterData", text_node, "", "", text_node->data, {}, {}, nullptr, nullptr);
     count = std::min(count, length - offset);
-    text_node->data = current_data.replace(offset, count, data);
+    text_node->data = current_data->replace(offset, count, data);
 
-    auto& live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>*>("live_ranges");
+    auto& live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>&>("live_ranges");
 
     live_ranges
             .filter([text_node](auto* range) {return range->start_container == text_node;})
@@ -65,9 +67,9 @@ dom::helpers::texts::split(
     const auto new_data = substring_data(text_node, offset, count);
 
     exceptions::throw_v8_exception(
-            "offset must be <= length of the node",
+            "offset must be <= length of the text node",
             INDEX_SIZE_ERR,
-            [offset, length] {return offset > length});
+            [offset, length] {return offset > length;});
 
     nodes::node* parent_node = text_node->parent;
     nodes::text* new_text_node = new nodes::text{new_data};
@@ -75,7 +77,7 @@ dom::helpers::texts::split(
 
     if (parent_node) {
         mutation_algorithms::insert(new_text_node, parent_node, new_text_node->next_sibling);
-        auto& live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>*>("live_ranges");
+        auto& live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>&>("live_ranges");
 
         live_ranges
                 .filter([text_node](auto* range) {return range->start_container == text_node;})
@@ -111,9 +113,9 @@ dom::helpers::texts::substring_data(
 
     const auto length = trees::length(text_node);
     exceptions::throw_v8_exception(
-            "offset must be <= length of the node",
+            "offset must be <= length of the text node",
             INDEX_SIZE_ERR,
-            [offset, length] {return offset > length});
+            [offset, length] {return offset > length;});
 
     count = std::min(count, length - offset);
     ext::cstring current_data = text_node->data;

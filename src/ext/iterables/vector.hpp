@@ -57,11 +57,11 @@ public: constructors
 public: methods
     // element access
     inline T& item_before(const T& item) {
-        return at((find(item) - 1) % this->length());
+        return this->at((this->find(item) - 1) % this->length());
     }
 
     inline T& item_after(const T& item) {
-        return at((find(item) + 1) % this->length());
+        return this->at((this->find(item) + 1) % this->length());
     }
 
     template <typename function> inline T& first_match(function&& func) {
@@ -126,7 +126,7 @@ public: methods
     }
 
     template <typename function> inline vector<T>& filter(function&& func) const {
-        return vector<T>{*this}.remove_if([func](const T& item) -> void {return not func(item);});
+        return vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
     }
 
     template <typename U=T, typename function> inline vector<U> transform(function&& func) const {
