@@ -2,6 +2,7 @@
 #define SBROWSER_MANUAL_CONVERSIONS_HPP
 
 #include <ext/iterables/string.hpp>
+#include <ext/iterables/set.hpp>
 #include <ext/types/any.hpp>
 #include <ext/types/infinity.hpp>
 #include <ext/types/property.hpp>
@@ -9,6 +10,10 @@
 #include <v8pp/convert.hpp>
 
 
+// TODO -> when from_type/to_type used as parameter types, check if (const) ...& / ...&& should be used
+
+
+/* STRING */
 template<>
 struct v8pp::convert<ext::string> {
     using from_type = ext::string;
@@ -19,17 +24,18 @@ struct v8pp::convert<ext::string> {
     static from_type from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) {
         if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Must be a non-null string");
 
-        v8::HandleScope handle_scope(isolate);
+        v8::HandleScope handle_scope{isolate};
         return from_type{v8pp::convert<std::string>::from_v8(isolate, v8_value.As<v8::String>())};
     }
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
-        v8::EscapableHandleScope escapable_handle_scope(isolate);
+        v8::EscapableHandleScope escapable_handle_scope{isolate};
         return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, (const char*)cpp_value, v8::NewStringType::kNormal, cpp_value.length()).ToLocalChecked());
     }
 };
 
 
+/* PROPERTY */
 template <typename T>
 struct v8pp::convert<ext::dom_property<T>> {
     using from_type = T;
@@ -40,12 +46,12 @@ struct v8pp::convert<ext::dom_property<T>> {
     static from_type from_v8(v8::Isolate* isolate, to_type v8_value) {
         if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Must be a non-null value");
 
-        v8::HandleScope handle_scope(isolate);
+        v8::HandleScope handle_scope{isolate};
         return v8pp::convert<T>::from_v8(isolate, v8_value);
     }
 
     static to_type to_v8(v8::Isolate* isolate, const ext::dom_property<T>& cpp_value) {
-        v8::EscapableHandleScope escapable_handle_scope(isolate);
+        v8::EscapableHandleScope escapable_handle_scope{isolate};
         return escapable_handle_scope.Escape(v8pp::convert<T>::to_v8(isolate, (T)cpp_value));
     }
 };
@@ -55,6 +61,7 @@ template <typename T>
 struct v8pp::is_wrapped_class<ext::dom_property<T>> : std::false_type{};
 
 
+/* VECTOR */
 template <typename T>
 struct v8pp::convert<ext::vector<T>> {
     using from_type = ext::vector<T>;
@@ -65,7 +72,7 @@ struct v8pp::convert<ext::vector<T>> {
     static from_type from_v8(v8::Isolate* isolate, to_type v8_value) {
         if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Must be a non-null array");
 
-        v8::HandleScope handle_scope(isolate);
+        v8::HandleScope handle_scope{isolate};
         v8::Local<v8::Array> v8_value_as_array = v8_value.As<v8::Array>();
 
         from_type cpp_value{};
@@ -75,7 +82,7 @@ struct v8pp::convert<ext::vector<T>> {
     }
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
-        v8::EscapableHandleScope escapable_handle_scope(isolate);
+        v8::EscapableHandleScope escapable_handle_scope{isolate};
 
         to_type v8_value_as_array = v8::Array::New(isolate, cpp_value.length());
         for (size_t i = 0; i < cpp_value.length(); ++i)
@@ -89,6 +96,39 @@ template <typename T>
 struct v8pp::is_wrapped_class<ext::vector<T>> : std::false_type{};
 
 
+/* SET */
+template <typename T>
+struct v8pp::convert<ext::set<T>> {
+    using from_type = ext::set<T>;
+    using to_type = v8::Local<v8::Set>;
+    
+    static bool is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value) {return not value.IsEmpty() and value->IsSet();}
+    
+    static from_type from_v8(v8::Isolate* isolate, to_type v8_value) {
+        if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Must be a non-null set");
+        
+        v8::HandleScope handle_scope{isolate};
+        v8::Local<v8::Set> v8_value_as_set = v8_value.As<v8::Set>();
+
+        from_type cpp_value;
+        for (size_t i = 0; i < v8_value_as_set->Size(); ++i)
+            cpp_value.emplace(v8pp::convert<T>::from_v8(isolate, v8_value_as_set->Get(isolate->GetCurrentContext(), i).ToLocalChecked()));
+        return cpp_value;
+    }
+
+
+    static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
+        v8::EscapableHandleScope escapable_handle_scope {isolate};
+
+        to_type v8_value_as_set = v8::Set::New(isolate);
+        for (size_t i = 0; i < cpp_value.length(); ++i)
+            v8_value_as_set->v8::Local<v8::Value>::Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value.at(i)));
+        return v8_value_as_set;
+    }
+};
+
+
+/* INFINITY */
 template <typename T>
 struct v8pp::convert<ext::infinity<T>> {
     using from_type = ext::infinity<T>;
@@ -99,14 +139,14 @@ struct v8pp::convert<ext::infinity<T>> {
     static from_type from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) {
         if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Must be a non-null number");
 
-        v8::HandleScope handle_scope(isolate);
+        v8::HandleScope handle_scope{isolate};
         v8::Local<v8::Number> v8_value_as_number = v8_value.As<v8::Number>();
 
         return from_type{.m_positive=v8pp::convert<T>::from_v8(v8_value_as_number) >= 0};
     }
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
-        v8::EscapableHandleScope escapable_handle_scope(isolate);
+        v8::EscapableHandleScope escapable_handle_scope{isolate};
         return escapable_handle_scope.Escape(v8pp::convert<T>::to_v8(isolate, (T)cpp_value));
     }
 };
@@ -116,6 +156,7 @@ template <typename T>
 struct v8pp::is_wrapped_class<ext::infinity<T>> : std::false_type{};
 
 
+/* ANY */
 template<>
 struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThis, Function, Symbol, Error, Math, RegExp, Buffers, Atomics, DataView, JSON, Promise, Generators/Functions, Reflect, Proxy, Intl., WebAssembly., Arguments
     using from_type = ext::any;
@@ -126,7 +167,7 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
     static from_type from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) {
         if (not is_valid(isolate, v8_value)) throw std::invalid_argument("Impossible Error");
 
-        v8::HandleScope handle_scope(isolate);
+        v8::HandleScope handle_scope{isolate};
         if (v8_value->IsBoolean()) // BOOLEAN
             return from_type{v8pp::convert<bool>::from_v8(isolate, v8_value)};
 
@@ -147,7 +188,7 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
     }
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
-        v8::EscapableHandleScope escapable_handle_scope(isolate);
+        v8::EscapableHandleScope escapable_handle_scope{isolate};
         if (cpp_value.type() == typeid(bool)) // BOOLEAN
             return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, (bool)cpp_value));
 

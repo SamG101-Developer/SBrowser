@@ -21,7 +21,7 @@ ext::string dom::nodes::attr::get_node_value() const {return value;}
 
 ext::string dom::nodes::attr::get_text_content() const {return value;}
 
-ext::string dom::nodes::attr::get_m_qualified_name() const {return ext::vector<ext::string>{prefix, ":", local_name}.join();}
+ext::string dom::nodes::attr::get_m_qualified_name() const {return ext::vector<ext::string>{prefix, ":", local_name}.join().c_str();}
 
 void dom::nodes::attr::set_node_value(ext::cstring& val) {set_value(val);}
 

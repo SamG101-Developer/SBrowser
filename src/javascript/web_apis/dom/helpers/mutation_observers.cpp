@@ -1,9 +1,9 @@
 #include "mutation_observers.hpp"
 
-#include <unordered_set>
 #include <queue>
 
 #include <ext/iterables/map.hpp>
+#include <ext/iterables/set.hpp>
 
 #include <javascript/environment/realms.hpp>
 
@@ -24,8 +24,8 @@
 void dom::helpers::mutation_observers::notify_mutation_observers() {
 
     javascript::realms::surrounding_agent().set("mutation_observer_microtask_queue", false);
-    auto notify_set = javascript::realms::surrounding_agent().get<std::unordered_set<mutations::mutation_observer*>>("mutation_observers");
-    auto signal_slots_set = javascript::realms::surrounding_agent().get<std::unordered_set<html::elements::html_slot_element*>>("signal_slots");
+    auto& notify_set = javascript::realms::surrounding_agent().get<ext::set<mutations::mutation_observer*>&>("mutation_observers");
+    auto& signal_slots_set = javascript::realms::surrounding_agent().get<ext::set<html::elements::html_slot_element*>&>("signal_slots");
     javascript::realms::surrounding_agent().get<decltype(signal_slots_set)>("signal_slots").clear();
 
     for (auto* mutation_observer: notify_set) {

@@ -103,6 +103,12 @@ public: methods
         return *this;
     }
 
+    inline vector<T>& clear() override {
+        ext::iterable<T, std::vector<T>>::clear();
+        this->m_iterable.shrink_to_fit();
+        return *this;
+    }
+
     inline T& max_element() {
         return this->at_iter(std::max_element(this->begin(), this->end()));
     }

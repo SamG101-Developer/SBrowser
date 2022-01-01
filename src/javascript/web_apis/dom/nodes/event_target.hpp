@@ -31,7 +31,7 @@ public constructors:
     event_target& operator=(const event_target&) = default;
     event_target& operator=(event_target&&) noexcept = default;
 
-    virtual ~event_target() {m_event_listeners.clear(true);};
+    virtual ~event_target() {m_event_listeners.clear();};
 
 public methods:
     void add_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options);

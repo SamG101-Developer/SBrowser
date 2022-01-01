@@ -73,9 +73,8 @@ public: constructors
     }
 
     // modifiers
-    inline iterable<T, C>& clear(bool delete_pointers = false) {
+    inline virtual iterable<T, C>& clear() {
         m_iterable.clear();
-        m_iterable.shrink_to_fit();
         return *this;
     }
     
