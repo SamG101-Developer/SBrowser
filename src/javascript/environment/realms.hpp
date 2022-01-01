@@ -24,13 +24,13 @@ public:
     template <typename T>
     inline T&
     get(ext::string&& attribute_name) const {
-        return v8pp::convert<T>::from_v8(m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), attribute_name)));
+        return v8pp::convert<T>::from_v8(v8::Isolate::GetCurrent(), m_context->Global()->Get(m_context, attribute_name));
     };
 
     template <typename T>
     inline void
     set(ext::string&& attribute_name, T new_value) {
-        v8pp::convert<T>::from_v8(m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), attribute_name))) = new_value;
+        m_context->Global()->Set(m_context, attribute_name, v8pp::convert<T>::to_v8(v8::Isolate::GetCurrent(), new_value));
     };
 
 private:
