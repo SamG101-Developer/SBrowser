@@ -122,10 +122,14 @@ struct v8pp::convert<ext::set<T>> {
 
         to_type v8_value_as_set = v8::Set::New(isolate);
         for (size_t i = 0; i < cpp_value.length(); ++i)
-            v8_value_as_set->v8::Local<v8::Value>::Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value.at(i)));
+            v8_value_as_set->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value.at(i)));
         return v8_value_as_set;
     }
 };
+
+
+template <typename T>
+struct v8pp::is_wrapped_class<ext::set<T>> : std::false_type{};
 
 
 /* INFINITY */

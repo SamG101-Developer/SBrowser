@@ -4,6 +4,7 @@
 
 #include <ext/macros/decorators.hpp>
 #include <ext/types/property.hpp>
+#include <dom_object.hpp>
 
 namespace dom {
     namespace helpers {struct traversal;}
@@ -15,7 +16,7 @@ namespace dom {
 }
 
 
-class dom::iterators::abstract_iterator {
+class dom::iterators::abstract_iterator : public dom_object {
 friends
     friend struct dom::helpers::traversal;
 
@@ -26,6 +27,9 @@ public: properties
     ext::dom_property<nodes::node*> root;
     ext::dom_property<node_filter*> filter;
     ext::dom_property<unsigned long> what_to_show;
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 
 private:
     bool m_active_flag;

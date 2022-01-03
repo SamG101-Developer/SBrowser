@@ -38,7 +38,7 @@ public: // TODO : annotation
     }
 
     template <typename T>
-    explicit operator T() const requires (not std::is_same_v<T, std::any>) {
+    operator T() const requires (not std::is_same_v<T, std::any>) {
         return any_cast<T>(m_value);
     }
 
@@ -77,8 +77,13 @@ private: internal_properties
 };
 
 
+bool operator==(ext::cany& first, ext::cany& second) {
+    return &first == &second;
+}
+
+
 template <class T>
-T any_cast(ext::any value) {
+T any_cast(ext::cany& value) {
     if (value.empty() or value.type() == typeid(void))
         return value.contains_pointer() ? nullptr : T();
     return value;

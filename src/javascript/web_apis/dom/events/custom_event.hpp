@@ -12,11 +12,14 @@ namespace dom::events {class custom_event;}
 
 class dom::events::custom_event : public event {
 
-public constructors:
+public: constructors
     custom_event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
 
-public properties:
+public: properties
     ext::dom_property<ext::any> detail;
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

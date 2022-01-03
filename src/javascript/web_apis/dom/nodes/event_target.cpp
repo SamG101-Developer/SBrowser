@@ -6,6 +6,16 @@
 #include <dom/helpers/exceptions.hpp>
 
 
+dom::nodes::event_target::event_target()
+        : dom_object() {
+}
+
+
+dom::nodes::event_target::~event_target() noexcept {
+    m_event_listeners.clear();
+}
+
+
 void
 dom::nodes::event_target::add_event_listener(
         ext::string type,
@@ -14,7 +24,7 @@ dom::nodes::event_target::add_event_listener(
 
     auto event_listener = helpers::event_listening::flatten_more(options);
     event_listener.insert("callback", callback);
-    event_listener.insert("type"    , type);
+    event_listener.insert("type", type);
 
     helpers::event_listening::add_event_listener(this, event_listener);
 }
@@ -28,7 +38,7 @@ dom::nodes::event_target::remove_event_listener(
 
     auto event_listener = helpers::event_listening::flatten_more(options);
     event_listener.insert("callback", callback);
-    event_listener.insert("type"    , type);
+    event_listener.insert("type", type);
 
     helpers::event_listening::remove_event_listener(this, event_listener);
 }
@@ -55,3 +65,13 @@ dom::nodes::event_target::get_the_parent(
     return nullptr;
 }
 
+
+ext::any dom::nodes::event_target::v8(v8::Isolate* isolate) const {
+    v8pp::class_<event_target> v8{isolate};
+    return v8
+            .ctor<>()
+            .function("addEventListener", &dom::nodes::event_target::add_event_listener)
+            .function("removeEventListener", &dom::nodes::event_target::remove_event_listener)
+            .function("dispatchEvent", &dom::nodes::event_target::dispatch_event)
+            .auto_wrap_objects();
+}

@@ -25,10 +25,10 @@ aliases
     using abort_signal_callback  = std::function<void()>;
     using abort_signal_callbacks = ext::vector<abort_signal_callback>;
 
-public constructors:
+public: constructors
     abort_signal();
 
-public methods:
+public: methods
     static abort_signal abort(ext::any reason = "");
     void throw_if_aborted();
 
@@ -36,7 +36,10 @@ public properties:
     ext::dom_property<bool> aborted;
     ext::dom_property<ext::any> reason;
 
-protected internal_properties:
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
+
+protected: internal_properties
     abort_signal_callbacks m_abort_algorithms;
 
 };

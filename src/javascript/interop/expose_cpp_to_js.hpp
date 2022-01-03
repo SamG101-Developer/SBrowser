@@ -59,6 +59,8 @@
 #include <dom/xpath/xpath_expression.hpp>
 #include <dom/xpath/xpath_result.hpp>
 
+#include <html/elements/html_element.hpp>
+
 #include <v8.h>
 #include <v8pp/class.hpp>
 #include <v8pp/module.hpp>
@@ -97,84 +99,6 @@ void javascript::interop::expose_cpp_to_js::expose(
             // TODO
             ;
 
-    v8pp::class_<dom::aborting::abort_controller> v8_abort_controller{isolate};
-    v8_abort_controller
-            .ctor<>()
-            .function("abort", &dom::aborting::abort_controller::abort)
-            .var("signal", &dom::aborting::abort_controller::signal)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::aborting::abort_signal> v8_abort_signal{isolate};
-    v8_abort_signal
-            .inherit<dom::nodes::event_target>()
-            .function("abort", &dom::aborting::abort_signal::abort)
-            .function("throwIfAborted", &dom::aborting::abort_signal::throw_if_aborted)
-            .var("aborted", &dom::aborting::abort_signal::aborted)
-            .var("reason", &dom::aborting::abort_signal::reason)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::events::custom_event> v8_custom_event{isolate};
-    v8_custom_event
-            .ctor<ext::cstring&, ext::cstring_any_map&>()
-            .inherit<dom::events::event>()
-            .var("detail", &dom::events::custom_event::detail)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::events::event> v8_event{isolate};
-    v8_event
-            .ctor<ext::cstring&, ext::cstring_any_map&>()
-
-            .static_("NONE", &dom::events::event::NONE)
-            .static_("CAPTURING_PHASE", &dom::events::event::CAPTURING_PHASE)
-            .static_("AT_TARGET", &dom::events::event::AT_TARGET)
-            .static_("BUBBLING_PHASE", &dom::events::event::BUBBLING_PHASE)
-
-            .function("stopImmediatePropagation", &dom::events::event::stop_immediate_propagation)
-            .function("stopPropagation", &dom::events::event::stop_propagation)
-            .function("preventDefault", &dom::events::event::prevent_default)
-            .function("composedPath", &dom::events::event::composed_path)
-
-            .var("type", &dom::events::event::type)
-            .var("bubbles", &dom::events::event::bubbles)
-            .var("cancelable", &dom::events::event::cancelable)
-            .var("composed", &dom::events::event::composed)
-            .var("target", &dom::events::event::target)
-            .var("currentTarget", &dom::events::event::current_target)
-            .var("relatedTarget", &dom::events::event::related_target)
-            .var("eventPhase", &dom::events::event::event_phase)
-            .var("timeStamp", &dom::events::event::time_stamp)
-            .var("isTrusted", &dom::events::event::is_trusted)
-            .var("touchTargets", &dom::events::event::touch_targets)
-            .var("path", &dom::events::event::path)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::iterators::abstract_iterator> v8_abstract_iterator{isolate};
-    v8_abstract_iterator
-            .var("root", &dom::iterators::abstract_iterator::root)
-            .var("filter", &dom::iterators::abstract_iterator::filter)
-            .var("whatToShow", &dom::iterators::abstract_iterator::what_to_show)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::iterators::node_filter> v8_node_filter{isolate};
-    v8_node_filter
-            .static_("FILTER_ACCEPT", dom::iterators::node_filter::FILTER_ACCEPT)
-            .static_("FILTER_SKIP", dom::iterators::node_filter::FILTER_SKIP)
-            .static_("FILTER_REJECT", dom::iterators::node_filter::FILTER_REJECT)
-
-            .static_("SHOW_ALL", dom::iterators::node_filter::SHOW_ALL)
-            .static_("SHOW_ELEMENT", dom::iterators::node_filter::SHOW_ELEMENT)
-            .static_("SHOW_ATTRIBUTE", dom::iterators::node_filter::SHOW_ATTRIBUTE)
-            .static_("SHOW_TEXT", dom::iterators::node_filter::SHOW_TEXT)
-            .static_("SHOW_CDATA_SECTION", dom::iterators::node_filter::SHOW_CDATA_SECTION)
-            .static_("SHOW_PROCESSING_INSTRUCTION", dom::iterators::node_filter::SHOW_PROCESSING_INSTRUCTION)
-            .static_("SHOW_COMMENT", dom::iterators::node_filter::SHOW_COMMENT)
-            .static_("SHOW_DOCUMENT", dom::iterators::node_filter::SHOW_DOCUMENT)
-            .static_("SHOW_DOCUMENT_TYPE", dom::iterators::node_filter::SHOW_DOCUMENT_TYPE)
-            .static_("SHOW_DOCUMENT_FRAGMENT", dom::iterators::node_filter::SHOW_DOCUMENT_FRAGMENT)
-
-            .function("acceptNode", &dom::iterators::node_filter::accept_node)
-            .auto_wrap_objects();
 
     v8pp::class_<dom::iterators::node_iterator> v8_node_iterator{isolate};
     v8_node_iterator
@@ -470,14 +394,6 @@ void javascript::interop::expose_cpp_to_js::expose(
 
             .var("parts", &dom::nodes::element::parts)
 
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::event_target> v8_event_target{isolate};
-    v8_event_target
-            .ctor<>()
-            .function("addEventListener", &dom::nodes::event_target::add_event_listener)
-            .function("removeEventListener", &dom::nodes::event_target::remove_event_listener)
-            .function("dispatchEvent", &dom::nodes::event_target::dispatch_event)
             .auto_wrap_objects();
 
     v8pp::class_<dom::nodes::node> v8_node{isolate};
@@ -805,6 +721,18 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("snapshotLength", &dom::xpath::xpath_result::snapshot_length)
 
             .auto_wrap_objects();
+
+
+    v8pp::class_<dom::aborting::abort_controller> v8_abort_controller = dom::aborting::abort_controller{}.v8(isolate);
+    v8pp::class_<dom::aborting::abort_signal> v8_abort_signal = dom::aborting::abort_signal{}.v8(isolate);
+
+    v8pp::class_<dom::events::custom_event> v8_custom_event = dom::events::custom_event{""}.v8(isolate);
+    v8pp::class_<dom::events::event> v8_event = dom::events::event{""}.v8(isolate);
+
+    v8pp::class_<dom::iterators::abstract_iterator> v8_abstract_iterator = dom::iterators::abstract_iterator{}.v8(isolate);
+    v8pp::class_<dom::iterators::node_filter> v8_node_filter = dom::iterators::node_filter{}.v8(isolate);
+
+    v8pp::class_<dom::nodes::event_target> v8_event_target = dom::nodes::event_target{}.v8(isolate);
 
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;

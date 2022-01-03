@@ -3,6 +3,7 @@
 #define SBROWSER_NODE_FILTER_HPP
 
 #include <ext/macros/decorators.hpp>
+#include <dom_object.hpp>
 
 namespace dom {
     namespace iterators {struct node_filter;}
@@ -10,7 +11,7 @@ namespace dom {
 }
 
 
-struct dom::iterators::node_filter {
+struct dom::iterators::node_filter : public dom_object {
 public: static_constants
     static const unsigned short FILTER_ACCEPT = 1;
     static const unsigned short FILTER_REJECT = 2;
@@ -29,6 +30,9 @@ public: static_constants
 
 public: methods
     unsigned short accept_node(nodes::node* node) {return 0x0; /* TODO : Find the impl or remove for legacy? */};
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

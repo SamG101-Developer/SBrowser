@@ -64,9 +64,9 @@ dom::events::event::composed_path() {
     composed_path_vector.append(current_target);
 
     auto current_target_hidden_subtree_level = 1;
-    auto current_target_index                = 0;
-    auto current_hidden_level                = 0;
-    auto max_hidden_level                    = 0;
+    auto current_target_index = 0;
+    auto current_hidden_level = 0;
+    auto max_hidden_level = 0;
     auto index = path_vector.length() - 1;
 
     while (index >= 0) {
@@ -77,8 +77,8 @@ dom::events::event::composed_path() {
     }
 
     current_hidden_level = current_target_hidden_subtree_level;
-    max_hidden_level     = current_target_hidden_subtree_level;
-    index                = current_target_index - 1;
+    max_hidden_level = current_target_hidden_subtree_level;
+    index = current_target_index - 1;
 
     while (index >= 0) {
         if (path_vector.at(index)->root_of_closed_tree) ++current_hidden_level;
@@ -91,8 +91,8 @@ dom::events::event::composed_path() {
     }
 
     current_hidden_level = current_target_hidden_subtree_level;
-    max_hidden_level     = current_target_hidden_subtree_level;
-    index                = current_target_index - 1;
+    max_hidden_level = current_target_hidden_subtree_level;
+    index = current_target_index - 1;
 
     while (index < path_vector.length()) {
         if (path_vector.at(index)->slot_in_closed_tree) ++current_hidden_level;
@@ -105,4 +105,37 @@ dom::events::event::composed_path() {
     }
 
     return composed_path_vector;
+}
+
+
+ext::any
+dom::events::event::v8(v8::Isolate* isolate) const {
+    return v8pp::class_<event>{isolate}
+            .ctor<ext::cstring&, ext::cstring_any_map&>()
+            .inherit<dom_object>()
+
+            .static_("NONE", event::NONE)
+            .static_("CAPTURING_PHASE", event::CAPTURING_PHASE)
+            .static_("AT_TARGET", event::AT_TARGET)
+            .static_("BUBBLING_PHASE", event::BUBBLING_PHASE)
+
+            .function("stopImmediatePropagation", &event::stop_immediate_propagation)
+            .function("stopPropagation", &event::stop_propagation)
+            .function("preventDefault", &event::prevent_default)
+            .function("composedPath", &event::composed_path)
+
+            .var("type", &event::type)
+            .var("bubbles", &event::bubbles)
+            .var("cancelable", &event::cancelable)
+            .var("composed", &event::composed)
+            .var("target", &event::target)
+            .var("currentTarget", &event::current_target)
+            .var("relatedTarget", &event::related_target)
+            .var("eventPhase", &event::event_phase)
+            .var("timeStamp", &event::time_stamp)
+            .var("isTrusted", &event::is_trusted)
+            .var("touchTargets", &event::touch_targets)
+            .var("path", &event::path)
+
+            .auto_wrap_objects();
 }

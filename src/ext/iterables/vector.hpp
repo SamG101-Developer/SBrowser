@@ -122,7 +122,7 @@ public: methods
 
     template <typename function> inline bool any_of(function&& func) const {
         bool flag = false;
-        for_each([&flag, func](const T& item) -> void {flag |= func(T{item}); if (flag) return;});
+        for_each([&flag, func](const T& item) -> void {flag |= (bool)func(T{item}); if (flag) return;});
         return flag;
     }
 

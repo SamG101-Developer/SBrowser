@@ -80,7 +80,7 @@ public: constructors
     
     inline iterable<T, C>& remove(const T& item, bool all = false) {
         while (contains(item)) {
-            auto r = std::remove(begin(), end(), item); // TODO : huge template warnings without 'auto r = ' ...
+            static_cast<void>(std::remove(begin(), end(), item)); // TODO : huge template warnings without 'auto r = ' ...
             if (not all) break;
         }
         return *this;
@@ -88,7 +88,7 @@ public: constructors
 
     template <class function> inline iterable<T, C>& remove_if(function&& func, bool all = false) {
         while (std::find_if(begin(), end(), func) != end()) {
-            std::remove_if(begin(), end(), func);
+            static_cast<void>(std::remove_if(begin(), end(), func));
             if (not all) break;
         }
         return *this;

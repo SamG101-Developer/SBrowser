@@ -29,3 +29,16 @@ dom::aborting::abort_signal::throw_if_aborted() {
 //            ABORT_ERR,
 //            [this] {return reason->has_value();});
 }
+
+
+ext::any
+dom::aborting::abort_signal::v8(v8::Isolate* isolate) const {
+    v8pp::class_<abort_signal> v8{isolate};
+    return v8
+            .inherit<event_target>()
+            .function("abort", &abort_signal::abort)
+            .function("throwIfAborted", &abort_signal::throw_if_aborted)
+            .var("aborted", &abort_signal::aborted)
+            .var("reason", &abort_signal::reason)
+            .auto_wrap_objects();
+}
