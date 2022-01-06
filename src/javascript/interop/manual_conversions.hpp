@@ -194,7 +194,7 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
         v8::EscapableHandleScope escapable_handle_scope{isolate};
         if (cpp_value.type() == typeid(bool)) // BOOLEAN
-            return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, (bool)cpp_value));
+            return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, cpp_value.to<bool>()));
 
         else if (cpp_value.type() == typeid(void)) // NULL
             return escapable_handle_scope.Escape(v8::Null(isolate));
@@ -203,13 +203,13 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
             return escapable_handle_scope.Escape(v8::Undefined(isolate));
 
         else if (cpp_value.is_numeric()) // NUMBER (no bigint, +-infinity, NaN)
-            return escapable_handle_scope.Escape(v8pp::convert<double>::to_v8(isolate, (double)cpp_value));
+            return escapable_handle_scope.Escape(v8pp::convert<double>::to_v8(isolate, cpp_value.to<double>()));
 
         else if (cpp_value.type() == typeid(ext::string)) // STRING
-            return escapable_handle_scope.Escape(v8pp::convert<ext::string>::to_v8(isolate, (ext::string)cpp_value));
+            return escapable_handle_scope.Escape(v8pp::convert<ext::string>::to_v8(isolate, cpp_value.to<ext::string>()));
 
         else if (cpp_value.type() == typeid(ext::vector<ext::any>)) // ARRAY TODO -> does this work?
-            return escapable_handle_scope.Escape(v8pp::convert<ext::vector<ext::any>>::to_v8(isolate, (ext::vector<ext::any>)cpp_value));
+            return escapable_handle_scope.Escape(v8pp::convert<ext::vector<ext::any>>::to_v8(isolate, cpp_value.to<ext::vector<ext::any>>()));
 
         else // OBJECT
             return escapable_handle_scope.Escape(v8::Object::New(isolate));

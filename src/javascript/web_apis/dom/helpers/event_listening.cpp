@@ -152,7 +152,7 @@ dom::helpers::event_listening::dispatch(
         }
 
         clear_targets_struct = *event->path
-                ->filter([](auto* event_path_struct) {return event_path_struct->shadow_adjusted_target;})
+                ->filter([](auto* event_path_struct) -> bool {return event_path_struct->shadow_adjusted_target;})
                 .back();
 
         clear_targets = not ext::vector<nodes::event_target*>{clear_targets_struct.shadow_adjusted_target, clear_targets_struct.related_target}

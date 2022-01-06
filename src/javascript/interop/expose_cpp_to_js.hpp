@@ -295,7 +295,7 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::nodes::document_type> v8_document_type{isolate};
     v8_document_type
             .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
+            .inherit<dom::mixins::child_node<dom::nodes::document_type>>()
 
             .var("name", &dom::nodes::document_type::name)
             .var("publicId", &dom::nodes::document_type::public_id)
@@ -377,12 +377,12 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8_node
             .inherit<dom::nodes::event_target>()
 
-            .static_("DOCUMENT_POSITION_DISCONNECTED", &dom::nodes::node::DOCUMENT_POSITION_DISCONNECTED)
-            .static_("DOCUMENT_POSITION_PRECEDING", &dom::nodes::node::DOCUMENT_POSITION_PRECEDING)
-            .static_("DOCUMENT_POSITION_FOLLOWING", &dom::nodes::node::DOCUMENT_POSITION_FOLLOWING)
-            .static_("DOCUMENT_POSITION_CONTAINS", &dom::nodes::node::DOCUMENT_POSITION_CONTAINS)
-            .static_("DOCUMENT_POSITION_CONTAINED_BY", &dom::nodes::node::DOCUMENT_POSITION_CONTAINED_BY)
-            .static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", &dom::nodes::node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC)
+            .static_("DOCUMENT_POSITION_DISCONNECTED", dom::nodes::node::DOCUMENT_POSITION_DISCONNECTED)
+            .static_("DOCUMENT_POSITION_PRECEDING", dom::nodes::node::DOCUMENT_POSITION_PRECEDING)
+            .static_("DOCUMENT_POSITION_FOLLOWING", dom::nodes::node::DOCUMENT_POSITION_FOLLOWING)
+            .static_("DOCUMENT_POSITION_CONTAINS", dom::nodes::node::DOCUMENT_POSITION_CONTAINS)
+            .static_("DOCUMENT_POSITION_CONTAINED_BY", dom::nodes::node::DOCUMENT_POSITION_CONTAINED_BY)
+            .static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", dom::nodes::node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC)
 
             .function("normalize", &dom::nodes::node::normalize)
             .function("hasChildNodes", &dom::nodes::node::has_child_nodes)
@@ -700,16 +700,16 @@ void javascript::interop::expose_cpp_to_js::expose(
             .auto_wrap_objects();
 
 
-    v8pp::class_<dom::aborting::abort_controller> v8_abort_controller = dom::aborting::abort_controller{}.v8(isolate);
-    v8pp::class_<dom::aborting::abort_signal> v8_abort_signal = dom::aborting::abort_signal{}.v8(isolate);
+    auto v8_abort_controller = dom::aborting::abort_controller{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_controller>>();
+    auto v8_abort_signal = dom::aborting::abort_signal{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_signal>>();
 
-    v8pp::class_<dom::events::custom_event> v8_custom_event = dom::events::custom_event{""}.v8(isolate);
-    v8pp::class_<dom::events::event> v8_event = dom::events::event{""}.v8(isolate);
+    auto v8_custom_event = dom::events::custom_event{""}.v8(isolate).to<v8pp::class_<dom::events::custom_event>>();
+    auto v8_event = dom::events::event{""}.v8(isolate).to<v8pp::class_<dom::events::event>>();
 
-    v8pp::class_<dom::iterators::abstract_iterator> v8_abstract_iterator = dom::iterators::abstract_iterator{}.v8(isolate);
-    v8pp::class_<dom::iterators::node_filter> v8_node_filter = dom::iterators::node_filter{}.v8(isolate);
+    auto v8_abstract_iterator = dom::iterators::abstract_iterator{}.v8(isolate).to<v8pp::class_<dom::iterators::abstract_iterator>>();
+    auto v8_node_filter = dom::iterators::node_filter{}.v8(isolate).to<v8pp::class_<dom::iterators::node_filter>>();
 
-    v8pp::class_<dom::nodes::event_target> v8_event_target = dom::nodes::event_target{}.v8(isolate);
+    auto v8_event_target = dom::nodes::event_target{}.v8(isolate).to<v8pp::class_<dom::nodes::event_target>>();
 
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;

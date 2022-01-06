@@ -131,8 +131,8 @@ public: methods
         return *this;
     }
 
-    template <typename function> inline vector<T>& filter(function&& func) const {
-        return (vector<T>&)vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
+    template <typename function> inline vector<T> filter(function&& func) const {
+        return vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
     }
 
     template <typename U=T, typename function> inline vector<U> transform(function&& func) const {
@@ -144,8 +144,8 @@ public: methods
     template <typename U> inline vector<U> cast_all() {
         vector<U> copy;
         copy = std::is_pointer_v<T>
-                ? &transform<U>([](const T& item) -> U {return dynamic_cast<U>(item);})
-                : &transform<U>([](const T& item) -> U {return static_cast<U>(item); });
+                ? transform<U>([](const T& item) -> U {return dynamic_cast<U>(item);})
+                : transform<U>([](const T& item) -> U {return static_cast<U>(item);});
 
         if (std::is_pointer_v<T>) copy.remove(nullptr, true);
         return copy;

@@ -10,6 +10,8 @@
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/element.hpp>
 
+#include <html/elements/html_unknown_element.hpp>
+
 
 dom::nodes::element*
 dom::helpers::custom_elements::create_an_element(
@@ -23,16 +25,14 @@ dom::helpers::custom_elements::create_an_element(
     nodes::element* result;
     auto* definition = lookup_custom_element_definition(document, namespace_, local_name, is);
 
-    result->namespace_uri = namespaces::HTML;
-    result->prefix = prefix;
-    result->local_name = local_name;
-    result->owner_document = document;
-    result->m_custom_element_definition = nullptr;
-    result->m_is = "";
-
     if (definition and definition->name != definition->local_name) {
         result = element_interface(local_name, namespaces::HTML);
+        result->namespace_uri = namespaces::HTML;
+        result->prefix = prefix;
+        result->local_name = local_name;
+        result->owner_document = document;
         result->m_custom_element_state = "undefined";
+        result->m_custom_element_definition = nullptr;
         result->m_is = is;
 
         if (synchronous_custom_elements_flag) {
@@ -81,11 +81,20 @@ dom::helpers::custom_elements::create_an_element(
                     NOT_SUPPORTED_ERR,
                     [result, local_name] {return result->local_name != local_name;});
 
+            result->prefix = prefix;
+            result->m_is = "";
+
             if (exception_handler.HasCaught()) {
                 // console::reporting::report_warning_to_console(exception_handler.Message()->Get()); TODO
 
-                result = new nodes::element{};
+                result = new html::elements::html_unknown_element{};
+                result->namespace_uri = namespaces::HTML;
+                result->prefix = prefix;
+                result->local_name = local_name;
+                result->owner_document = document;
+                result->m_custom_element_definition = nullptr;
                 result->m_custom_element_state = "failed";
+                result->m_is = "";
             }
         }
 

@@ -364,7 +364,7 @@ dom::helpers::mutation_algorithms::remove(
             transient_registered_observer->options = registered->options;
             transient_registered_observer->source = registered;
 
-            if (registered->options.at("subtree"))
+            if (registered->options.at("subtree").to<bool>())
                 node->m_registered_observer_list->append(transient_registered_observer);
         }
     }
