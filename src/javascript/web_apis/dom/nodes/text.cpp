@@ -8,7 +8,7 @@
 
 dom::nodes::text::text(ext::cstring& new_data)
         : character_data()
-        , mixins::slottable<dom::nodes::character_data>() {
+        , mixins::slottable<text>() {
 
     whole_text.get = [this] {get_whole_text();};
     data.set = [this](auto&& PH1) {set_data(std::forward<decltype(PH1)>(PH1));};

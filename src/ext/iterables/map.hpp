@@ -9,6 +9,8 @@
 
 namespace ext {
     template <class K, class V> class map;
+    template <class K, class V> using cmap = const map<K, V>;
+
     using string_any_map = map<string, ext::any>;
     using cstring_any_map = const ext::string_any_map;
 }
@@ -51,6 +53,14 @@ public: methods
         for (const auto& [key, value]: *this)
             copy.at(key) = value;
         return copy;
+    }
+
+public: operators
+    inline bool operator==(ext::cmap<K, V>& other) {
+        for (const auto& [key, value]: this->m_iterable) {
+            if (not (has_key(key) and at(key) == value)) return false;
+        }
+        return true;
     }
 };
 

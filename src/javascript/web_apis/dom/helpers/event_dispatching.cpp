@@ -120,4 +120,5 @@ dom::helpers::event_dispatching::fire_synthetic_pointer_event(
     // TODO -> event->view
 
 //    return event_listening::dispatch(event, target);
+    return true; // TODO
 }

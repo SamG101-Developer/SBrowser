@@ -305,7 +305,7 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::nodes::element> v8_element{isolate};
     v8_element
             .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
+            .inherit<dom::mixins::child_node<dom::nodes::element>>()
             .inherit<dom::mixins::document_or_element_node<dom::nodes::element>>()
             .inherit<dom::mixins::non_document_type_child_node<dom::nodes::element>>()
             .inherit<dom::mixins::slottable<dom::nodes::element>>()
@@ -687,7 +687,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .static_("FIRST_ORDERED_NODE_TYPE", dom::xpath::xpath_result::FIRST_ORDERED_NODE_TYPE)
 
             .function("iteratorNext", &dom::xpath::xpath_result::iterate_next)
-            .function("snapshotLength", &dom::xpath::xpath_result::snapshot_length)
+            .function("snapshotLength", &dom::xpath::xpath_result::snapshot_item)
 
             .var("resultType", &dom::xpath::xpath_result::result_type)
             .var("numberValue", &dom::xpath::xpath_result::number_value)

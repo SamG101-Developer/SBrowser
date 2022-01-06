@@ -30,7 +30,7 @@ struct v8pp::convert<ext::string> {
 
     static to_type to_v8(v8::Isolate* isolate, const from_type& cpp_value) {
         v8::EscapableHandleScope escapable_handle_scope{isolate};
-        return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, (const char*)cpp_value, v8::NewStringType::kNormal, cpp_value.length()).ToLocalChecked());
+        return escapable_handle_scope.Escape(v8::String::NewFromUtf8(isolate, cpp_value.c_str(), v8::NewStringType::kNormal, cpp_value.length()).ToLocalChecked());
     }
 };
 
@@ -202,8 +202,8 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
         else if (cpp_value.empty()) // UNDEFINED
             return escapable_handle_scope.Escape(v8::Undefined(isolate));
 
-        else if (cpp_value.is_numeric()) // NUMBER (no bigint, +-infinity, NaN)
-            return escapable_handle_scope.Escape(v8pp::convert<double>::to_v8(isolate, cpp_value.to<double>()));
+//        else if (cpp_value.is_numeric()) // NUMBER (no bigint, +-infinity, NaN)
+//            return escapable_handle_scope.Escape(v8pp::convert<double>::to_v8(isolate, cpp_value.to<double>())); TODO
 
         else if (cpp_value.type() == typeid(ext::string)) // STRING
             return escapable_handle_scope.Escape(v8pp::convert<ext::string>::to_v8(isolate, cpp_value.to<ext::string>()));

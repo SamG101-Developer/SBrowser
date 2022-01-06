@@ -32,11 +32,6 @@ public: constructors
     template <typename T> any& operator=(const T& other) {m_value = other; return *this;}
     template <typename T> any& operator=(T&& other) noexcept {m_value = other; return *this;}
 
-public: // TODO : annotation
-    operator std::any() const {
-        return m_value;
-    }
-
 public: methods
     const type_info& type() const {
         return m_value.type();
@@ -48,13 +43,6 @@ public: methods
 
     bool contains_pointer() const {
         return ext::string{type().name()}.contains("* __ptr64");
-    }
-
-    bool is_numeric() const {
-        return type() == typeid(unsigned char) or type() == typeid(unsigned short) or type() == typeid(unsigned int)
-                or type() == typeid(unsigned long) or type() == typeid(unsigned long long) or type() == typeid(char)
-                or type() == typeid(short) or type() == typeid(int) or type() == typeid(long) or type() == typeid(long long)
-                or type() == typeid(float) or type() == typeid(double) or type() == typeid(long double);
     }
 
     template <typename T>
@@ -78,10 +66,6 @@ private: internal_properties
 
 
 bool operator==(ext::cany& first, ext::cany& second) {
-    return &first == &second;
-}
-
-bool operator==(ext::any& first, ext::any& second) {
     return &first == &second;
 }
 
