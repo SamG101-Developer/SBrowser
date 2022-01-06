@@ -49,7 +49,7 @@ public: constructors
         this->m_iterable = std::vector<T>{items...};
     }
 
-    virtual ~vector() {
+    ~vector() override {
         this->m_iterable.clear();
         this->m_iterable.shrink_to_fit();
     }
@@ -93,7 +93,7 @@ public: methods
     }
 
     inline vector<T>& extend(const vector<T>& other, const size_t index = -1) {
-        ext::vector<T> reversed_other = other.reversed();
+        auto reversed_other = reinterpret_cast<ext::vector<T>&>(other.reversed());
         reversed_other.for_each([this, other, index = index % this->length()](const T& item) -> void {insert(item, index);});
         return *this;
     }

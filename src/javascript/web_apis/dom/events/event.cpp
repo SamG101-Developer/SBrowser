@@ -10,9 +10,9 @@ dom::events::event::event(
         ext::cstring_any_map& event_init) {
 
     type = event_type;
-    bubbles = (bool)event_init.at("bubbles");
-    cancelable = (bool)event_init.at("cancelable");
-    composed = (bool)event_init.at("composed");
+    bubbles = event_init.at("bubbles").to<bool>();
+    cancelable = event_init.at("cancelable").to<bool>();
+    composed = event_init.at("composed").to<bool>();
     target = nullptr;
     current_target = nullptr;
     related_target = nullptr;
@@ -110,6 +110,7 @@ dom::events::event::composed_path() {
 
 ext::any
 dom::events::event::v8(v8::Isolate* isolate) const {
+
     return v8pp::class_<event>{isolate}
             .ctor<ext::cstring&, ext::cstring_any_map&>()
             .inherit<dom_object>()

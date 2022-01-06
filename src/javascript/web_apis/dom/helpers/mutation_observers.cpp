@@ -75,20 +75,20 @@ dom::helpers::mutation_observers::queue_mutation_record(
     for (auto* node: nodes) {
         for (auto* registered: *node->m_registered_observer_list) {
             auto options = registered->options;
-            auto attribute_filter = (ext::vector<ext::string>)options.at("attributeFilter");
+            auto attribute_filter = options.at("attributeFilter").to<ext::vector<ext::string>>();
 
-            if (not ((node != target and not options.at("subtree")))
-                    or (type == "attributes" and not options.at("attributes"))
-                    or (type == "attributes" and options.at("attributeFilter") and (not attribute_filter.contains(name) or namespace_))
-                    or (type == "characterData" and not options.at("characterData"))
-                    or (type == "childList" and not options.at("childList"))) {
+            if (not ((node != target and not options.at("subtree").to<bool>()))
+                    or (type == "attributes" and not options.at("attributes").to<bool>())
+                    or (type == "attributes" and attribute_filter and (not attribute_filter.contains(name) or namespace_))
+                    or (type == "characterData" and not options.at("characterData").to<bool>())
+                    or (type == "childList" and not options.at("childList").to<bool>())) {
 
                 mutations::mutation_observer* mutation_observer = registered->observer;
 
                 if (not interested_observers.has_key(mutation_observer))
                     interested_observers.at(mutation_observer) = "";
 
-                if ((type == "attributes" and options.at("attributeOldValue") or type == "characterData" and options.at("characterDataOldValue")))
+                if (type == "attributes" and options.at("attributeOldValue").to<bool>() or type == "characterData" and options.at("characterDataOldValue").to<bool>())
                     interested_observers.at(mutation_observer) = old_value;
             }
         }

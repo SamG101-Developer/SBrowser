@@ -31,7 +31,7 @@ dom::helpers::event_listening::flatten(
 
     return std::holds_alternative<bool>(options)
             ? std::get<bool>(options)
-            : (bool)std::get<ext::string_any_map>(options).at("capture");
+            : std::get<ext::string_any_map>(options).at("capture").to<bool>();
 }
 
 
@@ -40,7 +40,7 @@ dom::helpers::event_listening::add_event_listener(
         nodes::event_target* event_target,
         ext::string_any_map& event_listener) {
 
-    auto* signal = (aborting::abort_signal*)event_listener.at("signal");
+    auto* signal = event_listener.at("signal").to<aborting::abort_signal*>();
 
     if (event_listener.at("callback").empty()) return;
     if (signal and signal->aborted) return;
@@ -62,9 +62,9 @@ dom::helpers::event_listening::remove_event_listener(
 
     event_listener.at("removed") = true;
     event_target->m_event_listeners.remove_if([event_listener](ext::cstring_any_map& existing_listener) {
-        return (callback_t)existing_listener.at("callback") == (callback_t)event_listener.at("callback")
-                and (ext::string)existing_listener.at("type") == (ext::string)event_listener.at("type")
-                and (bool)existing_listener.at("capture") == (bool)event_listener.at("capture");
+        return existing_listener.at("callback").to<callback_t>() == event_listener.at("callback").to<callback_t>()
+                and existing_listener.at("type").to<ext::string>() == event_listener.at("type").to<ext::string>()
+                and existing_listener.at("capture").to<bool>() == event_listener.at("capture").to<bool>();
     });
 }
 

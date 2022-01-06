@@ -24,8 +24,7 @@ dom::aborting::abort_controller::abort(ext::any&& reason) {
 ext::any
 dom::aborting::abort_controller::v8(v8::Isolate* isolate) const {
 
-    v8pp::class_<abort_controller> v8 {isolate};
-    return v8
+    return v8pp::class_<abort_controller>{isolate}
             .ctor<>()
             .inherit<dom_object>()
             .function("abort", &abort_controller::abort)

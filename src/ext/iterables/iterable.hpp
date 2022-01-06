@@ -130,7 +130,7 @@ public: constructors
         return iterable<T, C>{*this}.reverse();
     }
 
-    inline iterable<T, C>& sorted() const {
+    inline iterable<T, C> sorted() const {
         return iterable<T, C>{*this}.sort();
     }
 

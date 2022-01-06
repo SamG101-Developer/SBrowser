@@ -76,19 +76,18 @@ dom::helpers::event_dispatching::inner_invoke(
     using callback_t = std::function<void()>;
 
     for (auto& event_listener: event_listeners) {
-        if (event->type != (ext::string)event_listener.at("type")) continue;
-        if (phase == events::event::CAPTURING_PHASE and not (bool)event_listener.at("capturing")) continue;
-        if (phase == events::event::BUBBLING_PHASE and not (bool)event_listener.at("bubbling")) continue;
+        if (event->type != event_listener.at("type").to<ext::string>()) continue;
+        if (phase == events::event::CAPTURING_PHASE and not event_listener.at("capturing").to<bool>()) continue;
+        if (phase == events::event::BUBBLING_PHASE and not event_listener.at("bubbling").to<bool>()) continue;
 
-        event->m_in_passive_listener_flag = (bool)event_listener.at("passive");
-        auto event_listener_callback = (callback_t)event_listener.at("callback");
-        [event_listener_callback] {event_listener_callback();}();
+        event->m_in_passive_listener_flag = event_listener.at("passive").to<bool>();
+        event_listener.at("callback").to<callback_t>()();
         event->m_in_passive_listener_flag = false;
 
-        if ((bool)event_listener.at("once"))
+        if (event_listener.at("once").to<bool>())
             event->current_target->m_event_listeners.remove(event_listener);
 
-        if ((bool)event->m_stop_immediate_propagation_flag)
+        if (event->m_stop_immediate_propagation_flag)
             return;
     }
 }

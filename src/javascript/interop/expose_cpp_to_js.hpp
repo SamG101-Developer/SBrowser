@@ -4,9 +4,6 @@
 #include <javascript/environment/modules.hpp>
 #include <javascript/interop/javascript_namespace.hpp>
 
-#include <console/counting.hpp>
-#include <console/logging.hpp>
-
 #include <dom/aborting/abort_controller.hpp>
 #include <dom/aborting/abort_signal.hpp>
 
@@ -78,26 +75,6 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     v8::Local<v8::Context> local_context = v8::Local<v8::Context>::New(isolate, persistent_context);
     local_context->Enter();
-
-    v8pp::class_<javascript::interop::special_objects::javascript_namespace> v8_console{isolate};
-    v8_console
-//            .static_("assert", &console::logging::assert_)
-//            .static_("clear", &console::logging::clear)
-//            .static_("debug", &console::logging::debug)
-//            .static_("error", &console::logging::error)
-//            .static_("info", &console::logging::info)
-//            .static_("log", &console::logging::log)
-//            .static_("table", &console::logging::table)
-//            .static_("trace", &console::logging::trace)
-//            .static_("warn", &console::logging::warn)
-//            .static_("dir", &console::logging::dir)
-//            .static_("dirXml", &console::logging::dir_xml)
-
-            .static_("count", &console::counting::count)
-            .static_("countReset", &console::counting::count_reset)
-
-            // TODO
-            ;
 
 
     v8pp::class_<dom::iterators::node_iterator> v8_node_iterator{isolate};
@@ -779,9 +756,7 @@ void javascript::interop::expose_cpp_to_js::expose(
 
                     .class_("XPathEvaluator", v8_xpath_evaluator)
                     .class_("XPathExpression", v8_xpath_expression)
-                    .class_("XPathResult", v8_xpath_result)
-
-                    .class_("Console", v8_console);
+                    .class_("XPathResult", v8_xpath_result);
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }

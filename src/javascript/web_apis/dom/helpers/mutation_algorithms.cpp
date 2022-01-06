@@ -20,6 +20,8 @@
 #include <dom/helpers/trees.hpp>
 #include <dom/helpers/mutation_observers.hpp>
 
+#include <dom/ranges/range.hpp>
+
 #include <html/elements/html_slot_element.hpp>
 
 

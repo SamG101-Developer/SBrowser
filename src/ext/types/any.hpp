@@ -27,19 +27,14 @@ public: constructors
     ext::any& operator=(const ext::any&) = default;
     ext::any& operator=(ext::any&&) noexcept = default;
 
-    template <typename T> any(const T& other) : m_value(other) {};
-    template <typename T> any(T&& other) noexcept : m_value(other) {};
-    template <typename T> ext::any& operator=(const T& other) {m_value = other; return *this;}
-    template <typename T> ext::any& operator=(T&& other) noexcept {m_value = other; return *this;}
+    template <typename T> any(const T& other) {m_value = other;};
+    template <typename T> any(T&& other) noexcept {m_value = other;};
+    template <typename T> any& operator=(const T& other) {m_value = other; return *this;}
+    template <typename T> any& operator=(T&& other) noexcept {m_value = other; return *this;}
 
 public: // TODO : annotation
     operator std::any() const {
         return m_value;
-    }
-
-    template <typename T>
-    operator T() const requires (not std::is_same_v<T, std::any>) {
-        return any_cast<T>(m_value);
     }
 
 public: methods
@@ -72,6 +67,11 @@ public: methods
         m_value.template emplace<T>();
     }
 
+    template <typename T>
+    T to() const {
+        return any_cast<T>(m_value);
+    }
+
 private: internal_properties
     std::any m_value;
 };
@@ -86,7 +86,7 @@ template <class T>
 T any_cast(ext::cany& value) {
     if (value.empty() or value.type() == typeid(void))
         return value.contains_pointer() ? nullptr : T();
-    return value;
+    return std::any_cast<T>(value);
 }
 
 
