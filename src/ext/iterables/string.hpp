@@ -149,11 +149,11 @@ public: methods
         return m_iterable.contains(item);
     }
 
-public: operators
-    explicit inline operator const char*() const {
+    const char* c_str() const {
         return m_iterable.c_str();
     }
 
+public: operators
     inline operator QString() const {
         return {m_iterable.c_str()};
     }

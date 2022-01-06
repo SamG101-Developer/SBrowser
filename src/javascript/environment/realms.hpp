@@ -22,7 +22,7 @@ public:
     explicit realm(v8::Local<v8::Context> context): m_context(context) {};
 
     template <typename T>
-    inline T&
+    inline T
     get(ext::string&& attribute_name) const {
         return v8pp::convert<T>::from_v8(v8::Isolate::GetCurrent(), m_context->Global()->Get(m_context, attribute_name).ToLocalChecked());
     };

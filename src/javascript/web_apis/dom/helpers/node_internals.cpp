@@ -123,10 +123,9 @@ dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
 
     return trees::descendants(node)
             .cast_all<nodes::element*>()
-            .filter([namespace_, local_name](auto* descendant_element) {
-                return std::regex_match(descendant_element->namespace_uri, std::regex((const char*)namespace_)) and
-                       std::regex_match(descendant_element->local_namem, std::regex((const char*)local_name));
-            });
+            .filter([namespace_, local_name](nodes::element* descendant_element) {
+                return std::regex_match(descendant_element->namespace_uri->c_str(), std::regex(namespace_.c_str())) and
+                       std::regex_match(descendant_element->local_name->c_str(), std::regex(local_name.c_str()));});
 }
 
 

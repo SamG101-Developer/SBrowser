@@ -675,16 +675,16 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     v8pp::class_<dom::xpath::xpath_result> v8_xpath_result{isolate};
     v8_xpath_result
-            .static_("ANY_TYPE", &dom::xpath::xpath_result::ANY_TYPE)
-            .static_("NUMBER_TYPE", &dom::xpath::xpath_result::NUMBER_TYPE)
-            .static_("STRING_TYPE", &dom::xpath::xpath_result::STRING_TYPE)
-            .static_("BOOLEAN_TYPE", &dom::xpath::xpath_result::BOOLEAN_TYPE)
-            .static_("UNORDERED_NODE_ITERATOR_TYPE", &dom::xpath::xpath_result::UNORDERED_NODE_ITERATOR_TYPE)
-            .static_("ORDERED_NODE_ITERATOR_TYPE", &dom::xpath::xpath_result::ORDERED_NODE_ITERATOR_TYPE)
-            .static_("UNORDERED_NODE_SNAPSHOT_TYPE", &dom::xpath::xpath_result::UNORDERED_NODE_SNAPSHOT_TYPE)
-            .static_("ORDERED_NODE_SNAPSHOT_TYPE", &dom::xpath::xpath_result::ORDERED_NODE_SNAPSHOT_TYPE)
-            .static_("ANY_UNORDERED_NODE_TYPE", &dom::xpath::xpath_result::ANY_UNORDERED_NODE_TYPE)
-            .static_("FIRST_ORDERED_NODE_TYPE", &dom::xpath::xpath_result::FIRST_ORDERED_NODE_TYPE)
+            .static_("ANY_TYPE", dom::xpath::xpath_result::ANY_TYPE)
+            .static_("NUMBER_TYPE", dom::xpath::xpath_result::NUMBER_TYPE)
+            .static_("STRING_TYPE", dom::xpath::xpath_result::STRING_TYPE)
+            .static_("BOOLEAN_TYPE", dom::xpath::xpath_result::BOOLEAN_TYPE)
+            .static_("UNORDERED_NODE_ITERATOR_TYPE", dom::xpath::xpath_result::UNORDERED_NODE_ITERATOR_TYPE)
+            .static_("ORDERED_NODE_ITERATOR_TYPE", dom::xpath::xpath_result::ORDERED_NODE_ITERATOR_TYPE)
+            .static_("UNORDERED_NODE_SNAPSHOT_TYPE", dom::xpath::xpath_result::UNORDERED_NODE_SNAPSHOT_TYPE)
+            .static_("ORDERED_NODE_SNAPSHOT_TYPE", dom::xpath::xpath_result::ORDERED_NODE_SNAPSHOT_TYPE)
+            .static_("ANY_UNORDERED_NODE_TYPE", dom::xpath::xpath_result::ANY_UNORDERED_NODE_TYPE)
+            .static_("FIRST_ORDERED_NODE_TYPE", dom::xpath::xpath_result::FIRST_ORDERED_NODE_TYPE)
 
             .function("iteratorNext", &dom::xpath::xpath_result::iterate_next)
             .function("snapshotLength", &dom::xpath::xpath_result::snapshot_length)

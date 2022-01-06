@@ -81,6 +81,10 @@ bool operator==(ext::cany& first, ext::cany& second) {
     return &first == &second;
 }
 
+bool operator==(ext::any& first, ext::any& second) {
+    return &first == &second;
+}
+
 
 template <class T>
 T any_cast(ext::cany& value) {

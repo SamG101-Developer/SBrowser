@@ -175,8 +175,8 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
         if (v8_value->IsBoolean()) // BOOLEAN
             return from_type{v8pp::convert<bool>::from_v8(isolate, v8_value)};
 
-        else if (v8_value->IsNull()) { // NULL
-            auto f = from_type{}; f.emplace<void>(); return f;}
+//        else if (v8_value->IsNull()) { // NULL
+//            auto f = from_type{}; f.emplace<void>(); return f;} TODO
 
         else if (v8_value->IsUndefined()) // UNDEFINED
             return from_type{};
