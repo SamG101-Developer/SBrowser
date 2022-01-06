@@ -3,6 +3,7 @@
 #define SBROWSER_ITERABLE_HPP
 
 #include <algorithm>
+#include <iostream>
 #include <stdexcept>
 
 #include <ext/macros/decorators.hpp>
@@ -140,6 +141,10 @@ public: constructors
 
     inline bool contains(const T& item) const {
         return begin() + find(item) != end();
+    }
+
+    void print() {
+        std::cout << std::copy(begin(), end(), std::ostream_iterator<std::string>(std::cout, ", ")) << std::endl;
     }
 
 public: operators
