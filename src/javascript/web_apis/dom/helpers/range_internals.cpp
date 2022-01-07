@@ -117,19 +117,19 @@ dom::helpers::range_internals::get_range_helpers_variables(
     auto* common_ancestor = trees::common_ancestor(start_container, end_container);
 
     nodes::node* first_partially_contained_child = not trees::is_ancestor(start_container, end_container)
-            ? common_ancestor->child_nodes->filter([range](auto* node) {return partially_contains(node, range);}).front()
+            ? common_ancestor->child_nodes->filter([range](nodes::node* node) {return partially_contains(node, range);}).front()
             : nullptr;
 
     nodes::node* last_partially_contained_child = not trees::is_ancestor(end_container, start_container)
-            ? common_ancestor->child_nodes->filter([range](auto* node) {return partially_contains(node, range);}).back()
+            ? common_ancestor->child_nodes->filter([range](nodes::node* node) {return partially_contains(node, range);}).back()
             : nullptr;
 
-    auto contained_children = common_ancestor->child_nodes->filter([range](auto* node) {return contains(node, range);});
+    auto contained_children = common_ancestor->child_nodes->filter([range](nodes::node* node) {return contains(node, range);});
 
     exceptions::throw_v8_exception(
             "children of the common ancestor of the start and end container of a range must be non-document_type nodes",
             HIERARCHY_REQUEST_ERR,
-            [contained_children] {return contained_children.any_of([](auto* contained_child) {return dynamic_cast<nodes::document_type*>(contained_child);});});
+            [contained_children] {return contained_children.any_of([](nodes::node* contained_child) -> bool {return dynamic_cast<nodes::document_type*>(contained_child);});});
 
     return std::make_tuple(first_partially_contained_child, last_partially_contained_child, contained_children);
 }

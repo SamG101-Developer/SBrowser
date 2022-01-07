@@ -107,11 +107,11 @@ dom::helpers::node_internals::list_of_elements_with_qualified_name(
     return node->owner_document->m_type == "html"
             ? trees::descendants(node)
                 .cast_all<nodes::element*>()
-                .filter([qualified_name](auto* descendant_element) {return descendant_element->namespace_uri == "html" and descendant_element->m_qualified_name == qualified_name.new_lowercase() or descendant_element->namespace_uri != "html" and descendant_element->m_qualified_name == qualified_name;})
+                .filter([qualified_name](nodes::element* descendant_element) {return descendant_element->m_qualified_name == (descendant_element->namespace_uri == "html" ? qualified_name.new_lowercase() : qualified_name);})
 
             : trees::descendants(node)
                 .cast_all<nodes::element*>()
-                .filter([qualified_name](auto* descendant_element) {return descendant_element->m_qualified_name == qualified_name;});
+                .filter([qualified_name](nodes::element* descendant_element) {return descendant_element->m_qualified_name == qualified_name;});
 }
 
 
@@ -140,11 +140,10 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
 
     return trees::descendants(node)
             .cast_all<nodes::element*>()
-            .filter([node, classes](auto* descendant_element) {
+            .filter([node, classes](nodes::element* descendant_element) {
                 return node->owner_document->m_mode == "quirks"
-                        ? descendant_element->class_list->filter(&ext::set<ext::string>::contains)
-                        : descendant_element->class_list->transform(&ext::string::new_lowercase).filter(&ext::set<ext::string>::contains);
-            });
+                        ? descendant_element->class_list->any_of(&ext::vector<ext::string>::contains)
+                        : descendant_element->class_list->transform(&ext::string::new_lowercase).any_of(&ext::vector<ext::string>::contains);});
 }
 
 

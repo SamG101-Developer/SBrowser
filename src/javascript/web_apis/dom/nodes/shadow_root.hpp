@@ -12,6 +12,9 @@ class dom::nodes::shadow_root
         : public document_fragment
         , public mixins::document_or_shadow_root<dom::nodes::shadow_root> {
 
+friends
+    friend class element;
+
 public constructors:
     shadow_root();
 

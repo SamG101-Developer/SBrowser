@@ -41,7 +41,7 @@ protected: internal_methods
     virtual event_target* get_the_parent(events::event* event);
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    ext::any&& v8(v8::Isolate *isolate) const override;
 
 private: internal_properties
     ext::vector<ext::string_any_map> m_event_listeners;

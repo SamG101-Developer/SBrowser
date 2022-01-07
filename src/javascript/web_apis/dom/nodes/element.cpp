@@ -7,11 +7,14 @@
 #include <dom/helpers/exceptions.hpp>
 #include <dom/helpers/namespaces.hpp>
 #include <dom/helpers/node_internals.hpp>
+#include <dom/helpers/shadows.hpp>
+#include <dom/helpers/trees.hpp>
 
 #include <dom/nodes/attr.hpp>
 #include <dom/nodes/shadow_root.hpp>
 
-#include <QtCore/QObject>
+#include <geometry/shapes/dom_rect.hpp>
+
 #include <QtWidgets/QWidget>
 
 
@@ -21,9 +24,9 @@ dom::nodes::element::element()
         , mixins::non_document_type_child_node<element>()
         , mixins::child_node<element>()
         , mixins::slottable<element>()
-        , mixins::document_or_element<element>()
-        , css::cssom_view::mixins::scrolable<element>()
-        , css::cssom_view::mixins::geometry_utils<element>() {
+        , mixins::document_or_element_node<element>() {
+//        , css::cssom_view::mixins::scrolable<element>()
+//        , css::cssom_view::mixins::geometry_utils<element>() {
 
     tag_name.get = [this] {return get_tag_name();};
     shadow_root_node.get = [this] {return get_shadow_root();};
@@ -42,7 +45,7 @@ dom::nodes::element::element()
 
 
 dom::nodes::element::~element() {
-    attributes->clear(true);
+    attributes->clear();
     delete attributes;
 }
 
@@ -120,7 +123,7 @@ dom::nodes::element::set_attribute(
         ext::cstring& qualified_name,
         ext::cstring& value) {
 
-    ext::string html_qualified_name = helpers::node_internals::is_html(qualified_name)
+    ext::string html_qualified_name = helpers::node_internals::is_html(this)
             ? qualified_name.new_lowercase()
             : qualified_name;
 
@@ -148,7 +151,7 @@ dom::nodes::element::set_attribute_ns(
 
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
 
-    ext::string html_qualified_name = helpers::node_iternals::is_html(qualified_name)
+    ext::string html_qualified_name = helpers::node_internals::is_html(this)
             ? qualified_name.new_lowercase()
             : qualified_name;
 
@@ -276,7 +279,7 @@ dom::nodes::element::attach_shadow(ext::cstring_any_map& options) {
     helpers::exceptions::throw_v8_exception(
             "cannot attach a shadow root to a shadow root",
             NOT_SUPPORTED_ERR,
-            [this] {return helpers::shadows::is_shadow_root(this)});
+            [this] {return helpers::shadows::is_shadow_root(this);});
 
     helpers::exceptions::throw_v8_exception(
             "custom element's definition doesn't allow shadow root attachment",
@@ -286,9 +289,9 @@ dom::nodes::element::attach_shadow(ext::cstring_any_map& options) {
     auto* shadow = new shadow_root{};
     shadow->owner_document = owner_document;
     shadow->host = this;
-    shadow->delgates_focus = ext::any_cast<bool>(options.at("delegatesFocus"));
-    shadow->slot_assigment = ext::any_cast<bool>(options.at("slotAssignment"));
-    shadow->available_to_internals = m_custom_element_state == "custom" or m_custom_element_state == "precustomized";
+    shadow->delegates_focus = options.at("delegatesFocus").to<bool>();
+    shadow->slot_assignment = options.at("slotAssignment").to<ext::string>();
+    shadow->m_available_to_internals = m_custom_element_state == "custom" or m_custom_element_state == "precustomized";
 
     shadow_root_node = shadow;
     return shadow;
@@ -298,8 +301,10 @@ dom::nodes::element::attach_shadow(ext::cstring_any_map& options) {
 ext::vector<geometry::shapes::dom_rect>
 dom::nodes::element::get_client_rects() {
 
-    return ext::vector<QObject*> {render()->children().toVector()}
-            .cast_call<QWidget*>()
+    auto children = render()->children().toVector();
+
+    return ext::vector<QObject*>{children.begin(), children.end()}
+            .cast_all<QWidget*>()
             .transform<geometry::shapes::dom_rect>([](QWidget* widget) {return geometry::shapes::dom_rect{
                     (double)widget->geometry().left(),
                     (double)widget->geometry().top(),
@@ -315,13 +320,14 @@ dom::nodes::element::get_bounding_client_rect() {
     if (client_rects.empty())
         return geometry::shapes::dom_rect{0, 0, 0, 0};
 
-    if (client_rects.all_of(geometry::shapes::dom_rect rect) {return rect.width == 0.0 or rect.height == 0.0;})
+    if (client_rects.all_of([](const geometry::shapes::dom_rect& rect) {return rect.width == 0.0 or rect.height == 0.0;}))
         return client_rects.front();
 
     double furthest_left = ext::infinity<double>{};
     double furthest_top = ext::infinity<double>{};
     double furthest_right = 0.0;
     double furthest_bottom = 0.0;
+
     for (auto rect: client_rects) {
         furthest_left = std::min(furthest_left, (double)rect.x);
         furthest_top = std::min(furthest_top, (double)rect.y);
@@ -337,10 +343,13 @@ QWidget* dom::nodes::element::render() {return qobject_cast<QWidget*>(m_rendered
 
 
 ext::string dom::nodes::element::get_text_content() const {return helpers::trees::descendant_text_content(this);}
+
 ext::string dom::nodes::element::get_tag_name() const {return get_m_html_qualified_uppercase_name();}
+
 dom::nodes::shadow_root* dom::nodes::element::get_shadow_root() const {return shadow_root_node->mode == "closed" ? nullptr : shadow_root_node};
 
 void dom::nodes::element::set_text_content(ext::string val) {helpers::node_internals::replace_all(val, this);}
+
 void dom::nodes::element::set_id(ext::string val) {
     ext::string current_id;
     val >> current_id;
@@ -348,4 +357,5 @@ void dom::nodes::element::set_id(ext::string val) {
 }
 
 ext::string dom::nodes::element::get_m_qualified_name() const {return namespace_uri + ":" + local_name;}
+
 ext::string dom::nodes::element::get_m_html_qualified_uppercase_name() const {return helpers::node_internals::is_html(this) ? get_m_qualified_name().new_uppercase() : get_m_qualified_name()}

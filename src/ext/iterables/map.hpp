@@ -11,8 +11,8 @@ namespace ext {
     template <class K, class V> class map;
     template <class K, class V> using cmap = const map<K, V>;
 
-    using string_any_map = map<string, ext::any>;
-    using cstring_any_map = const ext::string_any_map;
+    using string_any_map = map<string, any>;
+    using cstring_any_map = const map<string, any>;
 }
 
 
@@ -33,6 +33,7 @@ public: methods
     // element access
     inline ext::map<K, V>& insert(const K& key, const V& value) {
         this->m_iterable.emplace(key, value);
+        return *this;
     }
 
     inline const V& at(const K& key) const {

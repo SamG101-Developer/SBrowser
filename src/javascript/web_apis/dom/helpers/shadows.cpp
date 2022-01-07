@@ -70,8 +70,8 @@ dom::helpers::shadows::find_slottables(
     return slot->m_manually_assigned_nodes
             ->filter([](auto* slottable) {return is_slottable(slottable);})
             .filter(root->slot_assignment == "manual"
-                    ? std::function{[host = root->host](html::elements::html_slot_element* slottable) -> bool {return slottable->parent == host;}}
-                    : std::function{[host = root->host](html::elements::html_slot_element* slottable) -> bool {return find_slot(slottable);}})
+                    ? std::function{[host = root->host](nodes::node* slottable) -> bool {return slottable->parent == host;}}
+                    : std::function{[host = root->host](nodes::node* slottable) -> bool {return find_slot(slottable);}})
             .remove(nullptr, true);
 }
 

@@ -3,6 +3,7 @@
 
 #include <ext/macros/decorators.hpp>
 #include <ext/types/any.hpp>
+#include <ext/types/property.hpp>
 
 #include <v8pp/class.hpp>
 
@@ -18,7 +19,7 @@ public: constructors
     virtual ~dom_object() = default;
 
 public: internal_methods
-    virtual ext::any v8(v8::Isolate* isolate) const = 0;
+    virtual ext::any&& v8(v8::Isolate* isolate) const = 0;
 };
 
 

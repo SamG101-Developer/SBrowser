@@ -122,12 +122,17 @@ public: methods
 
     template <typename function> inline bool any_of(function&& func) const {
         bool flag = false;
-        for_each([&flag, func](const T& item) -> void {flag |= (bool)func(T{item}); if (flag) return;});
+        for_each([&flag, func](const T& item) -> void {flag |= func(item); if (flag) return;});
         return flag;
     }
 
     template <typename function> inline vector<T>& for_each(function&& func) {
         for (T item: this->m_iterable) func(item);
+        return *this;
+    }
+
+    template <typename function> inline cvector<T>& for_each(function&& func) const {
+        for (const T item: this->m_iterable) func(item);
         return *this;
     }
 

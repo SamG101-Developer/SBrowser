@@ -56,6 +56,8 @@
 #include <dom/xpath/xpath_expression.hpp>
 #include <dom/xpath/xpath_result.hpp>
 
+#include <geometry/shapes/dom_rect.hpp>
+
 #include <html/elements/html_element.hpp>
 
 #include <v8.h>
@@ -700,7 +702,8 @@ void javascript::interop::expose_cpp_to_js::expose(
             .auto_wrap_objects();
 
 
-    auto v8_abort_controller = dom::aborting::abort_controller{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_controller>>();
+    auto temp = dom::aborting::abort_controller{}.v8(isolate);
+    auto v8_abort_controller = temp.to<v8pp::class_<dom::aborting::abort_controller>>();
     auto v8_abort_signal = dom::aborting::abort_signal{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_signal>>();
 
     auto v8_custom_event = dom::events::custom_event{""}.v8(isolate).to<v8pp::class_<dom::events::custom_event>>();

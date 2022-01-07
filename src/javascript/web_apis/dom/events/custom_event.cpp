@@ -11,7 +11,7 @@ dom::events::custom_event::custom_event(
 }
 
 
-ext::any
+ext::any&&
 dom::events::custom_event::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<custom_event>{isolate}

@@ -1,7 +1,7 @@
 #include "node_filter.hpp"
 
 
-ext::any
+ext::any&&
 dom::iterators::node_filter::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<dom::iterators::node_filter>{isolate}
