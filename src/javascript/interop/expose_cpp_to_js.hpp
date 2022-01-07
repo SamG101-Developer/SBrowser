@@ -78,35 +78,6 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8::Local<v8::Context> local_context = v8::Local<v8::Context>::New(isolate, persistent_context);
     local_context->Enter();
 
-
-    v8pp::class_<dom::iterators::node_iterator> v8_node_iterator{isolate};
-    v8_node_iterator
-            .inherit<dom::iterators::abstract_iterator>()
-
-            .var("referenceNode", &dom::iterators::node_iterator::reference_node)
-            .var("pointerBeforeReferenceNode", &dom::iterators::node_iterator::pointer_before_reference_node)
-
-            .function("nextNode", &dom::iterators::node_iterator::next_node)
-            .function("previousNode", &dom::iterators::node_iterator::previous_node)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::iterators::tree_walker> v8_tree_walker{isolate};
-    v8_tree_walker
-            .inherit<dom::iterators::abstract_iterator>()
-
-            .function("parentNode", &dom::iterators::tree_walker::parent_node)
-            .function("firstChild", &dom::iterators::tree_walker::first_child)
-            .function("lastChild", &dom::iterators::tree_walker::last_child)
-            .function("previousSibling", &dom::iterators::tree_walker::previous_sibling)
-            .function("nextSibling", &dom::iterators::tree_walker::next_sibling)
-            .function("previousNode", &dom::iterators::tree_walker::previous_node)
-            .function("nextNode", &dom::iterators::tree_walker::next_node)
-
-            .var("currentNode", &dom::iterators::tree_walker::current_node)
-
-            .auto_wrap_objects();
-
     v8pp::class_<dom::mixins::child_node<dom::nodes::node>> v8_child_node{isolate};
     v8_child_node
             .auto_wrap_objects();
@@ -372,48 +343,6 @@ void javascript::interop::expose_cpp_to_js::expose(
             .var("clientHeight", &dom::nodes::element::client_height, true)
 
             .var("parts", &dom::nodes::element::parts)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::node> v8_node{isolate};
-    v8_node
-            .inherit<dom::nodes::event_target>()
-
-            .static_("DOCUMENT_POSITION_DISCONNECTED", dom::nodes::node::DOCUMENT_POSITION_DISCONNECTED)
-            .static_("DOCUMENT_POSITION_PRECEDING", dom::nodes::node::DOCUMENT_POSITION_PRECEDING)
-            .static_("DOCUMENT_POSITION_FOLLOWING", dom::nodes::node::DOCUMENT_POSITION_FOLLOWING)
-            .static_("DOCUMENT_POSITION_CONTAINS", dom::nodes::node::DOCUMENT_POSITION_CONTAINS)
-            .static_("DOCUMENT_POSITION_CONTAINED_BY", dom::nodes::node::DOCUMENT_POSITION_CONTAINED_BY)
-            .static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", dom::nodes::node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC)
-
-            .function("normalize", &dom::nodes::node::normalize)
-            .function("hasChildNodes", &dom::nodes::node::has_child_nodes)
-            .function("contains", &dom::nodes::node::contains)
-            .function("isEqualNode", &dom::nodes::node::is_equal_node)
-            .function("isDefaultNamespace", &dom::nodes::node::is_default_namespace)
-            .function("lookupPrefix", &dom::nodes::node::lookup_prefix)
-            .function("lookupNamespaceURI", &dom::nodes::node::lookup_namespace_uri)
-            .function("compareDocumentPosition", &dom::nodes::node::compare_document_position)
-            .function("getRootNode", &dom::nodes::node::get_root_node)
-            .function("cloneNode", &dom::nodes::node::clone_node)
-            .function("insertBefore", &dom::nodes::node::insert_before)
-            .function("appendChild", &dom::nodes::node::append_child)
-            .function("replaceChild", &dom::nodes::node::replace_child)
-            .function("removeChild", &dom::nodes::node::remove_child)
-
-            .var("nodeName", &dom::nodes::node::node_name)
-            .var("nodeValue", &dom::nodes::node::node_value)
-            .var("textContent", &dom::nodes::node::text_content)
-            .var("baseURI", &dom::nodes::node::base_uri)
-            .var("isConnected", &dom::nodes::node::is_connected)
-            .var("childNodes", &dom::nodes::node::child_nodes)
-            .var("parentNode", &dom::nodes::node::parent)
-            .var("parentElement", &dom::nodes::node::parent_element)
-            .var("ownerDocument", &dom::nodes::node::owner_document)
-            .var("firstChild", &dom::nodes::node::first_child)
-            .var("lastChild", &dom::nodes::node::last_child)
-            .var("previousSibling", &dom::nodes::node::previous_sibling)
-            .var("nextSibling", &dom::nodes::node::next_sibling)
 
             .auto_wrap_objects();
 
@@ -702,8 +631,7 @@ void javascript::interop::expose_cpp_to_js::expose(
             .auto_wrap_objects();
 
 
-    auto temp = dom::aborting::abort_controller{}.v8(isolate);
-    auto v8_abort_controller = temp.to<v8pp::class_<dom::aborting::abort_controller>>();
+    auto v8_abort_controller = dom::aborting::abort_controller{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_controller>>();
     auto v8_abort_signal = dom::aborting::abort_signal{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_signal>>();
 
     auto v8_custom_event = dom::events::custom_event{""}.v8(isolate).to<v8pp::class_<dom::events::custom_event>>();
@@ -711,8 +639,11 @@ void javascript::interop::expose_cpp_to_js::expose(
 
     auto v8_abstract_iterator = dom::iterators::abstract_iterator{}.v8(isolate).to<v8pp::class_<dom::iterators::abstract_iterator>>();
     auto v8_node_filter = dom::iterators::node_filter{}.v8(isolate).to<v8pp::class_<dom::iterators::node_filter>>();
+    auto v8_node_iterator = dom::iterators::node_iterator{}.v8(isolate).to<v8pp::class_<dom::iterators::node_iterator>>();
+    auto v8_tree_walker = dom::iterators::tree_walker{}.v8(isolate).to<v8pp::class_<dom::iterators::tree_walker>>();
 
     auto v8_event_target = dom::nodes::event_target{}.v8(isolate).to<v8pp::class_<dom::nodes::event_target>>();
+    auto v8_node = dom::nodes::node{}.v8(isolate).to<v8pp::class_<dom::nodes::node>>();
 
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;
@@ -777,7 +708,6 @@ void javascript::interop::expose_cpp_to_js::expose(
         case javascript::environment::modules::module_type::audio_worklet: {
             v8_module
                     .class_("Event", v8_event)
-
                     .class_("EventTarget", v8_event_target);
 
             module_name = v8::String::NewFromUtf8(isolate, "AudioWorklet").ToLocalChecked();

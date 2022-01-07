@@ -34,11 +34,11 @@ friends
     friend struct helpers::mutation_observers;
     friend class mutations::mutation_observer;
 
-public constructors:
+public: constructors
     node();
     ~node() override;
 
-public static_constants:
+public: static_constants
     static const unsigned short DOCUMENT_POSITION_DISCONNECTED = 0x01;
     static const unsigned short DOCUMENT_POSITION_PRECEDING = 0x02;
     static const unsigned short DOCUMENT_POSITION_FOLLOWING = 0x04;
@@ -56,7 +56,7 @@ public static_constants:
     static const unsigned short DOCUMENT_TYPE_NODE = 10;
     static const unsigned short DOCUMENT_FRAGMENT_NODE = 11;
 
-public methods:
+public: methods
     void normalize() const;
     bool has_child_nodes() const;
     bool contains(node* other) const;
@@ -88,21 +88,23 @@ public properties:
     ext::dom_property<node*> previous_sibling;
     ext::dom_property<node*> next_sibling;
 
-protected accessors:
+public: internal_methods
+    ext::any && v8(v8::Isolate *isolate) const override;
+
+protected: accessors
     inline virtual ext::string get_node_value() const;
     inline virtual ext::string get_text_content() const;
 
     inline virtual void set_node_value(ext::cstring& val);
     inline virtual void set_text_content(ext::cstring& val);
 
-protected internal_methods:
-    virtual bool equals(nodes::node* other);
+protected: internal_methods
     virtual QWidget* render() {return nullptr;};
 
-protected internal_properties:
+protected: internal_properties
     QWidget* m_rendered_widget;
 
-private accessors:
+private: accessors
     inline bool get_is_connected() const;
     inline ext::string get_base_uri() const;
     inline node* get_first_child() const;

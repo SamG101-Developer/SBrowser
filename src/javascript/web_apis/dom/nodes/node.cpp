@@ -92,13 +92,27 @@ dom::nodes::node::normalize() const {
 }
 
 
-bool dom::nodes::node::has_child_nodes() const {return not child_nodes->empty();}
+bool dom::nodes::node::has_child_nodes() const {
+    return not child_nodes->empty();
+}
 
-bool dom::nodes::node::contains(node* other) const {return helpers::trees::is_descendant(other, this);}
+bool dom::nodes::node::contains(node* other) const {
+    return helpers::trees::is_descendant(other, this);
+}
 
-bool dom::nodes::node::is_equal_node(node* other) const {return other and helpers::node_internals::equals(this, other);}
+bool dom::nodes::node::is_equal_node(node* other) const {
+    if (not other) return false;
 
-bool dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const {return namespace_ == helpers::node_internals::locate_a_namespace(this, "");}
+    if (child_nodes->length() != other->child_nodes->length()) return false;
+    for (size_t child_index = 0; child_index < child_nodes->length(); ++child_index) {
+        if (not child_nodes->at(child_index)->equals(other->child_nodes->at(child_index))) return false;
+    }
+    return true;;
+}
+
+bool dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const {
+    return namespace_ == helpers::node_internals::locate_a_namespace(this, "");
+}
 
 
 ext::string
@@ -247,14 +261,21 @@ dom::nodes::node::remove_child(
 
 
 ext::string dom::nodes::node::get_node_value() const {return "";}
+
 ext::string dom::nodes::node::get_text_content() const {return "";}
 
 bool dom::nodes::node::get_is_connected() const {return helpers::shadows::is_connected(this);}
+
 ext::string dom::nodes::node::get_base_uri() const {return url::helpers::serializing::serialize_url(owner_document->base_uri);}
+
 dom::nodes::node* dom::nodes::node::get_first_child() const {return child_nodes->front();}
+
 dom::nodes::node* dom::nodes::node::get_last_child() const {return child_nodes->back();}
+
 dom::nodes::node* dom::nodes::node::get_previous_sibling() const {return parent->child_nodes->item_before(this);}
+
 dom::nodes::node* dom::nodes::node::get_next_sibling() const {return parent->child_nodes->item_after(this);}
+
 dom::nodes::element* dom::nodes::node::get_parent_element() const {return ext::property_dynamic_cast<element*>(parent);}
 
 void dom::nodes::node::set_parent_node(node* val) {
@@ -293,10 +314,45 @@ void dom::nodes::node::set_parent_node(node* val) {
 }
 
 
-bool dom::nodes::node::equals(nodes::node* other) {
-    if (child_nodes->length() != other->child_nodes->length()) return false;
-    for (size_t child_index = 0; child_index < child_nodes->length(); ++child_index) {
-        if (not child_nodes->at(child_index)->equals(other->child_nodes->at(child_index))) return false;
-    }
-    return true;
+ext::any&& dom::nodes::node::v8(v8::Isolate* isolate) const {
+    return v8pp::class_<node>{isolate}
+            .inherit<dom::nodes::event_target>()
+
+            .static_("DOCUMENT_POSITION_DISCONNECTED", node::DOCUMENT_POSITION_DISCONNECTED)
+            .static_("DOCUMENT_POSITION_PRECEDING", node::DOCUMENT_POSITION_PRECEDING)
+            .static_("DOCUMENT_POSITION_FOLLOWING", node::DOCUMENT_POSITION_FOLLOWING)
+            .static_("DOCUMENT_POSITION_CONTAINS", node::DOCUMENT_POSITION_CONTAINS)
+            .static_("DOCUMENT_POSITION_CONTAINED_BY", node::DOCUMENT_POSITION_CONTAINED_BY)
+            .static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC)
+
+            .function("normalize", &node::normalize)
+            .function("hasChildNodes", &node::has_child_nodes)
+            .function("contains", &node::contains)
+            .function("isEqualNode", &node::is_equal_node)
+            .function("isDefaultNamespace", &node::is_default_namespace)
+            .function("lookupPrefix", &node::lookup_prefix)
+            .function("lookupNamespaceURI", &node::lookup_namespace_uri)
+            .function("compareDocumentPosition", &node::compare_document_position)
+            .function("getRootNode", &node::get_root_node)
+            .function("cloneNode", &node::clone_node)
+            .function("insertBefore", &node::insert_before)
+            .function("appendChild", &node::append_child)
+            .function("replaceChild", &node::replace_child)
+            .function("removeChild", &node::remove_child)
+
+            .var("nodeName", &node::node_name)
+            .var("nodeValue", &node::node_value)
+            .var("textContent", &node::text_content)
+            .var("baseURI", &node::base_uri)
+            .var("isConnected", &node::is_connected)
+            .var("childNodes", &node::child_nodes)
+            .var("parentNode", &node::parent)
+            .var("parentElement", &node::parent_element)
+            .var("ownerDocument", &node::owner_document)
+            .var("firstChild", &node::first_child)
+            .var("lastChild", &node::last_child)
+            .var("previousSibling", &node::previous_sibling)
+            .var("nextSibling", &node::next_sibling)
+
+            .auto_wrap_objects();
 }

@@ -147,15 +147,6 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
 }
 
 
-bool
-dom::helpers::node_internals::equals(
-        nodes::node* node_1,
-        nodes::node* node_2) {
-
-    return node_1->is_equal_node(node_2);
-}
-
-
 void
 dom::helpers::node_internals::adopt(
         nodes::node* node,
