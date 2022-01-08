@@ -5,6 +5,8 @@
 #include <ext/macros/decorators.hpp>
 #include <ext/types/property.hpp>
 
+#include <dom_object.hpp>
+
 namespace dom {
     namespace other {class xslt_processor;}
     namespace nodes {
@@ -15,7 +17,7 @@ namespace dom {
 }
 
 
-class dom::other::xslt_processor {
+class dom::other::xslt_processor : virtual public dom_object {
 public: constructors
     xslt_processor();
 
@@ -30,6 +32,9 @@ public: methods
     void remove_parameter(ext::cstring& namespace_uri, ext::cstring& local_name);
     void clear_parameters();
     void reset();
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

@@ -6,6 +6,8 @@
 #include <ext/macros/decorators.hpp>
 #include <ext/types/property.hpp>
 
+#include <dom_object.hpp>
+
 namespace dom::other {class dom_exception;}
 
 enum exception_type {
@@ -18,13 +20,16 @@ enum exception_type {
 };
 
 
-class dom::other::dom_exception {
+class dom::other::dom_exception : public virtual dom_object {
 public: constructors
     dom_exception(ext::cstring& message, exception_type type);
 
 public: properties
     ext::dom_property<ext::string> message;
     ext::dom_property<exception_type> type;
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

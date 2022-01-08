@@ -1,6 +1,6 @@
 #include "dom_implementation.hpp"
 
-#include <ext/iterables/string_switch.hpp>
+#include <ext/macros//string_switch.hpp>
 
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>
@@ -55,7 +55,7 @@ dom::other::dom_implementation::create_document(
 
     document->m_origin = m_associated_document->m_origin;
 
-    string_switch(namespace_.to_c_str()) {
+    string_switch(namespace_) {
         string_case(helpers::namespaces::HTML): document->content_type = "application/xhtml+xml";
         string_case(helpers::namespaces::SVG): document->content_type = "image/svg+xml";
         string_default: document->content_type = "application/xml";
@@ -92,4 +92,15 @@ dom::other::dom_implementation::create_html_document(
     helpers::mutation_algorithms::append(helpers::custom_elements::create_an_element(document, "body", helpers::namespaces::HTML), document->child_nodes->at(1));
     document->m_origin = m_associated_document->m_origin;
     return document;
+}
+
+
+ext::any
+dom::other::dom_implementation::v8(v8::Isolate* isolate) const {
+
+    return v8pp::class_<dom_implementation>{isolate}
+            .function("createDocumentType", &dom::other::dom_implementation::create_document_type)
+            .function("createDocument", &dom::other::dom_implementation::create_document)
+            .function("createHTMLDocument", &dom::other::dom_implementation::create_html_document)
+            .auto_wrap_objects();
 }

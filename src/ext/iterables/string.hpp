@@ -149,7 +149,7 @@ public: methods
         return m_iterable.contains(item);
     }
 
-    const char* c_str() const {
+    constexpr const char* c_str() const {
         return m_iterable.c_str();
     }
 

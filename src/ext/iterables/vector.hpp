@@ -3,10 +3,11 @@
 #define SBROWSER_VECTOR_HPP
 
 #include <deque>
-#include <vector>
 #include <string>
 
 #include <ext/iterables/iterable.hpp>
+
+#include <veque/include/veque.hpp>
 
 namespace ext {
     template <typename T> class vector;
@@ -32,7 +33,7 @@ namespace {
 
 
 template <typename T>
-class ext::vector : public ext::iterable<T, std::vector<T>> {
+class ext::vector : public ext::iterable<T, veque::veque<T>> {
 public: constructors
     vector() = default;
     vector(const vector&) = default;
@@ -42,11 +43,11 @@ public: constructors
 
     template <typename iterator>
     vector(iterator begin, iterator end) requires (is_iterator_v<iterator>) {
-        this->m_iterable = std::vector<T>{begin, end};
+        this->m_iterable = veque::veque<T>{begin, end};
     }
 
     template <typename ...args> vector(args&&... items) {
-        this->m_iterable = std::vector<T>{items...};
+        this->m_iterable = veque::veque<T>{items...};
     }
 
     ~vector() override {
@@ -104,7 +105,7 @@ public: methods
     }
 
     inline vector<T>& clear() override {
-        ext::iterable<T, std::vector<T>>::clear();
+        this->m_iterable.clear();
         this->m_iterable.shrink_to_fit();
         return *this;
     }

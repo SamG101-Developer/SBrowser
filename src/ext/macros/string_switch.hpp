@@ -7,12 +7,12 @@
 
 namespace {
 
-constexpr unsigned long a = 54059;
-constexpr unsigned long b = 76963;
-constexpr unsigned long c = 86969;
-constexpr unsigned long d = 00037;
+const unsigned long a = 54059;
+const unsigned long b = 76963;
+const unsigned long c = 86969;
+const unsigned long d = 00037;
 
-constexpr size_t hash(const char* s) {
+size_t hash(const char* s) {
     auto h = d;
     while (*s) {
         h = (h * a) ^ (s[0] * b);
@@ -24,8 +24,8 @@ constexpr size_t hash(const char* s) {
 }
 
 
-#define string_switch(string) switch(hash(string))
-#define string_case(string) case(hash(string))
+#define string_switch(string) switch(hash(string.c_str()))
+#define string_case(string) case(hash(string.c_str()))
 #define string_default default
 
 

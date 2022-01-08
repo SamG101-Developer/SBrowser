@@ -513,28 +513,6 @@ javascript::interop::expose_cpp_to_js::expose(
 
             .auto_wrap_objects();
 
-    v8pp::class_<dom::other::dom_implementation> v8_dom_implementation{isolate};
-    v8_dom_implementation
-            .function("createDocumentType", &dom::other::dom_implementation::create_document_type)
-            .function("createDocument", &dom::other::dom_implementation::create_document)
-            .function("createHTMLDocument", &dom::other::dom_implementation::create_html_document)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::other::xslt_processor> v8_xslt_processor{isolate};
-    v8_xslt_processor
-            .ctor<>()
-
-            .function("importStylesheet", &dom::other::xslt_processor::import_stylesheet)
-            .function("transformToFragment", &dom::other::xslt_processor::transform_to_fragment)
-            .function("transformToDocument", &dom::other::xslt_processor::transform_to_document)
-            .function("setParameter", &dom::other::xslt_processor::set_parameter)
-            .function("getParameter", &dom::other::xslt_processor::get_parameter)
-            .function("removeParameter", &dom::other::xslt_processor::remove_parameter)
-            .function("clearParameters", &dom::other::xslt_processor::clear_parameters)
-            .function("reset", &dom::other::xslt_processor::reset)
-
-            .auto_wrap_objects();
-
 
     auto v8_abort_controller = object_to_v8<dom::aborting::abort_controller>(isolate);
     auto v8_abort_signal = object_to_v8<dom::aborting::abort_signal>(isolate);
@@ -551,6 +529,9 @@ javascript::interop::expose_cpp_to_js::expose(
 
     auto v8_event_target = object_to_v8<dom::nodes::event_target>(isolate);
     auto v8_node = object_to_v8<dom::nodes::node>(isolate);
+
+    auto v8_dom_implementation = object_to_v8<dom::other::dom_implementation>(isolate);
+    auto v8_xslt_processor = object_to_v8<dom::other::xslt_processor>(isolate);
 
     auto v8_abstract_range = object_to_v8<dom::ranges::abstract_range>(isolate);
     auto v8_range = object_to_v8<dom::ranges::range>(isolate);
