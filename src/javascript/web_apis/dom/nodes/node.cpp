@@ -314,7 +314,7 @@ void dom::nodes::node::set_parent_node(node* val) {
 }
 
 
-ext::any&& dom::nodes::node::v8(v8::Isolate* isolate) const {
+ext::any dom::nodes::node::v8(v8::Isolate* isolate) const {
     return v8pp::class_<node>{isolate}
             .inherit<dom::nodes::event_target>()
 

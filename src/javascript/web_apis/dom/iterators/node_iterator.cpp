@@ -20,7 +20,7 @@ dom::iterators::node_iterator::previous_node() {
 }
 
 
-ext::any&&
+ext::any
 dom::iterators::node_iterator::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<node_iterator>{isolate}

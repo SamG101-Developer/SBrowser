@@ -66,7 +66,7 @@ dom::nodes::event_target::get_the_parent(
 }
 
 
-ext::any&& dom::nodes::event_target::v8(v8::Isolate* isolate) const {
+ext::any dom::nodes::event_target::v8(v8::Isolate* isolate) const {
     v8pp::class_<event_target> v8{isolate};
     return v8
             .ctor<>()

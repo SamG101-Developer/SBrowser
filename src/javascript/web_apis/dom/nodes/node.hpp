@@ -89,7 +89,7 @@ public properties:
     ext::dom_property<node*> next_sibling;
 
 public: internal_methods
-    ext::any && v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate *isolate) const override;
 
 protected: accessors
     inline virtual ext::string get_node_value() const;

@@ -11,6 +11,9 @@ namespace dom::ranges {class static_range;}
 class dom::ranges::static_range : public abstract_range {
 public: constructors
     static_range(ext::cstring_any_map& init);
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

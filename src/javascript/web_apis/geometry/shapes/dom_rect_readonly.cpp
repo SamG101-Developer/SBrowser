@@ -30,7 +30,7 @@ double geometry::shapes::dom_rect_readonly::get_right() const {std::max(x, x + w
 double geometry::shapes::dom_rect_readonly::get_bottom() const {return std::max(y, y + height);}
 
 
-ext::any&&
+ext::any
 geometry::shapes::dom_rect_readonly::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<dom_rect_readonly>{isolate}

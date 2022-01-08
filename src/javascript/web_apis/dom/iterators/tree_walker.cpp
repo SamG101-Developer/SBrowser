@@ -61,7 +61,7 @@ dom::iterators::tree_walker::previous_node() {
 }
 
 
-ext::any&&
+ext::any
 dom::iterators::tree_walker::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<tree_walker>{isolate}

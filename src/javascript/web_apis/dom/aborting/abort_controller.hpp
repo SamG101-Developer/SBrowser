@@ -13,7 +13,7 @@ namespace dom::aborting {
 }
 
 
-class dom::aborting::abort_controller final : public dom_object {
+class dom::aborting::abort_controller final : virtual public dom_object {
 public constructors:
     abort_controller();
     ~abort_controller() override;
@@ -25,7 +25,7 @@ public properties:
     ext::dom_property<abort_signal*> signal;
 
 public: internal_methods
-    ext::any&& v8(v8::Isolate* isolate) const override;
+    ext::any v8(v8::Isolate* isolate) const override;
 };
 
 

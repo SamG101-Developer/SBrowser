@@ -11,7 +11,7 @@ namespace dom {
 }
 
 
-struct dom::iterators::node_filter : public dom_object {
+struct dom::iterators::node_filter : virtual public dom_object {
 public: static_constants
     static const unsigned short FILTER_ACCEPT = 1;
     static const unsigned short FILTER_REJECT = 2;
@@ -32,7 +32,7 @@ public: methods
     unsigned short accept_node(nodes::node* node) {return 0x0; /* TODO : Find the impl or remove for legacy? */};
 
 public: internal_methods
-    ext::any&& v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

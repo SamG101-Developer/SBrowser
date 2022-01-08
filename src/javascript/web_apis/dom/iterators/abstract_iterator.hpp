@@ -16,7 +16,7 @@ namespace dom {
 }
 
 
-class dom::iterators::abstract_iterator : public dom_object {
+class dom::iterators::abstract_iterator : virtual public dom_object {
 friends
     friend struct dom::helpers::traversal;
 
@@ -29,7 +29,7 @@ public: properties
     ext::dom_property<unsigned long> what_to_show;
 
 public: internal_methods
-    ext::any&& v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate *isolate) const override;
 
 private:
     bool m_active_flag;

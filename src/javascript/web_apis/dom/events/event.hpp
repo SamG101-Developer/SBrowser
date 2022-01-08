@@ -20,7 +20,7 @@ namespace dom {
 }
 
 
-class dom::events::event : public dom_object {
+class dom::events::event : virtual public dom_object {
 friends
     friend class dom::nodes::event_target;
     friend struct dom::helpers::event_dispatching;
@@ -57,7 +57,7 @@ public: properties
     ext::dom_property<ext::vector<internal::event_path_struct*>*> path;
 
 public: internal_methods
-    ext::any&& v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate *isolate) const override;
 
 protected: internal_properties
     bool m_stop_propagation_flag;

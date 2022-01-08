@@ -7,7 +7,9 @@
 
 
 dom::mutations::mutation_observer::mutation_observer(
-        mutation_callback&& callback) {
+        mutation_callback&& callback)
+
+        : dom_object() {
 
     m_callback = callback;
     m_record_queue = new std::queue<mutation_record*>{};
@@ -19,28 +21,28 @@ dom::mutations::mutation_observer::observe(
         nodes::node* target,
         ext::string_any_map&& options) {
 
-    auto attribute_filter = (ext::vector<ext::string>)(options.at("attribute_filter"));
+    auto attribute_filter = options.at("attribute_filter").to<ext::vector<ext::string>>();
 
-    if (not options.at("attributes") and (options.at("attributeOldValue") or not attribute_filter.empty()))
+    if (not options.at("attributes").to<bool>() and options.at("attributeOldValue").to<bool>() or not attribute_filter.empty())
         options.at("attributes") = true;
 
-    if (not options.at("characterData") and options.at("characterDataOldValue"))
+    if (not options.at("characterData").to<bool>() and options.at("characterDataOldValue").to<bool>())
         options.at("characterData") = true;
 
     helpers::exceptions::throw_v8_exception(
             "one item from ['childList', 'attributes', 'characterData'] must be true",
             &v8::Exception::TypeError,
-            [options] {return not (options.at("childList") or options.at("attributes") or options.at("characterData"));});
+            [options] {return not options.at("childList").to<bool>() or options.at("attributes").to<bool>() or options.at("characterData").to<bool>();});
 
     helpers::exceptions::throw_v8_exception(
             "if 'attributesOldValue' is true, 'attributes' must be true",
             &v8::Exception::TypeError,
-            [options] {return options.at("attributesOldValue") and not options.at("attributes");});
+            [options] {return options.at("attributesOldValue").to<bool>() and not options.at("attributes").to<bool>();});
 
     helpers::exceptions::throw_v8_exception(
             "if 'attributesFilter' is not empty, 'attributes' must be true",
             &v8::Exception::TypeError,
-            [options, attribute_filter] {return not attribute_filter.empty() and not options.at("attributes");});
+            [options, attribute_filter] {return not attribute_filter.empty() and not options.at("attributes").to<bool>();});
 
     for (const auto* registered: *target->m_registered_observer_list) {
         if (registered->observer == this) {
@@ -75,4 +77,16 @@ dom::mutations::mutation_observer::take_records() {
 
     return vector;
 
+}
+
+
+ext::any
+dom::mutations::mutation_observer::v8(v8::Isolate* isolate) const {
+
+    return v8pp::class_<dom::mutations::mutation_record>{isolate}
+            .ctor<dom::mutations::mutation_observer::mutation_callback&&>()
+            .function("observe", &dom::mutations::mutation_observer::observe)
+            .function("disconnect", &dom::mutations::mutation_observer::disconnect)
+            .function("takeRecords", &dom::mutations::mutation_observer::take_records)
+            .auto_wrap_objects();
 }

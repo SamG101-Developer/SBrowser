@@ -9,6 +9,8 @@
 #include <ext/iterables/map.hpp>
 #include <ext/iterables/vector.hpp>
 
+#include <dom_object.hpp>
+
 namespace dom {
     namespace helpers {class mutation_observers;}
     namespace nodes {class node;}
@@ -19,7 +21,7 @@ namespace dom {
 }
 
 
-class dom::mutations::mutation_observer {
+class dom::mutations::mutation_observer : virtual public dom_object {
 friends
     friend struct helpers::mutation_observers;
 
@@ -33,6 +35,9 @@ public: methods
     void observe(nodes::node* target, ext::string_any_map&& options = {});
     void disconnect();
     ext::vector<mutation_record*> take_records();
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 
 private: internal_properties
     mutation_callback m_callback;

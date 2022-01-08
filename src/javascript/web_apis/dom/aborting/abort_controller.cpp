@@ -21,7 +21,7 @@ dom::aborting::abort_controller::abort(ext::any&& reason) {
 }
 
 
-ext::any&&
+ext::any
 dom::aborting::abort_controller::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<abort_controller>{isolate}

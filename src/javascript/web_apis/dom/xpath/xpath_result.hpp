@@ -5,13 +5,15 @@
 #include <ext/macros/decorators.hpp>
 #include <ext/types/property.hpp>
 
+#include <dom_object.hpp>
+
 namespace dom {
     namespace nodes {class node;}
     namespace xpath {class xpath_result;}
 }
 
 
-class dom::xpath::xpath_result {
+class dom::xpath::xpath_result : public dom_object {
 public: constructors
     xpath_result();
 
@@ -39,6 +41,9 @@ public: properties
     ext::dom_property<nodes::node*> single_node_value;
     ext::dom_property<bool> invalid_iterator_state;
     ext::dom_property<unsigned long> snapshot_length;
+
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
 };
 
 

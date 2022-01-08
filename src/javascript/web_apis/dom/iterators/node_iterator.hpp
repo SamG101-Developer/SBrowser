@@ -26,7 +26,7 @@ public: properties
     ext::dom_property<bool> pointer_before_reference_node;
 
 public: internal_methods
-    ext::any && v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate *isolate) const override;
 
 private: internal_properties
     ext::vector<nodes::node*> iterator_collection;

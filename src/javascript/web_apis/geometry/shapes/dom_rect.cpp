@@ -16,7 +16,7 @@ geometry::shapes::dom_rect::dom_rect(
 }
 
 
-ext::any&&
+ext::any
 geometry::shapes::dom_rect::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<dom_rect>{isolate}

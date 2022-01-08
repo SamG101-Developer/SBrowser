@@ -31,7 +31,7 @@ dom::aborting::abort_signal::throw_if_aborted() {
 }
 
 
-ext::any&&
+ext::any
 dom::aborting::abort_signal::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<abort_signal>{isolate}

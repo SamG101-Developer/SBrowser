@@ -21,7 +21,7 @@ public: methods
     nodes::node* next_node();
 
 public: internal_methods
-    ext::any && v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate *isolate) const override;
 
 public: properties
     ext::dom_property<nodes::node*> current_node;

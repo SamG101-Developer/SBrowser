@@ -66,11 +66,21 @@
 
 
 namespace javascript::interop::expose_cpp_to_js {
+    template <typename T> auto object_to_v8(v8::Isolate* isolate)  requires std::is_base_of_v<dom_object, T>;
     void expose(v8::Isolate* isolate, v8::Persistent<v8::Context>& persistent_context, javascript::environment::modules::module_type module_type);
 }
 
 
-void javascript::interop::expose_cpp_to_js::expose(
+template <typename T>
+auto javascript::interop::expose_cpp_to_js::object_to_v8(
+        v8::Isolate* isolate) requires std::is_base_of_v<dom_object, T> {
+
+    return T{}.v8(isolate).template to<v8pp::class_<T>>();
+}
+
+
+void
+javascript::interop::expose_cpp_to_js::expose(
         v8::Isolate* isolate,
         v8::Persistent<v8::Context>& persistent_context,
         javascript::environment::modules::module_type module_type) {
@@ -124,14 +134,6 @@ void javascript::interop::expose_cpp_to_js::expose(
     v8pp::class_<dom::mixins::slottable<dom::nodes::node>> v8_slottable{isolate};
     v8_slottable
             .var("assignedSlot", &dom::mixins::slottable<dom::nodes::node>::assigned_slot)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mutations::mutation_observer> v8_mutation_observer{isolate};
-    v8_mutation_observer
-//            .ctor<dom::mutations::mutation_observer::mutation_callback&&>()
-            .function("observe", &dom::mutations::mutation_observer::observe)
-            .function("disconnect", &dom::mutations::mutation_observer::disconnect)
-            .function("takeRecords", &dom::mutations::mutation_observer::take_records)
             .auto_wrap_objects();
 
     v8pp::class_<dom::mutations::mutation_record> v8_mutation_record{isolate};
@@ -533,117 +535,30 @@ void javascript::interop::expose_cpp_to_js::expose(
 
             .auto_wrap_objects();
 
-    v8pp::class_<dom::ranges::abstract_range> v8_abstract_range{isolate};
-    v8_abstract_range
-            .var("collapsed", &dom::ranges::abstract_range::collapsed)
-            .var("startContainer", &dom::ranges::abstract_range::start_container)
-            .var("startOffset", &dom::ranges::abstract_range::start_offset)
-            .var("endContainer", &dom::ranges::abstract_range::end_container)
-            .var("endOffset", &dom::ranges::abstract_range::end_offset)
-            .auto_wrap_objects();
 
-    v8pp::class_<dom::ranges::range> v8_range{isolate};
-    v8_range
-            .ctor<>()
-            .inherit<dom::ranges::abstract_range>()
+    auto v8_abort_controller = object_to_v8<dom::aborting::abort_controller>(isolate);
+    auto v8_abort_signal = object_to_v8<dom::aborting::abort_signal>(isolate);
 
-            .static_("START_TO_START", dom::ranges::range::START_TO_START)
-            .static_("START_TO_END", dom::ranges::range::START_TO_END)
-            .static_("END_TO_END", dom::ranges::range::END_TO_END)
-            .static_("END_TO_START", dom::ranges::range::END_TO_START)
+    auto v8_custom_event = object_to_v8<dom::events::custom_event>(isolate);
+    auto v8_event = object_to_v8<dom::events::event>(isolate);
 
-            .function("setStart", &dom::ranges::range::set_start)
-            .function("setStartAfter", &dom::ranges::range::set_start_after)
-            .function("setStartBefore", &dom::ranges::range::set_start_before)
+    auto v8_abstract_iterator = object_to_v8<dom::iterators::abstract_iterator>(isolate);
+    auto v8_node_filter = object_to_v8<dom::iterators::node_filter>(isolate);
+    auto v8_node_iterator = object_to_v8<dom::iterators::node_iterator>(isolate);
+    auto v8_tree_walker = object_to_v8<dom::iterators::tree_walker>(isolate);
 
-            .function("setEnd", &dom::ranges::range::set_end)
-            .function("setEndAfter", &dom::ranges::range::set_end_after)
-            .function("setEndBefore", &dom::ranges::range::set_end_before)
+    auto v8_mutation_observer = object_to_v8<dom::mutations::mutation_observer>(isolate);
 
-            .function("insertNode", &dom::ranges::range::insert_node)
-            .function("intersectsNode", &dom::ranges::range::intersects_node)
-            .function("selectNode", &dom::ranges::range::select_node)
-            .function("selectNodeContents", &dom::ranges::range::select_node_contents)
+    auto v8_event_target = object_to_v8<dom::nodes::event_target>(isolate);
+    auto v8_node = object_to_v8<dom::nodes::node>(isolate);
 
-            .function("compareBoundaryPoints", &dom::ranges::range::compare_boundary_points)
-            .function("comparePoint", &dom::ranges::range::compare_point)
+    auto v8_abstract_range = object_to_v8<dom::ranges::abstract_range>(isolate);
+    auto v8_range = object_to_v8<dom::ranges::range>(isolate);
+    auto v8_static_range = object_to_v8<dom::ranges::static_range>(isolate);
 
-            .function("extractContents", &dom::ranges::range::extract_contents)
-            .function("cloneContents", &dom::ranges::range::clone_contents)
-            .function("deleteContents", &dom::ranges::range::delete_contents)
-            .function("surroundContents", &dom::ranges::range::surround_contents)
-
-            .function("collapse", &dom::ranges::range::collapse)
-            .function("cloneRange", &dom::ranges::range::clone_range)
-            .function("isPointInRange", &dom::ranges::range::is_point_in_range)
-
-            .function("toJSON", &dom::ranges::range::to_json)
-
-            .var("commonAncestorContainer", &dom::ranges::range::common_ancestor_container)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::ranges::static_range> v8_static_range{isolate};
-    v8_static_range
-            .ctor<ext::cstring_any_map&>()
-            .inherit<dom::ranges::abstract_range>()
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::xpath::xpath_evaluator> v8_xpath_evaluator{isolate};
-    v8_xpath_evaluator
-            .ctor<>()
-
-            .function("createExpression", &dom::xpath::xpath_evaluator::create_expression)
-            .function("createNodeResolver", &dom::xpath::xpath_evaluator::create_expression)
-            .function("evaluate", &dom::xpath::xpath_evaluator::evaluate)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::xpath::xpath_expression> v8_xpath_expression{isolate};
-    v8_xpath_expression
-            .function("evaluate", &dom::xpath::xpath_expression::evaluate)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::xpath::xpath_result> v8_xpath_result{isolate};
-    v8_xpath_result
-            .static_("ANY_TYPE", dom::xpath::xpath_result::ANY_TYPE)
-            .static_("NUMBER_TYPE", dom::xpath::xpath_result::NUMBER_TYPE)
-            .static_("STRING_TYPE", dom::xpath::xpath_result::STRING_TYPE)
-            .static_("BOOLEAN_TYPE", dom::xpath::xpath_result::BOOLEAN_TYPE)
-            .static_("UNORDERED_NODE_ITERATOR_TYPE", dom::xpath::xpath_result::UNORDERED_NODE_ITERATOR_TYPE)
-            .static_("ORDERED_NODE_ITERATOR_TYPE", dom::xpath::xpath_result::ORDERED_NODE_ITERATOR_TYPE)
-            .static_("UNORDERED_NODE_SNAPSHOT_TYPE", dom::xpath::xpath_result::UNORDERED_NODE_SNAPSHOT_TYPE)
-            .static_("ORDERED_NODE_SNAPSHOT_TYPE", dom::xpath::xpath_result::ORDERED_NODE_SNAPSHOT_TYPE)
-            .static_("ANY_UNORDERED_NODE_TYPE", dom::xpath::xpath_result::ANY_UNORDERED_NODE_TYPE)
-            .static_("FIRST_ORDERED_NODE_TYPE", dom::xpath::xpath_result::FIRST_ORDERED_NODE_TYPE)
-
-            .function("iteratorNext", &dom::xpath::xpath_result::iterate_next)
-            .function("snapshotLength", &dom::xpath::xpath_result::snapshot_item)
-
-            .var("resultType", &dom::xpath::xpath_result::result_type)
-            .var("numberValue", &dom::xpath::xpath_result::number_value)
-            .var("stringValue", &dom::xpath::xpath_result::string_value)
-            .var("booleanValue", &dom::xpath::xpath_result::boolean_value)
-            .var("singleNodeValue", &dom::xpath::xpath_result::single_node_value)
-            .var("invalidIteratorState", &dom::xpath::xpath_result::invalid_iterator_state)
-            .var("snapshotLength", &dom::xpath::xpath_result::snapshot_length)
-
-            .auto_wrap_objects();
-
-
-    auto v8_abort_controller = dom::aborting::abort_controller{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_controller>>();
-    auto v8_abort_signal = dom::aborting::abort_signal{}.v8(isolate).to<v8pp::class_<dom::aborting::abort_signal>>();
-
-    auto v8_custom_event = dom::events::custom_event{""}.v8(isolate).to<v8pp::class_<dom::events::custom_event>>();
-    auto v8_event = dom::events::event{""}.v8(isolate).to<v8pp::class_<dom::events::event>>();
-
-    auto v8_abstract_iterator = dom::iterators::abstract_iterator{}.v8(isolate).to<v8pp::class_<dom::iterators::abstract_iterator>>();
-    auto v8_node_filter = dom::iterators::node_filter{}.v8(isolate).to<v8pp::class_<dom::iterators::node_filter>>();
-    auto v8_node_iterator = dom::iterators::node_iterator{}.v8(isolate).to<v8pp::class_<dom::iterators::node_iterator>>();
-    auto v8_tree_walker = dom::iterators::tree_walker{}.v8(isolate).to<v8pp::class_<dom::iterators::tree_walker>>();
-
-    auto v8_event_target = dom::nodes::event_target{}.v8(isolate).to<v8pp::class_<dom::nodes::event_target>>();
-    auto v8_node = dom::nodes::node{}.v8(isolate).to<v8pp::class_<dom::nodes::node>>();
+    auto v8_xpath_evaluator = object_to_v8<dom::xpath::xpath_evaluator>(isolate);
+    auto v8_xpath_expression = object_to_v8<dom::xpath::xpath_expression>(isolate);
+    auto v8_xpath_result = object_to_v8<dom::xpath::xpath_result>(isolate);
 
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;

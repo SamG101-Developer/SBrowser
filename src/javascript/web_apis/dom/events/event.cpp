@@ -7,7 +7,9 @@
 
 dom::events::event::event(
         ext::cstring& event_type,
-        ext::cstring_any_map& event_init) {
+        ext::cstring_any_map& event_init):
+
+        dom_object() {
 
     type = event_type;
     bubbles = event_init.at("bubbles").to<bool>();
@@ -108,7 +110,7 @@ dom::events::event::composed_path() {
 }
 
 
-ext::any&&
+ext::any
 dom::events::event::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<event>{isolate}

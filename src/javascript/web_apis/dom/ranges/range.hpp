@@ -17,16 +17,16 @@ class dom::ranges::range : public abstract_range {
 friends
     friend struct helpers::range_internals;
 
-public constructors:
+public: constructors
     range();
 
-public static_constants:
+public: static_constants
     static const short START_TO_START = 0;
     static const short START_TO_END = 1;
     static const short END_TO_END = 2;
     static const short END_TO_START = 3;
 
-public methods:
+public: methods
     // dom
     void set_start(nodes::node* node, unsigned long offset);
     void set_start_before(nodes::node* node);
@@ -62,7 +62,10 @@ public methods:
 public properties:
     ext::dom_property<nodes::node*> common_ancestor_container;
 
-private internal_properties:
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
+
+private: internal_properties
     nodes::node* m_root;
 
 private accessors:
