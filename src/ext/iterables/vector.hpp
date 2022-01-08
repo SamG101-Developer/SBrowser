@@ -84,7 +84,7 @@ public: methods
     }
 
     inline vector<T>& prepend(const T& item) {
-        this->m_iterable.emplace(this->begin(), item);
+        this->m_iterable.emplace_front(this->begin(), item);
         return *this;
     }
 

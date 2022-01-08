@@ -19,7 +19,7 @@ public constructors:
     ~abort_controller() override;
 
 public methods:
-    void abort(ext::any&& reason);
+    void abort(ext::cany& reason);
 
 public properties:
     ext::dom_property<abort_signal*> signal;

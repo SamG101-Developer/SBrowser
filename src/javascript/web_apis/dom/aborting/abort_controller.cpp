@@ -15,7 +15,7 @@ dom::aborting::abort_controller::~abort_controller() {
 
 
 void
-dom::aborting::abort_controller::abort(ext::any&& reason) {
+dom::aborting::abort_controller::abort(ext::cany& reason) {
 
     helpers::signal_aborting::signal_abort(signal, reason);
 }

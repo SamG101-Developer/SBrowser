@@ -27,6 +27,7 @@ friends
     friend struct dom::helpers::event_listening;
 
 public: constructors
+    event(): dom_object() {};
     event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
     ~event() override;
 

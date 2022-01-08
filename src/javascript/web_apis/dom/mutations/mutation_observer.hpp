@@ -29,6 +29,7 @@ public: aliases
     using mutation_callback = std::function<void(ext::vector<mutation_record*>*, mutation_observer*)>;
 
 public: constructors
+    mutation_observer(): dom_object() {};
     mutation_observer(mutation_callback&& callback);
 
 public: methods
