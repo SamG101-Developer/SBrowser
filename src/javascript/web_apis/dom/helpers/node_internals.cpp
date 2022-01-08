@@ -141,9 +141,14 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
     return trees::descendants(node)
             .cast_all<nodes::element*>()
             .filter([node, classes](nodes::element* descendant_element) {
-                return node->owner_document->m_mode == "quirks"
-                        ? descendant_element->class_list->any_of(&ext::vector<ext::string>::contains)
-                        : descendant_element->class_list->transform(&ext::string::new_lowercase).any_of(&ext::vector<ext::string>::contains);});
+                ext::vector<ext::string> class_list = *descendant_element->class_list;
+                if (node->owner_document->m_mode == "quirks")
+                    class_list.for_each([](ext::string& string) {string.to_lowercase();});
+
+                return descendant_element->class_list->any_of([descendant_element](ext::cstring& class_) {
+                    return descendant_element->class_list->contains(class_);
+                });
+            });
 }
 
 

@@ -104,7 +104,7 @@ public properties:
     ext::dom_property<ext::string> id{true};
     ext::dom_property<shadow_root*> shadow_root_node;
     ext::dom_property<ext::vector<attr*>*> attributes;
-    ext::dom_property<ext::vector<ext::string>> class_list;
+    ext::dom_property<ext::vector<ext::string>*> class_list;
 
     // cssom-view
     ext::dom_property<double> scroll_top;
