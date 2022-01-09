@@ -13,7 +13,7 @@ struct ext::infinity {
 
     operator T() const {return std::numeric_limits<T>::infinity() * (m_positive ? 1 : -1);}
     ext::infinity<T> operator -() const {return infinity<T>{.m_positive = not m_positive};}
-    ext::infinity<T> operator +() const {return infinity<T>{.m_positive = true};}
+    ext::infinity<T> operator +() const {return infinity<T>{.m_positive = m_positive};}
 
 private:
     bool m_positive = true;

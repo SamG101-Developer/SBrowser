@@ -11,7 +11,8 @@ ext::vector<dom::nodes::element*>
 dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(
         ext::cstring& qualified_name) {
 
-    return helpers::node_internals::list_of_elements_with_qualified_name(reinterpret_cast<T*>(this), qualified_name);
+    T* base = reinterpret_cast<T*>(this);
+    return helpers::node_internals::list_of_elements_with_qualified_name(base, qualified_name);
 }
 
 
@@ -21,7 +22,8 @@ dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name) {
 
-    return helpers::node_internals::list_of_elements_with_namespace_and_local_name(reinterpret_cast<T*>(this), namespace_, local_name);
+    T* base = reinterpret_cast<T*>(this);
+    return helpers::node_internals::list_of_elements_with_namespace_and_local_name(base, namespace_, local_name);
 }
 
 
@@ -29,8 +31,9 @@ template <typename T>
 ext::vector<dom::nodes::element*>
 dom::mixins::document_or_element_node<T>::get_elements_by_class_name(
         ext::cstring& class_names) {
-    
-    return helpers::node_internals::list_of_elements_with_class_names(reinterpret_cast<T*>(this), class_names);
+
+    T* base = reinterpret_cast<T*>(this);
+    return helpers::node_internals::list_of_elements_with_class_names(base, class_names);
 }
 
 

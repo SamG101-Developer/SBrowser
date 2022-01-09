@@ -12,7 +12,7 @@
 
 unsigned short
 dom::helpers::traversal::filter(
-        nodes::node* node,
+        const nodes::node* node,
         iterators::abstract_iterator* iterator) {
 
     exceptions::throw_v8_exception(
@@ -36,7 +36,7 @@ dom::helpers::traversal::filter(
 dom::nodes::node*
 dom::helpers::traversal::traverse(
         iterators::node_iterator* iterator,
-        traversal_direction direction) {
+        const traversal_direction direction) {
 
     nodes::node* node = iterator->reference_node;
     bool before_node = iterator->pointer_before_reference_node;
@@ -45,7 +45,7 @@ dom::helpers::traversal::traverse(
     while (result != iterators::node_filter::FILTER_ACCEPT) {
         if (direction == traversal_direction::NEXT) {
             node = not before_node
-                    ? iterator->iterator_collection.first_match([node](auto* following_node) {return trees::is_following(node, following_node);})
+                    ? iterator->iterator_collection.first_match([node](nodes::node* following_node) {return trees::is_following(node, following_node);})
                     : node;
 
             if (before_node) return nullptr;
@@ -53,7 +53,7 @@ dom::helpers::traversal::traverse(
         }
         else if (direction == traversal_direction::PREVIOUS) {
             node = before_node
-                    ? iterator->iterator_collection.last_match([node](auto* preceding_node) {return trees::is_preceding(node, preceding_node);})
+                    ? iterator->iterator_collection.last_match([node](nodes::node* preceding_node) {return trees::is_preceding(node, preceding_node);})
                     : node;
 
             if (not before_node) return nullptr;
@@ -72,7 +72,7 @@ dom::helpers::traversal::traverse(
 dom::nodes::node*
 dom::helpers::traversal::traverse_children(
         iterators::tree_walker* iterator,
-        traversal_child type) {
+        const traversal_child type) {
 
     bool continue_traversing = true;
     nodes::node* node = type == FIRST_CHILD
@@ -118,7 +118,7 @@ dom::helpers::traversal::traverse_children(
 dom::nodes::node*
 dom::helpers::traversal::traverse_siblings(
         iterators::tree_walker* iterator,
-        traversal_sibling type) {
+        const traversal_sibling type) {
 
     nodes::node* node = iterator->current_node;
     if (node == iterator->root)

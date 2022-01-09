@@ -57,7 +57,7 @@ dom::events::event::prevent_default() {
 
 
 ext::vector<dom::nodes::event_target*>
-dom::events::event::composed_path() {
+dom::events::event::composed_path() const {
 
     ext::vector<nodes::event_target*> composed_path_vector{};
     ext::vector<internal::event_path_struct*> path_vector{};

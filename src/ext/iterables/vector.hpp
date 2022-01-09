@@ -2,7 +2,6 @@
 #ifndef SBROWSER_VECTOR_HPP
 #define SBROWSER_VECTOR_HPP
 
-#include <deque>
 #include <string>
 
 #include <ext/iterables/iterable.hpp>
@@ -57,21 +56,21 @@ public: constructors
 
 public: methods
     // element access
-    inline T& item_before(const T& item) {
+    inline T& item_before(const T& item) const {
         return this->at((this->find(item) - 1) % this->length());
     }
 
-    inline T& item_after(const T& item) {
+    inline T& item_after(const T& item) const {
         return this->at((this->find(item) + 1) % this->length());
     }
 
     template <typename function>
-    inline T& first_match(function&& func) {
+    inline T& first_match(function&& func) const {
         return filter(func).front();
     }
 
     template <typename function>
-    inline T& last_match(function&& func) {
+    inline T& last_match(function&& func) const {
         return filter(func).back();
     }
 

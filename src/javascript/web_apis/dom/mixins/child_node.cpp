@@ -31,7 +31,7 @@ dom::mixins::child_node<T>::before(
         helpers::mutation_algorithms::pre_insert(node, parent, viable_previous_sibling);
     }
 
-    ce_reactions(&dom::mixins::child_node<T>::before);
+    ce_reactions(&child_node<T>::before);
 }
 
 
@@ -53,7 +53,7 @@ dom::mixins::child_node<T>::after(
         helpers::mutation_algorithms::pre_insert(node, parent, viable_next_sibling);
     }
 
-    ce_reactions(&dom::mixins::child_node<T>::after);
+    ce_reactions(&child_node<T>::after);
 }
 
 
@@ -76,7 +76,7 @@ dom::mixins::child_node<T>::replace_with(
                 : helpers::mutation_algorithms::pre_insert(node, parent, viable_next_sibling);
     }
 
-    ce_reactions(&dom::mixins::child_node<T>::replace_with);
+    ce_reactions(&child_node<T>::replace_with);
 }
 
 
@@ -89,7 +89,7 @@ dom::mixins::child_node<T>::remove() {
     if (base->parent)
         helpers::mutation_algorithms::remove(base);
 
-    ce_reactions(&dom::mixins::child_node<T>::remove);
+    ce_reactions(&child_node<T>::remove);
 }
 
 

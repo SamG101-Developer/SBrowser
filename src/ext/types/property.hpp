@@ -7,8 +7,6 @@
 #include <ext/iterables/vector.hpp>
 #include <ext/types/any.hpp>
 
-#define readonly_setter [](T) {}
-
 
 namespace ext {
     template <typename T> class property;
@@ -142,7 +140,7 @@ public:
 
 public:
     std::function<void __fastcall ()> del;
-    std::function<T& __fastcall ()> get;
+    std::function<T __fastcall ()> get;
     std::function<void __fastcall (T)> set;
 
 private:

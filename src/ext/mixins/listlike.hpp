@@ -16,11 +16,10 @@ public:
             : m_linked_list(linked_list) {
 
         length.get = std::bind(&listlike<T>::get_length, this);
-        length.set = readonly_setter;
     }
 
     virtual T operator[] (size_t index) {return m_linked_list->at(index);}
-    virtual T operator[] (ext::string index) {return nullptr;}
+    virtual T operator[] (ext::cstring& index) {return nullptr;}
 
     ext::property<size_t> length;
 

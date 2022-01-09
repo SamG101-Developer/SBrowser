@@ -29,7 +29,7 @@ public: static_constants
     static const unsigned long SHOW_DOCUMENT_FRAGMENT = 0x400;
 
 public: methods
-    unsigned short accept_node(nodes::node* node) {return 0x0; /* TODO : Find the impl or remove for legacy? */};
+    unsigned short accept_node(nodes::node* node) const {return 0x0; /* TODO : Find the impl or remove for legacy? */};
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

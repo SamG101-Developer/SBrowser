@@ -49,7 +49,8 @@ public: methods
     }
 
     // modifiers
-    template <typename U> inline map<K, U> cast_all() requires std::is_same_v<V, std::any> {
+    template <typename U>
+    inline map<K, U> cast_all() requires std::is_same_v<V, std::any> {
         map<K, U> copy;
         for (const auto& [key, value]: *this)
             copy.at(key) = value;

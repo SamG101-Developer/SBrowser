@@ -41,7 +41,7 @@ public: methods
     void stop_propagation();
     void stop_immediate_propagation();
     void prevent_default();
-    ext::vector<nodes::event_target*> composed_path();
+    ext::vector<nodes::event_target*> composed_path() const;
 
 public: properties
     ext::dom_property<ext::string> type;

@@ -12,7 +12,7 @@ dom::iterators::tree_walker::tree_walker() = default;
 dom::nodes::node*
 dom::iterators::tree_walker::parent_node() {
     current_node = helpers::trees::ancestors(current_node)
-            .filter([](auto* node) {return helpers::traversal::filter(node, this) == node_filter::FILTER_ACCEPT;})
+            .filter([this](auto* node) {return helpers::traversal::filter(node, this) == node_filter::FILTER_ACCEPT;})
             .front();
 
     return current_node;
