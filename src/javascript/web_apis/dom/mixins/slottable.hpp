@@ -27,7 +27,7 @@ private: internal_properties
     html::elements::html_slot_element* m_manual_slot_assignment;
 
 private: accessors
-    html::elements::html_slot_element* get_assigned_slot();
+    html::elements::html_slot_element* get_assigned_slot() const;
 };
 
 

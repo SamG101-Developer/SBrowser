@@ -17,14 +17,32 @@ dom::nodes::attr::attr() : node() {
 }
 
 
-ext::string dom::nodes::attr::get_node_value() const {return value;}
+ext::string dom::nodes::attr::get_node_value() const {
 
-ext::string dom::nodes::attr::get_text_content() const {return value;}
+    return value;
+}
 
-ext::string dom::nodes::attr::get_m_qualified_name() const {return ext::vector<ext::string>{prefix, ":", local_name}.join().c_str();}
 
-void dom::nodes::attr::set_node_value(ext::cstring& val) {set_value(val);}
+ext::string dom::nodes::attr::get_text_content() const {
+    return value;
+}
 
-void dom::nodes::attr::set_text_content(ext::cstring& val) {set_value(val);}
 
-void dom::nodes::attr::set_value(ext::cstring& val) {helpers::attributes::set_existing_attribute_value(this, val);}
+ext::string dom::nodes::attr::get_m_qualified_name() const {
+    return ext::vector<ext::string>{prefix, ":", local_name}.join().c_str();
+}
+
+
+void dom::nodes::attr::set_node_value(ext::cstring& val) {
+    set_value(val);
+}
+
+
+void dom::nodes::attr::set_text_content(ext::cstring& val) {
+    set_value(val);
+}
+
+
+void dom::nodes::attr::set_value(ext::cstring& val) {
+    helpers::attributes::set_existing_attribute_value(this, val);
+}

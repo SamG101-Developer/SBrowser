@@ -10,7 +10,7 @@
 
 
 dom::nodes::node*
-dom::helpers::trees::root(nodes::node* node) {
+dom::helpers::trees::root(const nodes::node* node) {
 
     if (not node) return nullptr;
 
@@ -20,7 +20,7 @@ dom::helpers::trees::root(nodes::node* node) {
 
 
 ext::vector<dom::nodes::node*>
-dom::helpers::trees::descendants(nodes::node* node) {
+dom::helpers::trees::descendants(const nodes::node* node) {
 
     return node->child_nodes->empty()
             ? ext::vector<nodes::node*>{}
@@ -29,45 +29,49 @@ dom::helpers::trees::descendants(nodes::node* node) {
 
 
 ext::vector<dom::nodes::node*>
-dom::helpers::trees::ancestors(nodes::node* node) {
+dom::helpers::trees::ancestors(const nodes::node* node) {
 
-    return node->parent
-            ? node->parent
-            : node;
+    ext::vector<nodes::node*> ancestors {};
+    auto* parent = const_cast<nodes::node*>(node);
+
+    while (parent->parent)
+        ancestors.append(parent = node->parent);
+
+    return ancestors;
 }
 
 
-bool dom::helpers::trees::is_descendant(nodes::node* node_a, nodes::node* node_b) {
+bool dom::helpers::trees::is_descendant(const nodes::node* node_a, const nodes::node* node_b) {
     return ancestors(node_a).contains(node_b);
 }
 
 
-bool dom::helpers::trees::is_ancestor(nodes::node* node_a, nodes::node* node_b) {
+bool dom::helpers::trees::is_ancestor(const nodes::node* node_a, const nodes::node* node_b) {
     return ancestors(node_b).contains(node_a);
 }
 
 
-bool dom::helpers::trees::is_sibling(nodes::node* node_a, nodes::node* node_b) {
+bool dom::helpers::trees::is_sibling(const nodes::node* node_a, const nodes::node* node_b) {
     return node_a->parent == node_b->parent;
 }
 
 
-bool dom::helpers::trees::is_preceding(nodes::node* node_a, nodes::node* node_b) {
+bool dom::helpers::trees::is_preceding(const nodes::node* node_a, const nodes::node* node_b) {
     return index(node_a) < index(node_b);
 }
 
 
-bool dom::helpers::trees::is_following(nodes::node* node_a, nodes::node* node_b) {
+bool dom::helpers::trees::is_following(const nodes::node* node_a, const nodes::node* node_b) {
     return index(node_a) > index(node_b);
 }
 
 
-unsigned long dom::helpers::trees::index(nodes::node* node_a) {
+unsigned long dom::helpers::trees::index(const nodes::node* node_a) {
     return descendants(root(node_a)).find(node_a);
 }
 
 
-unsigned long dom::helpers::trees::length(nodes::node* node_a) {
+unsigned long dom::helpers::trees::length(const nodes::node* node_a) {
     if (dynamic_cast<nodes::attr*>(node_a) or dynamic_cast<nodes::document_type*>(node_a))
         return 0;
     else if(auto* character_data = dynamic_cast<nodes::character_data*>(node_a))
@@ -78,7 +82,7 @@ unsigned long dom::helpers::trees::length(nodes::node* node_a) {
 
 template <typename T>
 ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_following(nodes::node* node_a) {
+dom::helpers::trees::all_following(const nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return descendants(node_a)
@@ -89,7 +93,7 @@ dom::helpers::trees::all_following(nodes::node* node_a) {
 
 template <typename T>
 ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_preceding(nodes::node* node_a) {
+dom::helpers::trees::all_preceding(const nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return descendants(node_a)
@@ -100,7 +104,7 @@ dom::helpers::trees::all_preceding(nodes::node* node_a) {
 
 template <typename T>
 ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_following_siblings(nodes::node* node_a) {
+dom::helpers::trees::all_following_siblings(const nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return node_a->parent->child_nodes
@@ -111,7 +115,7 @@ dom::helpers::trees::all_following_siblings(nodes::node* node_a) {
 
 template <typename T>
 ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_preceding_siblings(nodes::node* node_a) {
+dom::helpers::trees::all_preceding_siblings(const nodes::node* node_a) {
 
     const auto index_a = index(node_a);
     return node_a->parent->child_nodes
@@ -120,23 +124,23 @@ dom::helpers::trees::all_preceding_siblings(nodes::node* node_a) {
 }
 
 
-bool dom::helpers::trees::is_element_node(nodes::node* node_a) {
+bool dom::helpers::trees::is_element_node(const nodes::node* node_a) {
     return dynamic_cast<nodes::element*>(node_a) != nullptr;
 }
 
 
-bool dom::helpers::trees::is_text_node(nodes::node* node_a) {
+bool dom::helpers::trees::is_text_node(const nodes::node* node_a) {
     return dynamic_cast<nodes::text*>(node_a) != nullptr;
 }
 
 
-bool dom::helpers::trees::is_document_type_node(nodes::node* node_a) {
+bool dom::helpers::trees::is_document_type_node(const nodes::node* node_a) {
     return dynamic_cast<nodes::document_type*>(node_a) != nullptr;
 }
 
 
 ext::string
-dom::helpers::trees::descendant_text_content(nodes::node* node_a) {
+dom::helpers::trees::descendant_text_content(const nodes::node* node_a) {
 
     return descendants(node_a)
             .template cast_all<nodes::text*>()
@@ -146,7 +150,7 @@ dom::helpers::trees::descendant_text_content(nodes::node* node_a) {
 
 
 ext::string
-dom::helpers::trees::child_text_content(nodes::node* node_a) {
+dom::helpers::trees::child_text_content(const nodes::node* node_a) {
 
     return node_a->child_nodes
             ->template cast_all<nodes::text*>()
@@ -156,13 +160,13 @@ dom::helpers::trees::child_text_content(nodes::node* node_a) {
 
 
 ext::vector<dom::nodes::text*>
-dom::helpers::trees::descendant_text_nodes(nodes::node* node_a) {
+dom::helpers::trees::descendant_text_nodes(const nodes::node* node_a) {
     return descendants(node_a).template cast_all<nodes::text*>();
 }
 
 
 ext::vector<dom::nodes::text*>
-dom::helpers::trees::contiguous_text_nodes(nodes::node* node_a) {
+dom::helpers::trees::contiguous_text_nodes(const nodes::node* node_a) {
 
     ext::vector<nodes::node*> siblings = node_a->parent->child_nodes;
 
@@ -172,15 +176,17 @@ dom::helpers::trees::contiguous_text_nodes(nodes::node* node_a) {
 }
 
 
-bool dom::helpers::trees::is_exclusive_text_node(nodes::node* node_a) {
+bool
+dom::helpers::trees::is_exclusive_text_node(const nodes::node* node_a) {
+
     return not dynamic_cast<nodes::cdata_section*>(node_a) and dynamic_cast<nodes::text*>(node_a);
 }
 
 
 dom::nodes::node*
 dom::helpers::trees::common_ancestor(
-        nodes::node* node_a,
-        nodes::node* node_b) {
+        const nodes::node* node_a,
+        const nodes::node* node_b) {
 
     auto node_a_ancestors = ancestors(node_a);
     auto node_b_ancestors = ancestors(node_b);

@@ -75,8 +75,8 @@ public:
     }
 
     // use pointer operand to access the attributes of the internal value
-    __forceinline T* __fastcall operator->() requires (not std::is_pointer_v<T>) {return &m_value;} //&std::forward<T&>(get());}
-    __forceinline T __fastcall operator->() requires (std::is_pointer_v<T>) {return m_value;}
+    __forceinline T* __fastcall operator->() const requires (not std::is_pointer_v<T>) {return &m_value;} //&std::forward<T&>(get());}
+    __forceinline T __fastcall operator->() const requires (std::is_pointer_v<T>) {return m_value;}
 
     // boolean comparison operators against another value (property will auto-cast into T)
     __forceinline bool __fastcall operator==(const T& other) const {return m_value == other;}

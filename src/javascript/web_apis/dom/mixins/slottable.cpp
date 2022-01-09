@@ -16,9 +16,9 @@ dom::mixins::slottable<T>::slottable() {
 
 template <typename T>
 html::elements::html_slot_element*
-dom::mixins::slottable<T>::get_assigned_slot() {
+dom::mixins::slottable<T>::get_assigned_slot() const {
 
-    return helpers::shadows::find_slot(reinterpret_cast<nodes::node*>(this), true);
+    return helpers::shadows::find_slot((nodes::node*)reinterpret_cast<const nodes::node*>(this), true); // TODO : messy
 }
 
 

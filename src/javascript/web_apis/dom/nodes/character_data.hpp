@@ -19,7 +19,7 @@ public constructors:
     character_data();
 
 public methods:
-    ext::string substring_data(unsigned long offset, unsigned long count);
+    ext::string substring_data(unsigned long offset, unsigned long count) const;
     void append_data(ext::cstring& new_data);
     void insert_data(unsigned long offset, ext::cstring& new_data);
     void delete_data(unsigned long offset, unsigned long count);

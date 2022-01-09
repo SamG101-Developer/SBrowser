@@ -6,13 +6,15 @@
 #include <ext/macros/decorators.hpp>
 #include <ext/types/property.hpp>
 
+#include <dom_object.hpp>
+
 namespace dom {
     namespace mutations {class mutation_record;}
     namespace nodes {class node;}
 }
 
 
-class dom::mutations::mutation_record {
+class dom::mutations::mutation_record : public virtual dom_object {
 public: constructors
     mutation_record();
 

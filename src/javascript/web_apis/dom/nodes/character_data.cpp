@@ -16,7 +16,7 @@ dom::nodes::character_data::character_data()
 ext::string
 dom::nodes::character_data::substring_data(
         unsigned long offset,
-        unsigned long count) {
+        unsigned long count) const{
 
     return helpers::texts::substring_data(this, offset, count);
 }

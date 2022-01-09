@@ -66,6 +66,7 @@ dom::mixins::child_node<T>::replace_with(
     T* base = reinterpret_cast<T*>(this);
 
     if (nodes::node* parent = base->parent) {
+
         nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_next_sibling = helpers::trees::all_following_siblings(this)
                 .filter([nodes = ext::vector{nodes...}](auto* node) {return not nodes.contains(node);})

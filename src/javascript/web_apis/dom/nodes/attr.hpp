@@ -23,7 +23,7 @@ public properties:
     ext::dom_property<element*> owner_element;
 
 protected internal_properties:
-    ext::dom_property<ext::string> m_qualified_name;
+    ext::property<ext::string> m_qualified_name;
 
 private accessors:
     inline ext::string get_node_value() const override;

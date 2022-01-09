@@ -107,7 +107,7 @@ dom::helpers::texts::split(
 
 ext::string
 dom::helpers::texts::substring_data(
-        nodes::character_data* text_node,
+        const nodes::character_data* text_node,
         unsigned long offset,
         unsigned long count) {
 
