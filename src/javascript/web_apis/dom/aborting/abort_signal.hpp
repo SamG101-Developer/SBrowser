@@ -22,7 +22,7 @@ friends
     friend class helpers::signal_aborting;
 
 aliases
-    using abort_signal_callback  = std::function<void()>;
+    using abort_signal_callback = std::function<void()>;
     using abort_signal_callbacks = ext::vector<abort_signal_callback>;
 
 public: constructors
@@ -30,7 +30,7 @@ public: constructors
 
 public: methods
     static abort_signal abort(ext::any reason = "");
-    void throw_if_aborted();
+    void throw_if_aborted() const;
 
 public properties:
     ext::dom_property<bool> aborted;

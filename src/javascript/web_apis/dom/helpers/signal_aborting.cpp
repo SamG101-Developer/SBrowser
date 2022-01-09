@@ -13,7 +13,7 @@ dom::helpers::signal_aborting::signal_abort(
 
     signal->aborted = true;
     signal->reason = reason;
-    signal->m_abort_algorithms.for_each([](auto& algorithm) {algorithm();});
+    signal->m_abort_algorithms.call_all();
     signal->m_abort_algorithms.clear();
 
     event_dispatching::fire_event<>("Abort", signal);
@@ -32,5 +32,5 @@ dom::helpers::signal_aborting::follow_signal(
         signal_abort(following_signal, parent_signal->reason);
 
     else
-        parent_signal->m_abort_algorithms.append([following_signal, parent_signal]() {signal_abort(following_signal, parent_signal->reason);});
+        parent_signal->m_abort_algorithms.append([&following_signal, &parent_signal]() {signal_abort(following_signal, parent_signal->reason);});
 }

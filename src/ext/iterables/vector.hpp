@@ -65,11 +65,13 @@ public: methods
         return this->at((this->find(item) + 1) % this->length());
     }
 
-    template <typename function> inline T& first_match(function&& func) {
+    template <typename function>
+    inline T& first_match(function&& func) {
         return filter(func).front();
     }
 
-    template <typename function> inline T& last_match(function&& func) {
+    template <typename function>
+    inline T& last_match(function&& func) {
         return filter(func).back();
     }
 
@@ -115,39 +117,46 @@ public: methods
     }
 
     // algorithms
-    template <typename function> inline bool all_of(function&& func) const {
+    template <typename function>
+    inline bool all_of(function&& func) const {
         bool flag = true;
         for_each([&flag, func](const T& item) -> void {flag &= func(T{item});});
         return flag;
     }
 
-    template <typename function> inline bool any_of(function&& func) const {
+    template <typename function>
+    inline bool any_of(function&& func) const {
         bool flag = false;
         for_each([&flag, func](const T& item) -> void {flag |= func(item); if (flag) return;});
         return flag;
     }
 
-    template <typename function> inline vector<T>& for_each(function&& func) {
+    template <typename function>
+    inline vector<T>& for_each(function&& func) {
         for (T item: this->m_iterable) func(item);
         return *this;
     }
 
-    template <typename function> inline cvector<T>& for_each(function&& func) const {
+    template <typename function>
+    inline cvector<T>& for_each(function&& func) const {
         for (const T item: this->m_iterable) func(item);
         return *this;
     }
 
-    template <typename function> inline vector<T> filter(function&& func) const {
+    template <typename function>
+    inline vector<T> filter(function&& func) const {
         return vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
     }
 
-    template <typename U=T, typename function> inline vector<U> transform(function&& func) const {
+    template <typename U=T, typename function>
+    inline vector<U> transform(function&& func) const {
         vector<U> copy{*this};
         std::transform(this->begin(), this->end(), copy.begin(), func);
         return copy;
     }
 
-    template <typename U> inline vector<U> cast_all() {
+    template <typename U>
+    inline vector<U> cast_all() {
         vector<U> copy;
         copy = std::is_pointer_v<T>
                 ? transform<U>([](const T& item) -> U {return dynamic_cast<U>(item);})
@@ -168,6 +177,10 @@ public: methods
     }
 
     inline vector<T>& flatten() {/* TODO */}
+
+    inline void call_all() requires (std::is_invocable_v<T>) {
+        for_each([](const T& item) -> void {item();});
+    }
 
 public: operators
     inline ext::vector<T> operator*(size_t multiplier) const {

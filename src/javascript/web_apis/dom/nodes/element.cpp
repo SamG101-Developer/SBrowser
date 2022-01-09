@@ -339,9 +339,6 @@ dom::nodes::element::get_bounding_client_rect() {
 }
 
 
-QWidget* dom::nodes::element::render() {return qobject_cast<QWidget*>(m_rendered_widget);}
-
-
 ext::string dom::nodes::element::get_text_content() const {return helpers::trees::descendant_text_content(this);}
 
 ext::string dom::nodes::element::get_tag_name() const {return get_m_html_qualified_uppercase_name();}
@@ -359,3 +356,81 @@ void dom::nodes::element::set_id(ext::string val) {
 ext::string dom::nodes::element::get_m_qualified_name() const {return namespace_uri + ":" + local_name;}
 
 ext::string dom::nodes::element::get_m_html_qualified_uppercase_name() const {return helpers::node_internals::is_html(this) ? get_m_qualified_name().new_uppercase() : get_m_qualified_name()}
+
+
+QWidget* dom::nodes::element::render() {
+    return qobject_cast<QWidget*>(m_rendered_widget);
+}
+
+
+ext::any dom::nodes::element::v8(v8::Isolate* isolate) const {
+    return v8pp::class_<element>{isolate}
+            .inherit<node>()
+            .inherit<dom::mixins::child_node<element>>()
+            .inherit<dom::mixins::document_or_element_node<element>>()
+            .inherit<dom::mixins::non_document_type_child_node<element>>()
+            .inherit<dom::mixins::slottable<element>>()
+
+            .function("hasAttributes", &element::has_attributes)
+            .function("hasAttribute", &element::has_attribute)
+            .function("hasAttributeNS", &element::has_attribute_ns)
+            .function("getAttributeNames", &element::get_attribute_names)
+
+            .function("getAttribute", &element::get_attribute)
+            .function("getAttributeNS", &element::get_attribute_ns)
+            .function("getAttributeNode", &element::get_attribute_node)
+            .function("hasAttributeNodeNS", &element::get_attribute_node_ns)
+
+            .function("setAttribute", &element::set_attribute)
+            .function("setAttributeNS", &element::set_attribute_ns)
+            .function("setAttributeNode", &element::set_attribute_node)
+            .function("setAttributeNodeNS", &element::set_attribute_node_ns)
+
+            .function("removeAttribute", &element::remove_attribute)
+            .function("removeAttributeNS", &element::remove_attribute_ns)
+            .function("removeAttributeNode", &element::remove_attribute_node)
+            .function("removeAttributeNodeNS", &element::remove_attribute_node_ns)
+
+            .function("toggleAttribute", &element::toggle_attribute)
+            .function("toggleAttributeNS", &element::toggle_attribute_ns)
+            .function("toggleAttributeNode", &element::toggle_attribute_node)
+            .function("toggleAttributeNodeNS", &element::toggle_attribute_node_ns)
+
+            .function("attachShadow", &element::attach_shadow)
+            .function("closest", &element::closest)
+            .function("matches", &element::matches)
+
+            .function("getSpatialNavigationContainer", &element::attach_shadow)
+            .function("spatialNavigationSearch", &element::spatial_navigation_search)
+            .function("focusableAreas", &element::focusable_areas)
+
+            .function("pseudo", &element::attach_shadow)
+
+            .function("getClientRects", &element::get_client_rects)
+            .function("getBoundingClientRect", &element::get_bounding_client_rect)
+            .function("scrollIntoView", &element::scroll_into_view)
+
+            .var("namespaceURI", &element::namespace_uri, true)
+            .var("prefix", &element::prefix, true)
+            .var("localName", &element::local_name, true)
+            .var("tagName", &element::tag_name, true)
+            .var("className", &element::class_name)
+            .var("slot", &element::slot)
+            .var("id", &element::id)
+            .var("shadowRoot", &element::shadow_root_node, true)
+            .var("attributes", &element::attributes, true)
+            .var("classList", &element::class_list, true)
+
+            .var("scrollTop", &element::scroll_top, true)
+            .var("scrollLeft", &element::scroll_left, true)
+            .var("scrollWidth", &element::scroll_width, true)
+            .var("scrollHeight", &element::scroll_height, true)
+            .var("clientTop", &element::client_top, true)
+            .var("clientLeft", &element::client_left, true)
+            .var("clientWidth", &element::client_width, true)
+            .var("clientHeight", &element::client_height, true)
+
+            .var("parts", &element::parts)
+
+            .auto_wrap_objects();
+}

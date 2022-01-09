@@ -45,11 +45,11 @@ friends
     friend struct helpers::custom_elements;
     friend struct helpers::node_internals;
 
-public constructors:
+public: constructors
     element();
     ~element() override;
 
-public methods:
+public: methods
     // dom
     bool has_attributes() const;
     bool has_attribute(ext::cstring& name) const;
@@ -80,6 +80,7 @@ public methods:
     element* closest(ext::cstring& selectors);
     bool matches(ext::cstring& selectors);
 
+public: methods
     // css-spatial-navigation
     node* get_spatial_navigation_container();
     node* spatial_navigation_search(ext::cstring& direction, ext::cstring_any_map& options = {});
@@ -93,7 +94,7 @@ public methods:
     geometry::shapes::dom_rect get_bounding_client_rect();
     void scroll_into_view(ext::cstring_any_map& options = {});
 
-public properties:
+public: properties
     // dom
     ext::dom_property<ext::string> namespace_uri;
     ext::dom_property<ext::string> prefix;
@@ -119,7 +120,7 @@ public properties:
     // cs-shadow-parts
     ext::dom_property<ext::vector<ext::string>*> parts;
 
-protected internal_properties:
+protected: internal_properties
     ext::property<ext::string> m_qualified_name;
     ext::property<ext::string> m_html_uppercase_qualified_name;
 
@@ -128,10 +129,7 @@ protected internal_properties:
     internal::custom_element_definition* m_custom_element_definition;
     std::queue<std::function<void(element*)>> m_custom_element_reaction_queue;
 
-public internal_methods:
-    QWidget* render() override;
-
-private accessors:
+private: accessors
     // dom
     inline ext::string get_text_content() const override;
     inline ext::string get_tag_name() const;
@@ -156,7 +154,11 @@ private accessors:
     inline ext::string get_m_qualified_name() const;
     inline ext::string get_m_html_qualified_uppercase_name() const;
 
-private internal_properties:
+public: internal_methods
+    QWidget* render() override;
+    ext::any v8(v8::Isolate *isolate) const override;
+
+private: internal_properties
     ext::vector<ext::string> m_local_names = {
             "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header",
             "main", "nav", "p", "section", "span"

@@ -8,6 +8,7 @@
 
 namespace javascript::realms {
     class realm;
+
     realm relevant_agent();
     realm surrounding_agent();
     realm current_agent();
@@ -24,13 +25,15 @@ public:
     template <typename T>
     inline T
     get(ext::string&& attribute_name) const {
-        return v8pp::convert<T>::from_v8(v8::Isolate::GetCurrent(), m_context->Global()->Get(m_context, attribute_name).ToLocalChecked());
+        auto v8_object = m_context->Global()->Get(m_context, attribute_name).ToLocalChecked();
+        return v8pp::convert<T>::from_v8(v8::Isolate::GetCurrent(), v8_object);
     };
 
     template <typename T>
     inline void
     set(ext::string&& attribute_name, T new_value) {
-        m_context->Global()->Set(m_context, attribute_name, v8pp::convert<T>::to_v8(v8::Isolate::GetCurrent(), new_value));
+        auto v8_value = v8pp::convert<T>::to_v8(v8::Isolate::GetCurrent(), new_value);
+        m_context->Global()->Set(m_context, attribute_name, v8_value);
     };
 
 private:

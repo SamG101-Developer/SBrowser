@@ -13,15 +13,16 @@ namespace dom::aborting {
 }
 
 
-class dom::aborting::abort_controller final : virtual public dom_object {
-public constructors:
+class dom::aborting::abort_controller final
+        : virtual public dom_object {
+
+public: constructors
     abort_controller();
-    ~abort_controller() override;
 
-public methods:
-    void abort(ext::cany& reason);
+public: methods
+    void abort(ext::cany& reason) const;
 
-public properties:
+public: properties
     ext::dom_property<abort_signal*> signal;
 
 public: internal_methods

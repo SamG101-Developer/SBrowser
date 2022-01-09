@@ -122,7 +122,9 @@ dom::nodes::window_proxy::set(
 }
 
 
-v8::Local<v8::Boolean> dom::nodes::window_proxy::delete_(v8::Local<v8::Number> P) {
+v8::Local<v8::Boolean>
+dom::nodes::window_proxy::delete_(v8::Local<v8::Number> P) {
+
     v8::Local<v8::Object> W = v8pp::convert<window*>::to_v8(v8::Isolate::GetCurrent(), s_window);
 
     if (not javascript::helpers::is_platform_object_same_origin)
@@ -136,7 +138,9 @@ v8::Local<v8::Boolean> dom::nodes::window_proxy::delete_(v8::Local<v8::Number> P
 }
 
 
-v8::Local<v8::Array> dom::nodes::window_proxy::own_property_keys() {
+v8::Local<v8::Array>
+dom::nodes::window_proxy::own_property_keys() {
+
     v8::Local<v8::Object> W = v8pp::convert<window*>::to_v8(v8::Isolate::GetCurrent(), s_window);
     ext::vector<ext::string> keys;
 
@@ -148,4 +152,24 @@ v8::Local<v8::Array> dom::nodes::window_proxy::own_property_keys() {
     return not javascript::helpers::is_platform_object_same_origin(W)
             ? v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), keys.join())
             : v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), keys.join() + v8pp::convert<ext::vector<ext::string>>::from_v8(javascript::helpers::cross_origin_own_property_keys(W)));
+}
+
+
+ext::any
+dom::nodes::window_proxy::v8(v8::Isolate* isolate) const {
+
+    return v8pp::class_<window_proxy>{isolate}
+            .function("[[GetPrototypeOf]]", &dom::nodes::window_proxy::get_prototype_of)
+            .function("[[SetPrototypeOf]]", &dom::nodes::window_proxy::set_prototype_of)
+            .function("[[IsExtensiblePrototypeOf]]", &dom::nodes::window_proxy::is_extensible_prototype_of)
+            .function("[[PreventExtensions]]", &dom::nodes::window_proxy::prevent_extensions)
+            .function("[[GetOwnProperty]]", &dom::nodes::window_proxy::get_own_property)
+            .function("[[DefineProperty]]", &dom::nodes::window_proxy::define_property)
+            .function("[[Get]]", &dom::nodes::window_proxy::get)
+            .function("[[Set]]", &dom::nodes::window_proxy::set)
+            .function("[[Delete]]", &dom::nodes::window_proxy::delete_)
+            .function("[[OwnPropertyKeys]]", &dom::nodes::window_proxy::own_property_keys)
+
+            .var("[[Window]]", &dom::nodes::window_proxy::s_window)
+            .auto_wrap_objects();
 }

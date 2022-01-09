@@ -54,22 +54,22 @@ public methods:
     ext::string prompt(ext::cstring& message="", ext::cstring& default_ = "");
     void post_message(ext::string message, ext::cstring_any_map& options = {});
 
-public methods:
+public: methods
     new_obj css::cssom::other::css_style_declaration* get_computed_style(element* elem, ext::cstring& pseudo_element);
 
 
-public methods:
+public: methods
     // spatial navigation
     void navigate(ext::cstring& direction);
 
-public methods:
+public: methods
     // cssom-view browsing context
     void move_to(long x, long y);
     void move_by(long x, long y);
     void resize_to(long width, long height);
     void resize_by(long width, long height);
 
-public properties:
+public: properties
     // current browsing context
     ext::dom_property<ext::string> name;
     ext::dom_property<ext::string> status;
@@ -103,7 +103,7 @@ public properties:
     ext::dom_property<bool> origin_agent_cluster;
     ext::dom_property<html::other::navigator*> navigator;
 
-public properties:
+public: properties
     // viewport
     ext::dom_property<long> inner_width;
     ext::dom_property<long> inner_height;
@@ -121,11 +121,14 @@ public properties:
     ext::dom_property<long> outer_height;
     ext::dom_property<double> device_pixel_width;
 
-public properties:
+public: properties
     // screens
     ext::dom_property<css::cssom_view::other::screen*> screen;
 
-private accessors:
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
+
+private: accessors
     long get_inner_width();
     long get_inner_height();
     long get_outer_width();

@@ -66,7 +66,7 @@ public:
     property(const property<T>& other) = default;
 
     // deleter, getter and setter calling at the correct places
-    virtual ~property() {del();}
+    virtual ~property() {del(); if constexpr (std::is_pointer_v<T>) delete m_value;}
     __forceinline virtual __fastcall operator T() const {return get();}
     __forceinline virtual property<T>& __fastcall operator=(const T& val) {set(val); return *this;}
 
@@ -133,18 +133,16 @@ public:
     __forceinline property<T>& __fastcall operator=(const property<T>& other) {m_value = other.m_value; return *this;}
     __forceinline property<T>& __fastcall operator=(property<T>&& other) noexcept {m_value = other.m_value; return *this;}
 
-    __forceinline std::remove_reference_t<T> __fastcall operator*() const {return *m_value;}
-
     __forceinline bool __fastcall operator[] (const T index) const {return m_value[index];}
     __forceinline bool __fastcall operator() () const {return m_value();}
 
     __forceinline std::remove_pointer_t<T> __fastcall operator*() const requires (std::is_pointer_v<T>) {return *m_value;}
 
-    __forceinline operator bool() requires (not std::is_same_v<T, bool>) {return (bool)m_value;}
+    __forceinline operator bool() const requires (not std::is_same_v<T, bool>) {return (bool)m_value;}
 
 public:
-    std::function<void __fastcall ( )> del;
-    std::function<T    __fastcall ( )> get;
+    std::function<void __fastcall ()> del;
+    std::function<T& __fastcall ()> get;
     std::function<void __fastcall (T)> set;
 
 private:

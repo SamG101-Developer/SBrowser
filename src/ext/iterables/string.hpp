@@ -84,17 +84,18 @@ public: constructors
 public: methods
     // modifiers
     inline string& ltrim() {
-        m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(" "));
+        m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(' '));
         return *this;
     }
 
     inline string& rtrim() {
-        m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(" ") + 1, end());
+        m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(' ') + 1, end());
         return *this;
     }
 
     inline string& trim() {
-        ltrim(); rtrim();
+        ltrim();
+        rtrim();
         return *this;
     }
 
@@ -154,6 +155,10 @@ public: methods
     }
 
 public: operators
+    inline operator std::string() const {
+        return m_iterable;
+    }
+
     inline operator QString() const {
         return {m_iterable.c_str()};
     }

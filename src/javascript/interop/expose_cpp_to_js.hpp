@@ -277,76 +277,6 @@ javascript::interop::expose_cpp_to_js::expose(
             .var("systemId", &dom::nodes::document_type::system_id)
             .auto_wrap_objects();
 
-    v8pp::class_<dom::nodes::element> v8_element{isolate};
-    v8_element
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::element>>()
-            .inherit<dom::mixins::document_or_element_node<dom::nodes::element>>()
-            .inherit<dom::mixins::non_document_type_child_node<dom::nodes::element>>()
-            .inherit<dom::mixins::slottable<dom::nodes::element>>()
-
-            .function("hasAttributes", &dom::nodes::element::has_attributes)
-            .function("hasAttribute", &dom::nodes::element::has_attribute)
-            .function("hasAttributeNS", &dom::nodes::element::has_attribute_ns)
-            .function("getAttributeNames", &dom::nodes::element::get_attribute_names)
-            
-            .function("getAttribute", &dom::nodes::element::get_attribute)
-            .function("getAttributeNS", &dom::nodes::element::get_attribute_ns)
-            .function("getAttributeNode", &dom::nodes::element::get_attribute_node)
-            .function("hasAttributeNodeNS", &dom::nodes::element::get_attribute_node_ns)
-
-            .function("setAttribute", &dom::nodes::element::set_attribute)
-            .function("setAttributeNS", &dom::nodes::element::set_attribute_ns)
-            .function("setAttributeNode", &dom::nodes::element::set_attribute_node)
-            .function("setAttributeNodeNS", &dom::nodes::element::set_attribute_node_ns)
-
-            .function("removeAttribute", &dom::nodes::element::remove_attribute)
-            .function("removeAttributeNS", &dom::nodes::element::remove_attribute_ns)
-            .function("removeAttributeNode", &dom::nodes::element::remove_attribute_node)
-            .function("removeAttributeNodeNS", &dom::nodes::element::remove_attribute_node_ns)
-
-            .function("toggleAttribute", &dom::nodes::element::toggle_attribute)
-            .function("toggleAttributeNS", &dom::nodes::element::toggle_attribute_ns)
-            .function("toggleAttributeNode", &dom::nodes::element::toggle_attribute_node)
-            .function("toggleAttributeNodeNS", &dom::nodes::element::toggle_attribute_node_ns)
-
-            .function("attachShadow", &dom::nodes::element::attach_shadow)
-            .function("closest", &dom::nodes::element::closest)
-            .function("matches", &dom::nodes::element::matches)
-
-            .function("getSpatialNavigationContainer", &dom::nodes::element::attach_shadow)
-            .function("spatialNavigationSearch", &dom::nodes::element::spatial_navigation_search)
-            .function("focusableAreas", &dom::nodes::element::focusable_areas)
-
-            .function("pseudo", &dom::nodes::element::attach_shadow)
-
-            .function("getClientRects", &dom::nodes::element::get_client_rects)
-            .function("getBoundingClientRect", &dom::nodes::element::get_bounding_client_rect)
-            .function("scrollIntoView", &dom::nodes::element::scroll_into_view)
-
-            .var("namespaceURI", &dom::nodes::element::namespace_uri, true)
-            .var("prefix", &dom::nodes::element::prefix, true)
-            .var("localName", &dom::nodes::element::local_name, true)
-            .var("tagName", &dom::nodes::element::tag_name, true)
-            .var("className", &dom::nodes::element::class_name)
-            .var("slot", &dom::nodes::element::slot)
-            .var("id", &dom::nodes::element::id)
-            .var("shadowRoot", &dom::nodes::element::shadow_root_node, true)
-            .var("attributes", &dom::nodes::element::attributes, true)
-            .var("classList", &dom::nodes::element::class_list, true)
-
-            .var("scrollTop", &dom::nodes::element::scroll_top, true)
-            .var("scrollLeft", &dom::nodes::element::scroll_left, true)
-            .var("scrollWidth", &dom::nodes::element::scroll_width, true)
-            .var("scrollHeight", &dom::nodes::element::scroll_height, true)
-            .var("clientTop", &dom::nodes::element::client_top, true)
-            .var("clientLeft", &dom::nodes::element::client_left, true)
-            .var("clientWidth", &dom::nodes::element::client_width, true)
-            .var("clientHeight", &dom::nodes::element::client_height, true)
-
-            .var("parts", &dom::nodes::element::parts)
-
-            .auto_wrap_objects();
 
     v8pp::class_<dom::nodes::processing_instruction> v8_processing_instruction{isolate};
     v8_processing_instruction
@@ -376,141 +306,9 @@ javascript::interop::expose_cpp_to_js::expose(
             .var("wholeText", &dom::nodes::text::whole_text, true)
             .auto_wrap_objects();
 
-    v8pp::class_<dom::nodes::window> v8_window{isolate};
-    v8_window
-            .inherit<dom::nodes::event_target>()
-            .inherit<ext::listlike<ext::string>>()
-
-            .function("close", &dom::nodes::window::close)
-            .function("stop", &dom::nodes::window::stop)
-            .function("focus", &dom::nodes::window::focus)
-            .function("open", &dom::nodes::window::open)
-
-            .function("print", &dom::nodes::window::print)
-            .function("alert", &dom::nodes::window::alert)
-            .function("confirm", &dom::nodes::window::confirm)
-            .function("prompt", &dom::nodes::window::prompt)
-            .function("postMessage", &dom::nodes::window::post_message)
-
-            .function("move_to", &dom::nodes::window::move_to)
-            .function("move_by", &dom::nodes::window::move_by)
-            .function("resize_to", &dom::nodes::window::resize_to)
-            .function("resize_by", &dom::nodes::window::resize_by)
-
-            .function("getComputedStyle", &dom::nodes::window::get_computed_style)
-
-            .function("navigate", &dom::nodes::window::navigate)
-
-            .var("name", &dom::nodes::window::name)
-            .var("status", &dom::nodes::window::status)
-            .var("closed", &dom::nodes::window::closed)
-
-            .var("location", &dom::nodes::window::location)
-            .var("history", &dom::nodes::window::history)
-            .var("customElements", &dom::nodes::window::custom_elements)
-
-            .var("window", &dom::nodes::window::window_)
-            .var("self", &dom::nodes::window::self)
-            .var("ownerDocument", &dom::nodes::window::document)
-
-            .var("location_bar", &dom::nodes::window::location_bar)
-            .var("menu_bar", &dom::nodes::window::menu_bar)
-            .var("personal_bar", &dom::nodes::window::personal_bar)
-            .var("scroll_bars", &dom::nodes::window::scroll_bars)
-            .var("status_bar", &dom::nodes::window::status_bar)
-            .var("tool_bar", &dom::nodes::window::tool_bar)
-
-            .var("opener", &dom::nodes::window::opener)
-            .var("length", &dom::nodes::window::length)
-            .var("frameElement", &dom::nodes::window::frame_element)
-            .var("frames", &dom::nodes::window::frames)
-            .var("top", &dom::nodes::window::top)
-            .var("parent", &dom::nodes::window::parent)
-
-            .var("originAgentCluster", &dom::nodes::window::origin_agent_cluster)
-            .var("navigator", &dom::nodes::window::navigator)
-
-            .var("innerWidth", &dom::nodes::window::inner_width)
-            .var("innerHeight", &dom::nodes::window::inner_height)
-
-            .var("scrollX", &dom::nodes::window::scroll_x)
-            .var("scrollY", &dom::nodes::window::scroll_y)
-            .var("pageXOffset", &dom::nodes::window::page_x_offset)
-            .var("pageYOffset", &dom::nodes::window::page_y_offset)
-
-            .var("screenX", &dom::nodes::window::screen_x)
-            .var("screenY", &dom::nodes::window::screen_y)
-            .var("outerWidth", &dom::nodes::window::outer_width)
-            .var("outerHeight", &dom::nodes::window::outer_height)
-            .var("devicePixelWidth", &dom::nodes::window::device_pixel_width)
-
-            .var("screen", &dom::nodes::window::screen)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::window_proxy> v8_window_proxy{isolate};
-    v8_window_proxy
-            .function("[[GetPrototypeOf]]", &dom::nodes::window_proxy::get_prototype_of)
-            .function("[[SetPrototypeOf]]", &dom::nodes::window_proxy::set_prototype_of)
-            .function("[[IsExtensiblePrototypeOf]]", &dom::nodes::window_proxy::is_extensible_prototype_of)
-            .function("[[PreventExtensions]]", &dom::nodes::window_proxy::prevent_extensions)
-            .function("[[GetOwnProperty]]", &dom::nodes::window_proxy::get_own_property)
-            .function("[[DefineProperty]]", &dom::nodes::window_proxy::define_property)
-            .function("[[Get]]", &dom::nodes::window_proxy::get)
-            .function("[[Set]]", &dom::nodes::window_proxy::set)
-            .function("[[Delete]]", &dom::nodes::window_proxy::delete_)
-            .function("[[OwnPropertyKeys]]", &dom::nodes::window_proxy::own_property_keys)
-
-            .var("[[Window]]", &dom::nodes::window_proxy::s_window)
-            .auto_wrap_objects();
-
     v8pp::class_<dom::nodes::xml_document> v8_xml_document{isolate};
     v8_xml_document
             .inherit<dom::nodes::document>()
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::other::dom_exception> v8_dom_exception{isolate};
-    v8_dom_exception
-            .ctor<ext::cstring&, exception_type>()
-            .var("message", &dom::other::dom_exception::message)
-            .var("type", &dom::other::dom_exception::type)
-
-            .static_("INDEX_SIZE_ERR", exception_type::INDEX_SIZE_ERR)
-            .static_("DOMSTRING_SIZE_ERR", exception_type::DOMSTRING_SIZE_ERR)
-            .static_("HIERARCHY_REQUEST_ERR", exception_type::HIERARCHY_REQUEST_ERR)
-            .static_("WRONG_DOCUMENT_ERR", exception_type::WRONG_DOCUMENT_ERR)
-            .static_("INVALID_CHARACTER_ERR", exception_type::INVALID_CHARACTER_ERR)
-            .static_("NO_DATA_ALLOWED_ERR", exception_type::NO_DATA_ALLOWED_ERR)
-            .static_("NO_MODIFICATION_ALLOWED_ERR", exception_type::NO_MODIFICATION_ALLOWED_ERR)
-            .static_("NOT_FOUND_ERR", exception_type::NOT_FOUND_ERR)
-            .static_("NOT_SUPPORTED_ERR", exception_type::NOT_SUPPORTED_ERR)
-            .static_("INUSE_ATTRIBUTE_ERR", exception_type::INUSE_ATTRIBUTE_ERR)
-            .static_("INVALID_STATE_ERR", exception_type::INVALID_STATE_ERR)
-            .static_("SYNTAX_ERR", exception_type::SYNTAX_ERR)
-            .static_("INVALID_MODIFICATION_ERR", exception_type::INVALID_MODIFICATION_ERR)
-            .static_("NAMESPACE_ERR", exception_type::NAMESPACE_ERR)
-            .static_("INVALID_ACCESS_ERR", exception_type::INVALID_ACCESS_ERR)
-            .static_("VALIDATION_ERR", exception_type::VALIDATION_ERR)
-            .static_("TYPE_MISMATCH_ERR", exception_type::TYPE_MISMATCH_ERR)
-            .static_("SECURITY_ERR", exception_type::SECURITY_ERR)
-            .static_("NETWORK_ERR", exception_type::NETWORK_ERR)
-            .static_("ABORT_ERR", exception_type::ABORT_ERR)
-            .static_("URL_MISMATCH_ERR", exception_type::URL_MISMATCH_ERR)
-            .static_("QUOTA_EXCEEDED_ERR", exception_type::QUOTA_EXCEEDED_ERR)
-            .static_("TIMEOUT_ERR", exception_type::TIMEOUT_ERR)
-            .static_("INVALID_NODE_TYPE_ERR", exception_type::INVALID_NODE_TYPE_ERR)
-            .static_("DATA_CLONE_ERR", exception_type::DATA_CLONE_ERR)
-            .static_("ENCODING_ERR", exception_type::ENCODING_ERR)
-            .static_("NOT_READABLE_ERR", exception_type::NOT_READABLE_ERR)
-            .static_("UNKNOWN_ERR", exception_type::UNKNOWN_ERR)
-            .static_("CONSTRAINT_ERR", exception_type::CONSTRAINT_ERR)
-            .static_("DATA_ERR", exception_type::DATA_ERR)
-            .static_("TRANSACTION_INACTIVE_ERR", exception_type::TRANSACTION_INACTIVE_ERR)
-            .static_("READONLY_ERR", exception_type::READONLY_ERR)
-            .static_("VERSION_ERR", exception_type::VERSION_ERR)
-            .static_("OPERATION_ERR", exception_type::OPERATION_ERR)
-            .static_("NOT_ALLOWED_ERR", exception_type::NOT_ALLOWED_ERR)
-
             .auto_wrap_objects();
 
 
@@ -527,9 +325,13 @@ javascript::interop::expose_cpp_to_js::expose(
 
     auto v8_mutation_observer = object_to_v8<dom::mutations::mutation_observer>(isolate);
 
+    auto v8_element = object_to_v8<dom::nodes::element>(isolate);
     auto v8_event_target = object_to_v8<dom::nodes::event_target>(isolate);
     auto v8_node = object_to_v8<dom::nodes::node>(isolate);
+    auto v8_window_proxy = object_to_v8<dom::nodes::window_proxy>(isolate);
+    auto v8_window = object_to_v8<dom::nodes::window>(isolate);
 
+    auto v8_dom_exception = object_to_v8<dom::other::dom_exception>(isolate);
     auto v8_dom_implementation = object_to_v8<dom::other::dom_implementation>(isolate);
     auto v8_xslt_processor = object_to_v8<dom::other::xslt_processor>(isolate);
 
@@ -567,6 +369,7 @@ javascript::interop::expose_cpp_to_js::expose(
                     .class_("Document", v8_document)
                     .class_("DocumentFragment", v8_document_fragment)
                     .class_("DocumentType", v8_document_type)
+                    .class_("Element", v8_element)
                     .class_("EventTarget", v8_event_target)
                     .class_("Node", v8_node)
                     .class_("ProcessingInstruction", v8_processing_instruction)

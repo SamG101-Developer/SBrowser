@@ -60,6 +60,11 @@ public: methods
         return any_cast<T>(m_value);
     }
 
+public: operators
+    inline operator bool() const {
+        return not empty();
+    }
+
 private: internal_properties
     std::any m_value;
 };

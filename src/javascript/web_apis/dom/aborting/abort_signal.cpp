@@ -12,7 +12,9 @@ dom::aborting::abort_signal
 dom::aborting::abort_signal::abort(
         ext::any reason) {
 
-    reason = not reason.empty() ? reason : ext::any{other::dom_exception{"", ABORT_ERR}};
+    reason = not reason.empty()
+            ? reason
+            : ext::any{other::dom_exception{"", ABORT_ERR}};
 
     abort_signal signal{};
     signal.aborted = true;
@@ -22,12 +24,12 @@ dom::aborting::abort_signal::abort(
 
 
 void
-dom::aborting::abort_signal::throw_if_aborted() {
+dom::aborting::abort_signal::throw_if_aborted() const {
 
-//    helpers::exceptions::throw_v8_exception(
-//            ext::property_any_cast<other::dom_exception>(reason).message,
-//            ABORT_ERR,
-//            [this] {return reason->has_value();});
+    helpers::exceptions::throw_v8_exception(
+            ext::property_any_cast<other::dom_exception>(reason).message,
+            ABORT_ERR,
+            [this] -> bool {return reason;});
 }
 
 
