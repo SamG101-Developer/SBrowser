@@ -72,9 +72,9 @@ unsigned long dom::helpers::trees::index(const nodes::node* node_a) {
 
 
 unsigned long dom::helpers::trees::length(const nodes::node* node_a) {
-    if (dynamic_cast<nodes::attr*>(node_a) or dynamic_cast<nodes::document_type*>(node_a))
+    if (dynamic_cast<const nodes::attr*>(node_a) or dynamic_cast<const nodes::document_type*>(node_a))
         return 0;
-    else if(auto* character_data = dynamic_cast<nodes::character_data*>(node_a))
+    else if(auto* character_data = dynamic_cast<const nodes::character_data*>(node_a))
         return character_data->data->length();
     return node_a->child_nodes->length();
 }
@@ -125,17 +125,17 @@ dom::helpers::trees::all_preceding_siblings(const nodes::node* node_a) {
 
 
 bool dom::helpers::trees::is_element_node(const nodes::node* node_a) {
-    return dynamic_cast<nodes::element*>(node_a) != nullptr;
+    return dynamic_cast<const nodes::element*>(node_a) != nullptr;
 }
 
 
 bool dom::helpers::trees::is_text_node(const nodes::node* node_a) {
-    return dynamic_cast<nodes::text*>(node_a) != nullptr;
+    return dynamic_cast<const nodes::text*>(node_a) != nullptr;
 }
 
 
 bool dom::helpers::trees::is_document_type_node(const nodes::node* node_a) {
-    return dynamic_cast<nodes::document_type*>(node_a) != nullptr;
+    return dynamic_cast<const nodes::document_type*>(node_a) != nullptr;
 }
 
 
