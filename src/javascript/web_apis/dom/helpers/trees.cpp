@@ -15,7 +15,7 @@ dom::helpers::trees::root(const nodes::node* node) {
     if (not node) return nullptr;
 
     while (node->parent) node = node->parent;
-    return node;
+    return const_cast<nodes::node*>(node);
 }
 
 
@@ -42,12 +42,12 @@ dom::helpers::trees::ancestors(const nodes::node* node) {
 
 
 bool dom::helpers::trees::is_descendant(const nodes::node* node_a, const nodes::node* node_b) {
-    return ancestors(node_a).contains(node_b);
+    return ancestors(node_a).contains(const_cast<nodes::node*>(node_b));
 }
 
 
 bool dom::helpers::trees::is_ancestor(const nodes::node* node_a, const nodes::node* node_b) {
-    return ancestors(node_b).contains(node_a);
+    return ancestors(node_b).contains(const_cast<nodes::node*>(node_a));
 }
 
 
@@ -67,7 +67,7 @@ bool dom::helpers::trees::is_following(const nodes::node* node_a, const nodes::n
 
 
 unsigned long dom::helpers::trees::index(const nodes::node* node_a) {
-    return descendants(root(node_a)).find(node_a);
+    return descendants(root(node_a)).find(const_cast<nodes::node*>(node_a));
 }
 
 
@@ -142,20 +142,24 @@ bool dom::helpers::trees::is_document_type_node(const nodes::node* node_a) {
 ext::string
 dom::helpers::trees::descendant_text_content(const nodes::node* node_a) {
 
-    return descendants(node_a)
+    auto text_content = descendants(node_a)
             .template cast_all<nodes::text*>()
-            .template transform<ext::string>([](auto* descendant_text_node) -> ext::string {return descendant_text_node->data;})
+            .template transform<ext::string>([](nodes::text* descendant_text_node) -> ext::string {return descendant_text_node->data;})
             .join();
+
+    return ext::string{text_content.c_str()};
 }
 
 
 ext::string
 dom::helpers::trees::child_text_content(const nodes::node* node_a) {
 
-    return node_a->child_nodes
+    auto text_content = node_a->child_nodes
             ->template cast_all<nodes::text*>()
             .template transform<ext::string>([](auto* child_text_node) -> ext::string {return child_text_node->data;})
             .join();
+
+    return ext::string{text_content.c_str()};
 }
 
 
@@ -171,15 +175,15 @@ dom::helpers::trees::contiguous_text_nodes(const nodes::node* node_a) {
     ext::vector<nodes::node*> siblings = node_a->parent->child_nodes;
 
     return ext::vector<nodes::text*>{}
-            .extend(siblings.slice(siblings.find(node_a), siblings.length()).cast_all<nodes::text*>())
-            .extend(siblings.slice(0, siblings.find(node_a)).cast_all<nodes::text*>().reversed(), 0);
+            .extend(siblings.slice(siblings.find(const_cast<nodes::node*>(node_a)), siblings.length()).cast_all<nodes::text*>())
+            .extend(siblings.slice(0, siblings.find(const_cast<nodes::node*>(node_a))).cast_all<nodes::text*>().reversed(), 0);
 }
 
 
 bool
 dom::helpers::trees::is_exclusive_text_node(const nodes::node* node_a) {
 
-    return not dynamic_cast<nodes::cdata_section*>(node_a) and dynamic_cast<nodes::text*>(node_a);
+    return not dynamic_cast<const nodes::cdata_section*>(node_a) and dynamic_cast<const nodes::text*>(node_a);
 }
 
 

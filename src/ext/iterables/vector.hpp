@@ -175,7 +175,9 @@ public: methods
         return joined;
     }
 
-    inline vector<T>& flatten() {/* TODO */}
+    inline vector<T>& flatten() {
+        /* TODO */
+    }
 
     inline void call_all() requires (std::is_invocable_v<T>) {
         for_each([](const T& item) -> void {item();});
