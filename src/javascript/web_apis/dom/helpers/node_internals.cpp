@@ -189,7 +189,7 @@ dom::helpers::node_internals::is_document_fully_active(
 
 bool
 dom::helpers::node_internals::is_html(
-        nodes::element* element) {
+        const nodes::element* element) {
 
     return element->namespace_uri == "html" and element->owner_document->m_type == "html";
 }

@@ -30,7 +30,7 @@ struct dom::helpers::node_internals {
     static void string_replace_all(ext::cstring& string, nodes::node* parent);
     static bool is_document_available_to_user(nodes::document* document, ext::cstring&);
     static bool is_document_fully_active(nodes::document* document); // TODO name [-1]
-    static bool is_html(nodes::element* element);
+    static bool is_html(const nodes::element* element);
 
     static bool has_active_parser(nodes::document* document);
     static ext::string advisory_information(html::elements::html_element* element);

@@ -16,16 +16,16 @@
 void
 dom::helpers::event_dispatching::append_to_event_path(
         events::event* event,
-        nodes::event_target* invocation_target,
-        nodes::event_target* shadow_adjusted_target,
-        nodes::event_target* related_target,
-        ext::vector<nodes::event_target*>& touch_targets,
-        bool slot_in_closed_tree) {
+        const nodes::event_target* invocation_target,
+        const nodes::event_target* shadow_adjusted_target,
+        const nodes::event_target* related_target,
+        ext::cvector<const nodes::event_target*>& touch_targets,
+        const bool slot_in_closed_tree) {
 
-    auto* invocation_target_as_shadow_root = dynamic_cast<nodes::shadow_root*>(invocation_target);
-    bool invocation_target_in_shadow_tree = shadows::is_root_shadow_root(dynamic_cast<nodes::node*>(invocation_target));
+    auto* invocation_target_as_shadow_root = dynamic_cast<const nodes::shadow_root*>(invocation_target);
+    bool invocation_target_in_shadow_tree = shadows::is_root_shadow_root(dynamic_cast<const nodes::node*>(invocation_target));
     bool root_of_closed_tree =
-            shadows::is_shadow_root(dynamic_cast<nodes::node*>(invocation_target))
+            shadows::is_shadow_root(dynamic_cast<const nodes::node*>(invocation_target))
             and invocation_target_as_shadow_root
             and invocation_target_as_shadow_root->mode == "closed";
 

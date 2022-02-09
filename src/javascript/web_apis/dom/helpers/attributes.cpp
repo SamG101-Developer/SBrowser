@@ -11,8 +11,8 @@
 
 void
 dom::helpers::attributes::handle_attributes_changes(
-        nodes::attr* attribute,
-        nodes::element* owner_element,
+        const nodes::attr* attribute,
+        const nodes::element* owner_element,
         ext::cstring& old_value,
         ext::cstring& new_value) {
 
@@ -48,7 +48,8 @@ dom::helpers::attributes::append(
 
 
 void
-dom::helpers::attributes::remove(nodes::attr* attribute) {
+dom::helpers::attributes::remove(
+        nodes::attr* attribute) {
 
     handle_attributes_changes(attribute, attribute->owner_element, attribute->value, "");
     attribute->owner_element->attributes->remove(attribute);
@@ -73,14 +74,14 @@ dom::helpers::attributes::replace(
 dom::nodes::attr*
 dom::helpers::attributes::get_attribute_by_name(
         ext::cstring& qualified_name,
-        nodes::element* owner_element) {
+        const nodes::element* owner_element) {
 
-    ext::string html_qualified_name = node_internals::is_html(owner_element)
+    ext::cstring html_qualified_name = node_internals::is_html(owner_element)
             ? qualified_name.new_lowercase()
             : qualified_name;
 
     return owner_element->attributes
-            ->filter([html_qualified_name](nodes::attr* attribute) {return attribute->name == html_qualified_name;})
+            ->filter([&html_qualified_name](const nodes::attr* attribute) {return attribute->name == html_qualified_name;})
             .front();
 }
 
@@ -89,22 +90,21 @@ dom::nodes::attr*
 dom::helpers::attributes::get_attribute_by_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name,
-        nodes::element* owner_element) {
+        const nodes::element* owner_element) {
 
     return owner_element->attributes
-            ->filter([local_name, namespace_](nodes::attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
+            ->filter([&local_name, &namespace_](const nodes::attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
             .front();
 }
 
 
 ext::string
 dom::helpers::attributes::get_attribute_value(
-        nodes::element* owner_element,
+        const nodes::element* owner_element,
         ext::cstring& namespace_,
         ext::cstring& local_name) {
 
-    auto* attribute = get_attribute_by_ns(namespace_, local_name, owner_element);
-    return attribute->value;
+    return get_attribute_by_ns(namespace_, local_name, owner_element)->value;
 }
 
 
@@ -119,7 +119,8 @@ dom::helpers::attributes::set_attribute(
             [attribute, new_owner_element] {return attribute->owner_element and attribute->owner_element == new_owner_element;});
 
     auto* old_attribute = get_attribute_by_ns(attribute->namespace_uri, attribute->local_name, new_owner_element);
-    if (old_attribute == attribute) return nullptr;
+    if (old_attribute == attribute)
+        return nullptr;
 
     old_attribute
             ? replace(old_attribute, attribute)
@@ -157,7 +158,7 @@ dom::helpers::attributes::set_attribute_value(
 dom::nodes::attr*
 dom::helpers::attributes::remove_attribute_by_name(
         ext::cstring& qualified_name,
-        nodes::element* owner_element) {
+        const nodes::element* owner_element) {
 
     auto* attribute = get_attribute_by_name(qualified_name, owner_element);
     if (attribute)
@@ -171,7 +172,7 @@ dom::nodes::attr*
 dom::helpers::attributes::remove_attribute_by_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name,
-        nodes::element* owner_element) {
+        const nodes::element* owner_element) {
 
     auto* attribute = get_attribute_by_ns(namespace_, local_name, owner_element);
     if (attribute)

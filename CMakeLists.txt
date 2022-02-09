@@ -37,7 +37,7 @@ link_libraries(${qt_LIBs})
 # Create exe
 add_executable(SBrowser main.cpp ${first_party_SRC} ${first_party_INC})
 
-# Move all dlls into the binary output directory
+# Move all dlls into the binary output directory TODO -> change to file(COPY ... DESTINATION ...)
 foreach(v8_DLL ${v8_DLLs})
     add_custom_command(TARGET SBrowser POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy ${v8_DLL} $<TARGET_FILE_DIR:SBrowser>)
 endforeach()

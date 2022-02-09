@@ -15,12 +15,12 @@
 
 dom::nodes::element*
 dom::helpers::custom_elements::create_an_element(
-        nodes::document* document,
+        const nodes::document* document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
         ext::cstring& prefix,
         ext::cstring& is,
-        bool synchronous_custom_elements_flag) {
+        const bool synchronous_custom_elements_flag) {
 
     nodes::element* result;
     auto* definition = lookup_custom_element_definition(document, namespace_, local_name, is);
@@ -36,7 +36,7 @@ dom::helpers::custom_elements::create_an_element(
         result->m_is = is;
 
         if (synchronous_custom_elements_flag) {
-            v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
+            const v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
             upgrade_element(definition, result);
 
             if (exception_handler.HasCaught()) {
@@ -50,7 +50,7 @@ dom::helpers::custom_elements::create_an_element(
 
     else if (definition) {
         if (synchronous_custom_elements_flag) {
-            v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
+            const v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
 
             result = definition->constructor;
             assert(result->m_custom_element_state and result->m_custom_element_definition);
@@ -59,22 +59,22 @@ dom::helpers::custom_elements::create_an_element(
             exceptions::throw_v8_exception(
                     "custom element must have an empty attribute list",
                     NOT_SUPPORTED_ERR,
-                    [result] {return result->attributes->empty();});
+                    [&result] {return result->attributes->empty();});
 
             exceptions::throw_v8_exception(
                     "custom element must have an empty child nodes list",
                     NOT_SUPPORTED_ERR,
-                    [result] {return result->child_nodes->empty();});
+                    [&result] {return result->child_nodes->empty();});
 
             exceptions::throw_v8_exception(
                     "custom element must have a null / undefined parent",
                     NOT_SUPPORTED_ERR,
-                    [result] {return result->parent;});
+                    [&result] {return result->parent;});
 
             exceptions::throw_v8_exception(
                     "custom element must have a null / undefined document",
                     NOT_SUPPORTED_ERR,
-                    [result] {return result->owner_document;});
+                    [&result] {return result->owner_document;});
 
             exceptions::throw_v8_exception(
                     "custom element's local name must match local name",
@@ -121,7 +121,7 @@ dom::helpers::custom_elements::create_an_element(
 void
 dom::helpers::custom_elements::upgrade_element(
         internal::custom_element_definition* definition,
-        nodes::element* element) {
+        const nodes::element* element) {
 
     if (element->m_custom_element_state != "undefined" and element->m_custom_element_state != "uncustomized")
         return;
@@ -164,7 +164,7 @@ dom::helpers::custom_elements::upgrade_element(
 
 void
 dom::helpers::custom_elements::try_to_upgrade_element(
-        nodes::element* element) {
+        const nodes::element* element) {
 
     if (auto* definition = lookup_custom_element_definition(
             element->owner_document,
@@ -177,7 +177,7 @@ dom::helpers::custom_elements::try_to_upgrade_element(
 
 dom::internal::custom_element_definition*
 dom::helpers::custom_elements::lookup_custom_element_definition(
-        nodes::document* document,
+        const nodes::document* document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
         ext::cstring& is) {
@@ -202,7 +202,7 @@ dom::helpers::custom_elements::lookup_custom_element_definition(
 
 void
 dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(
-        nodes::element* element) {
+        const nodes::element* element) {
 
     // TODO
 }
@@ -210,7 +210,7 @@ dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(
 
 void
 dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
-        nodes::element* element,
+        const nodes::element* element,
         ext::cstring& callback_name,
         ext::vector<ext::string>&& args) {
 
@@ -229,7 +229,7 @@ dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
 
 void
 dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
-        nodes::element* element,
+        const nodes::element* element,
         internal::custom_element_definition* definition) {
 
     // TODO
@@ -255,7 +255,7 @@ dom::helpers::custom_elements::is_valid_custom_element_name(
 
 bool
 dom::helpers::custom_elements::is_custom_node(
-        nodes::element* element) {
+        const nodes::element* element) {
 
     return element->m_custom_element_state == "custom";
 }
