@@ -88,20 +88,11 @@ public: operators
 };
 
 
-template <class ...string_t>
-ext::string ext::concatenate_strings(string_t&&... strings) {
-
-    const std::ostringstream stream;
-    (stream << ... << std::forward<string_t>(strings));
-    ext::string concatenation;
-    return concatenation = stream.str();
-}
-
-
 ext::string& ext::string::operator=(const char* other) {
     m_iterable = std::string{other};
     return *this;
 }
+
 
 ext::string& ext::string::operator=(char&& other) {
     m_iterable = other;
@@ -250,6 +241,15 @@ inline bool ext::string::operator==(const char* other) const {
     return m_iterable.c_str() == other;
 }
 
+
+template <class ...string_t>
+ext::string ext::concatenate_strings(string_t&&... strings) {
+
+    const std::ostringstream stream;
+    (stream << ... << std::forward<string_t>(strings));
+    ext::string concatenation;
+    return concatenation = stream.str();
+}
 
 
 #endif //SBROWSER_STRING_HPP

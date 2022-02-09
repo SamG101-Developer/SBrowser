@@ -79,17 +79,12 @@ public: operators
 };
 
 
-template <typename iterator>
-size_t iterator_to_index(iterator iter) {
-    return std::distance(iter.begin(), iter);
-}
-
-
 template <typename T>
 template <typename iterator>
 ext::vector<T>::vector(iterator begin, iterator end) requires is_iterator_v<iterator> {
     this->m_iterable = veque::veque<T>{begin, end};
 }
+
 
 template <typename T>
 template <typename ...args> ext::vector<T>::vector(args&&... items) {
@@ -262,6 +257,11 @@ inline ext::vector<T> ext::vector<T>::operator*(size_t multiplier) const {
 
     for (size_t i = 0; i < multiplier; ++i) output.extend(original);
     return output;
+}
+
+template <typename iterator>
+size_t iterator_to_index(iterator iter) {
+    return std::distance(iter.begin(), iter);
 }
 
 

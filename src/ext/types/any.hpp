@@ -33,37 +33,15 @@ public: constructors
     template <typename T> any& operator=(T&& other) noexcept {m_value = other; return *this;}
 
 public: methods
-    const type_info& type() const {
-        return m_value.type();
-    }
-
-    bool empty() const {
-        return not m_value.has_value();
-    }
-
-    bool contains_pointer() const {
-        return ext::string{type().name()}.contains("* __ptr64");
-    }
-
-    template <typename T>
-    void emplace(T&& element) {
-        m_value.template emplace<T>(element);
-    }
-
-    template <typename T>
-    void emplace() {
-        m_value.template emplace<T>();
-    }
-
-    template <typename T>
-    T to() const {
-        return any_cast<T>(m_value);
-    }
+    const type_info& type() const;
+    bool empty() const;
+    bool contains_pointer() const;
+    template <typename T> void emplace();
+    template <typename T> void emplace(T&& element);
+    template <typename T> T to() const;
 
 public: operators
-    inline operator bool() const {
-        return not empty();
-    }
+    operator bool() const;
 
 private: internal_properties
     std::any m_value;
@@ -72,6 +50,38 @@ private: internal_properties
 
 bool operator==(ext::cany& first, ext::cany& second) {
     return &first == &second;
+}
+
+
+const type_info& ext::any::type() const {
+    return m_value.type();
+}
+
+bool ext::any::empty() const {
+    return not m_value.has_value();
+}
+
+bool ext::any::contains_pointer() const {
+    return ext::string{type().name()}.contains("* __ptr64");
+}
+
+template <typename T>
+void ext::any::emplace(T&& element) {
+    m_value.template emplace<T>(element);
+}
+
+template <typename T>
+void ext::any::emplace() {
+    m_value.template emplace<T>();
+}
+
+template <typename T>
+T ext::any::to() const {
+    return any_cast<T>(m_value);
+}
+
+ext::any::operator bool() const {
+    return not empty();
 }
 
 
