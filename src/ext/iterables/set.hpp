@@ -2,6 +2,7 @@
 #define SBROWSER_SET_HPP
 
 #include <set>
+
 #include <ext/iterables/iterable.hpp>
 
 namespace ext {template <typename T> class set;}
@@ -14,11 +15,15 @@ public: constructors
 
 public: methods
     // modifiers
-    ext::set<T>& emplace(const T& item) {
-        this->m_iterable.emplace(item);
-        return *this;
-    }
+    ext::set<T>& insert(const T& item);
 };
+
+
+template <typename T>
+ext::set<T>& ext::set<T>::insert(const T& item) {
+    this->m_iterable.emplace(item);
+    return *this;
+}
 
 
 #endif //SBROWSER_SET_HPP

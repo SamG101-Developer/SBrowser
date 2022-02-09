@@ -22,9 +22,9 @@ public: constructors
     map() = default;
     map(const map<K, V>&) = default;
     map(map<K, V>&&) noexcept = default;
+    map(std::initializer_list<std::pair<K, V>>& other);
     map<K, V>& operator=(const map<K, V>&) = default;
     map<K, V>& operator=(map<K, V>&&) noexcept = default;
-    map(std::initializer_list<std::pair<K, V>>& other);
 
 public: methods
     // element access
