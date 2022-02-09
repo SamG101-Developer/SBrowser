@@ -22,7 +22,6 @@ namespace ext {
 
     template <class ...args> using are_strings = std::conjunction<std::is_same<ext::string, args>...>;
     template <class ...args> using are_strings_v = typename are_strings<args...>::value;
-
     template <class ...args> string concatenate_strings(args&&... strings);
 }
 
