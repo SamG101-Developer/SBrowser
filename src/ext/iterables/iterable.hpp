@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include <iostream>
+#include <numeric>
 #include <stdexcept>
 
 #include <ext/macros/decorators.hpp>
@@ -194,18 +195,6 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::remove_if(function&& func, bool
 }
 
 
-/***
- * Replace items in the iterable if they match a function ie the function being run on the item returns True (function
- * must have a boolean (-castable) output. Can either remove all elements matching the function or just the first match.
- * Every matching item is replaced by new_item.
- * @tparam T Type of element
- * @tparam C Type of container
- * @tparam function Type of function
- * @param func Function to match elements against
- * @param new_item Item to replace with
- * @param all If all matching items should be replaces
- * @return This iterable
- */
 template <typename T, typename C>
 template <class function>
 inline ext::iterable<T, C>& ext::iterable<T, C>::replace_if(function&& func, const T& new_item, bool all)
@@ -226,10 +215,15 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::replace_if(function&& func, con
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::remove(const T& item, bool all)
 {
-    while (contains(item)) {
-        static_cast<void>(std::remove(begin(), end(), item)); // TODO : huge template warnings without 'auto r = ' ...
+    // continue to loop while the item is in the iterable
+    while (contains(item))
+    {
+        // remove the item, and continue looping if looking for all matches
+        std::remove(begin(), end(), item);
         if (not all) break;
     }
+
+    // return the pointer to the iterable
     return *this;
 }
 
@@ -237,10 +231,15 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::remove(const T& item, bool all)
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::replace(const T& old_item, const T& new_item, bool all)
 {
-    while (contains(old_item)) {
+    // continue to loop while the item is in the iterable
+    while (contains(old_item))
+    {
+        // replace the item and continue looping if looking for all matches
         std::replace(begin(), end(), old_item, new_item);
         if (not all) break;
     }
+
+    // return the pointer to the iterable
     return *this;
 }
 
@@ -248,6 +247,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::replace(const T& old_item, cons
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::reverse()
 {
+    // reverse the iterable and return the pointer to it
     std::reverse(m_iterable.begin(), m_iterable.end());
     return *this;
 }
@@ -256,6 +256,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::reverse()
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::sort()
 {
+    // sort the iterable and return the pointer to it
     std::sort(m_iterable.begin(), m_iterable.end());
     return *this;
 }
@@ -264,13 +265,16 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::sort()
 template <typename T, typename C>
 inline ext::iterable<C, T>& ext::iterable<T, C>::clean() requires std::is_pointer_v<T>
 {
-    return remove(nullptr, true);
+    // remove all the nullptr from the iterable and return the pointer to it
+    remove(nullptr, true);
+    return *this;
 }
 
 
 template <typename T, typename C>
 inline ext::iterable<T, C> ext::iterable<T, C>::reversed() const
 {
+    // reverse a duplicate iterable and return the pointer to it
     return iterable<T, C>{*this}.reverse();
 }
 
@@ -278,6 +282,7 @@ inline ext::iterable<T, C> ext::iterable<T, C>::reversed() const
 template <typename T, typename C>
 inline ext::iterable<T, C> ext::iterable<T, C>::sorted() const
 {
+    // sort a duplicate iterable and return the pointer to it
     return iterable<T, C>{*this}.sort();
 }
 
@@ -285,6 +290,7 @@ inline ext::iterable<T, C> ext::iterable<T, C>::sorted() const
 template <typename T, typename C>
 size_t ext::iterable<T, C>::find(const T& object, const size_t offset) const
 {
+    // return the index of an item in the iterable by comparing iterator positions
     return std::distance(begin(), std::find(begin() + offset, end(), object));
 }
 
@@ -292,6 +298,7 @@ size_t ext::iterable<T, C>::find(const T& object, const size_t offset) const
 template <typename T, typename C>
 inline bool ext::iterable<T, C>::contains(const T& item) const
 {
+    // check if the iterable contains an item by comparing its iterator location to the end
     return begin() + find(item) != end();
 }
 
@@ -299,6 +306,7 @@ inline bool ext::iterable<T, C>::contains(const T& item) const
 template <typename T, typename C>
 void ext::iterable<T, C>::print() const
 {
+    // serialize the iterable by output the list as a string - TODO: MOVE TO OPERATOR <<
     std::cout << std::copy(begin(), end(), std::ostream_iterator<std::string>(std::cout, ", ")) << std::endl;
 }
 
@@ -306,6 +314,7 @@ void ext::iterable<T, C>::print() const
 template <typename T, typename C>
 bool ext::iterable<T, C>::operator!() const
 {
+    // the iterable evaluates to false if the list is empty (inverse operator ie -> true)
     return empty();
 }
 
@@ -313,20 +322,39 @@ bool ext::iterable<T, C>::operator!() const
 template <typename T, typename C>
 bool ext::iterable<T, C>::operator==(const iterable<T, C>& other) const
 {
-    return m_iterable == other.m_iterable;
+    // guard to check that the lengths match
+    if (length() != other.length())
+        return false;
+
+    // create a range of indexes the length of the iterable
+    std::array<size_t, length()> range;
+    std::iota(range.begin(), range.end(), 0);
+
+    // equality check by comparing the items in the two iterables
+    return std::all_of(range.begin(), range.end(), [this, other](const size_t i) {return at(i) == other.at(i);});
 }
 
 
 template <typename T, typename C>
 bool ext::iterable<T, C>::operator!=(const iterable<T, C>& other) const
 {
-    return m_iterable != other.m_iterable;
+    // guard to check that the lengths don't match
+    if (length() == other.length())
+        return false;
+
+    // create a range of indexes the length of the iterable
+    std::array<size_t, length()> range;
+    std::iota(range.begin(), range.end(), 0);
+
+    // inequality check by comparing the items in the two iterables
+    return std::any_of(range.begin(), range.end(), [this, other](const size_t i) {return at(i) != other.at(i);});
 }
 
 
 template <typename T, typename C>
 ext::iterable<T, C>::operator bool() const
 {
+    // the iterable evaluates to true if the list has at least 1 item in
     return not empty();
 }
 
