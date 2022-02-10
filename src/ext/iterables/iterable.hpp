@@ -30,8 +30,8 @@ public: constructors
     // element access
     T& front() const noexcept(false);
     T& back() const noexcept(false);
-    T& at(const size_t index) const noexcept(false);
-    T& at(const_iterator index) const noexcept(false);
+    T& at(const size_t i) const noexcept(false);
+    T& at(const_iterator i) const noexcept(false);
 
     // iterators
     iterator begin();
@@ -65,8 +65,8 @@ public: constructors
 public: operators
     operator bool() const;
     bool operator!() const;
-    bool operator==(const iterable<T, C>& other) const;
-    bool operator!=(const iterable<T, C>& other) const;
+    bool operator==(const iterable<T, C>& o) const;
+    bool operator!=(const iterable<T, C>& o) const;
 
 protected: internal_properties
     C m_iterable;
@@ -80,7 +80,7 @@ inline T& ext::iterable<T, C>::front() const noexcept(false)
     if (empty())
         throw std::out_of_range{"Cannot access front of an empty iterable"};
 
-    // return the front of the iterable
+    // return the item at the front of the iterable
     return m_iterable.front();
 }
 
@@ -92,32 +92,32 @@ inline T& ext::iterable<T, C>::back() const noexcept(false)
     if (empty())
         throw std::out_of_range{"Cannot access back of an empty iterable"};
 
-    // return the back of the iterable
+    // return the item at the back of the iterable
     return m_iterable.back();
 }
 
 
 template <typename T, typename C>
-inline T& ext::iterable<T, C>::at(const size_t index) const noexcept(false)
+inline T& ext::iterable<T, C>::at(const size_t i) const noexcept(false)
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
         throw std::out_of_range{"Cannot access nth item of an empty iterable"};
 
-    // return the middle of the iterable
-    return m_iterable.at(index);
+    // return the item int the middle of the iterable
+    return m_iterable.at(i);
 }
 
 
 template <typename T, typename C>
-inline T& ext::iterable<T, C>::at(const_iterator index) const noexcept(false)
+inline T& ext::iterable<T, C>::at(const_iterator i) const noexcept(false)
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
-        throw std::out_of_range{"Cannot access nth iterator item of an empty iterable"};
+        throw std::out_of_range{"Cannot access nth-iterator item of an empty iterable"};
 
-    // return the middle of the iterable
-    return m_iterable.at(*index);
+    // return the item in the middle of the iterable
+    return m_iterable.at(*i);
 }
 
 
@@ -298,7 +298,7 @@ size_t ext::iterable<T, C>::find(const T& object, const size_t offset) const
 template <typename T, typename C>
 inline bool ext::iterable<T, C>::contains(const T& item) const
 {
-    // check if the iterable contains an item by comparing its iterator location to the end
+    // check if the iterable contains an item by comparing its iterator location to the end iterator
     return begin() + find(item) != end();
 }
 
@@ -320,10 +320,10 @@ bool ext::iterable<T, C>::operator!() const
 
 
 template <typename T, typename C>
-bool ext::iterable<T, C>::operator==(const iterable<T, C>& other) const
+bool ext::iterable<T, C>::operator==(const iterable<T, C>& o) const
 {
     // guard to check that the lengths match
-    if (length() != other.length())
+    if (length() != o.length())
         return false;
 
     // create a range of indexes the length of the iterable
@@ -331,15 +331,15 @@ bool ext::iterable<T, C>::operator==(const iterable<T, C>& other) const
     std::iota(range.begin(), range.end(), 0);
 
     // equality check by comparing the items in the two iterables
-    return std::all_of(range.begin(), range.end(), [this, other](const size_t i) {return at(i) == other.at(i);});
+    return std::all_of(range.begin(), range.end(), [this, o](const size_t i) {return at(i) == o.at(i);});
 }
 
 
 template <typename T, typename C>
-bool ext::iterable<T, C>::operator!=(const iterable<T, C>& other) const
+bool ext::iterable<T, C>::operator!=(const iterable<T, C>& o) const
 {
     // guard to check that the lengths don't match
-    if (length() == other.length())
+    if (length() == o.length())
         return false;
 
     // create a range of indexes the length of the iterable
@@ -347,7 +347,7 @@ bool ext::iterable<T, C>::operator!=(const iterable<T, C>& other) const
     std::iota(range.begin(), range.end(), 0);
 
     // inequality check by comparing the items in the two iterables
-    return std::any_of(range.begin(), range.end(), [this, other](const size_t i) {return at(i) != other.at(i);});
+    return std::any_of(range.begin(), range.end(), [this, o](const size_t i) {return at(i) != o.at(i);});
 }
 
 
