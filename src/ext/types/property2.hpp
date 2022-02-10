@@ -4,6 +4,8 @@
 #include <functional>
 #include <type_traits>
 
+#include <ext/macros/cpp_keywords.hpp>
+
 namespace ext {
     template <typename T> struct property2;
     template <typename T> struct dom_property2;
@@ -61,6 +63,19 @@ public:
     bool operator>(const T& o) const;
     bool operator<=>(const T& o) const;
 
+    property2<T>& operator+=(const T& o);
+    property2<T>& operator-=(const T& o);
+    property2<T>& operator*=(const T& o);
+    property2<T>& operator/=(const T& o);
+    property2<T>& operator%=(const T& o);
+    property2<T>& operator^=(const T& o);
+    property2<T>& operator&=(const T& o);
+    property2<T>& operator|=(const T& o);
+    property2<T>& operator<<=(const size_t n);
+    property2<T>& operator>>=(const size_t n);
+    property2<T>& operator++();
+    property2<T>& operator--();
+
     property2<T> operator+(const T& o) const;
     property2<T> operator-(const T& o) const;
     property2<T> operator*(const T& o) const;
@@ -75,18 +90,6 @@ public:
     property2<T> operator--(const int n) const;
     bool operator&&(const T& o) const;
     bool operator||(const T& o) const;
-
-    property2<T>& operator+=(const T& o);
-    property2<T>& operator-=(const T& o);
-    property2<T>& operator*=(const T& o);
-    property2<T>& operator/=(const T& o);
-    property2<T>& operator%=(const T& o);
-    property2<T>& operator^=(const T& o);
-    property2<T>& operator&=(const T& o);
-    property2<T>& operator|=(const T& o);
-    property2<T>& operator<<=(const size_t n);
-    property2<T>& operator++();
-    property2<T>& operator--();
 
     property2<T> operator+() const;
     property2<T> operator-() const;
@@ -118,7 +121,7 @@ ext::property2<T>::property2()
 
 
 template <typename T>
-ext::property2<T>::property2(T val) : property2()
+FAST INLINE ext::property2<T>::property2(T val) : property2()
 {
     // set the internal value directly as the initialization value
     m_internal = val;
@@ -126,7 +129,7 @@ ext::property2<T>::property2(T val) : property2()
 
 
 template <typename T>
-ext::property2<T>& ext::property2<T>::operator=(const property2<T>& o)
+FAST INLINE ext::property2<T>& ext::property2<T>::operator=(const property2<T>& o)
 {
     // copy another property into this - only transfers the value across, not the accessors
     m_internal = o.m_internal;
@@ -135,7 +138,7 @@ ext::property2<T>& ext::property2<T>::operator=(const property2<T>& o)
 
 
 template <typename T>
-ext::property2<T>& ext::property2<T>::operator=(property2<T>&& o) noexcept
+FAST INLINE ext::property2<T>& ext::property2<T>::operator=(property2<T>&& o) noexcept
 {
     // move another property into this - only transfers the value across, not the accessors
     m_internal = o.m_internal;
@@ -144,7 +147,7 @@ ext::property2<T>& ext::property2<T>::operator=(property2<T>&& o) noexcept
 
 
 template <typename T>
-ext::property2<T>::~property2<T>()
+FAST INLINE ext::property2<T>::~property2<T>()
 {
     // call the deleter method on destruction, and delete the internal value if it is a pointer
     del();
@@ -153,7 +156,7 @@ ext::property2<T>::~property2<T>()
 
 
 template <typename T>
-ext::property2<T>::operator T() const
+FAST INLINE ext::property2<T>::operator T() const
 {
     // conversion to T acts as the getter, so return the value from the get() accessor
     return get();
@@ -161,7 +164,7 @@ ext::property2<T>::operator T() const
 
 
 template<typename T>
-ext::property2<T>& ext::property2<T>::operator=(const T& o)
+FAST INLINE ext::property2<T>& ext::property2<T>::operator=(const T& o)
 {
     // assignment operator to set an l-value reference, and return the pointer to the property
     set(o);
@@ -170,7 +173,7 @@ ext::property2<T>& ext::property2<T>::operator=(const T& o)
 
 
 template <typename T>
-ext::property2<T>& ext::property2<T>::operator=(T&& o) noexcept
+FAST INLINE ext::property2<T>& ext::property2<T>::operator=(T&& o) noexcept
 {
     // assignment operator to set an r-value reference, and return the pointer to the property
     set(std::forward<T&>(o));
@@ -179,7 +182,7 @@ ext::property2<T>& ext::property2<T>::operator=(T&& o) noexcept
 
 
 template <typename T>
-T* ext::property2<T>::operator->() const requires (!std::is_pointer_v<T>)
+FAST INLINE T* ext::property2<T>::operator->() const requires (!std::is_pointer_v<T>)
 {
     // accessor operator for non-pointer types needs to return the address of the stored object
     return &m_internal;
@@ -187,11 +190,178 @@ T* ext::property2<T>::operator->() const requires (!std::is_pointer_v<T>)
 
 
 template <typename T>
-T ext::property2<T>::operator->() const requires (std::is_pointer_v<T>)
+FAST INLINE T ext::property2<T>::operator->() const requires (std::is_pointer_v<T>)
 {
     // accessor operator for pointer types needs to return the stored object
     return m_internal;
 }
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator==(const T& o) const {
+
+    // equality test with internal value
+    return m_internal == o;
+}
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator!=(const T& o) const {
+
+    // inequality check with internal value
+    return m_internal != o;
+}
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator<=(const T& o) const {
+
+    // less than equal to check with internal value
+    return m_internal <= o;
+}
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator>=(const T& o) const {
+
+    // greater than equal to check with internal value
+    return m_internal >= o;
+}
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator<(const T& o) const {
+
+    // less than equal to check with internal value
+    return m_internal < o;
+}
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator>(const T& o) const {
+
+    // greater than equal to check with internal value
+    return m_internal > o;
+}
+
+
+template <typename T>
+FAST INLINE bool ext::property2<T>::operator<=>(const T& o) const {
+
+    // less than equal to check with internal value
+    return m_internal <=> o;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator+=(const T& o) {
+
+    // add the value to the internal value, and return the reference to the property
+    m_internal += o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator-=(const T& o) {
+
+    // subtract the value to the internal value, and return the reference to the property
+    m_internal -= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator*=(const T& o) {
+
+    // multiply the value to the internal value, and return the reference to the property
+    m_internal *= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator/=(const T& o) {
+
+    // divide the value to the internal value, and return the reference to the property
+    m_internal /= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator%=(const T& o) {
+
+    // the internal value modulo the value, and return the reference to the property
+    m_internal %= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator^=(const T& o) {
+
+    // raise the internal value to the value, and return the reference to the property
+    m_internal ^= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator&=(const T& o) {
+
+    // the internal value bitwise-and the value, and return the reference to the property
+    m_internal &= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator|=(const T& o) {
+
+    // the internal value bitwise-or the value, and return the reference to the property
+    m_internal |= o;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator<<=(const size_t n) {
+
+    // left bit-shift the internal value by value, and return the reference to the property
+    m_internal << n;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator>>=(const size_t n) {
+
+    // right bit-shift the internal value by value, and return the reference to the property
+    m_internal >> n;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator++() {
+
+    // increment the internal value and return the reference to the property
+    ++m_internal;
+    return *this;
+}
+
+
+template <typename T>
+FAST INLINE ext::property2<T>& ext::property2<T>::operator--() {
+
+    // decrement the internal value and return the reference to the property
+    --m_internal;
+    return *this;
+}
+
+
+
 
 
 #endif //SBROWSER_PROPERTY2_HPP
