@@ -20,7 +20,9 @@ public: methods
 
 
 template <typename T>
-ext::set<T>& ext::set<T>::insert(const T& item) {
+ext::set<T>& ext::set<T>::insert(const T& item)
+{
+    // insert the item in the middle of the iterable, and return the reference to the iterable
     this->m_iterable.emplace(item);
     return *this;
 }

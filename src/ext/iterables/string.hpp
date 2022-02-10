@@ -88,64 +88,98 @@ public: operators
 };
 
 
-ext::string& ext::string::operator=(const char* other) {
+ext::string& ext::string::operator=(const char* other)
+{
+    // set the iterable from a const char* type, and return the reference to the string
     m_iterable = std::string{other};
     return *this;
 }
 
 
-ext::string& ext::string::operator=(char&& other) {
+ext::string& ext::string::operator=(char&& other)
+{
+    // set the iterable from a const&& type, and return the reference to the string
     m_iterable = other;
     return *this;
 }
 
-ext::string& ext::string::operator=(const std::string& other) {
+
+ext::string& ext::string::operator=(const std::string& other)
+{
+    // set the iterable from a std::string l-value reference type, and return the reference to the string
     m_iterable = other;
     return *this;
 }
 
-ext::string& ext::string::operator=(std::string&& other) {
+
+ext::string& ext::string::operator=(std::string&& other)
+{
+    // set the iterable from a std::string r-value reference type, and return the reference to the string
     m_iterable = std::forward<std::string&>(other);
     return *this;
 }
 
-ext::string& ext::string::operator=(const QString& other) {
+
+ext::string& ext::string::operator=(const QString& other)
+{
+    // set the iterable from a QString l-value reference type, and return the reference to the string
     m_iterable = other.toStdString();
     return *this;
 }
 
-ext::string& ext::string::operator=(QString&& other) {
+
+ext::string& ext::string::operator=(QString&& other)
+{
+    // set the iterable from a QString r-value reference type, and return the reference to the string
     m_iterable = std::forward<QString&>(other).toStdString();
     return *this;
 }
 
-ext::string& ext::string::operator=(v8::Local<v8::String> other) {
+
+ext::string& ext::string::operator=(v8::Local<v8::String> other)
+{
+    // set the iterable from a v8 type, and return the reference to the string
     m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});
     return *this;
 }
 
-inline ext::string& ext::string::ltrim() {
+
+inline ext::string& ext::string::ltrim()
+{
+    // remove all the spaces from the left-hand side of the string, and return the reference to the string
     m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(' '));
     return *this;
 }
 
-inline ext::string& ext::string::rtrim() {
+
+inline ext::string& ext::string::rtrim()
+{
+    // remove all the spaces from the right-hand side of the string, and return the reference to the string
     m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(' ') + 1, end());
     return *this;
 }
 
-inline ext::string& ext::string::trim() {
+
+inline ext::string& ext::string::trim()
+{
+    // remove all the spaces from both sides of the string, and return the reference to the string
     ltrim();
     rtrim();
     return *this;
 }
 
-inline ext::string& ext::string::to_lowercase() {
+
+inline ext::string& ext::string::to_lowercase()
+{
+    // convert the string to lowercase by transforming each character individually, and return a reference to thr string
     std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
     return *this;
 }
 
-inline ext::string& ext::string::to_uppercase() {
+
+inline ext::string& ext::string::to_uppercase()
+{
+    // convert the string to uppercase by transforming each character individually, and return a reference to thr string
     std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::toupper(c);});
     return *this;
 }

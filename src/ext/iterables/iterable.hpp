@@ -172,7 +172,7 @@ inline size_t ext::iterable<T, C>::length() const noexcept
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::clear()
 {
-    // clear the iterable and return the pointer to it
+    // clear the iterable, and return the reference to it
     m_iterable.clear();
     return *this;
 }
@@ -207,7 +207,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::replace_if(function&& func, con
         if (not all) break;
     }
 
-    // return the pointer to the iterable
+    // return the reference to the iterable
     return *this;
 }
 
@@ -223,7 +223,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::remove(const T& item, bool all)
         if (not all) break;
     }
 
-    // return the pointer to the iterable
+    // return the reference to the iterable
     return *this;
 }
 
@@ -239,7 +239,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::replace(const T& old_item, cons
         if (not all) break;
     }
 
-    // return the pointer to the iterable
+    // return the reference to the iterable
     return *this;
 }
 
@@ -247,7 +247,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::replace(const T& old_item, cons
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::reverse()
 {
-    // reverse the iterable and return the pointer to it
+    // reverse the iterable, and return the reference to it
     std::reverse(m_iterable.begin(), m_iterable.end());
     return *this;
 }
@@ -256,7 +256,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::reverse()
 template <typename T, typename C>
 inline ext::iterable<T, C>& ext::iterable<T, C>::sort()
 {
-    // sort the iterable and return the pointer to it
+    // sort the iterable, and return the reference to it
     std::sort(m_iterable.begin(), m_iterable.end());
     return *this;
 }
@@ -265,7 +265,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::sort()
 template <typename T, typename C>
 inline ext::iterable<C, T>& ext::iterable<T, C>::clean() requires std::is_pointer_v<T>
 {
-    // remove all the nullptr from the iterable and return the pointer to it
+    // remove all the nullptr from the iterable, and return the reference to it
     remove(nullptr, true);
     return *this;
 }
@@ -274,7 +274,7 @@ inline ext::iterable<C, T>& ext::iterable<T, C>::clean() requires std::is_pointe
 template <typename T, typename C>
 inline ext::iterable<T, C> ext::iterable<T, C>::reversed() const
 {
-    // reverse a duplicate iterable and return the pointer to it
+    // reverse a duplicate iterable, and return the reference to it
     return iterable<T, C>{*this}.reverse();
 }
 
@@ -282,7 +282,7 @@ inline ext::iterable<T, C> ext::iterable<T, C>::reversed() const
 template <typename T, typename C>
 inline ext::iterable<T, C> ext::iterable<T, C>::sorted() const
 {
-    // sort a duplicate iterable and return the pointer to it
+    // sort a duplicate iterable, and return the reference to it
     return iterable<T, C>{*this}.sort();
 }
 

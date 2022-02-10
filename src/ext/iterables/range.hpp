@@ -24,18 +24,24 @@ private: internal_properties
 
 
 template <typename T>
-ext::range<T>::range(T low, T high) requires std::is_arithmetic_v<T>
-        : m_low(low)
-        , m_high(high) {
+ext::range<T>::range(T low, T high) requires std::is_arithmetic_v<T> : m_low(low) , m_high(high)
+{
+
 }
 
+
 template <typename T>
-bool ext::range<T>::inclusive_contains(T value) const {
+bool ext::range<T>::inclusive_contains(T value) const
+{
+    // check that a number is inbetween the bounds, including the bounds
     return (m_low <= value) and (value <= m_high);
 }
 
+
 template <typename T>
-bool ext::range<T>::exclusive_contains(T value) const {
+bool ext::range<T>::exclusive_contains(T value) const
+{
+    // check that a number is inbetween the bounds, excluding the bounds
     return (m_low < value) and (value < m_high);
 }
 

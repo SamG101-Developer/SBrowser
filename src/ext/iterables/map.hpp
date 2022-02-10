@@ -51,7 +51,7 @@ ext::map<K, V>::map(std::initializer_list<std::pair<K, V>>& o)
 template <typename K, typename V>
 inline ext::map<K, V>& ext::map<K, V>::insert(const K& key, const V& value)
 {
-    // insert the key-value pair and return the pointer to the map
+    // insert the key-value pair, and return the reference to the map
     this->m_iterable.emplace(key, value);
     return *this;
 }
