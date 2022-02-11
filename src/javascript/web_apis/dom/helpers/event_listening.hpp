@@ -24,9 +24,9 @@ struct dom::helpers::event_listening {
 
 
 struct dom::internal::event_path_struct {
-    const nodes::event_target* invocation_target = nullptr;
-    const nodes::event_target* shadow_adjusted_target = nullptr;
-    const nodes::event_target* related_target = nullptr;
+    nodes::event_target* invocation_target = nullptr;
+    nodes::event_target* shadow_adjusted_target = nullptr;
+    nodes::event_target* related_target = nullptr;
 
     ext::vector<nodes::event_target*> touch_targets;
     bool invocation_target_in_shadow_tree;

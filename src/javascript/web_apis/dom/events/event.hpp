@@ -5,7 +5,7 @@
 #include <ext/iterables/map.hpp>
 #include <ext/iterables/string.hpp>
 #include <ext/macros/decorators.hpp>
-#include <ext/types/property.hpp>
+#include <ext/properties/dom_property.hpp>
 
 #include <dom_object.hpp>
 
@@ -21,13 +21,13 @@ namespace dom {
 
 
 class dom::events::event : virtual public dom_object {
-friends
+public: friends
     friend class dom::nodes::event_target;
     friend struct dom::helpers::event_dispatching;
     friend struct dom::helpers::event_listening;
 
 public: constructors
-    event(): dom_object() {};
+    event();
     event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
     ~event() override;
 
@@ -44,18 +44,18 @@ public: methods
     ext::vector<nodes::event_target*> composed_path() const;
 
 public: properties
-    ext::dom_property<ext::string> type;
-    ext::dom_property<bool> bubbles;
-    ext::dom_property<bool> cancelable;
-    ext::dom_property<bool> composed;
-    ext::dom_property<nodes::event_target*> target;
-    ext::dom_property<nodes::event_target*> current_target;
-    ext::dom_property<nodes::event_target*> related_target;
-    ext::dom_property<unsigned short> event_phase;
-    ext::dom_property<double> time_stamp;
-    ext::dom_property<bool> is_trusted;
-    ext::dom_property<ext::vector<nodes::event_target*>*> touch_targets;
-    ext::dom_property<ext::vector<internal::event_path_struct*>*> path;
+    ext::dom_property<ext::string, _F> type;
+    ext::dom_property<bool, _F> bubbles;
+    ext::dom_property<bool, _F> cancelable;
+    ext::dom_property<bool, _F> composed;
+    ext::dom_property<nodes::event_target*, _F> target;
+    ext::dom_property<nodes::event_target*, _F> current_target;
+    ext::dom_property<nodes::event_target*, _F> related_target;
+    ext::dom_property<unsigned short, _F> event_phase;
+    ext::dom_property<double, _F> time_stamp;
+    ext::dom_property<bool, _F> is_trusted;
+    ext::dom_property<ext::vector<nodes::event_target*>*, _F> touch_targets;
+    ext::dom_property<ext::vector<internal::event_path_struct*>*, _F> path;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
