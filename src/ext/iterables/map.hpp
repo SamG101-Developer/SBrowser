@@ -29,7 +29,7 @@ public: constructors
 public: methods
     // element access
     ext::map<K, V>& insert(const K& key, const V& value);
-    const V& at(const K& key) const;
+    V& at(const K& key) const;
     bool has_key(const K& key);
 
     // modifiers
@@ -58,7 +58,7 @@ inline ext::map<K, V>& ext::map<K, V>::insert(const K& key, const V& value)
 
 
 template <typename K, typename V>
-inline const V& ext::map<K, V>::at(const K& key) const
+inline V& ext::map<K, V>::at(const K& key) const
 {
     // return the item in the middle of the map
     return this->m_iterable.at(key);

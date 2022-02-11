@@ -11,7 +11,6 @@
 
 namespace ext {template <typename T, typename C> class iterable;}
 
-
 template <typename T, typename C>
 class ext::iterable {
 aliases

@@ -2,6 +2,8 @@
 #ifndef SBROWSER_VECTOR_HPP
 #define SBROWSER_VECTOR_HPP
 
+#include <queue>
+#include <stack>
 #include <string>
 
 #include <ext/iterables/iterable.hpp>
@@ -14,20 +16,14 @@ namespace ext {
     class string;
 }
 
-
 namespace {
-    template <class T, class = void>
-    struct is_iterator : std::false_type{};
+    template <typename T, class = void> struct is_iterator : std::false_type{};
+    template <typename T> struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::pointer, typename std::iterator_traits<T>::reference>> : std::true_type {};
+    template <typename T> constexpr bool is_iterator_v = is_iterator<T>::value;
 
-    template <class T>
-    struct is_iterator<T, std::void_t<
-            typename std::iterator_traits<T>::pointer,
-            typename std::iterator_traits<T>::reference>>
-            : std::true_type {
-    };
-
-    template <typename T>
-    constexpr bool is_iterator_v = is_iterator<T>::value;
+    template <typename T, class = void> struct is_iterable : std::false_type {};
+    template <typename T> struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T>())), decltype(std::end  (std::declval<T>()))>> : std::true_type {};
+    template <typename T> constexpr bool is_iterable_v = is_iterable<T>::value;
 }
 
 
@@ -37,8 +33,10 @@ public: constructors
     vector() = default;
     vector(const vector&) = default;
     vector(vector&&) noexcept = default;
-    vector& operator=(const vector&) = default;
-    vector& operator=(vector&&) noexcept = default;
+    vector<T>& operator=(const vector&) = default;
+    vector<T>& operator=(vector&&) noexcept = default;
+    vector<T>& operator=(const std::queue<T>& o);
+    vector<T>& operator=(const std::stack<T>& o);
     template <typename iterator> vector(iterator begin, iterator end) requires is_iterator_v<iterator>;
     template <typename ...args> vector(args&&... items);
     ~vector() override;
@@ -77,6 +75,34 @@ public: methods
 public: operators
     ext::vector<T> operator*(size_t n) const;
 };
+
+
+template <typename T>
+inline ext::vector<T>& ext::vector<T>::operator=(const std::queue<T>& o)
+{
+    // fill the veque by emptying the queue
+    auto copy = std::queue<T>{o};
+    while (not copy.empty())
+    {
+        // append the front element and pop it from the queue
+        append(copy.front());
+        copy.pop();
+    }
+}
+
+
+template <typename T>
+inline ext::vector<T>& ext::vector<T>::operator=(const std::stack<T>& o)
+{
+    // fill the veque by emptying the stack
+    auto copy = std::stack<T>{o};
+    while (not copy.empty())
+    {
+        // append the top element and pop it from the queue
+        append(copy.top());
+        copy.pop();
+    }
+}
 
 
 template <typename T>
