@@ -5,12 +5,10 @@
 #include <type_traits>
 
 #include <ext/macros/cpp_keywords.hpp>
+#include <ext/macros/decorators.hpp>
 
 namespace ext {
     template <typename T> struct property2;
-    template <typename T> struct html_property2;
-    struct css_property2;
-    struct css_longhand_property2;
 
     template <typename U, typename T> U property_dynamic_cast(const ext::property2<T>& o);
     template <typename U, typename T> U property_static_cast(const ext::property2<T>& o);
@@ -22,6 +20,7 @@ namespace ext {
 
 template <typename T>
 struct ext::property2 {
+public: friends
     // override get
     friend T operator>>(const property2<T>& p, T& o);
     friend T operator>>(const property2<T>& p, T&& o);
@@ -37,7 +36,7 @@ struct ext::property2 {
     template <typename U, typename T> friend U property_reinterpret_cast(const ext::property2<T>& o);
     template <typename U, typename T> friend U property_any_cast(const ext::property2<T>& o);
 
-public:
+public: constructors
     property2();
     property2(T val);
     property2(const property2<T>&) = default;
@@ -101,12 +100,12 @@ public:
     template <typename U, typename ...Args> U& operator() (Args&&... args) const;
     operator bool() const requires (!std::is_same_v<T, bool>);
 
-public:
+public: internal_properties
     std::function<void()> del;
     std::function<T()> get;
     std::function<void(T)> set;
 
-private:
+private: internal_properties
     T m_internal;
 };
 

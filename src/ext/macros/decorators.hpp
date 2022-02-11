@@ -4,6 +4,7 @@
 #define static_constants      /* javascript-exposed static class constants */
 #define friends               /* friend classes, methods and functions     */
 #define aliases               /* aliases used by this class only           */
+#define enums                 /* enumerations used by this class only      */
 #define constructors          /* possibly-javascript-exposed ctors/dtors   */
 #define properties            /* javascript-exposed class properties       */
 #define methods               /* javascript-exposed class methods          */

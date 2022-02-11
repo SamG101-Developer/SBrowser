@@ -10,12 +10,14 @@ namespace {
 
 
 template <typename T, bool ce_reactions>
-struct ext::dom_property2 : public ext::property2<T> {
+struct ext::dom_property2 : public property2<T> {
+public: constructors
     dom_property2() = default;
     dom_property2(const dom_property2<T, ce_reactions>&) = default;
     dom_property2(dom_property2<T, ce_reactions>&&) noexcept = default;
     ~dom_property2() override;
 
+public: operators
     operator T() const override;
     dom_property2<T, ce_reactions>& operator=(const T& o) override;
     dom_property2<T, ce_reactions>& operator=(T&& o) override;
@@ -35,7 +37,7 @@ FAST INLINE ext::dom_property2<T, ce_reactions>::operator T() const
 {
     // handle any custom element reactions, and perform default getting operations
     if constexpr(ce_reactions) handle_ce_reactions(*this);
-    return ext::property2<T>::operator T();
+    return property2<T>::operator T();
 }
 
 
