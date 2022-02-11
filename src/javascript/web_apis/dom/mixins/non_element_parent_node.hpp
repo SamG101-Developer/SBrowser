@@ -12,7 +12,8 @@ namespace dom {
 
 template <typename T>
 class dom::mixins::non_element_parent_node {
-public:
+
+public: methods
     nodes::element* get_element_by_id(ext::cstring& element_id);
 };
 

@@ -4,9 +4,9 @@
 #include <ext/properties/property.hpp>
 
 namespace ext {template <typename T, bool ce_reactions> struct dom_property;}
-namespace {
-    template <typename T, bool ce_reactions> void handle_ce_reactions(ext::dom_property<T, ce_reactions>& p);
-}
+
+template <typename T, bool ce_reactions> void handle_ce_reactions(ext::dom_property<T, ce_reactions>& p);
+template <typename function> void handle_ce_reactions(const function& f);
 
 
 template <typename T, bool ce_reactions>

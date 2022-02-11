@@ -7,7 +7,9 @@
 
 
 template <typename T>
-dom::mixins::non_document_type_child_node<T>::non_document_type_child_node() {
+dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
+{
+    // set the custom accessors
     previous_element_sibling.get = [this] {return get_previous_element_sibling();};
     next_element_sibling.get = [this] {return get_next_element_sibling();};
 }
@@ -15,25 +17,29 @@ dom::mixins::non_document_type_child_node<T>::non_document_type_child_node() {
 
 template <typename T>
 dom::nodes::element*
-dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const {
-    const T* base = reinterpret_cast<const T*>(this);
+dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const
+{
+    // get the class that this mixin is being mixed into
+    auto* base = reinterpret_cast<const T*>(this);
 
+    // return the last node whose index precedes this node's
     return base->child_nodes
             ->cast_all<nodes::element*>()
-            .filter([this](auto* child) {return helpers::trees::index(child) < helpers::trees::index(base);})
-            .back();
+            .last_match([base](auto* child) {return helpers::trees::index(child) < helpers::trees::index(base);});
 }
 
 
 template <typename T>
 dom::nodes::element*
-dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const {
-    const T* base = reinterpret_cast<const T*>(this);
+dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const
+{
+    // get the class that this mixin is being mixed into
+    auto* base = reinterpret_cast<const T*>(this);
 
+    // return the first node whose index succeeds this node's
     return base->child_nodes
             ->cast_all<nodes::element*>()
-            .filter([this](auto* child) {return helpers::trees::index(child) > helpers::trees::index(base);})
-            .front();
+            .first_match([base](auto* child) {return helpers::trees::index(child) > helpers::trees::index(base);});
 }
 
 

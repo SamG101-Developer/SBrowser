@@ -9,13 +9,12 @@
 
 template<typename T>
 dom::nodes::element*
-dom::mixins::non_element_parent_node<T>::get_element_by_id(
-        ext::cstring& element_id) {
-
+dom::mixins::non_element_parent_node<T>::get_element_by_id(ext::cstring& element_id)
+{
+    // return the first descendant element whose id matches requested id
     return helpers::trees::descendants(reinterpret_cast<nodes::node*>(this))
             .template cast_all<nodes::element*>()
-            .filter([element_id](nodes::element* child_element) {return child_element->id == element_id;})
-            .front();
+            .template first_match([element_id](nodes::element* child_element) {return child_element->id == element_id;});
 }
 
 

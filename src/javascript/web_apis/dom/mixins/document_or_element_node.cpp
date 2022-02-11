@@ -8,9 +8,9 @@
 
 template <typename T>
 ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(
-        ext::cstring& qualified_name) {
-
+dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(ext::cstring& qualified_name)
+{
+    // get the class that this mixin is being mixed into, and return descendant elements with a matching qualified name
     T* base = reinterpret_cast<T*>(this);
     return helpers::node_internals::list_of_elements_with_qualified_name(base, qualified_name);
 }
@@ -20,8 +20,9 @@ template <typename T>
 ext::vector<dom::nodes::element*>
 dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
         ext::cstring& namespace_,
-        ext::cstring& local_name) {
-
+        ext::cstring& local_name)
+{
+    // get the class that this mixin is being mixed into, and return descendant elements with a matching local name
     T* base = reinterpret_cast<T*>(this);
     return helpers::node_internals::list_of_elements_with_namespace_and_local_name(base, namespace_, local_name);
 }
@@ -29,13 +30,13 @@ dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
 
 template <typename T>
 ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_class_name(
-        ext::cstring& class_names) {
-
+dom::mixins::document_or_element_node<T>::get_elements_by_class_name(ext::cstring& class_names)
+{
+    // get the class that this mixin is being mixed into, and return descendant elements with a matching class names
     T* base = reinterpret_cast<T*>(this);
     return helpers::node_internals::list_of_elements_with_class_names(base, class_names);
 }
 
 
-template class dom::mixins::document_or_element_node<dom::nodes::element>;
 template class dom::mixins::document_or_element_node<dom::nodes::document>;
+template class dom::mixins::document_or_element_node<dom::nodes::element>;

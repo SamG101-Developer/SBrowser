@@ -13,7 +13,8 @@ namespace dom {
 
 template <typename T>
 class dom::mixins::document_or_element_node {
-public:
+
+public: methods
     ext::vector<nodes::element*> get_elements_by_tag_name(ext::cstring& qualified_name);
     ext::vector<nodes::element*> get_elements_by_tag_name_ns(ext::cstring& namespace_, ext::cstring& local_name);
     ext::vector<nodes::element*> get_elements_by_class_name(ext::cstring& class_names);
