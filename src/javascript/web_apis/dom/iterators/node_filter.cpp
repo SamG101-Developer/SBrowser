@@ -2,8 +2,8 @@
 
 
 ext::any
-dom::iterators::node_filter::v8(v8::Isolate* isolate) const {
-
+dom::iterators::node_filter::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<dom::iterators::node_filter>{isolate}
             .static_("FILTER_ACCEPT", dom::iterators::node_filter::FILTER_ACCEPT)
             .static_("FILTER_SKIP", dom::iterators::node_filter::FILTER_SKIP)

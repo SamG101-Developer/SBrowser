@@ -11,7 +11,7 @@ namespace dom {
 
 
 class dom::iterators::node_iterator : public abstract_iterator {
-friends
+public: friends
     friend struct helpers::traversal;
 
 public: constructors
@@ -22,8 +22,8 @@ public: methods
     nodes::node* previous_node();
 
 public: properties
-    ext::dom_property<nodes::node*> reference_node;
-    ext::dom_property<bool> pointer_before_reference_node;
+    ext::dom_property<nodes::node*, _F> reference_node;
+    ext::dom_property<bool, _F> pointer_before_reference_node;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
