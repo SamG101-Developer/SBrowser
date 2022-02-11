@@ -3,7 +3,7 @@
 #define SBROWSER_ABORT_SIGNAL_HPP
 
 #include <ext/iterables/set.hpp>
-#include <ext/types/property.hpp>
+#include <ext/properties/dom_property.hpp>
 #include <dom/nodes/event_target.hpp>
 
 namespace dom {
@@ -16,13 +16,12 @@ namespace dom {
 
 
 class dom::aborting::abort_signal : public nodes::event_target {
-
-friends
+public: friends
     friend class helpers::event_listening;
     friend class helpers::signal_aborting;
 
-aliases
-    using abort_signal_callback = std::function<void()>;
+private: aliases
+    using abort_signal_callback  = std::function<void()>;
     using abort_signal_callbacks = ext::vector<abort_signal_callback>;
 
 public: constructors
@@ -33,8 +32,8 @@ public: methods
     void throw_if_aborted() const;
 
 public properties:
-    ext::dom_property<bool> aborted;
-    ext::dom_property<ext::any> reason;
+    ext::dom_property<bool    , _F> aborted;
+    ext::dom_property<ext::any, _F> reason;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

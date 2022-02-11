@@ -1,18 +1,18 @@
-#ifndef SBROWSER_CSS_PROPERTY2_HPP
-#define SBROWSER_CSS_PROPERTY2_HPP
+#ifndef SBROWSER_CSS_PROPERTY_HPP
+#define SBROWSER_CSS_PROPERTY_HPP
 
 #include <ext/iterables/string.hpp>
-#include <ext/properties/property2.hpp>
+#include <ext/properties/property.hpp>
 
 namespace ext {
-    struct css_property2;
-    struct css_shorthand_property2;
+    struct css_property;
+    struct css_shorthand_property;
 }
 
 
-struct ext::css_property2 : public property2<ext::string> {
+struct ext::css_property : public property<ext::string> {
 public: friends
-    friend struct css_shorthand_property2;
+    friend struct css_shorthand_property;
 
 public: enums
     enum animation_t {NOT_ANIMATABLE, BY_COMPUTED_VALUE, DISCRETE, REPEATABLE_LIST, NUMBER, LIST};
@@ -21,7 +21,7 @@ public: enums
     enum media_t {VISUAL, HIDDEN};
 
 public: constructors
-    css_property2(
+    css_property(
             string&& name, string&& initial, bool&& inherited = false, animation_t&& animation_type = NOT_ANIMATABLE,
             percentage_t&& percentage_type = NA, canonical_order_t&& canonical_order_type = PER_GRAMMAR,
             media_t&& media_type = HIDDEN);
@@ -37,11 +37,11 @@ private: internal_properties
 };
 
 
-ext::css_property2::css_property2(
+ext::css_property::css_property(
         string&& name, string&& initial, bool&& inherited, animation_t&& animation_type, percentage_t&& percentage_type,
         canonical_order_t&& canonical_order_type, media_t&& media_type)
 
-        : property2<ext::string>()
+        : property<ext::string>()
         , m_name(name)
         , m_initial(initial)
         , m_inherited(inherited)
@@ -52,4 +52,4 @@ ext::css_property2::css_property2(
 {}
 
 
-#endif //SBROWSER_CSS_PROPERTY2_HPP
+#endif //SBROWSER_CSS_PROPERTY_HPP
