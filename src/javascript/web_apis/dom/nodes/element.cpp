@@ -102,7 +102,7 @@ dom::nodes::element::get_attribute_names() const
 ext::string
 dom::nodes::element::get_attribute(ext::cstring& qualified_name) const
 {
-    // return the value of the attribute that whose name matches qualified name
+    // return the value of the attribute that whose name matches qualified_name
     return get_attribute_node(qualified_name)->value;
 }
 
@@ -112,14 +112,15 @@ dom::nodes::element::get_attribute_ns(
         ext::cstring& namespace_,
         ext::string local_name) const
 {
-
+    // return the value of the attribute that whose namespace and local_name matches namespace and local_name
     return get_attribute_node_ns(namespace_, local_name)->value;
 }
 
 
 dom::nodes::attr*
-dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const {
-
+dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const
+{
+    // return the attribute that whose name matches qualified_name
     return helpers::attributes::get_attribute_by_name(qualified_name, this);
 }
 
@@ -127,8 +128,9 @@ dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const {
 dom::nodes::attr*
 dom::nodes::element::get_attribute_node_ns(
         ext::cstring& namespace_,
-        ext::cstring& local_name) const {
-
+        ext::cstring& local_name) const
+{
+    // return the attribute that whose namespace and local_name matches namespace and local_name
     return helpers::attributes::get_attribute_by_ns(namespace_, local_name, this);
 }
 
@@ -136,7 +138,9 @@ dom::nodes::element::get_attribute_node_ns(
 void
 dom::nodes::element::set_attribute(
         ext::cstring& qualified_name,
-        ext::cstring& value) {
+        ext::cstring& value)
+{
+    // TODO
 
     ext::string html_qualified_name = helpers::node_internals::is_html(this)
             ? qualified_name.new_lowercase()
@@ -144,7 +148,7 @@ dom::nodes::element::set_attribute(
 
     // TODO : move into attr helpers namespacing (set_attribute_by_name)
     attr* attribute = attributes
-            ->filter([qualified_name](attr* attribute) {attribute->name == qualified_name;})
+            ->filter([qualified_name](attr* attribute) {return attribute->name == qualified_name;})
             .front();
 
     if (not attribute) {
@@ -162,7 +166,9 @@ void
 dom::nodes::element::set_attribute_ns(
         ext::cstring& namespace_,
         ext::cstring& qualified_name,
-        ext::cstring& value) {
+        ext::cstring& value)
+{
+    // TODO
 
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
 
