@@ -9,17 +9,24 @@ dom::nodes::document_fragment::document_fragment()
         , mixins::non_element_parent_node<document_fragment>()
         , mixins::parent_node<document_fragment>() {
 
-    node_type = DOCUMENT_FRAGMENT_NODE;
-    node_name = "#document-fragment";
-    host = nullptr;
+    // set the properties
+    node_type << DOCUMENT_FRAGMENT_NODE;
+    node_name << "#document-fragment";
+    host << nullptr;
 }
 
 
-ext::string dom::nodes::document_fragment::get_text_content() const {
+INLINE ext::string
+dom::nodes::document_fragment::get_text_content() const
+{
+    // the text content is the descendant text content's of this node
     return helpers::trees::descendant_text_content(this);
 }
 
 
-void dom::nodes::document_fragment::set_text_content(ext::cstring& val) {
+INLINE void
+dom::nodes::document_fragment::set_text_content(ext::cstring& val)
+{
+    // replace all the text in this node with the new val
     helpers::node_internals::string_replace_all(this, val);
 }

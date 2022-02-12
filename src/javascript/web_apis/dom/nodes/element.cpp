@@ -24,71 +24,85 @@ dom::nodes::element::element()
         , mixins::non_document_type_child_node<element>()
         , mixins::child_node<element>()
         , mixins::slottable<element>()
-        , mixins::document_or_element_node<element>() {
-//        , css::cssom_view::mixins::scrolable<element>()
+        , mixins::document_or_element_node<element>()
+//        , css::cssom_view::mixins::scrollable<element>()
 //        , css::cssom_view::mixins::geometry_utils<element>() {
-
+{
+    // set the custom accessors
     tag_name.get = [this] {return get_tag_name();};
     shadow_root_node.get = [this] {return get_shadow_root();};
     id.set = [this](auto&& PH1) {set_id(std::forward<decltype(PH1)>(PH1));};
 
-    node_type = ELEMENT_NODE;
-    shadow_root_node = nullptr;
-    attributes = new ext::vector<attr*>{};
-    class_list = new ext::vector<ext::string>{};
+    // set the properties
+    node_type << ELEMENT_NODE;
+    shadow_root_node << nullptr;
+    attributes << new ext::vector<attr*>{};
+    class_list << new ext::vector<ext::string>{};
 
+    // set the attributes
     m_custom_element_definition = nullptr;
     m_custom_element_reaction_queue = {};
 
+    // create the widget representation
     m_rendered_widget = new QWidget{};
 }
 
 
-dom::nodes::element::~element() {
+dom::nodes::element::~element()
+{
+    // delete all the attributes when the element is deleted
     attributes->clear();
     delete attributes;
 }
 
 
 bool
-dom::nodes::element::has_attributes() const {
+dom::nodes::element::has_attributes() const
+{
+    // return if the attributes list is not empty
     return not attributes->empty();
 }
 
 
 bool
-dom::nodes::element::has_attribute(ext::cstring& name) const {
+dom::nodes::element::has_attribute(ext::cstring& name) const
+{
+    // if this element is a html element then set the html qualified name to lowercase
     ext::string html_qualified_name = helpers::node_internals::is_html(this)
             ? name.new_lowercase()
             : name;
 
+    // return if the list of attributes filtered to have a matching name contains any elements or not
     return not attributes
             ->filter([name](attr* attribute) {return attribute->name == name;})
-            .empty()
+            .empty();
 }
 
 
 bool
 dom::nodes::element::has_attribute_ns(
         ext::cstring& namespace_,
-        ext::cstring& local_name) const {
-
-    return not namespace_
+        ext::cstring& local_name) const
+{
+    // return if the list of attributes filtered to have a matching namespace and local_name contains any elements or not
+    return not attributes
             ->filter([namespace_, local_name](attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
             .empty();
 }
 
 
 ext::vector<ext::string>
-dom::nodes::element::get_attribute_names() const {
-
-    return attributes->transform<ext::string>([](attr* attribute) -> ext::string {return attibute->name;});
+dom::nodes::element::get_attribute_names() const
+{
+    // return a list of attributes transformed into their names
+    return attributes->transform<ext::string>([](attr* attribute) -> ext::string {return attribute->name;});
 }
 
 
 ext::string
-dom::nodes::element::get_attribute(ext::cstring& qualified_name) const {
-
+dom::nodes::element::get_attribute(ext::cstring& qualified_name) const
+{
+    // return the value of the attribute that whose name matches qualified name
     return get_attribute_node(qualified_name)->value;
 }
 
@@ -96,7 +110,8 @@ dom::nodes::element::get_attribute(ext::cstring& qualified_name) const {
 ext::string
 dom::nodes::element::get_attribute_ns(
         ext::cstring& namespace_,
-        ext::string local_name) const {
+        ext::string local_name) const
+{
 
     return get_attribute_node_ns(namespace_, local_name)->value;
 }

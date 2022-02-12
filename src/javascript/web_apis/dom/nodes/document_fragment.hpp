@@ -18,12 +18,12 @@ public constructors:
     document_fragment();
 
 public properties:
-    ext::dom_property<dom::nodes::element*> host;
+    ext::dom_property<dom::nodes::element*, _F> host;
 
 private accessors:
-    inline ext::string get_text_content() const override;
+    ext::string get_text_content() const override;
 
-    inline void set_text_content(ext::cstring& val) override;
+    void set_text_content(ext::cstring& val) override;
 };
 
 

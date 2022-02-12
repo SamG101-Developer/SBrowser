@@ -17,9 +17,9 @@ public constructors:
     document_type();
 
 public properties:
-    ext::dom_property<ext::string> name;
-    ext::dom_property<ext::string> public_id;
-    ext::dom_property<ext::string> system_id;
+    ext::dom_property<ext::string, _F> name;
+    ext::dom_property<ext::string, _F> public_id;
+    ext::dom_property<ext::string, _F> system_id;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
