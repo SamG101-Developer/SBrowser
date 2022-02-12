@@ -622,25 +622,45 @@ dom::nodes::document::get_scripts()
 INLINE void
 dom::nodes::document::set_title(ext::cstring& val)
 {
-    element* title_element;
+    // case for when the document element is a svg element
     if (dynamic_cast<svg::nodes::svg_element*>(document_element)) {
-        title_element = document_element->child_nodes->cast_all<svg::nodes::svg_title_element*>().front();
 
-        if (not title_element) {
+        // the title element is the first child of the document that is a svg title element
+        auto* title_element = document_element->child_nodes->cast_all<svg::nodes::svg_title_element*>().front();
+
+        // if there is no title element, then create an element and insert it as the document element's children's first
+        // child
+        if (not title_element)
+        {
             title_element = helpers::custom_elements::create_an_element(document_element->owner_document, "title", helpers::namespaces::SVG);
             helpers::mutation_algorithms::insert(title_element, document_element, document_element->child_nodes->front());
         }
+
+        // replace all the text in the title element with the new title val
         helpers::node_internals::string_replace_all(val, title_element);
     }
 
+    // case for when the document element is a html element
     else if (document_element->namespace_uri == helpers::namespaces::HTML) {
-        if (not get_m_title_element() and not get_m_head_element()) return;
-        if (get_m_title_element()) title_element = get_m_title_element();
 
-        if (not title_element) {
+        // do nothing if there is no title or head element in the document
+        if (not get_m_title_element() and not get_m_head_element())
+            return;
+
+        element* title_element = nullptr;
+
+        // the title element is the html title element if it exists
+        if (get_m_title_element())
+            auto* title_element = get_m_title_element();
+
+        // otherwise, set the title element to the creation of an element
+        else
+        {
             title_element = helpers::custom_elements::create_an_element(document_element->owner_document, "title", helpers::namespaces::HTML);
             helpers::mutation_algorithms::append(title_element, get_m_head_element());
         }
+
+        // replace all the text in the title element with the new title val
         helpers::node_internals::string_replace_all(val, title_element);
     }
 }
@@ -649,16 +669,19 @@ dom::nodes::document::set_title(ext::cstring& val)
 INLINE void
 dom::nodes::document::set_body(html::elements::html_body_element* val)
 {
+    // if the new val isn't a html_body_element, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
             "body attribute must be a HTMLBodyElement",
             HIERARCHY_REQUEST_ERR,
             [val] {return dynamic_cast<html::elements::html_body_element*>(val);});
 
+    // if the new val is null and there is no document element, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
-            "settings a null body attribute requires a document element to be present",
+            "setting a null body attribute requires a document element to be present",
             HIERARCHY_REQUEST_ERR,
             [val, this] {return not val and not document_element;});
 
+    // append the new val into the document element
     helpers::mutation_algorithms::append(val, document_element);
 }
 
@@ -666,13 +689,17 @@ dom::nodes::document::set_body(html::elements::html_body_element* val)
 INLINE void
 dom::nodes::document::set_cookie(ext::cstring& val)
 {
-    if (html::helpers::cookies::is_cookie_averse_document(this)) return;
+    // if the document is cookie averse, then return
+    if (html::helpers::cookies::is_cookie_averse_document(this))
+        return;
 
+    // if the origin is opaque, then throw a security error
     helpers::exceptions::throw_v8_exception(
             "cannot set the cookie of a document that has an opaque origin",
             SECURITY_ERR,
             [this] {return m_origin == "opaque";});
 
+    // set the cookie's new value
     cookie << val;
 }
 
