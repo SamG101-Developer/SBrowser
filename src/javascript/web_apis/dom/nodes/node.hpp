@@ -4,7 +4,7 @@
 
 #include <ext/iterables/map.hpp>
 #include <ext/iterables/string.hpp>
-#include <ext/types/property.hpp>
+#include <ext/properties/dom_property.hpp>
 
 #include <dom/nodes/event_target.hpp>
 
@@ -73,30 +73,30 @@ public: methods
     dom::nodes::node* remove_child(node* old_node);
 
 public properties:
-    ext::dom_property<unsigned short> node_type;
-    ext::dom_property<ext::string> node_name{true};
-    ext::dom_property<ext::string> node_value{true};
-    ext::dom_property<ext::string> text_content{true};
-    ext::dom_property<ext::string> base_uri;
-    ext::dom_property<bool> is_connected;
-    ext::dom_property<ext::vector<node*>*> child_nodes;
-    ext::dom_property<node*> parent;
-    ext::dom_property<element*> parent_element;
-    ext::dom_property<document*> owner_document;
-    ext::dom_property<node*> first_child;
-    ext::dom_property<node*> last_child;
-    ext::dom_property<node*> previous_sibling;
-    ext::dom_property<node*> next_sibling;
+    ext::dom_property<unsigned short, _F> node_type;
+    ext::dom_property<ext::string, _T> node_name;
+    ext::dom_property<ext::string, _T> node_value;
+    ext::dom_property<ext::string, _T> text_content;
+    ext::dom_property<ext::string, _F> base_uri;
+    ext::dom_property<bool, _F> is_connected;
+    ext::dom_property<ext::vector<node*>*, _F> child_nodes;
+    ext::dom_property<node*, _F> parent;
+    ext::dom_property<element*, _F> parent_element;
+    ext::dom_property<document*, _F> owner_document;
+    ext::dom_property<node*, _F> first_child;
+    ext::dom_property<node*, _F> last_child;
+    ext::dom_property<node*, _F> previous_sibling;
+    ext::dom_property<node*, _F> next_sibling;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
 
 protected: accessors
-    inline virtual ext::string get_node_value() const;
-    inline virtual ext::string get_text_content() const;
+    virtual ext::string get_node_value() const;
+    virtual ext::string get_text_content() const;
 
-    inline virtual void set_node_value(ext::cstring& val);
-    inline virtual void set_text_content(ext::cstring& val);
+    virtual void set_node_value(ext::cstring& val);
+    virtual void set_text_content(ext::cstring& val);
 
 protected: internal_methods
     virtual QWidget* render() {return nullptr;};
@@ -105,15 +105,15 @@ protected: internal_properties
     QWidget* m_rendered_widget;
 
 private: accessors
-    inline bool get_is_connected() const;
-    inline ext::string get_base_uri() const;
-    inline node* get_first_child() const;
-    inline node* get_last_child() const;
-    inline node* get_previous_sibling() const;
-    inline node* get_next_sibling() const;
-    inline element* get_parent_element() const;
+    bool get_is_connected() const;
+    ext::string get_base_uri() const;
+    node* get_first_child() const;
+    node* get_last_child() const;
+    node* get_previous_sibling() const;
+    node* get_next_sibling() const;
+    element* get_parent_element() const;
 
-    inline void set_parent_node(node* val);
+    void set_parent_node(node* val);
 
     ext::vector<internal::registered_observer*>* m_registered_observer_list;
 };

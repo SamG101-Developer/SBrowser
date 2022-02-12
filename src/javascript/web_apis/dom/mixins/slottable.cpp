@@ -18,7 +18,7 @@ dom::mixins::slottable<T>::slottable()
 
 
 template <typename T>
-html::elements::html_slot_element*
+INLINE html::elements::html_slot_element*
 dom::mixins::slottable<T>::get_assigned_slot() const
 {
     // return the found slot from the helper function find_slot, after converting this into a node pointer

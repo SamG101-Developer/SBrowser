@@ -72,16 +72,16 @@ dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes)
 
 
 template <typename T>
-ext::vector<dom::nodes::element*>*
+INLINE ext::vector<dom::nodes::element*>*
 dom::mixins::parent_node<T>::get_children() const
 {
     // return all the children that are element type nodes
-    return reinterpret_cast<const T*>(this)->child_nodes->cast_all<nodes::element*>();
+    return reinterpret_cast<const nodes::node*>(this)->child_nodes->cast_all<nodes::element*>();
 }
 
 
 template <typename T>
-dom::nodes::element*
+INLINE dom::nodes::element*
 dom::mixins::parent_node<T>::get_first_element_child() const
 {
     // return the first item from the element child list
@@ -90,7 +90,7 @@ dom::mixins::parent_node<T>::get_first_element_child() const
 
 
 template <typename T>
-dom::nodes::element*
+INLINE dom::nodes::element*
 dom::mixins::parent_node<T>::get_last_element_child() const
 {
     // return the last item from the element child list
@@ -99,7 +99,7 @@ dom::mixins::parent_node<T>::get_last_element_child() const
 
 
 template <typename T>
-size_t
+INLINE size_t
 dom::mixins::parent_node<T>::get_child_element_count() const
 {
     // return the length of the element child list

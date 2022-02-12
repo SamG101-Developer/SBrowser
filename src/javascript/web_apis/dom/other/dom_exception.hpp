@@ -4,13 +4,13 @@
 
 #include <ext/iterables/string.hpp>
 #include <ext/macros/decorators.hpp>
-#include <ext/types/property.hpp>
+#include <ext/properties/dom_property.hpp>
 
 #include <dom_object.hpp>
 
 namespace dom::other {class dom_exception;}
 
-enum exception_type {
+enum exception_type { // TODO : scoping?
     INDEX_SIZE_ERR, DOMSTRING_SIZE_ERR, HIERARCHY_REQUEST_ERR, WRONG_DOCUMENT_ERR, INVALID_CHARACTER_ERR,
     NO_DATA_ALLOWED_ERR, NO_MODIFICATION_ALLOWED_ERR, NOT_FOUND_ERR, NOT_SUPPORTED_ERR, INUSE_ATTRIBUTE_ERR,
     INVALID_STATE_ERR, SYNTAX_ERR, INVALID_MODIFICATION_ERR, NAMESPACE_ERR, INVALID_ACCESS_ERR, VALIDATION_ERR,
@@ -25,8 +25,8 @@ public: constructors
     dom_exception(ext::cstring& message, exception_type type);
 
 public: properties
-    ext::dom_property<ext::string> message;
-    ext::dom_property<exception_type> type;
+    ext::dom_property<ext::string, _F> message;
+    ext::dom_property<exception_type, _F> type;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

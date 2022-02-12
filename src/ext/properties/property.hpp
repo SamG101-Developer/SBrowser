@@ -6,6 +6,7 @@
 
 #include <ext/macros/cpp_keywords.hpp>
 #include <ext/macros/decorators.hpp>
+#include <ext/types/any.hpp>
 
 namespace ext {
     template <typename T> struct property;
@@ -527,7 +528,7 @@ FAST INLINE U& ext::property<T>::operator[] (const size_t i) const
 
 template <typename T>
 template <typename U, typename ...Args>
-U& ext::property<T>::operator() (Args&&... args) const
+FAST INLINE U& ext::property<T>::operator() (Args&&... args) const
 {
     // return the result of invoking the function stored as the internal value
     return m_internal(std::forward<Args...>(args...));
@@ -535,10 +536,50 @@ U& ext::property<T>::operator() (Args&&... args) const
 
 
 template <typename T>
-ext::property<T>::operator bool() const requires (!std::is_same_v<T, bool>)
+FAST INLINE ext::property<T>::operator bool() const requires (!std::is_same_v<T, bool>)
 {
     // convert any non-property2<bool> property2<T> into a boolean and return the evaluation
     return (bool)m_internal;
+}
+
+
+template <typename U, typename T>
+U ext::property_dynamic_cast(const ext::property<T>& o)
+{
+    // dynamic_cast the internal value into a new value
+    return dynamic_cast<U>(o.m_internal);
+}
+
+
+template <typename U, typename T>
+U ext::property_static_cast(const ext::property<T>& o)
+{
+    // static_cast the internal value into a new value
+    return static_cast<U>(o.m_internal);
+}
+
+
+template <typename U, typename T>
+U ext::property_const_cast(const ext::property<T>& o)
+{
+    // const_cast the internal value into a new value
+    return const_cast<U>(o.m_internal);
+}
+
+
+template <typename U, typename T>
+U ext::property_reinterpret_cast(const ext::property<T>& o)
+{
+    // reinterpret_cast the internal value into a new value
+    return reinterpret_cast<U>(o.m_internal);
+}
+
+
+template <typename U, typename T>
+U ext::property_any_cast(const ext::property<T>& o)
+{
+    // any_cast the internal value into a new value
+    return any_cast<U>(o.m_internal);
 }
 
 

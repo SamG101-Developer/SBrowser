@@ -30,6 +30,7 @@ public: constructors
 public: methods
     static abort_signal abort(ext::any reason = "");
     void throw_if_aborted() const;
+    static abort_signal* timeout(unsigned long long milliseconds);
 
 public properties:
     ext::dom_property<bool    , _F> aborted;

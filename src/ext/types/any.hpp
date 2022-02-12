@@ -48,47 +48,73 @@ private: internal_properties
 };
 
 
-bool operator==(ext::cany& first, ext::cany& second) {
+bool operator==(ext::cany& first, ext::cany& second)
+{
+    // equality check by comparing the addresses of the two objects
     return &first == &second;
 }
 
 
-const type_info& ext::any::type() const {
+const type_info& ext::any::type() const
+{
+    // return the type of the internal object wrapped with the ext::any
     return m_value.type();
 }
 
-bool ext::any::empty() const {
+
+bool ext::any::empty() const
+{
+    // return if the ext::any object is empty ie there is no internal object wrapped
     return not m_value.has_value();
 }
 
-bool ext::any::contains_pointer() const {
+
+bool ext::any::contains_pointer() const
+{
+    // return if the internal object wrapped is a pointer type TODO : this implementation makes me feel sick
     return ext::string{type().name()}.contains("* __ptr64");
 }
 
+
 template <typename T>
-void ext::any::emplace(T&& element) {
+void ext::any::emplace(T&& element)
+{
+    // emplace an object of type T as the internal object being wrapped by ext::any
     m_value.template emplace<T>(element);
 }
 
+
 template <typename T>
-void ext::any::emplace() {
+void ext::any::emplace()
+{
+    // emplace an empty object of type T (ie assign the type as T but .empty() will return true)
     m_value.template emplace<T>();
 }
 
+
 template <typename T>
-T ext::any::to() const {
+T ext::any::to() const
+{
+    // cast the internal object wrapped to any type T
     return any_cast<T>(m_value);
 }
 
-ext::any::operator bool() const {
+
+ext::any::operator bool() const
+{
+    // the conversion will only return true if there is an internal object wrapped TODO : false / nullptr will return true -> special case?
     return not empty();
 }
 
 
 template <class T>
-T any_cast(ext::cany& value) {
+T any_cast(ext::cany& value)
+{
+    // if the value is empty or a void, then return a nullptr for pointer types, otherwise a new stack object of type T
     if (value.empty() or value.type() == typeid(void))
         return value.contains_pointer() ? nullptr : T();
+
+    // otherwise, return the internal object unwrapped, as type T
     return std::any_cast<T>(value);
 }
 

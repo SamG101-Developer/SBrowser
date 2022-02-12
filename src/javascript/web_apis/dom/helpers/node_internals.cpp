@@ -49,7 +49,7 @@ dom::helpers::node_internals::clone(
 
 ext::string
 dom::helpers::node_internals::locate_a_namespace_prefix(
-        nodes::element* element,
+        const nodes::element* element,
         ext::cstring& namespace_) {
 
     if (element->namespace_uri == namespace_ and element->prefix)
@@ -67,7 +67,7 @@ dom::helpers::node_internals::locate_a_namespace_prefix(
 
 ext::string
 dom::helpers::node_internals::locate_a_namespace(
-        nodes::node* node,
+        const nodes::node* node,
         ext::cstring& prefix) {
 
     if (not node)

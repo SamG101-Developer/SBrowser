@@ -24,7 +24,7 @@ public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
 
 public: properties
-    ext::dom_property<nodes::node*> current_node;
+    ext::dom_property<nodes::node*, _F> current_node;
 };
 
 

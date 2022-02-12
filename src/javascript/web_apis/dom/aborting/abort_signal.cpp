@@ -35,6 +35,15 @@ dom::aborting::abort_signal::throw_if_aborted() const
 }
 
 
+dom::aborting::abort_signal*
+dom::aborting::abort_signal::timeout(unsigned long long milliseconds)
+{
+    auto* signal = new abort_signal{};
+    // TODO
+    return signal;
+}
+
+
 ext::any
 dom::aborting::abort_signal::v8(v8::Isolate* isolate) const
 {
@@ -42,6 +51,7 @@ dom::aborting::abort_signal::v8(v8::Isolate* isolate) const
             .inherit<event_target>()
             .function("abort", &abort_signal::abort)
             .function("throwIfAborted", &abort_signal::throw_if_aborted)
+            .function("timeout", &abort_signal::timeout) // TODO -> static function?
             .var("aborted", &abort_signal::aborted)
             .var("reason", &abort_signal::reason)
             .auto_wrap_objects();

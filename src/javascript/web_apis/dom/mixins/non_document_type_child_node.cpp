@@ -16,7 +16,7 @@ dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
 
 
 template <typename T>
-dom::nodes::element*
+INLINE dom::nodes::element*
 dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const
 {
     // get the class that this mixin is being mixed into
@@ -30,7 +30,7 @@ dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() con
 
 
 template <typename T>
-dom::nodes::element*
+INLINE dom::nodes::element*
 dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const
 {
     // get the class that this mixin is being mixed into

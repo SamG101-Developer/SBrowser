@@ -26,15 +26,19 @@
 #include <QtWidgets/QWidgetAction>
 
 
-dom::nodes::node::node() : event_target() {
-    base_uri.get = [this] {return get_base_uri();};
-    is_connected.get = [this] {return get_is_connected();};
-    first_child.get = [this] {return get_first_child();};
-    last_child.get = [this] {return get_last_child();};
+dom::nodes::node::node() : event_target()
+{
+    // set the custom accessors
+    base_uri.get         = [this] {return get_base_uri();};
+    is_connected.get     = [this] {return get_is_connected();};
+    first_child.get      = [this] {return get_first_child();};
+    last_child.get       = [this] {return get_last_child();};
     previous_sibling.get = [this] {return get_previous_sibling();};
-    next_sibling.get = [this] {return get_next_sibling();};
+    next_sibling.get     = [this] {return get_next_sibling();};
 
     parent.set = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
+
+    // set the properties
     parent << nullptr;
     child_nodes << new ext::vector<node*>{};
 
@@ -42,135 +46,193 @@ dom::nodes::node::node() : event_target() {
 }
 
 
-dom::nodes::node::~node() {
+dom::nodes::node::~node()
+{
     // TODO : m_registered_observer_list->clear(true);
 }
 
 
 void
-dom::nodes::node::normalize() const {
-
-    for (text* text_node: helpers::trees::descendant_text_nodes(this)) {
+dom::nodes::node::normalize() const
+{
+    // iterator over the text nodes that are descendants of this node
+    for (const text* text_node: helpers::trees::descendant_text_nodes(this))
+    {
+        // if the length of the text node (ie the length of the text) is 0 then remove the text node
         size_t length = helpers::trees::length(text_node);
-        if (length <= 0) {
+        if (length <= 0)
+        {
             helpers::mutation_algorithms::remove(text_node);
             continue;
         }
 
-        ext::string data = helpers::trees::contiguous_text_nodes(text_node)
+        // combine the text from the next consecutive text nodes into the text node TODO : remove '(const node*)'
+        ext::string data = helpers::trees::contiguous_text_nodes((const node*)text_node)
                 .transform<ext::string>([](text* contiguous_text_node) -> ext::string {return contiguous_text_node->data;})
-                .join("");
+                .join('\0');
 
+        // replace the data in this node with the combined data from the contiguous nodes
         helpers::texts::replace_data(text_node, length, 0, data);
+
+        // get the current node as the next text node (whose text has been combined into the text node's text)
         node* current_node = text_node->next_sibling;
-
         auto* live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>*>("live_ranges");
-        while (helpers::trees::is_exclusive_text_node(current_node)) {
-            live_ranges
-                    ->filter([current_node](auto* range) {return range->start_container == current_node;})
-                    .for_each([text_node](auto* range) {range->start_offset += length; range->start_container = text_node;});
 
+        // iterate by incrementing the current_node to the next sibling
+        while (helpers::trees::is_exclusive_text_node(current_node))
+        {
+            // ranges whose starting node is current_node: increment the starting offset by the length of the text of
+            // the text node (text has shifted back to previous node) and set the starting node to the text node
             live_ranges
-                    ->filter([current_node](auto* range) {return range->end_container == current_node;})
-                    .for_each([text_node](auto* range) {range->end_offset += length; range->end_container = text_node;});
+                    ->filter([current_node](ranges::range* range) {return range->start_container == current_node;})
+                    .for_each([text_node, length](ranges::range* range) {range->start_offset += length; range->start_container = text_node;});
 
+            // ranges whose ending node is current_node: increment the ending offset by the length of the text of this
+            // text node (text has shifted back to previous node) abd set the ending node to the text node
             live_ranges
-                    ->filter([current_node](auto* range) {return range->start_container == current_node->parent;})
-                    .for_each([length, text_node](auto* range) {range->start_offset = length; range->start_container = text_node;});
+                    ->filter([current_node](ranges::range* range) {return range->end_container == current_node;})
+                    .for_each([text_node, length](ranges::range* range) {range->end_offset += length; range->end_container = text_node;});
 
+            // ranges whose starting node is current_node's parent: set the starting offset to the length of the text in
+            // the text node and set the starting node to the text node TODO : why?
             live_ranges
-                    ->filter([current_node](auto* range) {return range->end_container == current_node->parent;})
-                    .for_each([length, text_node](auto* range) {range->end_offset = length; range->end_container = text_node;});
+                    ->filter([current_node](ranges::range* range) {return range->start_container == current_node->parent;})
+                    .for_each([length, text_node](ranges::range* range) {range->start_offset = length; range->start_container = text_node;});
 
+            // ranges whose ending node is current_node's parent: set the ending offset to the length of the text in
+            // the text node and set the ending node to the text node TODO : why?
+            live_ranges
+                    ->filter([current_node](ranges::range* range) {return range->end_container == current_node->parent;})
+                    .for_each([length, text_node](ranges::range* range) {range->end_offset = length; range->end_container = text_node;});
+
+            // increment the length by the current_node's length (so that the next current_node's offset can be
+            // incremented further as needed to be, and set the current node to the next sibling
             length += helpers::trees::length(current_node);
             current_node = current_node->next_sibling;
         }
     }
 
+    // remove all the empty contiguous text node's that are now empty
     for (text* text_node: helpers::trees::contiguous_text_nodes(this))
         helpers::mutation_algorithms::remove(text_node);
 }
 
 
-bool dom::nodes::node::has_child_nodes() const {
+bool dom::nodes::node::has_child_nodes() const
+{
+    // return if there are any children
     return not child_nodes->empty();
 }
 
-bool dom::nodes::node::contains(node* other) const {
+bool dom::nodes::node::contains(node* other) const
+{
+    // return if the other node is a descendant of this node
     return helpers::trees::is_descendant(other, this);
 }
 
-bool dom::nodes::node::is_equal_node(node* other) const {
-    if (not other) return false;
+bool dom::nodes::node::is_equal_node(node* other) const
+{
+    // base implementation (derived nodes will extend this method)
 
-    if (child_nodes->length() != other->child_nodes->length()) return false;
-    for (size_t child_index = 0; child_index < child_nodes->length(); ++child_index) {
-        if (not child_nodes->at(child_index)->equals(other->child_nodes->at(child_index))) return false;
+    // if the other node is null, then the nodes aren't equal
+    if (not other)
+        return false;
+
+    // if the length of the child nodes are different, then the nodes aren't equal
+    if (child_nodes->length() != other->child_nodes->length())
+        return false;
+
+    // check that the children are also equal (recursive algorithm)
+    for (size_t child_index = 0; child_index < child_nodes->length(); ++child_index)
+    {
+        if (not child_nodes->at(child_index)->is_equal_node(other->child_nodes->at(child_index))) return false;
     }
-    return true;;
+
+    // return that all the base checks pass
+    return true;
 }
 
-bool dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const {
+bool dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const
+{
+    // return if the namespace of this node equals namespace generated from locating the empty namespace in this node
     return namespace_ == helpers::node_internals::locate_a_namespace(this, "");
 }
 
 
 ext::string
-dom::nodes::node::lookup_prefix(
-        ext::cstring& namespace_) const {
-
+dom::nodes::node::lookup_prefix(ext::cstring& namespace_) const
+{
+    // element node: return the lookup for the element
     if (auto* element_node = dynamic_cast<const element*>(this))
         return helpers::node_internals::locate_a_namespace_prefix(element_node, namespace_);
 
+    // document node: return the lookup for the document element
     if (auto* document_node = dynamic_cast<const document*>(this))
         return helpers::node_internals::locate_a_namespace_prefix(document_node->document_element, namespace_);
 
+    // document type node: return nullptr
     if (auto* document_type_node = dynamic_cast<const document_type*>(this))
         return nullptr;
 
+    // document fragment: return nullptr
     if (auto* document_fragment_node = dynamic_cast<const document_fragment*>(this))
         return nullptr;
 
+    // attribute node: return the lookup for the owner element
     if (auto* attribute_node = dynamic_cast<const attr*>(this))
         return helpers::node_internals::locate_a_namespace_prefix(attribute_node->owner_element, namespace_);
 
+    // default: return the lookup for the parent element if it exists, otherwise nullptr
     return parent_element
             ? helpers::node_internals::locate_a_namespace_prefix(parent_element, namespace_)
             : nullptr;
 }
 
 
-ext::string dom::nodes::node::lookup_namespace_uri(ext::cstring& prefix) const {return helpers::node_internals::locate_a_namespace(this, prefix);}
+ext::string dom::nodes::node::lookup_namespace_uri(ext::cstring& prefix) const
+{
+    // lookup the namespace with the prefix
+    return helpers::node_internals::locate_a_namespace(this, prefix);
+}
 
 unsigned short
-dom::nodes::node::compare_document_position(node* other) const {
+dom::nodes::node::compare_document_position(node* other) const
+{
+    // if the nodes are the same then return 0 ie there is no comparison to be done
     if (this == other) return 0;
 
+    // set the nodes to the other node and this node, and the attributes to nullptr (don't exist yet)
     node* node_1 = other;
-    node* node_2 = this;
+    node* node_2 = const_cast<node*>(this);
     attr* attr_1 = nullptr;
     attr* attr_2 = nullptr;
 
+    // set helper variables for element representations of the node variables
     element* node_1_as_element = nullptr;
     element* node_2_as_element = nullptr;
 
-    // if other is an attr attr_1 to the attribute and node_1 to the owner element
-    if (dynamic_cast<const attr*>(node_1)) {
+    // if other is an attr: set attr_1 to the attribute and node_1 to the owner element
+    if (dynamic_cast<const attr*>(node_1))
+    {
         const node* temp = node_1;
         node_1_as_element = attr_1->owner_element;
         attr_1 = (attr*)dynamic_cast<const attr*>(temp);
     }
 
-    // if this is an attr attr_2 to the attribute and node_1 to the owner element
-    if (dynamic_cast<const attr*>(node_2)) {
+    // if this is an attr: set attr_2 to the attribute and node_1 to the owner element
+    if (dynamic_cast<const attr*>(node_2))
+    {
         const node* temp = node_2;
         node_2_as_element = attr_2->owner_element;
         attr_2 = (attr*)dynamic_cast<const attr*>(temp);
     }
 
     // if both nodes are attributes with the same owner element
-    if (attr_1 and attr_2 and attr_1 == attr_2 and node_1_as_element == node_2_as_element) {
-        for (attr* attribute: *node_2_as_element->attributes) {
+    if (attr_1 and attr_2 and attr_1 == attr_2 and node_1_as_element == node_2_as_element)
+    {
+        // iterate over this node's attributes for attribute position comparison
+        for (attr* attribute: *node_2_as_element->attributes)
+        {
             if (attribute == attr_1) return DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC | DOCUMENT_POSITION_PRECEDING;
             if (attribute == attr_2) return DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC | DOCUMENT_POSITION_FOLLOWING;
         }
@@ -197,27 +259,30 @@ dom::nodes::node::compare_document_position(node* other) const {
     // other preceding or following depends on index comparison (in the same tree)
     return helpers::trees::is_preceding(node_1, node_2)
             ? DOCUMENT_POSITION_PRECEDING
-            : DOCUMENT_POSITION_FOLLOWING
+            : DOCUMENT_POSITION_FOLLOWING;
 }
 
 
 dom::nodes::node*
-dom::nodes::node::get_root_node(ext::cstring_any_map& options) const {
-
-    return ext::any_cast<bool>(options.at("composed"))
+dom::nodes::node::get_root_node(ext::cstring_any_map& options) const
+{
+    // return the shadow root if the <composed> option is true, otherwise the exposed tree root
+    return options.at("composed").to<bool>()
             ? helpers::shadows::shadow_including_root(this)
             : helpers::trees::root(this);
 }
 
 
 dom::nodes::node*
-dom::nodes::node::clone_node(bool deep) const {
-
+dom::nodes::node::clone_node(bool deep) const
+{
+    // throw a not support error if the root of the tree of this node is a shadow root
     helpers::exceptions::throw_v8_exception(
             "cannot clone a shadow root node",
-            helpers::exceptions::NOT_SUPPORTED_ERR,
+            NOT_SUPPORTED_ERR,
             [this] {return helpers::shadows::is_shadow_root(this);});
 
+    // return the clone helper method
     return helpers::node_internals::clone(this, nullptr, deep);
 }
 
@@ -225,58 +290,115 @@ dom::nodes::node::clone_node(bool deep) const {
 dom::nodes::node*
 dom::nodes::node::insert_before(
         node* new_node,
-        node* child) {
-
-    ce_reactions(&node::insert_before);
+        node* child)
+{
+    // pre-insert the new_node before the child
     helpers::mutation_algorithms::pre_insert(new_node, this, child);
+
+    // custom element reactions
+    handle_ce_reactions(&node::insert_before);
 }
 
 
 dom::nodes::node*
 dom::nodes::node::append_child(
-        node* new_node) {
-
-    ce_reactions(&node::append_child);
+        node* new_node)
+{
+    // append the new_node
     helpers::mutation_algorithms::append(new_node, this);
+
+    // custom element reactions
+    handle_ce_reactions(&node::append_child);
 }
 
 
 dom::nodes::node*
 dom::nodes::node::replace_child(
         node* old_node,
-        node* new_node) {
-
-    ce_reactions(&node::replace_child);
+        node* new_node)
+{
+    // replace the old_node with the new_node
     helpers::mutation_algorithms::replace(new_node, old_node, this);
+
+    // custom element reactions
+    handle_ce_reactions(&node::replace_child);
 }
 
 
 dom::nodes::node*
 dom::nodes::node::remove_child(
-        node* old_node) {
+        node* old_node)
+{
+    // remove the old node
+    helpers::mutation_algorithms::pre_remove(old_node, this);
 
-    ce_reactions(&node::remove_child);
-    helpers::mutation_algorithms::pre_remove(child, this);
+    // custom element reactions
+    handle_ce_reactions(&node::remove_child);
 }
 
 
-ext::string dom::nodes::node::get_node_value() const {return "";}
+INLINE ext::string
+dom::nodes::node::get_node_value() const
+{
+    // return the default node value - empty (abstract class)
+    return "";
+}
 
-ext::string dom::nodes::node::get_text_content() const {return "";}
+INLINE ext::string
+dom::nodes::node::get_text_content() const
+{
+    // return the default text content - empty (abstract class)
+    return "";
+}
 
-bool dom::nodes::node::get_is_connected() const {return helpers::shadows::is_connected(this);}
+INLINE bool
+dom::nodes::node::get_is_connected() const
+{
+    // return if this node is connected, by calling the is_connected helper method
+    return helpers::shadows::is_connected(this);
+}
 
-ext::string dom::nodes::node::get_base_uri() const {return url::helpers::serializing::serialize_url(owner_document->base_uri);}
+INLINE ext::string
+dom::nodes::node::get_base_uri() const
+{
+    // return the serialization if the document's base uri
+    return url::helpers::serializing::serialize_url(owner_document->base_uri);
+}
 
-dom::nodes::node* dom::nodes::node::get_first_child() const {return child_nodes->front();}
+INLINE dom::nodes::node*
+dom::nodes::node::get_first_child() const
+{
+    // return the first child node
+    return child_nodes->front();
+}
 
-dom::nodes::node* dom::nodes::node::get_last_child() const {return child_nodes->back();}
+INLINE dom::nodes::node*
+dom::nodes::node::get_last_child() const
+{
+    // return the last child node
+    return child_nodes->back();
+}
 
-dom::nodes::node* dom::nodes::node::get_previous_sibling() const {return parent->child_nodes->item_before(this);}
+INLINE dom::nodes::node*
+dom::nodes::node::get_previous_sibling() const
+{
+    // return the previous sibling of this node by getting the item before this node in the parent's child list
+    return parent->child_nodes->item_before(this);
+}
 
-dom::nodes::node* dom::nodes::node::get_next_sibling() const {return parent->child_nodes->item_after(this);}
+INLINE dom::nodes::node*
+dom::nodes::node::get_next_sibling() const
+{
+    // return the next sibling of this node by getting the item after this node in the parent's child list
+    return parent->child_nodes->item_after(this);
+}
 
-dom::nodes::element* dom::nodes::node::get_parent_element() const {return ext::property_dynamic_cast<element*>(parent);}
+INLINE dom::nodes::element*
+dom::nodes::node::get_parent_element() const
+{
+    // get the parent node of this noe if it is element, otherwise null (dynamic_cast handles both cases)
+    return ext::property_dynamic_cast<element*>(parent);
+}
 
 void dom::nodes::node::set_parent_node(node* val) {
 
