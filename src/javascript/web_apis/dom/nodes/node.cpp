@@ -24,6 +24,7 @@
 
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QWidgetAction>
+#include <QtWidgets/QLayout>
 
 
 dom::nodes::node::node() : event_target()
@@ -344,12 +345,14 @@ dom::nodes::node::get_node_value() const
     return "";
 }
 
+
 INLINE ext::string
 dom::nodes::node::get_text_content() const
 {
     // return the default text content - empty (abstract class)
     return "";
 }
+
 
 INLINE bool
 dom::nodes::node::get_is_connected() const
@@ -358,12 +361,14 @@ dom::nodes::node::get_is_connected() const
     return helpers::shadows::is_connected(this);
 }
 
+
 INLINE ext::string
 dom::nodes::node::get_base_uri() const
 {
     // return the serialization if the document's base uri
     return url::helpers::serializing::serialize_url(owner_document->base_uri);
 }
+
 
 INLINE dom::nodes::node*
 dom::nodes::node::get_first_child() const
@@ -372,12 +377,14 @@ dom::nodes::node::get_first_child() const
     return child_nodes->front();
 }
 
+
 INLINE dom::nodes::node*
 dom::nodes::node::get_last_child() const
 {
     // return the last child node
     return child_nodes->back();
 }
+
 
 INLINE dom::nodes::node*
 dom::nodes::node::get_previous_sibling() const
@@ -386,12 +393,14 @@ dom::nodes::node::get_previous_sibling() const
     return parent->child_nodes->item_before(this);
 }
 
+
 INLINE dom::nodes::node*
 dom::nodes::node::get_next_sibling() const
 {
     // return the next sibling of this node by getting the item after this node in the parent's child list
     return parent->child_nodes->item_after(this);
 }
+
 
 INLINE dom::nodes::element*
 dom::nodes::node::get_parent_element() const
@@ -400,53 +409,65 @@ dom::nodes::node::get_parent_element() const
     return ext::property_dynamic_cast<element*>(parent);
 }
 
-void dom::nodes::node::set_parent_node(node* val) {
 
+INLINE void
+dom::nodes::node::set_parent_node(node* val) {
+
+    // remove this node from the current parent's child node list TODO : move to mutation algorithms?
     if (parent and parent_element->child_nodes->contains(this))
         parent->child_nodes->remove(this);
 
+    // set the new parent and append this to the child nodes TODO : move to mutation algorithms
     parent << val;
     parent->child_nodes->append(this);
 
-    if (m_rendered_widget->isWidgetType()) {
-
-        if (auto* new_parent_scroll_widget = dynamic_cast<QScrollArea*>(val->render())) {
+    // if this node can be rendered
+    if (m_rendered_widget->isWidgetType())
+    {
+        // scrollable widget parent: append to the QScrollArea's internal widget's layout
+        if (auto* new_parent_scroll_widget = dynamic_cast<QScrollArea*>(val->render()))
+        {
             auto* this_widget = dynamic_cast<QWidget*>(m_rendered_widget);
             new_parent_scroll_widget->widget()->layout()->addWidget(this_widget);
         }
 
-        else if (auto new_parent_action_widget = dynamic_cast<QWidgetAction*>(val->render())) {
+        // widget action (for menus and similar) parent: append to the TODO
+        else if (auto new_parent_action_widget = dynamic_cast<QWidgetAction*>(val->render()))
+        {
             auto* this_widget = dynamic_cast<QWidget*>(m_rendered_widget);
             new_parent_action_widget->setDefaultWidget(this_widget);
         }
 
-        else if (auto* new_parent_widget = dynamic_cast<QWidget*>(val->render())) {
+        // widget parent: append to the QWidget's layout
+        else if (auto* new_parent_widget = dynamic_cast<QWidget*>(val->render()))
+        {
             auto* this_widget = dynamic_cast<QWidget*>(m_rendered_widget);
             new_parent_widget->layout()->addWidget(this_widget);
         }
 
+        // should never reach here (failsafe for incorrect c++ code implementations)
         else {
             std::cout << "error widget type trying to render" << std::endl;
             delete m_rendered_widget;
             return;
         }
 
+        // show the widget render of this widget (sometimes changing the parent can hide this widget)
         m_rendered_widget->show();
     }
 }
 
 
-ext::any dom::nodes::node::v8(v8::Isolate* isolate) const {
+ext::any dom::nodes::node::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<node>{isolate}
             .inherit<dom::nodes::event_target>()
-
             .static_("DOCUMENT_POSITION_DISCONNECTED", node::DOCUMENT_POSITION_DISCONNECTED)
             .static_("DOCUMENT_POSITION_PRECEDING", node::DOCUMENT_POSITION_PRECEDING)
             .static_("DOCUMENT_POSITION_FOLLOWING", node::DOCUMENT_POSITION_FOLLOWING)
             .static_("DOCUMENT_POSITION_CONTAINS", node::DOCUMENT_POSITION_CONTAINS)
             .static_("DOCUMENT_POSITION_CONTAINED_BY", node::DOCUMENT_POSITION_CONTAINED_BY)
             .static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC)
-
             .function("normalize", &node::normalize)
             .function("hasChildNodes", &node::has_child_nodes)
             .function("contains", &node::contains)
@@ -461,7 +482,6 @@ ext::any dom::nodes::node::v8(v8::Isolate* isolate) const {
             .function("appendChild", &node::append_child)
             .function("replaceChild", &node::replace_child)
             .function("removeChild", &node::remove_child)
-
             .var("nodeName", &node::node_name)
             .var("nodeValue", &node::node_value)
             .var("textContent", &node::text_content)
@@ -475,6 +495,5 @@ ext::any dom::nodes::node::v8(v8::Isolate* isolate) const {
             .var("lastChild", &node::last_child)
             .var("previousSibling", &node::previous_sibling)
             .var("nextSibling", &node::next_sibling)
-
             .auto_wrap_objects();
 }
