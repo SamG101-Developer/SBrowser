@@ -40,7 +40,8 @@ class dom::nodes::element
 //        , public css::cssom_view::mixins::scrollable<element>
 //        , public css::cssom_view::mixins::geometry_utils<element> {
 
-friends
+public: friends
+    friend class document;
     friend struct helpers::attributes;
     friend struct helpers::custom_elements;
     friend struct helpers::node_internals;

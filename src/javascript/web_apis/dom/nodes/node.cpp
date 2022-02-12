@@ -70,7 +70,7 @@ dom::nodes::node::normalize() const
         // combine the text from the next consecutive text nodes into the text node TODO : remove '(const node*)'
         ext::string data = helpers::trees::contiguous_text_nodes((const node*)text_node)
                 .transform<ext::string>([](text* contiguous_text_node) -> ext::string {return contiguous_text_node->data;})
-                .join('\0');
+                .join(EMPTY);
 
         // replace the data in this node with the combined data from the contiguous nodes
         helpers::texts::replace_data(text_node, length, 0, data);
@@ -277,7 +277,7 @@ dom::nodes::node::get_root_node(ext::cstring_any_map& options) const
 dom::nodes::node*
 dom::nodes::node::clone_node(bool deep) const
 {
-    // throw a not support error if the root of the tree of this node is a shadow root
+    // if the root of the tree of this node is a shadow root, then throw a not support error
     helpers::exceptions::throw_v8_exception(
             "cannot clone a shadow root node",
             NOT_SUPPORTED_ERR,

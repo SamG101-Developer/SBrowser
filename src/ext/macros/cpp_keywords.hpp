@@ -6,4 +6,6 @@
 #define _T true
 #define _F false
 
+#define EMPTY '\0'
+
 #endif //SBROWSER_CPP_KEYWORDS_HPP

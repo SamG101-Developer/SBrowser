@@ -26,16 +26,16 @@ public methods:
     void replace_data(unsigned long offset, unsigned long count, ext::cstring& new_data);
 
 public properties:
-    ext::dom_property<ext::string> data;
-    ext::dom_property<unsigned long> length;
+    ext::dom_property<ext::string, _F> data;
+    ext::dom_property<unsigned long, _F> length;
 
 private accessors:
-    inline ext::string get_node_value() const override;
-    inline ext::string get_text_content() const override;
-    inline unsigned long get_length() const;
+    ext::string get_node_value() const override;
+    ext::string get_text_content() const override;
+    unsigned long get_length() const;
 
-    inline void set_node_value(ext::cstring& val) override;
-    inline void set_text_content(ext::cstring& val) override;
+    void set_node_value(ext::cstring& val) override;
+    void set_text_content(ext::cstring& val) override;
 };
 
 

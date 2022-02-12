@@ -21,7 +21,7 @@ public methods:
     text* split_text(unsigned long offset);
 
 public properties:
-    ext::dom_property<ext::string> whole_text;
+    ext::dom_property<ext::string, _F> whole_text;
 
 public internal_methods:
     QLabel* render() override;

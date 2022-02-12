@@ -15,6 +15,8 @@ struct dom::helpers::namespaces {
     struct_string XML = "http://www.w3.org/XML/1998/namespace";
     struct_string XMLNS = "http://www.w3.org/2000/xmlns/";
 
+    struct_string NONE = "";
+
     static void validate(ext::cstring& qualified_name);
     static std::tuple<ext::string, ext::string, ext::string> validate_and_extract(ext::cstring& namespace_, ext::cstring& qualified_name);
 };
