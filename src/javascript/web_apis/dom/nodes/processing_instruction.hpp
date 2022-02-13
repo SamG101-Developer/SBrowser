@@ -15,7 +15,7 @@ public constructors:
     processing_instruction();
 
 public properties:
-    ext::dom_property<ext::string> target;
+    ext::dom_property<ext::string, _F> target;
 };
 
 

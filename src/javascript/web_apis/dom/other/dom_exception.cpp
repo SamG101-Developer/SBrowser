@@ -5,16 +5,17 @@ dom::other::dom_exception::dom_exception(
         ext::cstring& message,
         exception_type type)
 
-        : dom_object() {
-
-    this->message = message;
-    this->type = type;
+        : dom_object()
+{
+    // set the properties
+    this->message << message;
+    this->type << type;
 }
 
 
 ext::any
-dom::other::dom_exception::v8(v8::Isolate* isolate) const {
-
+dom::other::dom_exception::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<dom_exception>{isolate}
             .ctor<ext::cstring&, exception_type>()
             .var("message", &dom::other::dom_exception::message)

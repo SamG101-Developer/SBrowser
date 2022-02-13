@@ -14,17 +14,22 @@ dom::nodes::window::window()
         : event_target()
 //        , html::mixins::window_or_worker_global_scope()
 //        , css::cssom_view::mixins::scrollable()
-        , ext::listlike<ext::string>() {
+        , ext::listlike<ext::string>()
+{
 }
 
 
 void
-dom::nodes::window::alert(ext::cstring& message) {
+dom::nodes::window::alert(ext::cstring& message)
+{
+    // if the application can show dialogs, get the message
+    if (html::helpers::dialogs::cannot_show_dialogs())
+        return;
 
-    if (html::helpers::dialogs::cannot_show_dialogs()) return;
     message = infra::helpers::strings::normalize_newlines(message);
     message = infra::helpers::strings::optionally_truncate(message); // TODO in html spec?
 
+    // create the message box and display the message TODO : remove to render stack
     QMessageBox message_box;
     message_box.setParent(document->render());
     message_box.setIcon(QMessageBox::Icon::Information);
@@ -38,10 +43,14 @@ dom::nodes::window::alert(ext::cstring& message) {
 void
 dom::nodes::window::confirm(ext::cstring& message) {
 
-    if (html::helpers::dialogs::cannot_show_dialogs()) return;
+    // if the application can show dialogs, get the message
+    if (html::helpers::dialogs::cannot_show_dialogs())
+        return;
+
     message = infra::helpers::strings::normalize_newlines(message);
     message = infra::helpers::strings::optionally_truncate(message);
 
+    // create the message box and display the message TODO : remove to render stack
     QMessageBox message_box;
     message_box.setParent(document->render());
     message_box.setIcon(QMessageBox::Icon::Question);
@@ -57,11 +66,15 @@ dom::nodes::window::prompt(
         ext::cstring& message,
         ext::cstring& default_) {
 
-    if (html::helpers::dialogs::cannot_show_dialogs()) return;
+    // if the application can show dialogs, get the message
+    if (html::helpers::dialogs::cannot_show_dialogs())
+        return "";
+
     message = infra::helpers::strings::normalize_newlines(message);
     message = infra::helpers::strings::optionally_truncate(message);
     default_ = infra::helpers::strings::optionally_truncate(default_);
 
+    // create the message box and display the message TODO : remove to render stack
     QInputDialog input_dialog;
     input_dialog.setParent(document->render());
     input_dialog.setLabelText(message);

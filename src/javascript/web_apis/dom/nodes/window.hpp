@@ -3,7 +3,9 @@
 #define SBROWSER_WINDOW_HPP
 
 #include <ext/mixins/listlike.hpp>
+#include <ext/properties/dom_property.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
+
 #include <dom/nodes/event_target.hpp>
 
 namespace dom::nodes {
@@ -71,59 +73,59 @@ public: methods
 
 public: properties
     // current browsing context
-    ext::dom_property<ext::string> name;
-    ext::dom_property<ext::string> status;
-    ext::dom_property<bool> closed;
+    ext::dom_property<ext::string, _F> name;
+    ext::dom_property<ext::string, _F> status;
+    ext::dom_property<bool, _F> closed;
 
-    ext::dom_property<html::other::location*> location;
-    ext::dom_property<html::other::history*> history;
-    ext::dom_property<html::custom_elements::custom_element_registry*> custom_elements;
+    ext::dom_property<html::other::location*, _F> location;
+    ext::dom_property<html::other::history*, _F> history;
+    ext::dom_property<html::custom_elements::custom_element_registry*, _F> custom_elements;
 
-    ext::dom_property<window_proxy*> window_;
-    ext::dom_property<window_proxy*> self;
-    ext::dom_property<document*> document;
+    ext::dom_property<window_proxy*, _F> window_;
+    ext::dom_property<window_proxy*, _F> self;
+    ext::dom_property<document*, _F> document;
 
     // bar prop elements
-    ext::dom_property<html::other::bar_prop*> location_bar;
-    ext::dom_property<html::other::bar_prop*> menu_bar;
-    ext::dom_property<html::other::bar_prop*> personal_bar;
-    ext::dom_property<html::other::bar_prop*> scroll_bars;
-    ext::dom_property<html::other::bar_prop*> status_bar;
-    ext::dom_property<html::other::bar_prop*> tool_bar;
+    ext::dom_property<html::other::bar_prop*, _F> location_bar;
+    ext::dom_property<html::other::bar_prop*, _F> menu_bar;
+    ext::dom_property<html::other::bar_prop*, _F> personal_bar;
+    ext::dom_property<html::other::bar_prop*, _F> scroll_bars;
+    ext::dom_property<html::other::bar_prop*, _F> status_bar;
+    ext::dom_property<html::other::bar_prop*, _F> tool_bar;
 
     // animated types browsing context
-    ext::dom_property<ext::any> opener;
-    ext::dom_property<unsigned long> length;
-    ext::dom_property<element*> frame_element;
-    ext::dom_property<window_proxy*> frames;
-    ext::dom_property<window_proxy*> top;
-    ext::dom_property<window_proxy*> parent;
+    ext::dom_property<ext::any, _F> opener;
+    ext::dom_property<unsigned long, _F> length;
+    ext::dom_property<element*, _F> frame_element;
+    ext::dom_property<window_proxy*, _F> frames;
+    ext::dom_property<window_proxy*, _F> top;
+    ext::dom_property<window_proxy*, _F> parent;
 
     // user agent
-    ext::dom_property<bool> origin_agent_cluster;
-    ext::dom_property<html::other::navigator*> navigator;
+    ext::dom_property<bool, _F> origin_agent_cluster;
+    ext::dom_property<html::other::navigator*, _F> navigator;
 
 public: properties
     // viewport
-    ext::dom_property<long> inner_width;
-    ext::dom_property<long> inner_height;
+    ext::dom_property<long, _F> inner_width;
+    ext::dom_property<long, _F> inner_height;
 
     // viewport scrolling
-    ext::dom_property<double> scroll_x;
-    ext::dom_property<double> scroll_y;
-    ext::dom_property<double> page_x_offset;
-    ext::dom_property<double> page_y_offset;
+    ext::dom_property<double, _F> scroll_x;
+    ext::dom_property<double, _F> scroll_y;
+    ext::dom_property<double, _F> page_x_offset;
+    ext::dom_property<double, _F> page_y_offset;
 
     // client
-    ext::dom_property<long> screen_x;
-    ext::dom_property<long> screen_y;
-    ext::dom_property<long> outer_width;
-    ext::dom_property<long> outer_height;
-    ext::dom_property<double> device_pixel_width;
+    ext::dom_property<long, _F> screen_x;
+    ext::dom_property<long, _F> screen_y;
+    ext::dom_property<long, _F> outer_width;
+    ext::dom_property<long, _F> outer_height;
+    ext::dom_property<double, _F> device_pixel_width;
 
 public: properties
     // screens
-    ext::dom_property<css::cssom_view::other::screen*> screen;
+    ext::dom_property<css::cssom_view::other::screen*, _F> screen;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

@@ -99,7 +99,7 @@ ext::string& ext::string::operator=(const char* other)
 ext::string& ext::string::operator=(char&& other)
 {
     // set the iterable from a const&& type, and return the reference to the string
-    m_iterable = other;
+    m_iterable = &other;
     return *this;
 }
 
@@ -147,7 +147,7 @@ ext::string& ext::string::operator=(v8::Local<v8::String> other)
 inline ext::string& ext::string::ltrim()
 {
     // remove all the spaces from the left-hand side of the string, and return the reference to the string
-    m_iterable.erase(begin(), begin() + (std::string::difference_type)m_iterable.find_first_not_of(' '));
+    m_iterable.erase(begin(), begin() + (decltype(m_iterable)::difference_type)m_iterable.find_first_not_of(' '));
     return *this;
 }
 
@@ -155,7 +155,7 @@ inline ext::string& ext::string::ltrim()
 inline ext::string& ext::string::rtrim()
 {
     // remove all the spaces from the right-hand side of the string, and return the reference to the string
-    m_iterable.erase(begin() + (std::string::difference_type)m_iterable.find_last_not_of(' ') + 1, end());
+    m_iterable.erase(begin() + (decltype(m_iterable)::difference_type)m_iterable.find_last_not_of(' '), end());
     return *this;
 }
 
@@ -172,7 +172,7 @@ inline ext::string& ext::string::trim()
 inline ext::string& ext::string::to_lowercase()
 {
     // convert the string to lowercase by transforming each character individually, and return a reference to thr string
-    std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
+    std::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
     return *this;
 }
 

@@ -12,16 +12,16 @@ class dom::nodes::shadow_root
         : public document_fragment
         , public mixins::document_or_shadow_root<dom::nodes::shadow_root> {
 
-friends
+public: friends
     friend class element;
 
 public constructors:
     shadow_root();
 
 public properties:
-    ext::dom_property<ext::string> mode;
-    ext::dom_property<ext::string> slot_assignment;
-    ext::dom_property<bool> delegates_focus;
+    ext::dom_property<ext::string, _F> mode;
+    ext::dom_property<ext::string, _F> slot_assignment;
+    ext::dom_property<bool, _F> delegates_focus;
 
 protected internal_properties:
     bool m_available_to_internals = false;

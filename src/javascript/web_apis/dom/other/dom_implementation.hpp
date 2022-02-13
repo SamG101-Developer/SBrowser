@@ -9,11 +9,7 @@
 
 namespace dom {
     namespace other {class dom_implementation;}
-    namespace nodes {
-        class document_type;
-        class document;
-        class xml_document;
-    }
+    namespace nodes {class document_type; class document; class xml_document;}
 }
 
 
