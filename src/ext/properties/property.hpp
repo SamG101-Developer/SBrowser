@@ -70,8 +70,8 @@ public: constructors
     property<T>& operator^=(const T& o);
     property<T>& operator&=(const T& o);
     property<T>& operator|=(const T& o);
-    property<T>& operator<<=(const size_t n);
-    property<T>& operator>>=(const size_t n);
+    property<T>& operator<<=(const size_t n) requires (not std::is_arithmetic_v<T>);
+    property<T>& operator>>=(const size_t n) requires (not std::is_arithmetic_v<T>);
     property<T>& operator++();
     property<T>& operator--();
 
@@ -83,8 +83,8 @@ public: constructors
     property<T> operator^(const T& o) const;
     property<T> operator&(const T& o) const;
     property<T> operator|(const T& o) const;
-    property<T> operator<<(const size_t n) const;
-    property<T> operator>>(const size_t n) const;
+    property<T> operator<<(const size_t n) const requires (not std::is_arithmetic_v<T>);
+    property<T> operator>>(const size_t n) const requires (not std::is_arithmetic_v<T>);
     property<T> operator++(const int n) const;
     property<T> operator--(const int n) const;
 
@@ -327,7 +327,7 @@ FAST INLINE ext::property<T>& ext::property<T>::operator|=(const T& o)
 
 
 template <typename T>
-FAST INLINE ext::property<T>& ext::property<T>::operator<<=(const size_t n)
+FAST INLINE ext::property<T>& ext::property<T>::operator<<=(const size_t n) requires (not std::is_arithmetic_v<T>)
 {
     // left bit-shift the internal value by value, and return the reference to the property
     m_internal <<= n;
@@ -336,7 +336,7 @@ FAST INLINE ext::property<T>& ext::property<T>::operator<<=(const size_t n)
 
 
 template <typename T>
-FAST INLINE ext::property<T>& ext::property<T>::operator>>=(const size_t n)
+FAST INLINE ext::property<T>& ext::property<T>::operator>>=(const size_t n) requires (not std::is_arithmetic_v<T>)
 {
     // right bit-shift the internal value by value, and return the reference to the property
     m_internal >>= n;
@@ -427,7 +427,7 @@ FAST INLINE ext::property<T> ext::property<T>::operator|(const T& o) const
 
 
 template <typename T>
-FAST INLINE ext::property<T> ext::property<T>::operator<<(const size_t n) const
+FAST INLINE ext::property<T> ext::property<T>::operator<<(const size_t n) const requires (not std::is_arithmetic_v<T>)
 {
     // left bit-shift the copied internal value by value, and return the reference to the property
     return property<T>{*this} <<= n;
@@ -435,7 +435,7 @@ FAST INLINE ext::property<T> ext::property<T>::operator<<(const size_t n) const
 
 
 template <typename T>
-FAST INLINE ext::property<T> ext::property<T>::operator>>(const size_t n) const
+FAST INLINE ext::property<T> ext::property<T>::operator>>(const size_t n) const requires (not std::is_arithmetic_v<T>)
 {
     // right bit-shift the copied internal value by value, and return the reference to the property
     return property<T>{*this} >>= n;

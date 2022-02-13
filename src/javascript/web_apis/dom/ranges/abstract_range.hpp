@@ -3,7 +3,7 @@
 #define SBROWSER_ABSTRACT_RANGE_HPP
 
 #include <ext/macros/decorators.hpp>
-#include <ext/types/property.hpp>
+#include <ext/properties/dom_property.hpp>
 
 #include <dom_object.hpp>
 
@@ -18,11 +18,11 @@ public constructors:
     abstract_range();
 
 public properties:
-    ext::dom_property<bool> collapsed;
-    ext::dom_property<nodes::node*> start_container;
-    ext::dom_property<nodes::node*> end_container;
-    ext::dom_property<unsigned long> start_offset;
-    ext::dom_property<unsigned long> end_offset;
+    ext::dom_property<bool, _F> collapsed;
+    ext::dom_property<nodes::node*, _F> start_container;
+    ext::dom_property<nodes::node*, _F> end_container;
+    ext::dom_property<unsigned long, _F> start_offset;
+    ext::dom_property<unsigned long, _F> end_offset;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

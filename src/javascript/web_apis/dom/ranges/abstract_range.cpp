@@ -1,14 +1,14 @@
 #include "abstract_range.hpp"
 
 
-dom::ranges::abstract_range::abstract_range()
-        : dom_object() {
+dom::ranges::abstract_range::abstract_range() : dom_object()
+{
 }
 
 
 ext::any
-dom::ranges::abstract_range::v8(v8::Isolate* isolate) const {
-
+dom::ranges::abstract_range::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<abstract_range>{isolate}
             .inherit<dom_object>()
 

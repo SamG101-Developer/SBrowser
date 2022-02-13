@@ -15,14 +15,17 @@
 #include <dom/helpers/trees.hpp>
 
 
-dom::ranges::range::range() : abstract_range() {
+dom::ranges::range::range() : abstract_range()
+{
+    // set the custom accessors
     common_ancestor_container.get = [this] {return get_common_ancestor_container();};
 
-    start_container = (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
-    end_container = (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
+    // set the properties
+    start_container << (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
+    end_container << (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
 
-    start_offset = 0;
-    end_offset = 0;
+    start_offset << 0;
+    end_offset << 0;
 }
 
 

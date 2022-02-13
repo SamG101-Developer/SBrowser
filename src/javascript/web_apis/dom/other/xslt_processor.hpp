@@ -3,7 +3,6 @@
 #define SBROWSER_XSLT_PROCESSOR_HPP
 
 #include <ext/macros/decorators.hpp>
-#include <ext/types/property.hpp>
 
 #include <dom_object.hpp>
 

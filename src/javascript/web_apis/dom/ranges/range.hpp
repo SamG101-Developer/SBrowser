@@ -14,7 +14,7 @@ namespace geometry::shapes {class dom_rect;}
 
 
 class dom::ranges::range : public abstract_range {
-friends
+public: friends
     friend struct helpers::range_internals;
 
 public: constructors
@@ -60,7 +60,7 @@ public: methods
     geometry::shapes::dom_rect get_bounding_client_rect();
 
 public properties:
-    ext::dom_property<nodes::node*> common_ancestor_container;
+    ext::dom_property<nodes::node*, _F> common_ancestor_container;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
