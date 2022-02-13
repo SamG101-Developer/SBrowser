@@ -174,7 +174,7 @@ dom::helpers::range_internals::clone_character_data_and_append(
 }
 
 
-void
+dom::nodes::document_fragment*
 dom::helpers::range_internals::append_to_sub_fragment(
         nodes::node* node,
         nodes::document_fragment* fragment,
@@ -194,6 +194,8 @@ dom::helpers::range_internals::append_to_sub_fragment(
 
     auto* sub_fragment = sub_range->extract_contents();
     mutation_algorithms::append(sub_fragment, clone);
+
+    return sub_fragment;
 }
 
 

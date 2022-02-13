@@ -53,7 +53,7 @@ dom::nodes::event_target::remove_event_listener(
 bool
 dom::nodes::event_target::dispatch_event(events::event* event)
 {
-    // if the dispatch is already set or the initialized flag isn't set, throw an invalid state error
+    // if the dispatch is already set or the initialized flag isn't set, then throw an invalid state error
     helpers::exceptions::throw_v8_exception(
             "event must be initialized and not dispatched in order be dispatched",
             INVALID_STATE_ERR,
