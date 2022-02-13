@@ -515,8 +515,8 @@ dom::ranges::range::collapse(bool to_start)
 
 
 dom::ranges::range*
-dom::ranges::range::clone_range() {
-
+dom::ranges::range::clone_range()
+{
     // create a new range with the same nodes and offsets as this node
     auto range_object = new range{};
     range_object->start_container = start_container;
@@ -557,8 +557,8 @@ dom::ranges::range::is_point_in_range(
 
 
 ext::string
-dom::ranges::range::to_json() {
-
+dom::ranges::range::to_json()
+{
     // create the output string, and the start and end containers as text nodes
     ext::string s;
     auto* start_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
@@ -574,27 +574,30 @@ dom::ranges::range::to_json() {
     if (start_text_node)
         s += start_text_node->data->substring(start_offset);
 
-    //
+    // append the text from the descendant text nodes that are partially contained to the output string
     for (auto* descendant_text_node: helpers::trees::descendant_text_nodes(m_root).filter([this](nodes::text* descendant_node) {return helpers::range_internals::contains(descendant_node, this);}))
         s += descendant_text_node->data->substring(start_offset);
 
+    // if the end node is a text node, then append the substring upto the end offset to the output string
     if (end_text_node)
         s += end_text_node->data->substring(0, end_offset);
 
+    // return the output string
     return s;
 }
 
 
 dom::nodes::node*
-dom::ranges::range::get_common_ancestor_container() const {
-
+dom::ranges::range::get_common_ancestor_container() const
+{
+    // get the common ancestor of the two containers using the common_ancestor helper method
     return helpers::trees::common_ancestor(start_container, end_container);
 }
 
 
 ext::any
-dom::ranges::range::v8(v8::Isolate* isolate) const {
-
+dom::ranges::range::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<range>{isolate}
             .ctor<>()
             .inherit<abstract_range>()
@@ -630,8 +633,6 @@ dom::ranges::range::v8(v8::Isolate* isolate) const {
             .function("isPointInRange", &range::is_point_in_range)
 
             .function("toJSON", &range::to_json)
-
             .var("commonAncestorContainer", &range::common_ancestor_container)
-
             .auto_wrap_objects();
 }
