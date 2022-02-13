@@ -427,7 +427,7 @@ dom::ranges::range::clone_contents()
 
 
 dom::nodes::document_fragment*
-dom::ranges::range::delete_contents() {
+dom::ranges::range::delete_contents() { // TODO : check this method against the DOM spec (or add replace_data offset info into comments)
 
     // return nullptr if the range is collapsed
     if (collapsed)
@@ -450,45 +450,54 @@ dom::ranges::range::delete_contents() {
             .filter([this](auto* node) {return helpers::range_internals::contains(node, this);})
             .filter([this](auto* node) {return not helpers::range_internals::contains(node->parent_node, this);});
 
+    // if the start node is a textually based range container, then delete the data in its character data cast
     if (helpers::range_internals::is_textual_based_range_container(start_container)) {
-        nodes::character_data* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
-        helpers::texts::replace_data(start_container_character_data, start_offset, helpers::trees::length(start_container) - start_offset, "");
+        auto* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
+        helpers::texts::replace_data(start_container_character_data, start_offset, -start_offset + helpers::trees::length(start_container), "");
     }
 
-    nodes_to_remove.for_each([](auto* node) {helpers::mutation_algorithms::remove(node);});
+    // remove each node in the nodes_to_remove_list
+    for (nodes::node* node: nodes_to_remove)
+        helpers::mutation_algorithms::remove(node);
 
+    // if the start node is a textually based range container, then delete the data in its character data cast
     if (helpers::range_internals::is_textual_based_range_container(end_container)) {
-        nodes::character_data* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(end_container);
+        auto* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(end_container);
         helpers::texts::replace_data(start_container_character_data, 0, end_offset, "");
     }
 
-    start_container = new_node, start_offset = new_offset;
-    end_container = new_node, end_offset = new_offset;
+    // set the start and end nodes to the new_node, and set the start and end offsets to the new_offset
+    start_container = new_node;
+    start_offset = new_offset;
+    end_container = new_node;
+    end_offset = new_offset;
 }
 
 
 dom::nodes::document_fragment*
-dom::ranges::range::surround_contents(
-        nodes::node* new_parent) {
-
+dom::ranges::range::surround_contents(nodes::node* new_parent)
+{
+    // if there are text node descendants of this range's root that are partially contained, throw an invalid state error
     helpers::exceptions::throw_v8_exception(
             "cannot surround the contents of a range that partially contains a text node",
             INVALID_STATE_ERR,
-            [this] {return not helpers::trees::descendants(m_root)
-                    .cast_all<nodes::text*>()
-                    .filter([](auto* node) {return helpers::range_internals::partially_contains(node, this);})
-                    .empty();});
+            [this] {return not helpers::trees::descendant_text_nodes(m_root).filter([this](auto* node) {return helpers::range_internals::partially_contains(node, this);}).empty();});
 
+    // if the new_parent is a document, document_fragment or document_type, then throw an invalid node type error
     helpers::exceptions::throw_v8_exception(
             "cannot surround the contents of a range with a new parent that is a document, document_fragment or document_type",
             INVALID_NODE_TYPE_ERR,
-            [new_parent] {return dynamic_cast<nodes::document*>(new_parent)
-                    or dynamic_cast<nodes::document_fragment*>(new_parent)
-                    or dynamic_cast<nodes::document_type*>(new_parent);});
+            [new_parent] {return dynamic_cast<nodes::document*>(new_parent) or dynamic_cast<nodes::document_fragment*>(new_parent) or dynamic_cast<nodes::document_type*>(new_parent);});
 
+    // extract the contents of the range
     auto* fragment = extract_contents();
-    if (new_parent->child_nodes) helpers::mutation_algorithms::replace_all(nullptr, new_parent);
 
+    // if the new parent has child nodes, then replace them all with nullptr
+    if (new_parent->child_nodes)
+        helpers::mutation_algorithms::replace_all(nullptr, new_parent);
+
+    // insert the new_parent into the range, append the new parent into the fragment, and select the new_parent in the
+    // node
     insert_node(new_parent);
     helpers::mutation_algorithms::append(fragment, new_parent);
     select_node(new_parent);
@@ -496,23 +505,26 @@ dom::ranges::range::surround_contents(
 
 
 void
-dom::ranges::range::collapse(
-        bool to_start) {
-
+dom::ranges::range::collapse(bool to_start)
+{
+    // if to_start is true, the set the end container to the start container, otherwise the other awayaround
     to_start
-    ? end_container = start_container
-    : start_container = end_container;
+            ? end_container = start_container
+            : start_container = end_container;
 }
 
 
 dom::ranges::range*
 dom::ranges::range::clone_range() {
 
+    // create a new range with the same nodes and offsets as this node
     auto range_object = new range{};
     range_object->start_container = start_container;
     range_object->start_offset = start_offset;
     range_object->end_container = end_container;
     range_object->end_offset = end_offset;
+
+    // return the range
     return range_object;
 }
 
@@ -520,29 +532,51 @@ dom::ranges::range::clone_range() {
 bool
 dom::ranges::range::is_point_in_range(
         nodes::node* node,
-        unsigned long offset) {
+        unsigned long offset)
+{
+    // return false if this range's root isn't the same root as the node's root
+    if (m_root != helpers::trees::root(node))
+        return false;
 
-    if (m_root != helpers::trees::root(node)) return false;
+    // if the node is a document_type node, then throw an invalid node type error
+    dom::helpers::exceptions::throw_v8_exception(
+            "node cannot be a doctype node",
+            INVALID_NODE_TYPE_ERR,
+            [node] -> bool {return dynamic_cast<nodes::document_type*>(node);});
+
+    // if the offset > the length of the node, then throw an index error
+    dom::helpers::exceptions::throw_v8_exception(
+            "offset must be <= the length of the node",
+            INDEX_SIZE_ERR,
+            [node, offset] {return offset > helpers::trees::length(node);});
+
+    // the point is in the range if it between the start container/offset and end container/offset
+    return helpers::range_internals::position_relative(node, offset, start_container, start_offset) == AFTER
+            and helpers::range_internals::position_relative(node, offset, end_container, end_offset) == BEFORE;
 }
 
 
 ext::string
 dom::ranges::range::to_json() {
 
+    // create the output string, and the start and end containers as text nodes
     ext::string s;
-    nodes::text* start_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
-    nodes::text* end_text_node = ext::property_dynamic_cast<nodes::text*>(end_container);
+    auto* start_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
+    auto* end_text_node = ext::property_dynamic_cast<nodes::text*>(end_container);
 
+    // if the start and end nodes are the same (and a text node), then return the substring of the text from between the
+    // start and end offset
     if (start_container == end_container and start_text_node)
         return start_text_node->data->substring(start_offset, end_offset - start_offset);
 
+    // if the start node is a text node, then increment the output string by the substring of the data in the text node
+    // that ranges from the start_offset to the end of the text
     if (start_text_node)
         s += start_text_node->data->substring(start_offset);
 
-    helpers::trees::descendants(m_root)
-            .filter([this](auto* descendant_node) {return helpers::range_internals::contains(descendant_node, this);})
-            .cast_all<nodes::text*>()
-            .for_each([&s, this](auto* descendant_node) {s += descendant_node->data->substring(start_offset);});
+    //
+    for (auto* descendant_text_node: helpers::trees::descendant_text_nodes(m_root).filter([this](nodes::text* descendant_node) {return helpers::range_internals::contains(descendant_node, this);}))
+        s += descendant_text_node->data->substring(start_offset);
 
     if (end_text_node)
         s += end_text_node->data->substring(0, end_offset);
