@@ -51,7 +51,7 @@ dom::other::dom_implementation::create_document(
         ext::cstring& qualified_name,
         nodes::document_type* document_type) {
 
-    // create a non-html document, and set the document element to a created element if a qualified name is given
+    // create a new non-html document, and set the document element to a created element if a qualified name is given
     auto* document = new nodes::xml_document{};
     auto* document_element = not qualified_name.empty()
             ? document->create_element_ns(namespace_, qualified_name)
@@ -87,38 +87,45 @@ dom::other::dom_implementation::create_document(
 
 
 dom::nodes::document*
-dom::other::dom_implementation::create_html_document(
-        ext::cstring& title) {
-
+dom::other::dom_implementation::create_html_document(ext::cstring& title)
+{
+    // create a new document, and set its type and content type to html
     auto* document = new nodes::document{};
     document->m_type = "html";
     document->content_type = "text/html";
 
+    // create a new doctype and set its document to the new html document
     auto* document_type = new nodes::document_type{};
     document_type->name = "html";
     document_type->owner_document = document;
 
+    // append the doctype into the document, and create a new html and head element
     helpers::mutation_algorithms::append(document_type, document);
     helpers::mutation_algorithms::append(helpers::custom_elements::create_an_element(document, "html", helpers::namespaces::HTML), document);
     helpers::mutation_algorithms::append(helpers::custom_elements::create_an_element(document, "head", helpers::namespaces::HTML), document->child_nodes->at(1));
 
     if (not title.empty()) {
+        // create a new text node with the title text in, and set the owner document to the new html document
         auto* text_node = new nodes::text{title};
         text_node->owner_document = document;
 
+        // append the title element into the document head and append the text node into the title element
         helpers::mutation_algorithms::append(helpers::custom_elements::create_an_element(document, "title", helpers::namespaces::HTML), document->child_nodes->at(2));
         helpers::mutation_algorithms::append(text_node, document->child_nodes->at(3));
     }
 
+    // create a new body node and add it to the html element
     helpers::mutation_algorithms::append(helpers::custom_elements::create_an_element(document, "body", helpers::namespaces::HTML), document->child_nodes->at(1));
+
+    // set the document's origin to the associated document's origin, and return the document
     document->m_origin = m_associated_document->m_origin;
     return document;
 }
 
 
 ext::any
-dom::other::dom_implementation::v8(v8::Isolate* isolate) const {
-
+dom::other::dom_implementation::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<dom_implementation>{isolate}
             .function("createDocumentType", &dom::other::dom_implementation::create_document_type)
             .function("createDocument", &dom::other::dom_implementation::create_document)
