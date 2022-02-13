@@ -31,7 +31,6 @@ dom::nodes::element::element()
     // set the custom accessors
     tag_name.get = [this] {return get_tag_name();};
     shadow_root_node.get = [this] {return get_shadow_root();};
-    id.set = [this](auto&& PH1) {set_id(std::forward<decltype(PH1)>(PH1));};
 
     // set the properties
     node_type << ELEMENT_NODE;
@@ -64,6 +63,14 @@ dom::nodes::element::has_attributes() const
 }
 
 
+ext::vector<ext::string>
+dom::nodes::element::get_attribute_names() const
+{
+    // return a list of attributes transformed into their names
+    return attributes->transform<ext::string>([](attr* attribute) -> ext::string {return attribute->name;});
+}
+
+
 bool
 dom::nodes::element::has_attribute(ext::cstring& name) const
 {
@@ -73,9 +80,7 @@ dom::nodes::element::has_attribute(ext::cstring& name) const
             : name;
 
     // return if the list of attributes filtered to have a matching name contains any elements or not
-    return not attributes
-            ->filter([name](attr* attribute) {return attribute->name == name;})
-            .empty();
+    return not attributes->filter([name](attr* attribute) {return attribute->name == name;}).empty();
 }
 
 
@@ -85,34 +90,37 @@ dom::nodes::element::has_attribute_ns(
         ext::cstring& local_name) const
 {
     // return if the list of attributes filtered to have a matching namespace and local_name contains any elements or not
-    return not attributes
-            ->filter([namespace_, local_name](attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;})
-            .empty();
+    return not attributes->filter([namespace_, local_name](attr* attribute) {return attribute->namespace_uri == namespace_ and attribute->local_name == local_name;}).empty();
 }
 
 
-ext::vector<ext::string>
-dom::nodes::element::get_attribute_names() const
+bool
+dom::nodes::element::has_attribute_node(attr* attribute)
 {
-    // return a list of attributes transformed into their names
-    return attributes->transform<ext::string>([](attr* attribute) -> ext::string {return attribute->name;});
+    // return if the attribute is in the attributes list
+    return attributes->contains(attribute);
+}
+
+
+bool
+dom::nodes::element::has_attribute_node_ns(attr* attribute) {
+    // return if the attribute is in the attributes list
+    return attributes->contains(attribute);
 }
 
 
 ext::string
 dom::nodes::element::get_attribute(ext::cstring& qualified_name) const
 {
-    // return the value of the attribute that whose name matches qualified_name
+    // return the value of an attribute that whose name matches qualified_name
     return get_attribute_node(qualified_name)->value;
 }
 
 
 ext::string
-dom::nodes::element::get_attribute_ns(
-        ext::cstring& namespace_,
-        ext::string local_name) const
+dom::nodes::element::get_attribute_ns(ext::cstring& namespace_, ext::string local_name) const
 {
-    // return the value of the attribute that whose namespace and local_name matches namespace and local_name
+    // return the value of an attribute that whose namespace and local_name matches namespace and local_name
     return get_attribute_node_ns(namespace_, local_name)->value;
 }
 
@@ -120,7 +128,7 @@ dom::nodes::element::get_attribute_ns(
 dom::nodes::attr*
 dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const
 {
-    // return the attribute that whose name matches qualified_name
+    // return an attribute whose name matches qualified_name
     return helpers::attributes::get_attribute_by_name(qualified_name, this);
 }
 
@@ -130,7 +138,7 @@ dom::nodes::element::get_attribute_node_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name) const
 {
-    // return the attribute that whose namespace and local_name matches namespace and local_name
+    // return an attribute whose namespace and local_name matches namespace_ and local_name
     return helpers::attributes::get_attribute_by_ns(namespace_, local_name, this);
 }
 
@@ -196,46 +204,50 @@ dom::nodes::element::set_attribute_ns(
 
 
 dom::nodes::attr*
-dom::nodes::element::set_attribute_node(
-        attr* attribute) {
-
+dom::nodes::element::set_attribute_node(attr* attribute)
+{
+    // set an attribute by a node
     return helpers::attributes::set_attribute(attribute, this);
 }
 
 
 dom::nodes::attr*
-dom::nodes::element::set_attribute_node_ns(
-        attr* attribute) {
-
+dom::nodes::element::set_attribute_node_ns(attr* attribute)
+{
+    // set an attribute by a node (same as set_attribute_node, included for uniform function set)
     return set_attribute_node(attribute);
 }
 
 
 void
-dom::nodes::element::remove_attribute(ext::cstring& qualified_name) {
-
+dom::nodes::element::remove_attribute(ext::cstring& qualified_name)
+{
+    // remove an attribute whose name matches qualified_name
     helpers::attributes::remove_attribute_by_name(qualified_name, this);
 }
 
 
 void dom::nodes::element::remove_attribute_ns(
         ext::cstring& namespace_,
-        ext::cstring& local_name) {
-
+        ext::cstring& local_name)
+{
+    // remove an attribute whose namespace and local_name matches namespace_ and local_name 
     helpers::attributes::remove_attribute_by_ns(namespace_, local_name, this);
 }
 
 
 dom::nodes::attr*
-dom::nodes::element::remove_attribute_node(attr* attribute) {
-
-    return helpers::attributes::remove_attribute(attribute)
+dom::nodes::element::remove_attribute_node(attr* attribute)
+{
+    // remove an attribute by a node
+    return helpers::attributes::remove_attribute(attribute);
 }
 
 
 dom::nodes::attr*
-dom::nodes::element::remove_attribute_node_ns(attr* attribute) {
-
+dom::nodes::element::remove_attribute_node_ns(attr* attribute)
+{
+    // remove an attribute by a node (same as remove_attribute_node, included for uniform function set)
     return remove_attribute_node(attribute);
 }
 
@@ -248,10 +260,11 @@ dom::nodes::element::remove_attribute_node_ns(attr* attribute) {
 bool
 dom::nodes::element::toggle_attribute(
         ext::cstring& qualified_name,
-        bool force) {
-
+        bool force)
+{
+    // toggle an attribute whose name matches qualified_name
     attr* attribute = helpers::attributes::get_attribute_by_name(qualified_name, this);
-    return helpers::attibutes::toggle_attribute(attribute);
+    return helpers::attributes::toggle_attribute(attribute);
 }
 
 
@@ -259,8 +272,9 @@ bool
 dom::nodes::element::toggle_attribute_ns(
         ext::cstring& namespace_,
         ext::cstring& local_name,
-        bool force) {
-
+        bool force)
+{
+    // toggle an attribute whose namespace and local_name matches namespace_ and local_name
     attr* attribute = helpers::attributes::get_attribute_by_ns(namespace_, local_name, this);
     return helpers::attributes::toggle_attribute(attribute);
 }
@@ -269,8 +283,9 @@ dom::nodes::element::toggle_attribute_ns(
 dom::nodes::attr*
 dom::nodes::element::toggle_attribute_node(
         attr* attribute,
-        bool force) {
-
+        bool force)
+{
+    // toggle an attribute by a node
     return helpers::attributes::toggle_attribute(attribute);
 }
 
@@ -278,50 +293,57 @@ dom::nodes::element::toggle_attribute_node(
 dom::nodes::attr*
 dom::nodes::element::toggle_attribute_node_ns(
         attr* attribute,
-        bool force) {
-
+        bool force)
+{
+    // toggle the attribute by a node (same as toggle_attribute_node, included for uniform function set)
     return toggle_attribute_node(attribute, force);
 }
 
 
 dom::nodes::shadow_root*
-dom::nodes::element::attach_shadow(ext::cstring_any_map& options) {
-
+dom::nodes::element::attach_shadow(ext::cstring_any_map& options)
+{
+    // if the namespace is not html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
             "cannot attach a shadow to a non-html namespaced element",
             NOT_SUPPORTED_ERR,
             [this] {return namespace_uri != helpers::namespaces::HTML;});
 
+    // if the local name is unknown, or not a known custom element, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
             local_name + " element is incompatible with shadow root attachment",
             NOT_SUPPORTED_ERR,
-            [this] {return not m_local_names.contains(local_name) or not helpers::custom_elements::is_valid_custom_element_name(local_name);});
+            [this] {return not m_shadow_attachable_local_names.contains(local_name) or not helpers::custom_elements::is_valid_custom_element_name(local_name);});
 
+    // if this element is a shadow root, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
             "cannot attach a shadow root to a shadow root",
             NOT_SUPPORTED_ERR,
             [this] {return helpers::shadows::is_shadow_root(this);});
 
+    // if this node is a custom noe that has shadows disabled, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
             "custom element's definition doesn't allow shadow root attachment",
             NOT_SUPPORTED_ERR,
-            [this] {return helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, m_is)->disable_shadow and helpers::custom_elements::is_valid_custom_element_name(local_name) or m_is;});
+            [this] {return helpers::custom_elements::is_valid_custom_element_name(local_name) and helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, m_is)->disable_shadow or m_is;});
 
+    // create a new shadow root, and set the owner document to this document
     auto* shadow = new shadow_root{};
-    shadow->owner_document = owner_document;
     shadow->host = this;
     shadow->delegates_focus = options.at("delegatesFocus").to<bool>();
     shadow->slot_assignment = options.at("slotAssignment").to<ext::string>();
+    shadow->owner_document = owner_document;
     shadow->m_available_to_internals = m_custom_element_state == "custom" or m_custom_element_state == "precustomized";
 
+    // set this element's shadow root to the shadow, and return the shadow
     shadow_root_node = shadow;
     return shadow;
 }
 
 
 ext::vector<geometry::shapes::dom_rect>
-dom::nodes::element::get_client_rects() {
-
+dom::nodes::element::get_client_rects()
+{
     auto children = render()->children().toVector();
 
     return ext::vector<QObject*>{children.begin(), children.end()}
@@ -360,31 +382,62 @@ dom::nodes::element::get_bounding_client_rect() {
 }
 
 
-ext::string dom::nodes::element::get_text_content() const {return helpers::trees::descendant_text_content(this);}
-
-ext::string dom::nodes::element::get_tag_name() const {return get_m_html_qualified_uppercase_name();}
-
-dom::nodes::shadow_root* dom::nodes::element::get_shadow_root() const {return shadow_root_node->mode == "closed" ? nullptr : shadow_root_node};
-
-void dom::nodes::element::set_text_content(ext::string val) {helpers::node_internals::replace_all(val, this);}
-
-void dom::nodes::element::set_id(ext::string val) {
-    ext::string current_id;
-    val >> current_id;
-    id << (local_name == id and not namespace_uri->empty() ? val : current_id);
+INLINE ext::string
+dom::nodes::element::get_text_content() const
+{
+    // the text content is the descendant text contents of this node
+    return helpers::trees::descendant_text_content(this);
 }
 
-ext::string dom::nodes::element::get_m_qualified_name() const {return namespace_uri + ":" + local_name;}
 
-ext::string dom::nodes::element::get_m_html_qualified_uppercase_name() const {return helpers::node_internals::is_html(this) ? get_m_qualified_name().new_uppercase() : get_m_qualified_name()}
+INLINE ext::string
+dom::nodes::element::get_tag_name() const
+{
+    // the tag name is the html qualified name
+    return get_m_html_qualified_uppercase_name();
+}
 
 
-QWidget* dom::nodes::element::render() {
+INLINE dom::nodes::shadow_root*
+dom::nodes::element::get_shadow_root() const
+{
+    // the shadow root is the shadow root if the mode option is closed, otherwise null (access from javascript)
+    return shadow_root_node->mode == "closed" ? nullptr : shadow_root_node;
+}
+
+
+INLINE void
+dom::nodes::element::set_text_content(ext::cstring& val)
+{
+    // set the text_content by replacing the data with the val
+    helpers::node_internals::string_replace_all(val, this);
+}
+
+
+INLINE ext::string
+dom::nodes::element::get_m_qualified_name() const
+{
+    // the qualified name is the namespace and local name joined with a colon
+    return namespace_uri + ext::string{":"} + local_name;
+}
+
+
+INLINE ext::string
+dom::nodes::element::get_m_html_qualified_uppercase_name() const
+{
+    // the html qualified uppercase name is the qualified name, in uppercase if the element is html
+    return helpers::node_internals::is_html(this) ? get_m_qualified_name().new_uppercase() : get_m_qualified_name();
+}
+
+
+QWidget* dom::nodes::element::render()
+{
     return qobject_cast<QWidget*>(m_rendered_widget);
 }
 
 
-ext::any dom::nodes::element::v8(v8::Isolate* isolate) const {
+ext::any dom::nodes::element::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<element>{isolate}
             .inherit<node>()
             .inherit<dom::mixins::child_node<element>>()
@@ -393,9 +446,12 @@ ext::any dom::nodes::element::v8(v8::Isolate* isolate) const {
             .inherit<dom::mixins::slottable<element>>()
 
             .function("hasAttributes", &element::has_attributes)
+            .function("getAttributeNames", &element::get_attribute_names)
+
             .function("hasAttribute", &element::has_attribute)
             .function("hasAttributeNS", &element::has_attribute_ns)
-            .function("getAttributeNames", &element::get_attribute_names)
+            .function("hasAttributeNode", &element::has_attribute_node)
+            .function("hasAttributeNodeNS", &element::has_attribute_node_ns)
 
             .function("getAttribute", &element::get_attribute)
             .function("getAttributeNS", &element::get_attribute_ns)

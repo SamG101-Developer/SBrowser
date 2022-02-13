@@ -53,9 +53,12 @@ public: constructors
 public: methods
     // dom
     bool has_attributes() const;
+    ext::vector<ext::string> get_attribute_names() const;
+
     bool has_attribute(ext::cstring& name) const;
     bool has_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const;
-    ext::vector<ext::string> get_attribute_names() const;
+    bool has_attribute_node(attr* attribute);
+    bool has_attribute_node_ns(attr* attribute);
 
     ext::string get_attribute(ext::cstring& qualified_name) const;
     ext::string get_attribute_ns(ext::cstring& namespace_, ext::string local_name) const;
@@ -136,8 +139,7 @@ private: accessors
     inline ext::string get_tag_name() const;
     inline shadow_root* get_shadow_root() const;
 
-    inline void set_text_content(ext::string val);
-    inline void set_id(ext::string val);
+    inline void set_text_content(ext::cstring& val) override;
 
     // cssom-view
     inline double get_scroll_top() const;
@@ -160,7 +162,7 @@ public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
 
 private: internal_properties
-    ext::vector<ext::string> m_local_names = {
+    ext::vector<ext::string> m_shadow_attachable_local_names = {
             "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header",
             "main", "nav", "p", "section", "span"
     };

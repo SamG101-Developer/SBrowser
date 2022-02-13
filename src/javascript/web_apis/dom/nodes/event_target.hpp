@@ -13,16 +13,13 @@
 
 namespace dom {
     namespace events {class event;}
-    namespace helpers {
-        struct event_dispatching;
-        struct event_listening;
-    }
+    namespace helpers {struct event_dispatching; struct event_listening;}
     namespace nodes {class event_target;}
 }
 
 
 class dom::nodes::event_target : virtual public dom_object {
-friends
+public: friends
     friend struct helpers::event_dispatching;
     friend struct helpers::event_listening;
     using event_listener_callback = std::function<void()>;
@@ -37,11 +34,11 @@ public: methods
     void remove_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options);
     bool dispatch_event(events::event* event);
 
-protected: internal_methods
-    virtual event_target* get_the_parent(events::event* event);
-
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;
+
+protected: internal_methods
+    virtual event_target* get_the_parent(events::event* event);
 
 private: internal_properties
     ext::vector<ext::string_any_map> m_event_listeners;

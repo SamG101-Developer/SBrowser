@@ -27,8 +27,11 @@ struct dom::helpers::attributes {
     static ext::string get_attribute_value(const nodes::element* owner_element, ext::cstring& namespace_, ext::cstring& local_name = "");
 
     static nodes::attr* set_attribute(nodes::attr* attribute, nodes::element* new_owner_element);
+    static nodes::attr* set_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element);
+    static nodes::attr* set_attribute_by_ns(ext::cstring& namespace_, ext::cstring& local_name, const nodes::element* owner_element);
     static nodes::attr* set_attribute_value(nodes::element* owner_element, ext::cstring& local_name, ext::cstring& value, ext::cstring& prefix = "", ext::cstring& namespace_ = "");
 
+    static nodes::attr* remove_attribute(nodes::attr* attribute, nodes::element* owner_element);
     static nodes::attr* remove_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element);
     static nodes::attr* remove_attribute_by_ns(ext::cstring& namespace_, ext::cstring& local_name, const nodes::element* owner_element);
 

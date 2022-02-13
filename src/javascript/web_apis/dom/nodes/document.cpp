@@ -582,7 +582,7 @@ dom::nodes::document::get_head() const
 INLINE ext::string
 dom::nodes::document::get_title() const
 {
-    // the title is the text content of the title element (including the title's children nodes)
+    // the title is the child text content of the title element
     return helpers::trees::child_text_content(get_m_title_element());
 }
 

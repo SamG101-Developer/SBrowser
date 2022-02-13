@@ -19,7 +19,7 @@ dom::nodes::document_fragment::document_fragment()
 INLINE ext::string
 dom::nodes::document_fragment::get_text_content() const
 {
-    // the text content is the descendant text content's of this node
+    // the text content is the descendant text contents of this node
     return helpers::trees::descendant_text_content(this);
 }
 
