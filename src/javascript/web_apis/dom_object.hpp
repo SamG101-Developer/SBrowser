@@ -2,8 +2,8 @@
 #define SBROWSER_DOM_OBJECT_HPP
 
 #include <ext/macros/decorators.hpp>
+#include <ext/properties/dom_property.hpp>
 #include <ext/types/any.hpp>
-#include <ext/types/property.hpp>
 
 #include <v8pp/class.hpp>
 
@@ -21,6 +21,13 @@ public: constructors
 public: internal_methods
     virtual ext::any v8(v8::Isolate* isolate) const = 0;
 };
+
+
+template <typename ...Args, typename U>
+inline bool dom_cast(U* cls)
+{
+    return (... ||(nullptr != dynamic_cast<Args>(cls)));
+}
 
 
 #endif //SBROWSER_DOM_OBJECT_HPP
