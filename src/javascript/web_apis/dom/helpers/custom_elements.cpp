@@ -228,14 +228,10 @@ dom::helpers::custom_elements::upgrade_element(
 
 
 void
-dom::helpers::custom_elements::try_to_upgrade_element(
-        const nodes::element* element) {
-
-    if (auto* definition = lookup_custom_element_definition(
-            element->owner_document,
-            element->namespace_uri,
-            element->local_name,
-            element->m_is))
+dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* element)
+{
+    // only queue a custom upgrade reaction if a definition is found
+    if (auto* definition = lookup_custom_element_definition(element->owner_document, element->namespace_uri, element->local_name, element->m_is))
         enqueue_custom_element_upgrade_reaction(element, definition);
 }
 
@@ -245,11 +241,13 @@ dom::helpers::custom_elements::lookup_custom_element_definition(
         const nodes::document* document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
-        ext::cstring& is) {
-
+        ext::cstring& is)
+{
+    // return if the namespace isn't html
     if (namespace_ != namespaces::HTML)
         return nullptr;
 
+    // return if the document doesn't have a browsing context
     if (not document->m_browsing_context)
         return nullptr;
 
@@ -266,9 +264,8 @@ dom::helpers::custom_elements::lookup_custom_element_definition(
 
 
 void
-dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(
-        const nodes::element* element) {
-
+dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(const nodes::element* element)
+{
     // TODO
 }
 
@@ -277,17 +274,24 @@ void
 dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
         const nodes::element* element,
         ext::cstring& callback_name,
-        ext::vector<ext::string>&& args) {
-
+        ext::vector<ext::string>&& args)
+{
+    // get the definition from the element, and the callback from it
     auto* definition = element->m_custom_element_definition;
     auto callback = definition->lifecycle_callbacks.at("callback_name");
 
+    // return if there is no callback
     if (not callback)
         return;
 
-    if (callback_name == "attributeChangedCallback") {
+    // if the callback name is attributeChangedCallback
+    if (callback_name == "attributeChangedCallback")
+    {
+        // get the attribute name and return if there is no observed attributes on the definition containing the
+        // attribute name
         ext::string attribute_name = args.front();
-        if (not definition->observed_attributes.contains(attribute_name)) return;
+        if (not definition->observed_attributes.contains(attribute_name))
+            return;
     }
 }
 
@@ -295,33 +299,30 @@ dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
 void
 dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
         const nodes::element* element,
-        internal::custom_element_definition* definition) {
-
+        internal::custom_element_definition* definition)
+{
     // TODO
 }
 
 
 void
-dom::helpers::custom_elements::enqueue_custom_element_reaction(
-        std::queue<nodes::element*>& element_queue) {
-
+dom::helpers::custom_elements::enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue)
+{
     // TODO
 }
 
 
 bool
-dom::helpers::custom_elements::is_valid_custom_element_name(
-        ext::cstring& element_name) {
-
+dom::helpers::custom_elements::is_valid_custom_element_name(ext::cstring& element_name)
+{
     // TODO
     return true;
 }
 
 
 bool
-dom::helpers::custom_elements::is_custom_node(
-        const nodes::element* element) {
-
+dom::helpers::custom_elements::is_custom_node(const nodes::element* element)
+{
     return element->m_custom_element_state == "custom";
 }
 
@@ -329,7 +330,7 @@ dom::helpers::custom_elements::is_custom_node(
 dom::nodes::element*
 dom::helpers::custom_elements::element_interface(
         ext::cstring& local_name,
-        ext::cstring& namespace_) {
-
+        ext::cstring& namespace_)
+{
     return new nodes::element{}; // TODO types
 }
