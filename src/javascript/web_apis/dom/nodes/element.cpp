@@ -103,7 +103,8 @@ dom::nodes::element::has_attribute_node(attr* attribute)
 
 
 bool
-dom::nodes::element::has_attribute_node_ns(attr* attribute) {
+dom::nodes::element::has_attribute_node_ns(attr* attribute)
+{
     // return if the attribute is in the attributes list
     return attributes->contains(attribute);
 }
@@ -148,25 +149,8 @@ dom::nodes::element::set_attribute(
         ext::cstring& qualified_name,
         ext::cstring& value)
 {
-    // TODO
-
-    ext::string html_qualified_name = helpers::node_internals::is_html(this)
-            ? qualified_name.new_lowercase()
-            : qualified_name;
-
-    // TODO : move into attr helpers namespacing (set_attribute_by_name)
-    attr* attribute = attributes
-            ->filter([qualified_name](attr* attribute) {return attribute->name == qualified_name;})
-            .front();
-
-    if (not attribute) {
-        attribute = new attr{};
-        attribute->local_name = qualified_name;
-        attribute->value = value;
-        attribute->owner_document = owner_document;
-        helpers::attributes::append(attribute, this);
-    }
-    helpers::attributes::change(attribute, value);
+    // set the value to an attribute whose name matches the qualified name
+    helpers::attributes::set_attribute_by_name(qualified_name, this, value);
 }
 
 
@@ -176,30 +160,8 @@ dom::nodes::element::set_attribute_ns(
         ext::cstring& qualified_name,
         ext::cstring& value)
 {
-    // TODO
-
-    auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
-
-    ext::string html_qualified_name = helpers::node_internals::is_html(this)
-            ? qualified_name.new_lowercase()
-            : qualified_name;
-
-    // TODO : move into attr helpers namespacing (set_attribute_by_ns)
-    attr* attribute = helpers::attributes::get_attribute_by_ns(
-            namespace_,
-            local_name,
-            this);
-
-    if (not attribute) {
-        attribute = new attr{};
-        attribute->namespace_uri = html_qualified_namespace;
-        attribute->prefix = prefix;
-        attribute->local_name = local_name;
-        attribute->value = value;
-        attribute->owner_document = owner_document;
-        helpers::attributes::append(attribute, this);
-    }
-    helpers::attributes::change(attribute, value);
+    // set the value to an attribute whose namespace, name matches the namespace_ and qualified_name
+    helpers::attributes::set_attribute_by_ns(namespace_, qualified_name, this, value);
 }
 
 
@@ -240,7 +202,7 @@ dom::nodes::attr*
 dom::nodes::element::remove_attribute_node(attr* attribute)
 {
     // remove an attribute by a node
-    return helpers::attributes::remove_attribute(attribute);
+    return helpers::attributes::remove_attribute(attribute, this);
 }
 
 
@@ -252,10 +214,6 @@ dom::nodes::element::remove_attribute_node_ns(attr* attribute)
 }
 
 
-//not attribute
-//        ? set_attribute(qualified_name, "")
-//        : remove_attribute(qualified_name);
-
 
 bool
 dom::nodes::element::toggle_attribute(
@@ -263,8 +221,7 @@ dom::nodes::element::toggle_attribute(
         bool force)
 {
     // toggle an attribute whose name matches qualified_name
-    attr* attribute = helpers::attributes::get_attribute_by_name(qualified_name, this);
-    return helpers::attributes::toggle_attribute(attribute);
+    return helpers::attributes::toggle_attribute_by_name(qualified_name, this, force);
 }
 
 
@@ -275,8 +232,7 @@ dom::nodes::element::toggle_attribute_ns(
         bool force)
 {
     // toggle an attribute whose namespace and local_name matches namespace_ and local_name
-    attr* attribute = helpers::attributes::get_attribute_by_ns(namespace_, local_name, this);
-    return helpers::attributes::toggle_attribute(attribute);
+    return helpers::attributes::toggle_attribute_by_ns(namespace_, local_name, this, force);
 }
 
 
@@ -286,7 +242,7 @@ dom::nodes::element::toggle_attribute_node(
         bool force)
 {
     // toggle an attribute by a node
-    return helpers::attributes::toggle_attribute(attribute);
+    return helpers::attributes::toggle_attribute(attribute, force);
 }
 
 

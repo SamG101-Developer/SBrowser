@@ -3,7 +3,7 @@
 #define SBROWSER_XPATH_RESULT_HPP
 
 #include <ext/macros/decorators.hpp>
-#include <ext/types/property.hpp>
+#include <ext/properties/dom_property.hpp>
 
 #include <dom_object.hpp>
 
@@ -34,13 +34,13 @@ public: methods
     nodes::node* snapshot_item(unsigned long index);
 
 public: properties
-    ext::dom_property<unsigned short> result_type;
-    ext::dom_property<double> number_value;
-    ext::dom_property<ext::string> string_value;
-    ext::dom_property<bool> boolean_value;
-    ext::dom_property<nodes::node*> single_node_value;
-    ext::dom_property<bool> invalid_iterator_state;
-    ext::dom_property<unsigned long> snapshot_length;
+    ext::dom_property<unsigned short, _F> result_type;
+    ext::dom_property<double, _F> number_value;
+    ext::dom_property<ext::string, _F> string_value;
+    ext::dom_property<bool, _F> boolean_value;
+    ext::dom_property<nodes::node*, _F> single_node_value;
+    ext::dom_property<bool, _F> invalid_iterator_state;
+    ext::dom_property<unsigned long, _F> snapshot_length;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

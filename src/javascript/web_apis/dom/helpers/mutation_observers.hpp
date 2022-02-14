@@ -33,7 +33,7 @@ private:
 public:
     static void notify_mutation_observers();
     static void queue_microtask(steps_t&& steps);
-    static void queue_mutation_record(ext::cstring& type, nodes::event_target* target, ext::cstring& name, ext::cstring& namespace_, ext::cstring& old_value, ext::cvector<nodes::node*>& added_nodes, ext::cvector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling);
+    static void queue_mutation_record(ext::cstring& type, const nodes::event_target* target, ext::cstring& name, ext::cstring& namespace_, ext::cstring& old_value, ext::cvector<nodes::node*>& added_nodes, ext::cvector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling);
     static void queue_tree_mutation_record(nodes::event_target* target, ext::cvector<nodes::node*>& added_nodes, ext::cvector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling);
     static void queue_mutation_observers_microtask();
     static void queue_task(/* TODO */) {/* TODO */};

@@ -1,13 +1,14 @@
 #include "xpath_result.hpp"
 
 
-dom::xpath::xpath_result::xpath_result()
-        : dom_object() {
+dom::xpath::xpath_result::xpath_result(): dom_object()
+{
 }
 
 
 ext::any
-dom::xpath::xpath_result::v8(v8::Isolate* isolate) const {
+dom::xpath::xpath_result::v8(v8::Isolate* isolate) const
+{
     return v8pp::class_<xpath_result>{isolate}
             .inherit<dom_object>()
 

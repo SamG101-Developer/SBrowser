@@ -84,7 +84,6 @@ public: methods
     element* closest(ext::cstring& selectors);
     bool matches(ext::cstring& selectors);
 
-public: methods
     // css-spatial-navigation
     node* get_spatial_navigation_container();
     node* spatial_navigation_search(ext::cstring& direction, ext::cstring_any_map& options = {});

@@ -60,7 +60,7 @@ void dom::helpers::mutation_observers::queue_microtask(steps_t&& steps) {
 void
 dom::helpers::mutation_observers::queue_mutation_record(
         ext::cstring& type,
-        nodes::event_target* target,
+        const nodes::event_target* target,
         ext::cstring& name,
         ext::cstring& namespace_,
         ext::cstring& old_value,
