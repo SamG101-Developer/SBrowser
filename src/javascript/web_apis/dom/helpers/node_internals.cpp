@@ -2,8 +2,6 @@
 
 #include <regex>
 
-#include <ext/iterables/set.hpp>
-
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
 #include <dom/helpers/namespaces.hpp>
@@ -26,23 +24,34 @@ dom::nodes::node*
 dom::helpers::node_internals::clone(
         T* node,
         nodes::document* document,
-        bool deep) requires std::is_base_of_v<T, nodes::node> {
-
+        bool deep) requires std::is_base_of_v<T, nodes::node>
+{
+    // set the document to the node's document if the document is a nullptr, and create a pointer for the cloned_node
     document = document ? dynamic_cast<nodes::document*>(node->owner_document) : document;
     T* cloned_node;
 
+    // if the node is or is derived an element, then set the clone to the result of the create_an_element helper method
     auto* element = dynamic_cast<nodes::element*>(node);
     cloned_node = (element)
             ? cloned_node = custom_elements::create_an_element(document, element->local_name, element->namespace_uri, element->prefix, element->m_is, false)
             : cloned_node = new T{*node};
 
+    // if the node is or is derived an element, then clone the attributes over too
     if (element)
         element->attributes->for_each([node](auto* attribute) {mutation_algorithms::append(clone(attribute), node->owner_document);});
+
+    // if the clone is a document, then set the owner document and document to copy, otherwise set the clones owner
+    // document to document
     if (not (cloned_node->owner_document = dynamic_cast<nodes::document*>(cloned_node)))
         cloned_node->owner_document = document;
+    else
+        document = cloned_node;
+
+    // if deep is set, then clone each child recursively, with the deep flag set
     if (deep)
         node->child_nodes->for_each([document](auto* child) {helpers::mutation_algorithms::append(clone(child, document, true));});
 
+    // return the cloned node
     return cloned_node;
 }
 
@@ -50,17 +59,21 @@ dom::helpers::node_internals::clone(
 ext::string
 dom::helpers::node_internals::locate_a_namespace_prefix(
         const nodes::element* element,
-        ext::cstring& namespace_) {
-
+        ext::cstring& namespace_)
+{
+    // return the element prefix if the element namespace matches namespace_ and the element has a prefix
     if (element->namespace_uri == namespace_ and element->prefix)
         return element->prefix;
 
+    // return the local name of the attribute, if an attribute whose value is the namespace_ and whose prefix is xmlns
     else if (auto front = element->attributes->filter([namespace_](auto* attribute) {return attribute->prefix == "xmlns" and attribute->value == namespace_;}).front())
-        return front->name;
+        return front->local_name;
 
+    // return the locating of a namespace prefix against the parent if the element has a parent
     else if (nodes::element* parent = element->parent_element)
         return locate_a_namespace_prefix(parent, namespace_);
 
+    // return nullptr if all other checks fail
     return nullptr;
 }
 
@@ -68,30 +81,46 @@ dom::helpers::node_internals::locate_a_namespace_prefix(
 ext::string
 dom::helpers::node_internals::locate_a_namespace(
         const nodes::node* node,
-        ext::cstring& prefix) {
-
+        ext::cstring& prefix)
+{
+    // if the node is nullptr then return an empty namespace
     if (not node)
         return "";
 
-    else if (auto* element = dynamic_cast<nodes::element*>(node)) {
+    // otherwise, cast the node into an element and continue
+    else if (auto* element = dynamic_cast<const nodes::element*>(node))
+    {
+        // return the element's namespace if the namespace is present and the element's prefix matches the prefix
         if (element->namespace_uri and element->prefix == prefix)
             return element->namespace_uri;
 
-        if (auto* front = element->attributes->filter([prefix](nodes::attr* attribute) {return (attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == prefix and attribute->prefix == "xmlns") or (attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == "xmlns" and not attribute->prefix and not prefix);}).front())
+        // return the value of the attribute, if the attribute exists where it is in the xmlns namespace, and either the
+        // attribute's local name matched the prefix and the attribute's prefix is "xmlns"
+        if (auto* front = element->attributes->first_match([prefix](nodes::attr* attribute) {return attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == prefix and attribute->prefix == "xmlns";}))
             return front->value;
 
-        return node_internals::locate_a_namespace(node, prefix);
+        // return the value of the attribute, if the attribute exists where it is in the xmlns namespace, and the
+        // attribute's local name is "xmlns" and there is no attribute prefix or prefix
+        if (auto* front = element->attributes->first_match([prefix](nodes::attr* attribute) {return attribute->namespace_uri == namespaces::XMLNS and attribute->local_name == "xmlns" and attribute->prefix == "" and prefix == "";}))
+            return front->value;
+
+        // return the locating of a namespace for the node's parent using prefix otherwise
+        return node_internals::locate_a_namespace(node->parent, prefix);
     }
 
-    else if (auto* document = dynamic_cast<nodes::document*>(node))
+    // return the location of a namespace for the document element with prefix if the node is a document
+    else if (auto* document = dynamic_cast<const nodes::document*>(node))
         return locate_a_namespace(ext::property_dynamic_cast<nodes::node*>(document->document_element), prefix);
 
-    else if (dynamic_cast<nodes::document_fragment*>(node) or dynamic_cast<nodes::document_type*>(node))
+    // return nullptr if the node is a document_fragment or a document_type
+    else if (multi_cast<const nodes::document_fragment*, const nodes::document_type>(node))
         return nullptr;
 
-    else if (auto* attribute = dynamic_cast<nodes::attr*>(node))
+    // return the location of a namespace for the owner document with prefix if the node is an attribute
+    else if (auto* attribute = dynamic_cast<const nodes::attr*>(node))
         return locate_a_namespace(ext::property_dynamic_cast<nodes::node*>(attribute->owner_document), prefix);
 
+    // return a location for the namespace for the node's parent with prefix otherwise
     return locate_a_namespace(node->parent, prefix);
 }
 
@@ -99,11 +128,14 @@ dom::helpers::node_internals::locate_a_namespace(
 ext::vector<dom::nodes::element*>
 dom::helpers::node_internals::list_of_elements_with_qualified_name(
         nodes::node* node,
-        ext::cstring& qualified_name) {
-
+        ext::cstring& qualified_name)
+{
+    // handle wildcard option
     if (qualified_name == "*")
         return trees::descendants(node).cast_all<nodes::element*>();
 
+    // return a list of elements that match the qualified name, taking the html qualified name into account ie making it
+    // lowercase if the document is a html document and the element is a html namespaced element
     return node->owner_document->m_type == "html"
             ? trees::descendants(node)
                 .cast_all<nodes::element*>()
@@ -119,8 +151,10 @@ ext::vector<dom::nodes::element*>
 dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
         nodes::node* node,
         ext::cstring& namespace_,
-        ext::cstring& local_name) {
-
+        ext::cstring& local_name)
+{
+    // return a list of elements whose namespace and local name match their respective regex counterparts (meant to just
+    // be a name or an asterix, but this implementation is more flexible TODO : maybe change back to just string and *
     return trees::descendants(node)
             .cast_all<nodes::element*>()
             .filter([namespace_, local_name](nodes::element* descendant_element) {
@@ -134,10 +168,12 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
         nodes::node* node,
         ext::cstring& class_names) {
 
+    // parse the classes into a set, and return an empty list if the set is empty
     auto classes = ordered_sets::ordered_set_parser(class_names);
     if (classes.empty())
         return {};
 
+    // TODO : comment; cba rn
     return trees::descendants(node)
             .cast_all<nodes::element*>()
             .filter([node, classes](nodes::element* descendant_element) {

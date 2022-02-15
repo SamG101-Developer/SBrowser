@@ -2,6 +2,8 @@
 #ifndef SBROWSER_HTML_ELEMENT_HPP
 #define SBROWSER_HTML_ELEMENT_HPP
 
+#include <ext/properties/html_property.hpp>
+
 #include <dom/nodes/element.hpp>
 
 namespace html {

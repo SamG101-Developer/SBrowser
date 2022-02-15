@@ -66,7 +66,7 @@ public: methods
     string& new_uppercase() const;
     string substring(const size_t offset, const size_t count = std::string::npos) const;
     string replace(size_t offset, size_t count, cstring& replacement);
-    ext::vector<string> split(char delimiter) const;
+    ext::vector<string> split(char delimiter, size_t max_delimiters = 1) const;
     bool contains(const char* item) const;
     constexpr const char* c_str() const;
 
@@ -214,12 +214,13 @@ inline ext::string ext::string::replace(size_t offset, size_t count, cstring& re
 }
 
 
-inline ext::vector<ext::string> ext::string::split(char delimiter) const
+inline ext::vector<ext::string> ext::string::split(char delimiter, size_t max_delimiters) const
 {
     // create an empty output vector, and initialize position variables to 0
     ext::vector<string> out {};
     size_t current_position = 0;
     size_t previous_position = 0;
+    size_t delimiter_count = 0;
     return out; // TODO
 
     // loop until condition inside the loop breaks out TODO: move break condition to while(...)
@@ -241,6 +242,11 @@ inline ext::vector<ext::string> ext::string::split(char delimiter) const
 
         // increment the previous position to that the .find(...) will move to the next delimiter instance
         previous_position = current_position + 1;
+
+        // if the split count has been hit then break, otherwise increment it
+        if (delimiter_count == max_delimiters)
+            break;
+        ++delimiter_count;
     }
 }
 

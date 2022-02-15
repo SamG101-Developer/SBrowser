@@ -24,7 +24,7 @@ public: internal_methods
 
 
 template <typename ...Args, typename U>
-inline bool dom_cast(U* cls)
+inline bool multi_cast(U* cls)
 {
     return (... ||(nullptr != dynamic_cast<Args>(cls)));
 }

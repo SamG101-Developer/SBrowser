@@ -18,6 +18,9 @@ class dom::mutations::mutation_record : public virtual dom_object {
 public: constructors
     mutation_record();
 
+public: internal_methods
+    ext::any v8(v8::Isolate *isolate) const override;
+
 public: properties
     ext::dom_property<ext::string, _F> type;
     ext::dom_property<ext::string, _F> attribute_name;

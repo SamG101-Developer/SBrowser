@@ -35,7 +35,7 @@ dom::helpers::mutation_algorithms::common_checks(
     exceptions::throw_v8_exception(
             "parent must be a document, document_fragment or element node",
             HIERARCHY_REQUEST_ERR,
-            [parent] {return not dom_cast<nodes::document*, nodes::document_fragment*, nodes::element*>(parent);});
+            [parent] {return not multi_cast<nodes::document*, nodes::document_fragment*, nodes::element*>(parent);});
 
     // if the node is a shadow-including ancestor of the parent, then throw a hierarchy request error
     exceptions::throw_v8_exception(
@@ -53,7 +53,8 @@ dom::helpers::mutation_algorithms::common_checks(
     exceptions::throw_v8_exception(
             "node must be a document_fragment, document_type, element, text, processing_instruction or comment node",
             HIERARCHY_REQUEST_ERR,
-            [node] {return not dom_cast<nodes::document_fragment*, nodes::document_type*, nodes::element*, nodes::text*, nodes::processing_instruction*, nodes::comment*>(node);});
+            [node] {return not multi_cast<nodes::document_fragment*, nodes::document_type*, nodes::element*, nodes::text*, nodes::processing_instruction*, nodes::comment*>(
+                    node);});
 
     // if the parent is a document and the node is a text node, then throe a hierarchy request error
     exceptions::throw_v8_exception(

@@ -135,7 +135,8 @@ bool
 dom::helpers::event_dispatching::fire_synthetic_pointer_event(
         ext::cstring& e,
         nodes::event_target* target,
-        bool not_trusted_flag) {
+        bool not_trusted_flag)
+{
 
 //    auto* event = new pointer_events::events::pointer_event{e, {{"bubbles", true}, {"cancelable", true}, {"composed", true}}};
 //    event->is_trusted = not not_trusted_flag;
