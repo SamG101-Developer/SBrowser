@@ -16,7 +16,7 @@ namespace dom {
 namespace html::elements {class html_slot_element;}
 
 
-struct dom::helpers::shadows {
+struct dom::helpers::shadows { // TODO -> change to const nodes::node* etc where possible (fix compat issues w/ other helper structs)
     static bool is_connected(nodes::node* node);
     static bool is_slot(nodes::node* node);
     static bool is_slottable(nodes::node* node);

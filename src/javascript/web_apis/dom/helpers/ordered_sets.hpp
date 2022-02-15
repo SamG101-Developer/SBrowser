@@ -9,7 +9,6 @@ namespace dom::helpers {struct ordered_sets;}
 
 
 struct dom::helpers::ordered_sets {
-public:
     static ext::set<ext::string> ordered_set_parser(ext::cstring& input_string);
     static ext::string ordered_set_serializer(const ext::set<ext::string>& input_set);
 };
