@@ -17,7 +17,8 @@
 bool
 dom::helpers::range_internals::contains(
         nodes::node* node,
-        ranges::range* range) {
+        ranges::range* range)
+{
 
     return range->m_root == trees::root(node)
             and position_relative(node, 0, range->start_container, range->start_offset) == internal::AFTER
@@ -28,7 +29,8 @@ dom::helpers::range_internals::contains(
 bool
 dom::helpers::range_internals::partially_contains(
         nodes::node* node,
-        ranges::range* range) {
+        ranges::range* range)
+{
 
     return trees::is_ancestor(node, range->start_container) and not trees::is_ancestor(node, range->end_container)
             or trees::is_ancestor(node, range->end_container) and not trees::is_ancestor(node, range->start_container);
@@ -40,7 +42,8 @@ dom::helpers::range_internals::set_start_or_end(
         ranges::range* range,
         nodes::node* container,
         unsigned long offset,
-        bool start) {
+        bool start)
+{
 
     exceptions::throw_v8_exception(
             "node must be a non-document_type node",
@@ -53,10 +56,11 @@ dom::helpers::range_internals::set_start_or_end(
             [container, offset] {return offset > trees::index(container);});
 
     // set the container to the start of the range
-    if (start) {
-
+    if (start)
+    {
         // if the node is in a different tree or indexed after the end of range then set it to the end of the range
-        if (range->m_root != trees::root(container) or position_relative(container, offset, range->end_container, range->end_offset) == internal::AFTER) {
+        if (range->m_root != trees::root(container) or position_relative(container, offset, range->end_container, range->end_offset) == internal::AFTER)
+        {
             range->end_container = container;
             range->end_offset = offset;
         }
@@ -69,16 +73,18 @@ dom::helpers::range_internals::set_start_or_end(
     }
 
     // set the container to the end of the range
-    else {
-
+    else
+    {
         // of the node is in a different tree or indexed before the start of the range then set it to the start of the range
-        if (range->m_root != trees::root(container) or position_relative(container, offset, range->start_container, range->start_offset) == internal::BEFORE) {
+        if (range->m_root != trees::root(container) or position_relative(container, offset, range->start_container, range->start_offset) == internal::BEFORE)
+        {
             range->start_container = container;
             range->start_offset = offset;
         }
 
         // otherwise, set it to the end of the range
-        else {
+        else
+        {
             range->end_container = container;
             range->end_offset = offset;
         }
@@ -91,7 +97,8 @@ dom::helpers::range_internals::position_relative(
         nodes::node* start_container,
         unsigned long start_offset,
         nodes::node* end_container,
-        unsigned long end_offset) {
+        unsigned long end_offset)
+{
 
     assert(trees::root(start_container) == trees::root(end_container));
 
@@ -112,7 +119,8 @@ std::tuple<dom::nodes::node*, dom::nodes::node*, ext::vector<dom::nodes::node*>>
 dom::helpers::range_internals::get_range_helpers_variables(
         ranges::range* range,
         nodes::node* start_container,
-        nodes::node* end_container) {
+        nodes::node* end_container)
+{
 
     auto* common_ancestor = trees::common_ancestor(start_container, end_container);
 
@@ -136,8 +144,8 @@ dom::helpers::range_internals::get_range_helpers_variables(
 
 
 dom::nodes::node*
-dom::helpers::range_internals::check_parent_exists(nodes::node* node) {
-
+dom::helpers::range_internals::check_parent_exists(nodes::node* node)
+{
     exceptions::throw_v8_exception(
             "node must have a parent",
             INVALID_NODE_TYPE_ERR,
@@ -148,7 +156,8 @@ dom::helpers::range_internals::check_parent_exists(nodes::node* node) {
 
 
 bool
-dom::helpers::range_internals::is_textual_based_range_container(nodes::node* node) {
+dom::helpers::range_internals::is_textual_based_range_container(nodes::node* node)
+{
     return dynamic_cast<nodes::text*>(node)
            or dynamic_cast<nodes::processing_instruction*>(node)
            or dynamic_cast<nodes::comment*>(node);
@@ -161,7 +170,8 @@ dom::helpers::range_internals::clone_character_data_and_append(
         nodes::document_fragment* fragment,
         unsigned long start_offset,
         unsigned long end_offset,
-        bool replace) {
+        bool replace)
+{
 
     auto* character_data = dynamic_cast<nodes::character_data*>(node);
     auto* clone = dynamic_cast<nodes::character_data*>(character_data->clone_node());
@@ -181,7 +191,8 @@ dom::helpers::range_internals::append_to_sub_fragment(
         nodes::node* start_container,
         nodes::node* end_container,
         unsigned long start_offset,
-        unsigned long end_offset) {
+        unsigned long end_offset)
+{
 
     auto* clone = node->clone_node();
     mutation_algorithms::append(clone, fragment);
@@ -203,7 +214,8 @@ std::tuple<dom::nodes::node*, unsigned long>
 dom::helpers::range_internals::create_new_node_and_offset(
         nodes::node* start_container,
         nodes::node* end_container,
-        unsigned long start_offset) {
+        unsigned long start_offset)
+{
 
     auto* common_ancestor = helpers::trees::common_ancestor(start_container, end_container);
 
