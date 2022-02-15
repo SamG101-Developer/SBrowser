@@ -21,7 +21,7 @@ struct dom::helpers::attributes {
     static void remove(nodes::attr* attribute);
     static void replace(nodes::attr* old_attribute, nodes::attr* new_attribute);
 
-    // TODO : move owner_element parameter to be the first parameter in all of these methods
+    // TODO : move owner_element parameter to be the first parameter in all these methods
 
     static ext::string get_attribute_value(const nodes::element* owner_element, ext::cstring& namespace_, ext::cstring& local_name = "");
     static nodes::attr* get_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element);

@@ -130,7 +130,8 @@ dom::helpers::node_internals::list_of_elements_with_qualified_name(
         nodes::node* node,
         ext::cstring& qualified_name)
 {
-    // handle wildcard option
+    // return all the elements, as the namespace and local name have no restrictions when the wild card option is used
+    // for the qualified name
     if (qualified_name == "*")
         return trees::descendants(node).cast_all<nodes::element*>();
 
@@ -153,13 +154,33 @@ dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
         ext::cstring& namespace_,
         ext::cstring& local_name)
 {
-    // return a list of elements whose namespace and local name match their respective regex counterparts (meant to just
-    // be a name or an asterix, but this implementation is more flexible TODO : maybe change back to just string and *
-    return trees::descendants(node)
+    // return all the elements, as the namespace and local name have no restrictions when the wild card option is used
+    // for the namespace and local name
+    if (namespace_ == "*" and local_name == "*")
+        return trees::descendants(node)
+            .cast_all<nodes::element*>();
+
+    // return all the elements that have a matching local name to the given local name, as the namespace is still a
+    // wildcard option
+    else if (namespace_ == "*")
+        return trees::descendants(node)
             .cast_all<nodes::element*>()
-            .filter([namespace_, local_name](nodes::element* descendant_element) {
-                return std::regex_match(descendant_element->namespace_uri->c_str(), std::regex(namespace_.c_str())) and
-                       std::regex_match(descendant_element->local_name->c_str(), std::regex(local_name.c_str()));});
+            .filter([namespace_](nodes::element* element) {return element->namespace_uri == namespace_;});
+
+    // return all the elements that have a matching namespace to the given namespace, as the local name is still a
+    // wildcard option
+    else if (local_name == "*")
+        return trees::descendants(node)
+            .cast_all<nodes::element*>()
+            .filter([local_name](nodes::element* element) {return element->local_name == local_name;});
+
+    // return all the elements that have a matching namespace t the given namespace and a matching local name to the
+    // given local name, as there are no wild card options
+    else
+        return trees::descendants(node)
+            .cast_all<nodes::element*>()
+            .filter([namespace_](nodes::element* element) {return element->namespace_uri == namespace_;})
+            .filter([local_name](nodes::element* element) {return element->local_name == local_name;});
 }
 
 
@@ -191,11 +212,18 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
 void
 dom::helpers::node_internals::adopt(
         nodes::node* node,
-        nodes::document* document) {
-
+        nodes::document* document)
+{
+    // get the old document
     nodes::document* old_document = node->owner_document;
-    if (node->parent) mutation_algorithms::remove(node);
-    if (document != old_document) /* TODO show inclusive descendants */ return;
+
+    // if the node has a parent, then remove the node from its document, as it is being adopted into the new document
+    if (node->parent)
+        mutation_algorithms::remove(node);
+
+    // if the two documents are different, the handle shadow options
+    if (document != old_document)
+        return; /* TODO show inclusive descendants */
 }
 
 
@@ -204,19 +232,25 @@ dom::helpers::node_internals::string_replace_all(
         ext::cstring& string,
         nodes::node* parent) {
 
-    if (not string.empty()) {
+    // make sure that the string contains something
+    if (not string.empty())
+    {
+        // create a new text node, set the data to the new string, and set the owner document to the parent's document
         auto* text_node = new nodes::text{};
         text_node->data = string;
         text_node->owner_document = parent->owner_document;
+
+        // replace all the nodes in parent with the text node, that contains the new text
         mutation_algorithms::replace_all(text_node, parent);
     }
 }
 
 
 bool
-dom::helpers::node_internals::is_document_fully_active(
-        nodes::document* document) {
-
+dom::helpers::node_internals::is_document_fully_active(nodes::document* document)
+{
+    // return true if the documents browsing context exists, the document is the active document, and [the container
+    // document is active or there is no parent browsing context - auto enables document]
     return document->m_browsing_context
             and document->m_browsing_context->active_document == document
             and (is_document_fully_active(document->m_browsing_context->container_document) or not document->m_browsing_context->parent_browsing_context);
@@ -224,10 +258,10 @@ dom::helpers::node_internals::is_document_fully_active(
 
 
 bool
-dom::helpers::node_internals::is_html(
-        const nodes::element* element) {
-
-    return element->namespace_uri == "html" and element->owner_document->m_type == "html";
+dom::helpers::node_internals::is_html(const nodes::element* element)
+{
+    // return if the element is in the html namespace, and the document's type is html
+    return element->namespace_uri == namespaces::HTML and element->owner_document->m_type == "html";
 }
 
 
@@ -235,6 +269,8 @@ ext::string
 dom::helpers::node_internals::advisory_information(
         html::elements::html_element* element) {
 
+    // return the element title if it exists, the parent's advisory information if there is a parent, otherwise an empty
+    // string - in other words, move directly up the tree until the title attribute is set, otherwise an empty string
     return element->title ? element->title : element->parent_element
             ? advisory_information(ext::property_dynamic_cast<html::elements::html_element*>(element->parent_element))
             : "";
@@ -245,15 +281,19 @@ template <typename ...nodes_or_strings>
 dom::nodes::node*
 dom::helpers::node_internals::convert_nodes_into_node(
         nodes::document* document,
-        nodes_or_strings ...nodes) {
-
+        nodes_or_strings ...nodes)
+{
+    // create an empty converted nodes list, and append a node if the object is a node, otherwise append a text node
+    // containing the string as the data
     ext::vector<nodes::node*> converted_nodes{};
     ext::vector{nodes...}.template for_each([&converted_nodes](auto* node) {converted_nodes.append(dynamic_cast<nodes::node*>(node) ? node : new nodes::text{node});});
 
-    auto* node = converted_nodes.front();
-    if (node) return node;
+    // if there are nodes in the list, then return the first node
+    if (not converted_nodes.empty())
+        return converted_nodes.front();
 
-    node = new nodes::document_fragment{};
-    converted_nodes.template for_each([&master_node = node](auto* node) {helpers::mutation_algorithms::append(node, master_node);});
+    // otherwise, create a document fragment, append all the converted nodes to it, and return the document fragment
+    auto* node = new nodes::document_fragment{};
+    converted_nodes.template for_each([&node](nodes::node* converted_node) {helpers::mutation_algorithms::append(converted_node, node);});
     return node;
 }
