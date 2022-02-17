@@ -244,18 +244,21 @@ dom::helpers::shadows::is_host_including_ancestor(
         const nodes::node* node_a,
         const nodes::node* node_b)
 {
-
+    // TODO
     return trees::is_descendant(node_a, node_b) or shadow_root(node_b) and shadow_root(node_b)->host and is_host_including_ancestor(node_a, shadow_root(node_b)->host);
 }
 
 
 bool
 dom::helpers::shadows::is_closed_shadow_hidden(
-        nodes::node* node_a,
-        nodes::node* node_b) {
+        const nodes::node* node_a,
+        const nodes::node* node_b)
+{
+    // get the shadow root of node_a
+    auto* shadow_root_a = dynamic_cast<const nodes::shadow_root*>(node_a);
 
-    auto* shadow_root_a = dynamic_cast<nodes::shadow_root*>(node_a);
-
+    // return if the root is a shadow root that isn't a shadow including ancestor of node_b, and [the shadow root's mode
+    // is closed or the shadow root's host is a closed shadow hidden of node_b]
     return is_root_shadow_root(node_a)
             and not is_shadow_including_ancestor(shadow_root_a, node_b)
             and (shadow_root_a->mode == "closed" or is_closed_shadow_hidden(shadow_root_a->host, node_b));
