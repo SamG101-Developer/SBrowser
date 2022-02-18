@@ -8,4 +8,6 @@
 
 #define EMPTY '\0'
 
+#define function auto
+
 #endif //SBROWSER_CPP_KEYWORDS_HPP

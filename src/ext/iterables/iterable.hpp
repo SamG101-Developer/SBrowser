@@ -7,6 +7,7 @@
 #include <numeric>
 #include <stdexcept>
 
+#include <ext/macros/cpp_keywords.hpp>
 #include <ext/macros/decorators.hpp>
 
 namespace ext {template <typename T, typename C> class iterable;}
@@ -27,45 +28,45 @@ public: constructors
     virtual ~iterable() = default;
 
     // element access
-    T& front() const noexcept(false);
-    T& back() const noexcept(false);
-    T& at(const size_t i) const noexcept(false);
-    T& at(const_iterator i) const noexcept(false);
+    function front() const noexcept(false) -> T&;
+    function back() const noexcept(false) -> T&;
+    function at(const size_t i) const noexcept(false) -> T&;
+    function at(const_iterator i) const noexcept(false) -> T&;
 
     // iterators
-    iterator begin();
-    const_iterator begin() const;
-    iterator end();
-    const_iterator end() const;
+    function begin() -> iterator;
+    function begin() const -> const_iterator ;
+    function end() -> iterator;
+    function end() const -> const_iterator;
 
     // capacity
-    bool empty() const noexcept;
-    size_t length() const noexcept;
+    function empty() const noexcept -> bool;
+    function length() const noexcept -> size_t;
 
     // modifiers
-    virtual iterable<T, C>& clear();
-    template <class function> iterable<T, C>& remove_if(function&& func, bool all = false);
-    template <class function> iterable<T, C>& replace_if(function&& func, const T& new_item, bool all = false);
-    iterable<T, C>& remove(const T& item, bool all = false);
-    iterable<T, C>& replace(const T& old_item, const T& new_item, bool all = false);
-    iterable<T, C>& reverse();
-    iterable<T, C>& sort();
-    iterable<C, T>& clean() requires std::is_pointer_v<T>;
+    virtual function clear() -> iterable<T, C>&;
+    template <class F> function remove_if(F&& func, bool all = false) -> iterable<T, C>&;
+    template <class F> function replace_if(F&& func, const T& new_item, bool all = false) -> iterable<T, C>&;
+    function remove(const T& item, bool all = false) -> iterable<T, C>&;
+    function replace(const T& old_item, const T& new_item, bool all = false) -> iterable<T, C>&;
+    function reverse() -> iterable<T, C>&;
+    function sort() -> iterable<T, C>&;
+    function clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
 
     // new iterables
-    iterable<T, C> reversed() const;
-    iterable<T, C> sorted() const;
+    function reversed() const -> iterable<T, C>;
+    function sorted() const -> iterable<T, C>;
 
     // algorithms
-    size_t find(const T& object, const size_t offset = 0) const;
-    bool contains(const T& item) const;
-    void print() const;
+    function find(const T& object, const size_t offset = 0) const -> size_t;
+    function contains(const T& item) const -> bool;
+    function print() const -> void;
 
 public: operators
     operator bool() const;
-    bool operator!() const;
-    bool operator==(const iterable<T, C>& o) const;
-    bool operator!=(const iterable<T, C>& o) const;
+    function operator!() const -> bool;
+    function operator==(const iterable<T, C>& o) const -> bool;
+    function operator!=(const iterable<T, C>& o) const -> bool;
 
 protected: internal_properties
     C m_iterable;
@@ -73,7 +74,7 @@ protected: internal_properties
 
 
 template <typename T, typename C>
-inline T& ext::iterable<T, C>::front() const noexcept(false)
+function ext::iterable<T, C>::front() const noexcept(false) -> T&
 {
     // throws error if accessing the front of an empty iterable
     if (empty())
@@ -85,7 +86,7 @@ inline T& ext::iterable<T, C>::front() const noexcept(false)
 
 
 template <typename T, typename C>
-inline T& ext::iterable<T, C>::back() const noexcept(false)
+function ext::iterable<T, C>::back() const noexcept(false) -> T&
 {
     // throws error if accessing the back of an empty iterable
     if (empty())
@@ -97,7 +98,7 @@ inline T& ext::iterable<T, C>::back() const noexcept(false)
 
 
 template <typename T, typename C>
-inline T& ext::iterable<T, C>::at(const size_t i) const noexcept(false)
+function ext::iterable<T, C>::at(const size_t i) const noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -109,7 +110,7 @@ inline T& ext::iterable<T, C>::at(const size_t i) const noexcept(false)
 
 
 template <typename T, typename C>
-inline T& ext::iterable<T, C>::at(const_iterator i) const noexcept(false)
+function ext::iterable<T, C>::at(const_iterator i) const noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -121,7 +122,7 @@ inline T& ext::iterable<T, C>::at(const_iterator i) const noexcept(false)
 
 
 template <typename T, typename C>
-inline typename ext::iterable<T, C>::iterator ext::iterable<T, C>::begin()
+function ext::iterable<T, C>::begin() -> ext::iterable<T, C>::iterator
 {
     // return the begin iterator for the iterable
     return m_iterable.begin();
@@ -129,7 +130,7 @@ inline typename ext::iterable<T, C>::iterator ext::iterable<T, C>::begin()
 
 
 template <typename T, typename C>
-inline typename ext::iterable<T, C>::const_iterator ext::iterable<T, C>::begin() const
+function ext::iterable<T, C>::begin() const -> ext::iterable<T, C>::const_iterator
 {
     // return the const begin iterator for the iterable
     return m_iterable.begin();
@@ -137,7 +138,7 @@ inline typename ext::iterable<T, C>::const_iterator ext::iterable<T, C>::begin()
 
 
 template <typename T, typename C>
-inline typename ext::iterable<T, C>::iterator ext::iterable<T, C>::end()
+function ext::iterable<T, C>::end() -> ext::iterable<T, C>::iterator
 {
     // return the end iterator for the iterable
     return m_iterable.end();
@@ -145,7 +146,7 @@ inline typename ext::iterable<T, C>::iterator ext::iterable<T, C>::end()
 
 
 template <typename T, typename C>
-inline typename ext::iterable<T, C>::const_iterator ext::iterable<T, C>::end() const
+function ext::iterable<T, C>::end() const -> ext::iterable<T, C>::const_iterator
 {
     // return the const end iterator for the iterable
     return m_iterable.end();
