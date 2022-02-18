@@ -33,76 +33,51 @@ public: constructors
     vector() = default;
     vector(const vector&) = default;
     vector(vector&&) noexcept = default;
-    vector<T>& operator=(const vector&) = default;
-    vector<T>& operator=(vector&&) noexcept = default;
-    vector<T>& operator=(const std::queue<T>& o);
-    vector<T>& operator=(const std::stack<T>& o);
     template <typename iterator> vector(iterator begin, iterator end) requires is_iterator_v<iterator>;
     template <typename ...args> vector(args&&... items);
+
+    func operator=(const vector&) -> vector<T>& = default;
+    func operator=(vector&&) noexcept -> vector<T>& = default;
+    func operator=(const std::queue<T>& o) -> vector<T>&;
+    func operator=(const std::stack<T>& o) -> vector<T>&;
+
     ~vector() override;
 
 public: methods
     // element access
-    T& item_before(const T& item) const;
-    T& item_after(const T& item) const;
-    template <typename F> T& first_match(F&& function) const;
-    template <typename F> T& last_match(F&& function) const;
-    vector<T>& slice(size_t front_index, size_t back_index) const;
+    func slice(size_t front_index, size_t back_index) const -> vector<T>&;
+    func item_before(const T& item) const -> T&;
+    func item_after(const T& item) const -> T&;
+    template <typename F> func first_match(F&& function) const -> T&;
+    template <typename F> func last_match(F&& function) const -> T&;
 
     // modifiers
-    vector<T>& append(const T& item);
-    vector<T>& prepend(const T& item);
-    vector<T>& insert(const T& item, const size_t index = -1);
-    vector<T>& extend(const vector<T>& other, const size_t index = -1);
-    vector<T>& pop(size_t index = -1);
-    vector<T>& clear() override;
-    T& max_element() const;
-    T& min_element() const;
+    func append(const T& item) -> vector<T>&;
+    func prepend(const T& item) -> vector<T>&;
+    func insert(const T& item, size_t index = -1) -> vector<T>&;
+    func extend(const vector<T>& other, size_t index = -1) -> vector<T>&;
+    func pop(size_t index = -1) -> vector<T>&;
+    func clear() -> vector<T>& override;
+    func max_element() const -> T&;
+    func min_element() const -> T&;
 
     // algorithms
-    template <typename F> bool all_of(F&& function) const;
-    template <typename F> bool any_of(F&& function) const;
-    template <typename F> vector<T>& for_each(F&& function);
-    template <typename F> cvector<T>& for_each(F&& function) const;
-    template <typename F> vector<T> filter(F&& function) const;
-    template <typename U=T, typename F> vector<U> transform(F&& function) const;
-    template <typename U=T> vector<U> cast_all() const;
-    vector<T>& intersection(vector<T>& other) const;
-    const char* join(char&& delimiter = ' ') const;
-    vector<T>& flatten();
-    void call_all() const requires std::is_invocable_v<T>;
+    template <typename F> func all_of(F&& function) const -> bool;
+    template <typename F> func any_of(F&& function) const -> bool;
+    template <typename F> func for_each(F&& function) -> vector<T>&;
+    template <typename F> func for_each(F&& function) const -> cvector<T>&;
+    template <typename F> func filter(F&& function) const -> vector<T>;
+    template <typename U=T, typename F> func transform(F&& function) const -> vector<U>;
+    template <typename U=T> func cast_all() const -> vector<U>;
+
+    func intersection(vector<T>& other) const -> vector<T>&;
+    func join(char&& delimiter = ' ') const -> const char*;
+    func flatten() -> vector<T>&;
+    func call_all() const -> void requires std::is_invocable_v<T>;
 
 public: operators
     ext::vector<T> operator*(size_t n) const;
 };
-
-
-template <typename T>
-inline ext::vector<T>& ext::vector<T>::operator=(const std::queue<T>& o)
-{
-    // fill the veque by emptying the queue
-    auto copy = std::queue<T>{o};
-    while (not copy.empty())
-    {
-        // append the front element and pop it from the queue
-        append(copy.front());
-        copy.pop();
-    }
-}
-
-
-template <typename T>
-inline ext::vector<T>& ext::vector<T>::operator=(const std::stack<T>& o)
-{
-    // fill the veque by emptying the stack
-    auto copy = std::stack<T>{o};
-    while (not copy.empty())
-    {
-        // append the top element and pop it from the queue
-        append(copy.top());
-        copy.pop();
-    }
-}
 
 
 template <typename T>
@@ -123,6 +98,34 @@ template <typename ...args> ext::vector<T>::vector(args&&... items)
 
 
 template <typename T>
+func ext::vector<T>::operator=(const std::queue<T>& o) -> ext::vector<T>&
+{
+    // fill the veque by emptying the queue
+    auto copy = std::queue<T>{o};
+    while (not copy.empty())
+    {
+        // append the front element and pop it from the queue
+        append(copy.front());
+        copy.pop();
+    }
+}
+
+
+template <typename T>
+func ext::vector<T>::operator=(const std::stack<T>& o) -> ext::vector<T>&
+{
+    // fill the veque by emptying the stack
+    auto copy = std::stack<T>{o};
+    while (not copy.empty())
+    {
+        // append the top element and pop it from the queue
+        append(copy.top());
+        copy.pop();
+    }
+}
+
+
+template <typename T>
 ext::vector<T>::~vector()
 {
     // call the clear method to clear up the list before it is deleted
@@ -131,7 +134,15 @@ ext::vector<T>::~vector()
 
 
 template <typename T>
-inline T& ext::vector<T>::item_before(const T& item) const
+func ext::vector<T>::slice(size_t front_index, size_t back_index) const -> ext::vector<T>&
+{
+    // slice the list by adding the front_index and back_index to the begin iterator
+    return vector<T>{this->begin() + front_index, this->begin() + back_index};
+}
+
+
+template <typename T>
+func ext::vector<T>::item_before(const T& item) const -> T&
 {
     // get the item in the veque found adjacent to the item passed in, before
     return this->at((this->find(item) - 1) % this->length());
@@ -139,7 +150,7 @@ inline T& ext::vector<T>::item_before(const T& item) const
 
 
 template <typename T>
-inline T& ext::vector<T>::item_after(const T& item) const
+func ext::vector<T>::item_after(const T& item) const -> T&
 {
     // get the item in the veque found adjacent to the item passed in, after
     return this->at((this->find(item) + 1) % this->length());
@@ -148,7 +159,7 @@ inline T& ext::vector<T>::item_after(const T& item) const
 
 template <typename T>
 template <typename F>
-inline T& ext::vector<T>::first_match(F&& function) const
+func ext::vector<T>::first_match(F&& function) const -> T&
 {
     // get the first match by filtering the veque and returning the first item TODO : break on first item
     return filter(function).front();
@@ -157,7 +168,7 @@ inline T& ext::vector<T>::first_match(F&& function) const
 
 template <typename T>
 template <typename F>
-inline T& ext::vector<T>::last_match(F&& function) const
+func ext::vector<T>::last_match(F&& function) const -> T&
 {
     // get the last match by filtering the veque and returning the last match TODO : break on last item (reverse)
     return filter(function).back();
@@ -165,15 +176,7 @@ inline T& ext::vector<T>::last_match(F&& function) const
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::slice(size_t front_index, size_t back_index) const
-{
-    // slice the list by adding the front_index and back_index to the begin iterator
-    return vector<T>{this->begin() + front_index, this->begin() + back_index};
-}
-
-
-template <typename T>
-inline ext::vector<T>& ext::vector<T>::append(const T& item)
+func ext::vector<T>::append(const T& item) -> ext::vector<T>&
 {
     // append the item to the back of the veque, and return a reference to it
     this->m_iterable.emplace_back(item);
@@ -182,7 +185,7 @@ inline ext::vector<T>& ext::vector<T>::append(const T& item)
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::prepend(const T& item)
+func ext::vector<T>::prepend(const T& item) -> ext::vector<T>&
 {
     // prepend the item to the front of the veque, and return a reference to it
     this->m_iterable.emplace_front(this->begin(), item);
@@ -191,7 +194,7 @@ inline ext::vector<T>& ext::vector<T>::prepend(const T& item)
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::insert(const T& item, const size_t index)
+func ext::vector<T>::insert(const T& item, size_t index) -> ext::vector<T>&
 {
     // insert the item in the middle of the veque, and return a reference to it
     this->m_iterable.emplace(this->begin() + index, item);
@@ -200,7 +203,7 @@ inline ext::vector<T>& ext::vector<T>::insert(const T& item, const size_t index)
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::extend(const vector<T>& other, const size_t index)
+func ext::vector<T>::extend(const vector<T>& other, size_t index) -> ext::vector<T>&
 {
     // reverse the other list so that it can be inserted in the correct order ie 3 then 2 then 1 so {1, 2, 3} is added
     auto reversed_other = other.reversed();
@@ -212,7 +215,7 @@ inline ext::vector<T>& ext::vector<T>::extend(const vector<T>& other, const size
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::pop(size_t index)
+func ext::vector<T>::pop(size_t index) -> ext::vector<T>&
 {
     // remove an item based on its index - syntactic sugar for v.remove(v.at(...))
     this->remove(this->at(index));
@@ -221,7 +224,7 @@ inline ext::vector<T>& ext::vector<T>::pop(size_t index)
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::clear()
+func ext::vector<T>::clear() -> ext::vector<T>&
 {
     // clear the list and shrink it down to 0 size to free memory
     this->m_iterable.clear();
@@ -233,7 +236,7 @@ inline ext::vector<T>& ext::vector<T>::clear()
 
 
 template <typename T>
-inline T& ext::vector<T>::max_element() const
+func ext::vector<T>::max_element() const -> T&
 {
     // get the maximum element, and return the item at this iterator
     return this->at_iter(std::max_element(this->begin(), this->end()));
@@ -241,7 +244,7 @@ inline T& ext::vector<T>::max_element() const
 
 
 template <typename T>
-inline T& ext::vector<T>::min_element() const
+func ext::vector<T>::min_element() const -> T&
 {
     // get the minimum element, and return the item at this iterator
     return this->at_iter(std::min_element(this->begin(), this->end()));
@@ -250,7 +253,7 @@ inline T& ext::vector<T>::min_element() const
 
 template <typename T>
 template <typename F>
-inline bool ext::vector<T>::all_of(F&& function) const
+func ext::vector<T>::all_of(F&& function) const -> bool
 {
     // set the flag to true by default
     bool flag = true;
@@ -268,7 +271,7 @@ inline bool ext::vector<T>::all_of(F&& function) const
 
 template <typename T>
 template <typename F>
-inline bool ext::vector<T>::any_of(F&& function) const
+func ext::vector<T>::any_of(F&& function) const -> bool
 {
     // set the flag to false by default
     bool flag = false;
@@ -286,7 +289,7 @@ inline bool ext::vector<T>::any_of(F&& function) const
 
 template <typename T>
 template <typename F>
-inline ext::vector<T>& ext::vector<T>::for_each(F&& function)
+func ext::vector<T>::for_each(F&& function) -> ext::vector<T>&
 {
     // apply a function to each item in this veque, and return a reference to it
     for (T item: this->m_iterable) function(item);
@@ -296,7 +299,7 @@ inline ext::vector<T>& ext::vector<T>::for_each(F&& function)
 
 template <typename T>
 template <typename F>
-inline ext::cvector<T>& ext::vector<T>::for_each(F&& function) const
+func ext::vector<T>::for_each(F&& function) const -> ext::cvector<T>&
 {
     // apply a const function to each item in this veque, and return a reference to it (for all_of, any_of etc...)
     for (const T item: this->m_iterable) function(item);
@@ -306,7 +309,7 @@ inline ext::cvector<T>& ext::vector<T>::for_each(F&& function) const
 
 template <typename T>
 template <typename F>
-inline ext::vector<T> ext::vector<T>::filter(F&& function) const
+func ext::vector<T>::filter(F&& function) const -> ext::vector<T>
 {
     // remove non-matching items from a duplicate of the veque, and return it
     return vector<T>{*this}.remove_if([function](const T& item) -> bool {return not function(item);});
@@ -315,7 +318,7 @@ inline ext::vector<T> ext::vector<T>::filter(F&& function) const
 
 template <typename T>
 template <typename U, typename F>
-inline ext::vector<U> ext::vector<T>::transform(F&& function) const
+func ext::vector<T>::transform(F&& function) const -> ext::vector<U>
 {
     // create a duplicate of the veque, transform all the items in it, and return a reference to it
     vector<U> copy{*this};
@@ -326,7 +329,7 @@ inline ext::vector<U> ext::vector<T>::transform(F&& function) const
 
 template <typename T>
 template <typename U>
-inline ext::vector<U> ext::vector<T>::cast_all() const
+func ext::vector<T>::cast_all() const -> ext::vector<U>
 {
     // create a duplicate empty veque, and cast all the items from T to U
     vector<U> copy;
@@ -341,7 +344,7 @@ inline ext::vector<U> ext::vector<T>::cast_all() const
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::intersection(vector<T>& other) const
+func ext::vector<T>::intersection(vector<T>& other) const -> ext::vector<T>&
 {
     // get the intersection by filtering this list based on if the other veque contains the item of not
     return filter(&other.contains);
@@ -349,7 +352,7 @@ inline ext::vector<T>& ext::vector<T>::intersection(vector<T>& other) const
 
 
 template <typename T>
-inline const char* ext::vector<T>::join(char&& delimiter) const
+func ext::vector<T>::join(char&& delimiter) const -> const char*
 {
     // create a string and join each item in the veque to it
     std::string joined;
@@ -361,14 +364,14 @@ inline const char* ext::vector<T>::join(char&& delimiter) const
 
 
 template <typename T>
-inline ext::vector<T>& ext::vector<T>::flatten()
+func ext::vector<T>::flatten() -> ext::vector<T>&
 {
     /* TODO */
 }
 
 
 template <typename T>
-inline void ext::vector<T>::call_all() const requires std::is_invocable_v<T>
+func ext::vector<T>::call_all() const -> void requires std::is_invocable_v<T>
 {
     // invoke each function in the veque
     for_each([](const T& item) {item();});
@@ -376,7 +379,7 @@ inline void ext::vector<T>::call_all() const requires std::is_invocable_v<T>
 
 
 template <typename T>
-inline ext::vector<T> ext::vector<T>::operator*(size_t n) const
+func ext::vector<T>::operator*(size_t n) const -> ext::vector<T>
 {
     // create 2 copies of this veque (output and duplicator)
     auto original = vector<string>{*this};
@@ -389,7 +392,9 @@ inline ext::vector<T> ext::vector<T>::operator*(size_t n) const
 
 
 template <typename iterator>
-size_t iterator_to_index(iterator iter) {
+func iterator_to_index(iterator iter) -> size_t
+{
+    // convert the iterator to an index, same thing as vector.index_of(*iterator)
     return std::distance(iter.begin(), iter);
 }
 
