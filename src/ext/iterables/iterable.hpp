@@ -154,7 +154,7 @@ function ext::iterable<T, C>::end() const -> ext::iterable<T, C>::const_iterator
 
 
 template <typename T, typename C>
-inline bool ext::iterable<T, C>::empty() const noexcept
+function ext::iterable<T, C>::empty() const noexcept -> bool
 {
     // return if the iterable is empty or not
     return m_iterable.empty();
@@ -162,7 +162,7 @@ inline bool ext::iterable<T, C>::empty() const noexcept
 
 
 template <typename T, typename C>
-inline size_t ext::iterable<T, C>::length() const noexcept
+function ext::iterable<T, C>::length() const noexcept -> size_t
 {
     // return the size of the iterable
     return m_iterable.size();
@@ -170,7 +170,7 @@ inline size_t ext::iterable<T, C>::length() const noexcept
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C>& ext::iterable<T, C>::clear()
+function ext::iterable<T, C>::clear() -> ext::iterable<T, C>&
 {
     // clear the iterable, and return the reference to it
     m_iterable.clear();
@@ -179,8 +179,8 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::clear()
 
 
 template <typename T, typename C>
-template <class function>
-inline ext::iterable<T, C>& ext::iterable<T, C>::remove_if(function&& func, bool all)
+template <class F>
+function ext::iterable<T, C>::remove_if(F&& func, bool all) -> ext::iterable<T, C>&
 {
     // continue to loop while the function matches items in the iterable
     while (std::find_if(begin(), end(), func) != end())
@@ -196,8 +196,11 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::remove_if(function&& func, bool
 
 
 template <typename T, typename C>
-template <class function>
-inline ext::iterable<T, C>& ext::iterable<T, C>::replace_if(function&& func, const T& new_item, bool all)
+template <class F>
+function ext::iterable<T, C>::replace_if(
+        F&& func,
+        const T& new_item,
+        bool all) -> ext::iterable<T, C>&
 {
     // continue to loop while the function matches items in the iterable
     while (std::find_if(begin(), end(), func) != end())
@@ -213,7 +216,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::replace_if(function&& func, con
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C>& ext::iterable<T, C>::remove(const T& item, bool all)
+function ext::iterable<T, C>::remove(const T& item, bool all) -> ext::iterable<T, C>&
 {
     // continue to loop while the item is in the iterable
     while (contains(item))
@@ -229,7 +232,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::remove(const T& item, bool all)
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C>& ext::iterable<T, C>::replace(const T& old_item, const T& new_item, bool all)
+function ext::iterable<T, C>::replace(const T& old_item, const T& new_item, bool all) -> ext::iterable<T, C>&
 {
     // continue to loop while the item is in the iterable
     while (contains(old_item))
