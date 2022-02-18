@@ -38,53 +38,53 @@ public: constructors
     string(string&&) noexcept = default;
     string(const char* other) {m_iterable = other;}
 
-    function operator=(const string&) -> string& = default;
-    function operator=(const char* other) -> string&;
-    function operator=(const std::string& other) -> string&;
-    function operator=(const QString& other) -> string&;
-    function operator=(const v8::Local<v8::String> other) -> string&;
+    func operator=(const string&) -> string& = default;
+    func operator=(const char* other) -> string&;
+    func operator=(const std::string& other) -> string&;
+    func operator=(const QString& other) -> string&;
+    func operator=(const v8::Local<v8::String> other) -> string&;
 
-    function operator=(string&&) noexcept -> string& = default;
-    function operator=(char&& other) -> string&;
-    function operator=(std::string&& other) -> string&;
-    function operator=(QString&& other) -> string&;
+    func operator=(string&&) noexcept -> string& = default;
+    func operator=(char&& other) -> string&;
+    func operator=(std::string&& other) -> string&;
+    func operator=(QString&& other) -> string&;
 
 public: methods
     // modifiers
-    function ltrim() -> string&;
-    function rtrim() -> string&;
-    function trim() -> string&;
+    func ltrim() -> string&;
+    func rtrim() -> string&;
+    func trim() -> string&;
 
     // algorithms
-    function to_lowercase() -> string&;
-    function to_uppercase() -> string&;
-    function new_lowercase() const -> string;
-    function new_uppercase() const -> string;
-    function substring(const size_t offset, const size_t count = std::string::npos) const -> string;
-    function replace(size_t offset, size_t count, cstring& replacement) -> string;
-    function split(char delimiter, size_t max_delimiters = 1) const -> ext::vector<string>;
-    function contains(const char* item) const -> bool;
-    constexpr function c_str() const -> const char*;
+    func to_lowercase() -> string&;
+    func to_uppercase() -> string&;
+    func new_lowercase() const -> string;
+    func new_uppercase() const -> string;
+    func substring(const size_t offset, const size_t count = std::string::npos) const -> string;
+    func replace(size_t offset, size_t count, cstring& replacement) -> string;
+    func split(char delimiter, size_t max_delimiters = 1) const -> ext::vector<string>;
+    func contains(const char* item) const -> bool;
+    constexpr func c_str() const -> const char*;
 
 public: operators
     operator std::string() const;
     operator QString() const;
     operator v8::Local<v8::String>() const;
 
-    function operator+(cstring& other) const -> string;
-    function operator+(const char* other) const -> string;
-    function operator+=(cstring& other) -> string&;
+    func operator+(cstring& other) const -> string;
+    func operator+(const char* other) const -> string;
+    func operator+=(cstring& other) -> string&;
 
-    function operator<(cstring& other) const -> bool;
-    function operator>(cstring& other) const -> bool;
+    func operator<(cstring& other) const -> bool;
+    func operator>(cstring& other) const -> bool;
 
-    function operator!() const -> bool;
-    function operator==(const string& other) const -> bool;
-    function operator==(const char* other) const -> bool;
+    func operator!() const -> bool;
+    func operator==(const string& other) const -> bool;
+    func operator==(const char* other) const -> bool;
 };
 
 
-function ext::string::operator=(const char* other) -> ext::string&
+func ext::string::operator=(const char* other) -> ext::string&
 {
     // set the iterable from a const char* type, and return the reference to the string
     m_iterable = std::string{other};
@@ -92,7 +92,7 @@ function ext::string::operator=(const char* other) -> ext::string&
 }
 
 
-function ext::string::operator=(const std::string& other) -> ext::string&
+func ext::string::operator=(const std::string& other) -> ext::string&
 {
     // set the iterable from a std::string l-value reference type, and return the reference to the string
     m_iterable = other;
@@ -100,7 +100,7 @@ function ext::string::operator=(const std::string& other) -> ext::string&
 }
 
 
-function ext::string::operator=(const QString& other) -> ext::string&
+func ext::string::operator=(const QString& other) -> ext::string&
 {
     // set the iterable from a QString l-value reference type, and return the reference to the string
     m_iterable = other.toStdString();
@@ -108,7 +108,7 @@ function ext::string::operator=(const QString& other) -> ext::string&
 }
 
 
-function ext::string::operator=(const v8::Local<v8::String> other) -> ext::string&
+func ext::string::operator=(const v8::Local<v8::String> other) -> ext::string&
 {
     // set the iterable from a v8 type, and return the reference to the string
     m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});
@@ -116,7 +116,7 @@ function ext::string::operator=(const v8::Local<v8::String> other) -> ext::strin
 }
 
 
-function ext::string::operator=(char&& other) -> ext::string&
+func ext::string::operator=(char&& other) -> ext::string&
 {
     // set the iterable from a const&& type, and return the reference to the string
     m_iterable = &other;
@@ -124,7 +124,7 @@ function ext::string::operator=(char&& other) -> ext::string&
 }
 
 
-function ext::string::operator=(std::string&& other) -> ext::string&
+func ext::string::operator=(std::string&& other) -> ext::string&
 {
     // set the iterable from a std::string r-value reference type, and return the reference to the string
     m_iterable = std::forward<std::string&>(other);
@@ -132,7 +132,7 @@ function ext::string::operator=(std::string&& other) -> ext::string&
 }
 
 
-function ext::string::operator=(QString&& other) -> ext::string&
+func ext::string::operator=(QString&& other) -> ext::string&
 {
     // set the iterable from a QString r-value reference type, and return the reference to the string
     m_iterable = std::forward<QString&>(other).toStdString();
@@ -140,7 +140,7 @@ function ext::string::operator=(QString&& other) -> ext::string&
 }
 
 
-function ext::string::ltrim() -> ext::string&
+func ext::string::ltrim() -> ext::string&
 {
     // remove all the spaces from the left-hand side of the string, and return the reference to the string
     m_iterable.erase(begin(), begin() + (decltype(m_iterable)::difference_type)m_iterable.find_first_not_of(' '));
@@ -148,7 +148,7 @@ function ext::string::ltrim() -> ext::string&
 }
 
 
-function ext::string::rtrim() -> ext::string&
+func ext::string::rtrim() -> ext::string&
 {
     // remove all the spaces from the right-hand side of the string, and return the reference to the string
     m_iterable.erase(begin() + (decltype(m_iterable)::difference_type)m_iterable.find_last_not_of(' '), end());
@@ -156,7 +156,7 @@ function ext::string::rtrim() -> ext::string&
 }
 
 
-function ext::string::trim() -> ext::string&
+func ext::string::trim() -> ext::string&
 {
     // remove all the spaces from both sides of the string, and return the reference to the string
     ltrim();
@@ -165,7 +165,7 @@ function ext::string::trim() -> ext::string&
 }
 
 
-function ext::string::to_lowercase() -> ext::string&
+func ext::string::to_lowercase() -> ext::string&
 {
     // convert the string to lowercase by transforming each character individually, and return a reference to thr string
     std::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
@@ -173,7 +173,7 @@ function ext::string::to_lowercase() -> ext::string&
 }
 
 
-function ext::string::to_uppercase() -> ext::string&
+func ext::string::to_uppercase() -> ext::string&
 {
     // convert the string to uppercase by transforming each character individually, and return a reference to thr string
     std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::toupper(c);});
@@ -181,21 +181,21 @@ function ext::string::to_uppercase() -> ext::string&
 }
 
 
-function ext::string::new_lowercase() const -> ext::string
+func ext::string::new_lowercase() const -> ext::string
 {
     // create a new string, convert it to lowercase, and return it
     return string{*this}.to_lowercase();
 }
 
 
-function ext::string::new_uppercase() const -> ext::string
+func ext::string::new_uppercase() const -> ext::string
 {
     // create a new string, convert it to uppercase, and return it
     return string{*this}.to_uppercase();
 }
 
 
-function ext::string::substring(const size_t offset, const size_t count) const -> ext::string
+func ext::string::substring(const size_t offset, const size_t count) const -> ext::string
 {
     // create a substring from the internal value and wrap it into ext::string, and return it
     string substring;
@@ -203,14 +203,14 @@ function ext::string::substring(const size_t offset, const size_t count) const -
 }
 
 
-function ext::string::replace(size_t offset, size_t count, cstring& replacement) -> ext::string
+func ext::string::replace(size_t offset, size_t count, cstring& replacement) -> ext::string
 {
     // replace count characters starting at offset with replacement
     m_iterable.replace(offset, count, replacement);
 }
 
 
-function ext::string::split(char delimiter, size_t max_delimiters) const -> ext::vector<ext::string>
+func ext::string::split(char delimiter, size_t max_delimiters) const -> ext::vector<ext::string>
 {
     // create an empty output vector, and initialize position variables to 0
     ext::vector<string> out {};
@@ -247,7 +247,7 @@ function ext::string::split(char delimiter, size_t max_delimiters) const -> ext:
 }
 
 
-function ext::string::contains(const char* item) const -> bool
+func ext::string::contains(const char* item) const -> bool
 {
     // check if the string contains a substring
     return m_iterable.contains(item);

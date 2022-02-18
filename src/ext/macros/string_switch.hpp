@@ -12,13 +12,20 @@ const unsigned long b = 76963;
 const unsigned long c = 86969;
 const unsigned long d = 00037;
 
-size_t hash(const char* s) {
+auto hash(const char* s) -> size_t
+{
+    // create the hash object h
     auto h = d;
+
+    // loop until the end of the string is reached
     while (*s) {
+
+        // update the hash and increment the string
         h = (h * a) ^ (s[0] * b);
         s++;
     }
 
+    // return the hash object
     return h;
 }
 }

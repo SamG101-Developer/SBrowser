@@ -45,8 +45,8 @@ public: methods
     // element access
     T& item_before(const T& item) const;
     T& item_after(const T& item) const;
-    template <typename function> T& first_match(function&& func) const;
-    template <typename function> T& last_match(function&& func) const;
+    template <typename F> T& first_match(F&& function) const;
+    template <typename F> T& last_match(F&& function) const;
     vector<T>& slice(size_t front_index, size_t back_index) const;
 
     // modifiers
@@ -60,12 +60,12 @@ public: methods
     T& min_element() const;
 
     // algorithms
-    template <typename function> bool all_of(function&& func) const;
-    template <typename function> bool any_of(function&& func) const;
-    template <typename function> vector<T>& for_each(function&& func);
-    template <typename function> cvector<T>& for_each(function&& func) const;
-    template <typename function> vector<T> filter(function&& func) const;
-    template <typename U=T, typename function> vector<U> transform(function&& func) const;
+    template <typename F> bool all_of(F&& function) const;
+    template <typename F> bool any_of(F&& function) const;
+    template <typename F> vector<T>& for_each(F&& function);
+    template <typename F> cvector<T>& for_each(F&& function) const;
+    template <typename F> vector<T> filter(F&& function) const;
+    template <typename U=T, typename F> vector<U> transform(F&& function) const;
     template <typename U=T> vector<U> cast_all() const;
     vector<T>& intersection(vector<T>& other) const;
     const char* join(char&& delimiter = ' ') const;
@@ -147,20 +147,20 @@ inline T& ext::vector<T>::item_after(const T& item) const
 
 
 template <typename T>
-template <typename function>
-inline T& ext::vector<T>::first_match(function&& func) const
+template <typename F>
+inline T& ext::vector<T>::first_match(F&& function) const
 {
     // get the first match by filtering the veque and returning the first item TODO : break on first item
-    return filter(func).front();
+    return filter(function).front();
 }
 
 
 template <typename T>
-template <typename function>
-inline T& ext::vector<T>::last_match(function&& func) const
+template <typename F>
+inline T& ext::vector<T>::last_match(F&& function) const
 {
     // get the last match by filtering the veque and returning the last match TODO : break on last item (reverse)
-    return filter(func).back();
+    return filter(function).back();
 }
 
 
@@ -249,15 +249,15 @@ inline T& ext::vector<T>::min_element() const
 
 
 template <typename T>
-template <typename function>
-inline bool ext::vector<T>::all_of(function&& func) const
+template <typename F>
+inline bool ext::vector<T>::all_of(F&& function) const
 {
     // set the flag to true by default
     bool flag = true;
 
     // check if a condition matches all items in the veque, break early if 1 element doesn't match
-    for_each([&flag, func](const T& item) {
-        flag &= func(T{item});
+    for_each([&flag, function](const T& item) {
+        flag &= function(T{item});
         if (not flag) return;
     });
 
@@ -267,15 +267,15 @@ inline bool ext::vector<T>::all_of(function&& func) const
 
 
 template <typename T>
-template <typename function>
-inline bool ext::vector<T>::any_of(function&& func) const
+template <typename F>
+inline bool ext::vector<T>::any_of(F&& function) const
 {
     // set the flag to false by default
     bool flag = false;
 
     // check if a condition matches any items in the veque, brake early if 1 element does match
-    for_each([&flag, func](const T& item) {
-        flag |= func(item);
+    for_each([&flag, function](const T& item) {
+        flag |= function(item);
         if (flag) return;
     });
 
@@ -285,41 +285,41 @@ inline bool ext::vector<T>::any_of(function&& func) const
 
 
 template <typename T>
-template <typename function>
-inline ext::vector<T>& ext::vector<T>::for_each(function&& func)
+template <typename F>
+inline ext::vector<T>& ext::vector<T>::for_each(F&& function)
 {
     // apply a function to each item in this veque, and return a reference to it
-    for (T item: this->m_iterable) func(item);
+    for (T item: this->m_iterable) function(item);
     return *this;
 }
 
 
 template <typename T>
-template <typename function>
-inline ext::cvector<T>& ext::vector<T>::for_each(function&& func) const
+template <typename F>
+inline ext::cvector<T>& ext::vector<T>::for_each(F&& function) const
 {
     // apply a const function to each item in this veque, and return a reference to it (for all_of, any_of etc...)
-    for (const T item: this->m_iterable) func(item);
+    for (const T item: this->m_iterable) function(item);
     return *this;
 }
 
 
 template <typename T>
-template <typename function>
-inline ext::vector<T> ext::vector<T>::filter(function&& func) const
+template <typename F>
+inline ext::vector<T> ext::vector<T>::filter(F&& function) const
 {
     // remove non-matching items from a duplicate of the veque, and return it
-    return vector<T>{*this}.remove_if([func](const T& item) -> bool {return not func(item);});
+    return vector<T>{*this}.remove_if([function](const T& item) -> bool {return not function(item);});
 }
 
 
 template <typename T>
-template <typename U, typename function>
-inline ext::vector<U> ext::vector<T>::transform(function&& func) const
+template <typename U, typename F>
+inline ext::vector<U> ext::vector<T>::transform(F&& function) const
 {
     // create a duplicate of the veque, transform all the items in it, and return a reference to it
     vector<U> copy{*this};
-    std::transform(this->begin(), this->end(), copy.begin(), func);
+    std::transform(this->begin(), this->end(), copy.begin(), function);
     return copy;
 }
 

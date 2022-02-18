@@ -4,11 +4,12 @@
 
 #include <fstream>
 
+#include <ext/macros/cpp_keywords.hpp>
 #include <ext/iterables/string.hpp>
 
 
-ext::string
-file_read(ext::cstring& file_path) {
+func file_read(ext::cstring& file_path) -> ext::string
+{
     // create the input and output strings
     std::ifstream input(file_path.c_str());
     std::string output;
@@ -18,8 +19,4 @@ file_read(ext::cstring& file_path) {
         output += file_line;
 
     // return the output as an ext object
-    return ext::string{output.c_str()};
-}
-
-
-#endif //SBROWSER_FILES_HPP
+    return ext::string{ou

@@ -14,12 +14,12 @@ public: constructors
     set() = default;
 
 public: methods
-    function push(const T& item) -> ext::set<T>&;
+    func push(const T& item) -> ext::set<T>&;
 };
 
 
 template <typename T>
-function ext::set<T>::push(const T& item) -> ext::set<T>&
+func ext::set<T>::push(const T& item) -> ext::set<T>&
 {
     // insert the item in the middle of the iterable, and return the reference to the iterable
     this->m_iterable.emplace(item);
