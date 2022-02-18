@@ -258,7 +258,7 @@ func ext::string::contains(const char* item) const -> bool
  * use the .c_str() to keep compatibility with std::string::c_str() -> also helps with messy (const char*) conversions
  * @return const char* string
  */
-constexpr function ext::string::c_str() const -> const char*
+constexpr func ext::string::c_str() const -> const char*
 {
     // return the const char* representation of the internal string
     return m_iterable.c_str();
@@ -299,7 +299,7 @@ ext::string::operator v8::Local<v8::String>() const
 }
 
 
-function ext::string::operator+(cstring& other) const -> ext::string
+func ext::string::operator+(cstring& other) const -> ext::string
 {
     // create a new string composed of adding the two strings, and return it
     ext::string new_string;
@@ -307,7 +307,7 @@ function ext::string::operator+(cstring& other) const -> ext::string
 }
 
 
-function ext::string::operator+(const char* other) const -> ext::string
+func ext::string::operator+(const char* other) const -> ext::string
 {
     // create a new string composed of adding the two strings, and return it
     ext::string new_string;
@@ -315,7 +315,7 @@ function ext::string::operator+(const char* other) const -> ext::string
 }
 
 
-function ext::string::operator+=(cstring& other) -> ext::string&
+func ext::string::operator+=(cstring& other) -> ext::string&
 {
     // acd the other string to this string and return a reference to it
     m_iterable += other.m_iterable;
@@ -323,35 +323,35 @@ function ext::string::operator+=(cstring& other) -> ext::string&
 }
 
 
-function ext::string::operator<(cstring& other) const -> bool
+func ext::string::operator<(cstring& other) const -> bool
 {
     // do comparisons by pointer comparison
     return this < &other;
 }
 
 
-function ext::string::operator>(cstring& other) const -> bool
+func ext::string::operator>(cstring& other) const -> bool
 {
     // do comparisons by pointer comparison
     return this > &other;
 }
 
 
-function ext::string::operator!() const -> bool
+func ext::string::operator!() const -> bool
 {
     // check if the string is empty
     return empty();
 }
 
 
-function ext::string::operator==(const string& other) const -> bool
+func ext::string::operator==(const string& other) const -> bool
 {
     // equality check by comparing the two strings
     return m_iterable == other.m_iterable;
 }
 
 
-function ext::string::operator==(const char* other) const -> bool
+func ext::string::operator==(const char* other) const -> bool
 {
     // inequality check by comparing the two strings
     return m_iterable.c_str() == other;
@@ -359,7 +359,7 @@ function ext::string::operator==(const char* other) const -> bool
 
 
 template <class ...string_t>
-function ext::concatenate_strings(string_t&&... strings) -> ext::string {
+func ext::concatenate_strings(string_t&&... strings) -> ext::string {
 
     // create a string stream and add the forwarded strings into it
     const std::ostringstream stream;
