@@ -13,9 +13,8 @@ public: constructors
     range(T low, T high) requires std::is_arithmetic_v<T>;
 
 public: methods
-    // algorithms
-    bool inclusive_contains(T value) const;
-    bool exclusive_contains(T value) const;
+    function inclusive_contains(T value) const -> bool;
+    function exclusive_contains(T value) const -> bool;
 
 private: internal_properties
     const T m_low;
@@ -31,7 +30,7 @@ ext::range<T>::range(T low, T high) requires std::is_arithmetic_v<T> : m_low(low
 
 
 template <typename T>
-bool ext::range<T>::inclusive_contains(T value) const
+function ext::range<T>::inclusive_contains(T value) const -> bool
 {
     // check that a number is inbetween the bounds, including the bounds
     return (m_low <= value) and (value <= m_high);
@@ -39,7 +38,7 @@ bool ext::range<T>::inclusive_contains(T value) const
 
 
 template <typename T>
-bool ext::range<T>::exclusive_contains(T value) const
+function ext::range<T>::exclusive_contains(T value) const -> bool
 {
     // check that a number is inbetween the bounds, excluding the bounds
     return (m_low < value) and (value < m_high);

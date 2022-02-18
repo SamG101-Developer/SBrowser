@@ -27,16 +27,14 @@ public: constructors
     map<K, V>& operator=(map<K, V>&&) noexcept = default;
 
 public: methods
-    // element access
-    ext::map<K, V>& insert(const K& key, const V& value);
-    V& at(const K& key) const;
-    bool has_key(const K& key);
+    function insert(const K& key, const V& value) -> ext::map<K, V>&;
+    function at(const K& key) const -> V&;
+    function has_key(const K& key) -> bool;
 
-    // modifiers
-    template <typename U> map<K, U> cast_all() requires std::is_same_v<V, ext::any>;
+    template <typename U> function cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
 
 public: operators
-    bool operator==(ext::cmap<K, V>& o);
+    function operator==(ext::cmap<K, V>& o) -> bool;
 };
 
 
@@ -49,7 +47,7 @@ ext::map<K, V>::map(const std::initializer_list<std::pair<K, V>>& o)
 
 
 template <typename K, typename V>
-inline ext::map<K, V>& ext::map<K, V>::insert(const K& key, const V& value)
+function ext::map<K, V>::insert(const K& key, const V& value) -> ext::map<K, V>&
 {
     // insert the key-value pair, and return the reference to the map
     this->m_iterable.emplace(key, value);
@@ -58,7 +56,7 @@ inline ext::map<K, V>& ext::map<K, V>::insert(const K& key, const V& value)
 
 
 template <typename K, typename V>
-inline V& ext::map<K, V>::at(const K& key) const
+function ext::map<K, V>::at(const K& key) const -> V&
 {
     // return the item in the middle of the map
     return this->m_iterable.at(key);
@@ -66,7 +64,7 @@ inline V& ext::map<K, V>::at(const K& key) const
 
 
 template <typename K, typename V>
-inline bool ext::map<K, V>::has_key(const K& key)
+function ext::map<K, V>::has_key(const K& key) -> bool
 {
     // check if the iterable contains a key by comparing its iterator location to the end iterator
     return this->m_iterable.find(key) != this->m_iterable.end();
@@ -75,7 +73,7 @@ inline bool ext::map<K, V>::has_key(const K& key)
 
 template <typename K, typename V>
 template <typename U>
-inline ext::map<K, U> ext::map<K, V>::cast_all() requires std::is_same_v<V, ext::any>
+function ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext::any>
 {
     // create an empty copy of the map
     map<K, U> copy;
@@ -84,13 +82,13 @@ inline ext::map<K, U> ext::map<K, V>::cast_all() requires std::is_same_v<V, ext:
     for (const auto& [key, value]: *this)
         copy.at(key) = value;
 
-    // return the casted map
+    // return the cast map
     return copy;
 }
 
 
 template <typename K, typename V>
-inline bool ext::map<K, V>::operator==(ext::cmap<K, V>& o)
+function ext::map<K, V>::operator==(ext::cmap<K, V>& o) -> bool
 {
     // guard to check that the lengths match
     if (this->length() != o.length())

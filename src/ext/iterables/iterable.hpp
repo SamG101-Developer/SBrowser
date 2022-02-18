@@ -27,23 +27,19 @@ public: constructors
 
     virtual ~iterable() = default;
 
-    // element access
     function front() const noexcept(false) -> T&;
     function back() const noexcept(false) -> T&;
     function at(const size_t i) const noexcept(false) -> T&;
     function at(const_iterator i) const noexcept(false) -> T&;
 
-    // iterators
     function begin() -> iterator;
     function begin() const -> const_iterator ;
     function end() -> iterator;
     function end() const -> const_iterator;
 
-    // capacity
     function empty() const noexcept -> bool;
     function length() const noexcept -> size_t;
 
-    // modifiers
     virtual function clear() -> iterable<T, C>&;
     template <class F> function remove_if(F&& func, bool all = false) -> iterable<T, C>&;
     template <class F> function replace_if(F&& func, const T& new_item, bool all = false) -> iterable<T, C>&;
@@ -53,18 +49,16 @@ public: constructors
     function sort() -> iterable<T, C>&;
     function clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
 
-    // new iterables
     function reversed() const -> iterable<T, C>;
     function sorted() const -> iterable<T, C>;
 
-    // algorithms
     function find(const T& object, const size_t offset = 0) const -> size_t;
     function contains(const T& item) const -> bool;
     function print() const -> void;
 
 public: operators
     operator bool() const;
-    function operator!() const -> bool;
+    virtual function operator!() const -> bool;
     function operator==(const iterable<T, C>& o) const -> bool;
     function operator!=(const iterable<T, C>& o) const -> bool;
 
@@ -180,7 +174,10 @@ function ext::iterable<T, C>::clear() -> ext::iterable<T, C>&
 
 template <typename T, typename C>
 template <class F>
-function ext::iterable<T, C>::remove_if(F&& func, bool all) -> ext::iterable<T, C>&
+function ext::iterable<T, C>::remove_if(
+        F&& func,
+        bool all)
+        -> ext::iterable<T, C>&
 {
     // continue to loop while the function matches items in the iterable
     while (std::find_if(begin(), end(), func) != end())
@@ -200,7 +197,8 @@ template <class F>
 function ext::iterable<T, C>::replace_if(
         F&& func,
         const T& new_item,
-        bool all) -> ext::iterable<T, C>&
+        bool all)
+        -> ext::iterable<T, C>&
 {
     // continue to loop while the function matches items in the iterable
     while (std::find_if(begin(), end(), func) != end())
@@ -216,7 +214,10 @@ function ext::iterable<T, C>::replace_if(
 
 
 template <typename T, typename C>
-function ext::iterable<T, C>::remove(const T& item, bool all) -> ext::iterable<T, C>&
+function ext::iterable<T, C>::remove(
+        const T& item,
+        bool all)
+        -> ext::iterable<T, C>&
 {
     // continue to loop while the item is in the iterable
     while (contains(item))
@@ -232,7 +233,11 @@ function ext::iterable<T, C>::remove(const T& item, bool all) -> ext::iterable<T
 
 
 template <typename T, typename C>
-function ext::iterable<T, C>::replace(const T& old_item, const T& new_item, bool all) -> ext::iterable<T, C>&
+function ext::iterable<T, C>::replace(
+        const T& old_item,
+        const T& new_item,
+        bool all)
+        -> ext::iterable<T, C>&
 {
     // continue to loop while the item is in the iterable
     while (contains(old_item))
@@ -248,7 +253,7 @@ function ext::iterable<T, C>::replace(const T& old_item, const T& new_item, bool
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C>& ext::iterable<T, C>::reverse()
+function ext::iterable<T, C>::reverse() -> ext::iterable<T, C>&
 {
     // reverse the iterable, and return the reference to it
     std::reverse(m_iterable.begin(), m_iterable.end());
@@ -257,7 +262,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::reverse()
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C>& ext::iterable<T, C>::sort()
+function ext::iterable<T, C>::sort() -> ext::iterable<T, C>&
 {
     // sort the iterable, and return the reference to it
     std::sort(m_iterable.begin(), m_iterable.end());
@@ -266,7 +271,7 @@ inline ext::iterable<T, C>& ext::iterable<T, C>::sort()
 
 
 template <typename T, typename C>
-inline ext::iterable<C, T>& ext::iterable<T, C>::clean() requires std::is_pointer_v<T>
+function ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_pointer_v<T>
 {
     // remove all the nullptr from the iterable, and return the reference to it
     remove(nullptr, true);
@@ -275,7 +280,7 @@ inline ext::iterable<C, T>& ext::iterable<T, C>::clean() requires std::is_pointe
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C> ext::iterable<T, C>::reversed() const
+function ext::iterable<T, C>::reversed() const -> ext::iterable<T, C>
 {
     // reverse a duplicate iterable, and return the reference to it
     return iterable<T, C>{*this}.reverse();
@@ -283,7 +288,7 @@ inline ext::iterable<T, C> ext::iterable<T, C>::reversed() const
 
 
 template <typename T, typename C>
-inline ext::iterable<T, C> ext::iterable<T, C>::sorted() const
+function ext::iterable<T, C>::sorted() const -> ext::iterable<T, C>
 {
     // sort a duplicate iterable, and return the reference to it
     return iterable<T, C>{*this}.sort();
@@ -291,7 +296,7 @@ inline ext::iterable<T, C> ext::iterable<T, C>::sorted() const
 
 
 template <typename T, typename C>
-size_t ext::iterable<T, C>::find(const T& object, const size_t offset) const
+function ext::iterable<T, C>::find(const T& object, const size_t offset) const -> size_t
 {
     // return the index of an item in the iterable by comparing iterator positions
     return std::distance(begin(), std::find(begin() + offset, end(), object));
@@ -299,7 +304,7 @@ size_t ext::iterable<T, C>::find(const T& object, const size_t offset) const
 
 
 template <typename T, typename C>
-inline bool ext::iterable<T, C>::contains(const T& item) const
+function ext::iterable<T, C>::contains(const T& item) const -> bool
 {
     // check if the iterable contains an item by comparing its iterator location to the end iterator
     return begin() + find(item) != end();
@@ -307,7 +312,7 @@ inline bool ext::iterable<T, C>::contains(const T& item) const
 
 
 template <typename T, typename C>
-void ext::iterable<T, C>::print() const
+function ext::iterable<T, C>::print() const -> void
 {
     // serialize the iterable by output the list as a string - TODO: MOVE TO OPERATOR <<
     std::cout << std::copy(begin(), end(), std::ostream_iterator<std::string>(std::cout, ", ")) << std::endl;
@@ -315,7 +320,7 @@ void ext::iterable<T, C>::print() const
 
 
 template <typename T, typename C>
-bool ext::iterable<T, C>::operator!() const
+function ext::iterable<T, C>::operator!() const -> bool
 {
     // the iterable evaluates to false if the list is empty (inverse operator ie -> true)
     return empty();
@@ -323,7 +328,7 @@ bool ext::iterable<T, C>::operator!() const
 
 
 template <typename T, typename C>
-bool ext::iterable<T, C>::operator==(const iterable<T, C>& o) const
+function ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
 {
     // guard to check that the lengths match
     if (length() != o.length())
@@ -339,7 +344,7 @@ bool ext::iterable<T, C>::operator==(const iterable<T, C>& o) const
 
 
 template <typename T, typename C>
-bool ext::iterable<T, C>::operator!=(const iterable<T, C>& o) const
+function ext::iterable<T, C>::operator!=(const iterable<T, C>& o) const -> bool
 {
     // guard to check that the lengths don't match
     if (length() == o.length())
