@@ -12,10 +12,19 @@ template <typename T>
 class ext::set : public ext::iterable<T, std::set<T>> {
 public: constructors
     set() = default;
+    set(const std::set<T>& o);
 
 public: methods
     func push(const T& item) -> ext::set<T>&;
 };
+
+
+template <typename T>
+ext::set<T>::set(const std::set<T>& o)
+{
+    // set the iterable to a set
+    this->m_iterable = o;
+}
 
 
 template <typename T>

@@ -33,7 +33,8 @@ public: constructors
     vector() = default;
     vector(const vector&) = default;
     vector(vector&&) noexcept = default;
-    template <typename iterator> vector(iterator begin, iterator end) requires is_iterator_v<iterator>;
+    template <typename iterable_t> vector(const iterable_t& iterable_object) requires is_iterable_v<iterable_t>;
+    template <typename iterator_t> vector(iterator_t begin, iterator_t end) requires is_iterator_v<iterator_t>;
     template <typename ...args> vector(args&&... items);
 
     func operator=(const vector&) -> vector<T>& = default;
@@ -44,14 +45,13 @@ public: constructors
     ~vector() override;
 
 public: methods
-    // element access
     func slice(size_t front_index, size_t back_index) const -> vector<T>&;
     func item_before(const T& item) const -> T&;
     func item_after(const T& item) const -> T&;
     template <typename F> func first_match(F&& function) const -> T&;
     template <typename F> func last_match(F&& function) const -> T&;
 
-    // modifiers
+    func reserve(size_t count) -> void;
     func append(const T& item) -> vector<T>&;
     func prepend(const T& item) -> vector<T>&;
     func insert(const T& item, size_t index = -1) -> vector<T>&;
@@ -61,7 +61,6 @@ public: methods
     func max_element() const -> T&;
     func min_element() const -> T&;
 
-    // algorithms
     template <typename F> func all_of(F&& function) const -> bool;
     template <typename F> func any_of(F&& function) const -> bool;
     template <typename F> func for_each(F&& function) -> vector<T>&;
@@ -76,13 +75,22 @@ public: methods
     func call_all() const -> void requires std::is_invocable_v<T>;
 
 public: operators
-    ext::vector<T> operator*(size_t n) const;
+    func operator*(size_t n) const -> ext::vector<T>;
 };
 
 
 template <typename T>
-template <typename iterator>
-ext::vector<T>::vector(iterator begin, iterator end) requires is_iterator_v<iterator>
+template <typename iterable_t>
+ext::vector<T>::vector(const iterable_t& iterable_object) requires is_iterable_v<iterable_t>
+{
+    // set the iterable to a veque from the iterator pair of the iterable_object
+    this->m_iterable = veque::veque<T>{iterable_object.begin(), iterable_object.end()};
+}
+
+
+template <typename T>
+template <typename iterator_t>
+ext::vector<T>::vector(iterator_t begin, iterator_t end) requires is_iterator_v<iterator_t>
 {
     // set the iterable to a veque defined by an iterator pair
     this->m_iterable = veque::veque<T>{begin, end};
@@ -172,6 +180,14 @@ func ext::vector<T>::last_match(F&& function) const -> T&
 {
     // get the last match by filtering the veque and returning the last match TODO : break on last item (reverse)
     return filter(function).back();
+}
+
+
+template <typename T>
+func ext::vector<T>::reserve(size_t count) -> void
+{
+    // reserve count amount of object space in the veque for quicker insertion
+    this->m_iterable.reserve();
 }
 
 

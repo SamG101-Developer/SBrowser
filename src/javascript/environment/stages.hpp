@@ -15,17 +15,17 @@ namespace javascript::environment {
     namespace modules {enum module_type;}
 
     namespace stages {
-        auto initialize_v8_engine(char** argv) -> void;
-        auto create_isolate() -> v8::Isolate*;
-        auto create_context(v8::Isolate* isolate, javascript::environment::modules::module_type module_type) -> v8::Persistent<v8::Context>&;
-        auto execute(v8::Isolate* isolate, v8::Persistent<v8::Context>& persistent_context, const char* code) -> void;
-        auto dispose_isolate(v8::Isolate* isolate) -> void;
-        auto dispose_v8() -> void;
+        func initialize_v8_engine(char** argv) -> void;
+        func create_isolate() -> v8::Isolate*;
+        func create_context(v8::Isolate* isolate, javascript::environment::modules::module_type module_type) -> v8::Persistent<v8::Context>&;
+        func execute(v8::Isolate* isolate, v8::Persistent<v8::Context>& persistent_context, const char* code) -> void;
+        func dispose_isolate(v8::Isolate* isolate) -> void;
+        func dispose_v8() -> void;
     }
 }
 
 
-auto javascript::environment::stages::initialize_v8_engine(char** argv) -> void
+func javascript::environment::stages::initialize_v8_engine(char** argv) -> void
 {
     // initialize the icu default location and the external startup data
     v8::V8::InitializeICUDefaultLocation(argv[0]);
@@ -38,7 +38,7 @@ auto javascript::environment::stages::initialize_v8_engine(char** argv) -> void
 }
 
 
-auto javascript::environment::stages::create_isolate() -> v8::Isolate*
+func javascript::environment::stages::create_isolate() -> v8::Isolate*
 {
     // create the create_params object for the array buffer allocator
     v8::Isolate::CreateParams create_params;
@@ -50,7 +50,7 @@ auto javascript::environment::stages::create_isolate() -> v8::Isolate*
 }
 
 
-auto javascript::environment::stages::create_context(
+func javascript::environment::stages::create_context(
         v8::Isolate* isolate,
         javascript::environment::modules::module_type module_type)
         -> v8::Persistent<v8::Context>&
@@ -60,7 +60,7 @@ auto javascript::environment::stages::create_context(
     v8::HandleScope handle_scope(isolate);
 
     // create a persistent context from the isolate
-    static v8::Persistent<v8::Context> persistent_context = v8::Persistent<v8::Context>(isolate, v8::Context::New(isolate));
+    static v8::Persistent<v8::Context> persistent_context = v8::Persistent<v8::Context>{isolate, v8::Context::New(isolate)};
 
     // expose the web api module code into the javascript context
     javascript::interop::expose_cpp_to_js::expose(isolate, persistent_context, module_type);
@@ -68,7 +68,7 @@ auto javascript::environment::stages::create_context(
 }
 
 
-auto javascript::environment::stages::execute(
+func javascript::environment::stages::execute(
         v8::Isolate* isolate,
         v8::Persistent<v8::Context>& persistent_context,
         const char* code)
@@ -88,9 +88,12 @@ auto javascript::environment::stages::execute(
         v8::Local<v8::Script> script = v8::Script::Compile(local_context, source).ToLocalChecked();
         v8::Local<v8::Value>  result = script->Run(local_context).ToLocalChecked();
 
-        // get the output and write it to console TODO : remove std::cout << ... << ...;
+        // get the output and write it to console
         std::string output = *v8::String::Utf8Value(isolate, result);
+
+        #if DEBUG
         std::cout << output << std::endl;
+        #endif
     }
 }
 

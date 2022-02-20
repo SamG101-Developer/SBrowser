@@ -27,7 +27,8 @@ namespace ext {
 
 
 class ext::string : public ext::iterable<char, std::string> {
-    friend std::ostream& operator<<(std::ostream& stream, ext::cstring& string) {
+    friend std::ostream& operator<<(std::ostream& stream, ext::cstring& string)
+    {
         stream << string.m_iterable;
         return stream;
     };

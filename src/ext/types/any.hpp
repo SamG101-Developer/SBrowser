@@ -33,12 +33,13 @@ public: constructors
     template <typename T> any& operator=(T&& other) noexcept {m_value = other; return *this;}
 
 public: methods
-    const type_info& type() const;
-    bool empty() const;
-    bool contains_pointer() const;
-    template <typename T> void emplace();
-    template <typename T> void emplace(T&& element);
-    template <typename T> T to() const;
+    func type() const -> const type_info&;
+    func empty() const -> bool;
+    func contains_pointer() const -> bool;
+    func is_numeric() const -> bool;
+    template <typename T> func emplace() -> void;
+    template <typename T> func emplace(T&& element) -> void;
+    template <typename T> func to() const -> T;
 
 public: operators
     operator bool() const;
@@ -73,6 +74,20 @@ bool ext::any::contains_pointer() const
 {
     // return if the internal object wrapped is a pointer type TODO : this implementation makes me feel sick
     return ext::string{type().name()}.contains("* __ptr64");
+}
+
+
+func ext::any::is_numeric() const -> bool
+{
+    // return is the internal type is numeric
+    try
+    {
+        return any_cast<int>(*this);
+    }
+    catch (const std::bad_any_cast&)
+    {
+        return false;
+    }
 }
 
 
