@@ -24,8 +24,7 @@ dom::aborting::abort_signal::abort(ext::any reason)
 }
 
 
-void
-dom::aborting::abort_signal::throw_if_aborted() const
+auto dom::aborting::abort_signal::throw_if_aborted() const -> void
 {
     // if a reason has been given, then throw an abort error
     helpers::exceptions::throw_v8_exception(
@@ -35,17 +34,15 @@ dom::aborting::abort_signal::throw_if_aborted() const
 }
 
 
-dom::aborting::abort_signal*
-dom::aborting::abort_signal::timeout(unsigned long long milliseconds)
+auto dom::aborting::abort_signal::timeout(unsigned long long milliseconds) -> dom::aborting::abort_signal
 {
-    auto* signal = new abort_signal{};
+    abort_signal signal{};
     // TODO
     return signal;
 }
 
 
-ext::any
-dom::aborting::abort_signal::v8(v8::Isolate* isolate) const
+auto dom::aborting::abort_signal::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<abort_signal>{isolate}
             .inherit<event_target>()

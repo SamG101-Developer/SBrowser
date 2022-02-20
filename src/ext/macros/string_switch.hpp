@@ -12,7 +12,7 @@ const unsigned long b = 76963;
 const unsigned long c = 86969;
 const unsigned long d = 00037;
 
-func hash(const char* s) -> size_t
+auto hash(const char* s) -> size_t
 {
     // create the hash object h
     auto h = d;

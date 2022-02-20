@@ -7,13 +7,12 @@ dom::events::custom_event::custom_event(
 
         : dom::events::event(event_type, event_init)
 {
-    // set the attributes from the options dictionary
+    // set the properties
     detail = event_init.at("detail");
 }
 
 
-ext::any
-dom::events::custom_event::v8(v8::Isolate* isolate) const
+auto dom::events::custom_event::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<custom_event>{isolate}
             .ctor<ext::cstring&, ext::cstring_any_map&>()

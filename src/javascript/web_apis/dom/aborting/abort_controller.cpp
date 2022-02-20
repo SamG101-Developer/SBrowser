@@ -6,20 +6,20 @@
 
 dom::aborting::abort_controller::abort_controller() : dom_object()
 {
+    // set the properties
     signal = new abort_signal{};
 }
 
 
-void
-dom::aborting::abort_controller::abort(ext::cany& reason) const
+
+auto dom::aborting::abort_controller::abort(ext::cany& reason) const -> void
 {
     // call the helper method to signal abort the signal with a given reason
     helpers::signal_aborting::signal_abort(signal, reason);
 }
 
 
-ext::any
-dom::aborting::abort_controller::v8(v8::Isolate* isolate) const
+auto dom::aborting::abort_controller::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<abort_controller>{isolate}
             .ctor<>()

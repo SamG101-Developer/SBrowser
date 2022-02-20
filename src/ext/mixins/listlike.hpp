@@ -14,8 +14,8 @@ class ext::listlike {
 public:
     listlike(ext::vector<T>* linked_list = {});
 
-    virtual func operator[] (size_t index) -> T&;
-    virtual func operator[] (ext::cstring& index) -> T&;
+    virtual auto operator[] (size_t index) -> T&;
+    virtual auto operator[] (ext::cstring& index) -> T&;
 
     ext::property<size_t> length;
 
@@ -23,7 +23,7 @@ protected:
     ext::vector<T>* m_linked_list;
 
 private:
-    func get_length() -> size_t;
+    auto get_length() -> size_t;
 };
 
 
@@ -36,7 +36,7 @@ ext::listlike<T>::listlike(ext::vector<T>* linked_list) : m_linked_list(linked_l
 
 
 template <typename T>
-func ext::listlike<T>::operator[](size_t index) -> T&
+auto ext::listlike<T>::operator[](size_t index) -> T&
 {
     // use the [size_t] operator as getting an item by index
     return m_linked_list->at(index);
@@ -44,7 +44,7 @@ func ext::listlike<T>::operator[](size_t index) -> T&
 
 
 template <typename T>
-func ext::listlike<T>::operator[](ext::cstring& index) -> T&
+auto ext::listlike<T>::operator[](ext::cstring& index) -> T&
 {
     // default behaviour of [ext::string] is to return a nullptr
     return nullptr;
@@ -52,7 +52,7 @@ func ext::listlike<T>::operator[](ext::cstring& index) -> T&
 
 
 template <typename T>
-func ext::listlike<T>::get_length() -> size_t
+auto ext::listlike<T>::get_length() -> size_t
 {
     // get the length of the internal list
     return m_linked_list->length();

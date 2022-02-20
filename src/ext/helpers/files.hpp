@@ -8,7 +8,7 @@
 #include <ext/iterables/string.hpp>
 
 
-func file_read(ext::cstring& file_path) -> ext::string
+auto file_read(ext::cstring& file_path) -> ext::string
 {
     // create the input and output strings
     std::ifstream input(file_path.c_str());

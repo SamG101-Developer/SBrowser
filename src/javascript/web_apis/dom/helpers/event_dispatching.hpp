@@ -6,7 +6,8 @@
 #include <ext/iterables/vector.hpp>
 #include <ext/iterables/string.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace events {class event;}
     namespace helpers {struct event_dispatching;}
     namespace internal {struct event_path_struct;}

@@ -38,10 +38,10 @@ public: static_constants
     static constexpr unsigned char BUBBLING_PHASE = 3;
 
 public: methods
-    void stop_propagation();
-    void stop_immediate_propagation();
-    void prevent_default();
-    ext::vector<nodes::event_target*> composed_path() const;
+    auto stop_propagation() -> void;
+    auto stop_immediate_propagation() -> void;
+    auto prevent_default() -> void;
+    auto composed_path() const -> ext::vector<nodes::event_target*>;
 
 public: properties
     ext::dom_property<ext::string, _F> type;
@@ -58,7 +58,7 @@ public: properties
     ext::dom_property<ext::vector<internal::event_path_struct*>*, _F> path;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected: internal_properties
     bool m_stop_propagation_flag;

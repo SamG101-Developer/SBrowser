@@ -19,13 +19,13 @@ struct v8pp::convert<ext::string> {
     using from_type = ext::string;
     using to_type = v8::Local<v8::String>;
 
-    static func is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
+    static auto is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
     {
         // verify that the value is a non-empty string
         return not value.IsEmpty() and value->IsString();
     }
 
-    static func from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
+    static auto from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
     {
         // validate the javascript string object
         if (not is_valid(isolate, v8_value))
@@ -37,7 +37,7 @@ struct v8pp::convert<ext::string> {
         return from_type{cpp_value};
     }
 
-    static func to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
+    static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript string object
         v8::EscapableHandleScope escapable_handle_scope{isolate};
@@ -55,13 +55,13 @@ struct v8pp::convert<ext::property<T>> {
     using from_type = T;
     using to_type = v8::Local<v8::Value>;
 
-    static func is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
+    static auto is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
     {
         // verify that the value is non-empty
         return not value.IsEmpty();
     }
 
-    static func from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
+    static auto from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
     {
         // validate the javascript T input
         if (not is_valid(isolate, v8_value))
@@ -73,7 +73,7 @@ struct v8pp::convert<ext::property<T>> {
         return cpp_value;
     }
 
-    static func to_v8(v8::Isolate* isolate, const ext::property<T>& cpp_value) -> to_type
+    static auto to_v8(v8::Isolate* isolate, const ext::property<T>& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript T object (T operator invokes property getter)
         v8::EscapableHandleScope escapable_handle_scope{isolate};
@@ -99,7 +99,7 @@ struct v8pp::convert<ext::vector<T>> {
         return not value.IsEmpty() and value->IsArray();
     }
 
-    static func from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
+    static auto from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
     {
         // validate the javascript array input
         if (not is_valid(isolate, v8_value))
@@ -111,7 +111,7 @@ struct v8pp::convert<ext::vector<T>> {
         return from_type{cpp_value};
     }
 
-    static func to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
+    static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript array object (after filling the array)
         v8::EscapableHandleScope escapable_handle_scope{isolate};
@@ -135,13 +135,13 @@ struct v8pp::convert<ext::set<T>> {
     using from_type = ext::set<T>;
     using to_type = v8::Local<v8::Set>;
     
-    static func is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value) -> bool
+    static auto is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value) -> bool
     {
         // verify that the value is a non-empty set
         return not value.IsEmpty() and value->IsSet();
     }
     
-    static func from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
+    static auto from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
     {
         // validate the javascript set input
         if (not is_valid(isolate, v8_value))
@@ -154,7 +154,7 @@ struct v8pp::convert<ext::set<T>> {
     }
 
 
-    static func to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
+    static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript set object (after filling the set)
         v8::EscapableHandleScope escapable_handle_scope {isolate};
@@ -178,13 +178,13 @@ struct v8pp::convert<ext::infinity<T>> {
     using from_type = ext::infinity<T>;
     using to_type = v8::Local<v8::Number>;
 
-    static func is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value) -> bool
+    static auto is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value) -> bool
     {
         // verify that the value is a non-empty number
         return not value.IsEmpty() and value->IsNumber();
     }
 
-    static func from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
+    static auto from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
     {
         // validate the javascript number input
         if (not is_valid(isolate, v8_value))
@@ -196,7 +196,7 @@ struct v8pp::convert<ext::infinity<T>> {
         return from_type{.m_positive=cpp_value >= 0.0};
     }
 
-    static func to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
+    static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript number object (T operator invokes numeric conversion)
         v8::EscapableHandleScope escapable_handle_scope{isolate};
@@ -216,13 +216,13 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
     using from_type = ext::any;
     using to_type = v8::Local<v8::Value>;
 
-    static func is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
+    static auto is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
     {
         // no verifications
         return true;
     }
 
-    static func from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
+    static auto from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
     {
         // call is_valid to keep uniform with other struct implementations (can never throw)
         if (not is_valid(isolate, v8_value))
@@ -253,7 +253,7 @@ struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThi
             throw std::invalid_argument("Invalid type");
     }
 
-    static func to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
+    static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript number object (T operator invokes numeric conversion)
         v8::EscapableHandleScope escapable_handle_scope{isolate};

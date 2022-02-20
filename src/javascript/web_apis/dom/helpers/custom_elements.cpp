@@ -13,19 +13,19 @@
 #include <html/elements/html_unknown_element.hpp>
 
 
-dom::nodes::element*
-dom::helpers::custom_elements::create_an_element(
-        const nodes::document* document,
+auto dom::helpers::custom_elements::create_an_element(
+        nodes::document* document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
         ext::cstring& prefix,
         ext::cstring& is,
-        const bool synchronous_custom_elements_flag) {
+        const bool synchronous_custom_elements_flag)
+        -> dom::nodes::element* {
 
     // create a result pointer to store the created element, and a definition struct holding private information about
     // the custom element (like an PIMPL without the pointer -> uses a lookup table instead)
     nodes::element* result;
-    auto* definition = lookup_custom_element_definition(document, namespace_, local_name, is);
+    auto* definition = lookup_custom_element_definition(document, local_name, namespace_, is);
 
     // if there is a valid definition for the custom element, and the definition's name doesn't equal the definition's
     // local name, then...
@@ -117,7 +117,7 @@ dom::helpers::custom_elements::create_an_element(
             result->m_is = "";
 
             // if there was an exception thrown, then set up the result as a html unknown element
-            if (exception_handler.HasCaught()) #
+            if (exception_handler.HasCaught())
             {
                 // TODO console::reporting::report_warning_to_console(exception_handler.Message()->Get());
 
@@ -164,10 +164,11 @@ dom::helpers::custom_elements::create_an_element(
 }
 
 
-void
-dom::helpers::custom_elements::upgrade_element(
+
+auto dom::helpers::custom_elements::upgrade_element(
         internal::custom_element_definition* definition,
         const nodes::element* element)
+        -> void
 {
     // elements whose custom element state that is "undefined" or "uncustomized" cannot be upgraded, so return from the
     // function early
@@ -177,7 +178,7 @@ dom::helpers::custom_elements::upgrade_element(
     // set the custom element definition to definition, and the custom element state to "failed" (as a default ie if no
     // other upgrade works, them the upgrade has failed)
     element->m_custom_element_definition = definition;
-    element->m_custom_element_state = "failed";
+    element->m_custom_element_state = ext::string{"failed"};
 
     // iterate over the attributes in the element's attribute list, and enqueue a custom element reaction for each
     // attribute for attributeChangedCallback
@@ -227,8 +228,7 @@ dom::helpers::custom_elements::upgrade_element(
 }
 
 
-void
-dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* element)
+auto dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* element) -> void
 {
     // only queue a custom upgrade reaction if a definition is found
     if (auto* definition = lookup_custom_element_definition(element->owner_document, element->namespace_uri, element->local_name, element->m_is))
@@ -236,12 +236,12 @@ dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* elem
 }
 
 
-dom::internal::custom_element_definition*
-dom::helpers::custom_elements::lookup_custom_element_definition(
+auto dom::helpers::custom_elements::lookup_custom_element_definition(
         const nodes::document* document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
         ext::cstring& is)
+        -> dom::internal::custom_element_definition*
 {
     // return if the namespace isn't html
     if (namespace_ != namespaces::HTML)
@@ -263,18 +263,17 @@ dom::helpers::custom_elements::lookup_custom_element_definition(
 }
 
 
-void
-dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(const nodes::element* element)
+auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(const nodes::element* element) -> void
 {
     // TODO
 }
 
 
-void
-dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
+auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
         const nodes::element* element,
         ext::cstring& callback_name,
         ext::vector<ext::string>&& args)
+        -> void
 {
     // get the definition from the element, and the callback from it
     auto* definition = element->m_custom_element_definition;
@@ -296,41 +295,38 @@ dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
 }
 
 
-void
-dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
+auto dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
         const nodes::element* element,
         internal::custom_element_definition* definition)
+        -> void
 {
     // TODO
 }
 
 
-void
-dom::helpers::custom_elements::enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue)
+auto dom::helpers::custom_elements::enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue) -> void
 {
     // TODO
 }
 
 
-bool
-dom::helpers::custom_elements::is_valid_custom_element_name(ext::cstring& element_name)
+auto dom::helpers::custom_elements::is_valid_custom_element_name(ext::cstring& element_name) -> bool
 {
     // TODO
     return true;
 }
 
 
-bool
-dom::helpers::custom_elements::is_custom_node(const nodes::element* element)
+auto dom::helpers::custom_elements::is_custom_node(const nodes::element* element) -> bool
 {
     return element->m_custom_element_state == "custom";
 }
 
 
-dom::nodes::element*
-dom::helpers::custom_elements::element_interface(
+auto dom::helpers::custom_elements::element_interface(
         ext::cstring& local_name,
         ext::cstring& namespace_)
+        -> dom::nodes::element*
 {
     return new nodes::element{}; // TODO types
 }

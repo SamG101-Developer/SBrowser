@@ -46,32 +46,28 @@ dom::events::event::~event()
 }
 
 
-void
-dom::events::event::stop_propagation()
+auto dom::events::event::stop_propagation() -> void
 {
     // set the stop propagation flag so that the recursive method to find the next node will stop
     m_stop_propagation_flag = true;
 }
 
 
-void
-dom::events::event::stop_immediate_propagation()
+auto dom::events::event::stop_immediate_propagation() -> void
 {
     // set the stop immediate propagation flat so that the recursive method to find the next listener will stop
     m_stop_immediate_propagation_flag = true;
 }
 
 
-void
-dom::events::event::prevent_default()
+auto dom::events::event::prevent_default() -> void
 {
     // set the cancelled flag, as long as the event is cancelable and not in a passive listener
     m_canceled_flag = cancelable and not m_in_passive_listener_flag;
 }
 
 
-ext::vector<dom::nodes::event_target*>
-dom::events::event::composed_path() const
+auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_target*>
 {
     // create the default vectors, and return if the current event traversal path is empty
     ext::vector<nodes::event_target*> composed_path_vector{};
@@ -137,8 +133,7 @@ dom::events::event::composed_path() const
 }
 
 
-ext::any
-dom::events::event::v8(v8::Isolate* isolate) const
+auto dom::events::event::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<event>{isolate}
             .ctor<ext::cstring&, ext::cstring_any_map&>()

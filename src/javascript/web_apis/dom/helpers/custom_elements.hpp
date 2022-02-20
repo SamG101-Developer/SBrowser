@@ -21,18 +21,19 @@ namespace dom {
 
 
 struct dom::helpers::custom_elements {
-    static dom::nodes::element* create_an_element(const nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& prefix = "", ext::cstring& is = "", const bool synchronous_custom_elements_flag = false);
-    static void upgrade_element(internal::custom_element_definition* definition, const nodes::element* element);
-    static void try_to_upgrade_element(const nodes::element* element);
-    static internal::custom_element_definition* lookup_custom_element_definition(const nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& is);
-    static void enqueue_element_on_appropriate_element_queue(const nodes::element* element);
-    static void enqueue_custom_element_callback_reaction(const nodes::element* element, ext::cstring& callback_name, ext::vector<ext::string>&& args);
-    static void enqueue_custom_element_upgrade_reaction(const nodes::element* element, internal::custom_element_definition* definition);
-    static void enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue);
-    static bool is_valid_custom_element_name(ext::cstring& element_name);
-    static bool is_custom_node(const nodes::element* element);
+    static auto create_an_element(nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& prefix = "", ext::cstring& is = "", const bool synchronous_custom_elements_flag = false) -> dom::nodes::element*;
+    static auto upgrade_element(internal::custom_element_definition* definition, const nodes::element* element) -> void;
+    static auto try_to_upgrade_element(const nodes::element* element) -> void;
+    static auto lookup_custom_element_definition(const nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& is) -> internal::custom_element_definition*;
+    static auto element_interface(ext::cstring& local_name, ext::cstring& namespace_) -> nodes::element*;
 
-    static nodes::element* element_interface(ext::cstring& local_name, ext::cstring& namespace_);
+    static auto enqueue_element_on_appropriate_element_queue(const nodes::element* element) -> void;
+    static auto enqueue_custom_element_callback_reaction(const nodes::element* element, ext::cstring& callback_name, ext::vector<ext::string>&& args) -> void;
+    static auto enqueue_custom_element_upgrade_reaction(const nodes::element* element, internal::custom_element_definition* definition) -> void;
+    static auto enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue) -> void;
+
+    static auto is_valid_custom_element_name(ext::cstring& element_name) -> bool;
+    static auto is_custom_node(const nodes::element* element) -> bool;
 };
 
 

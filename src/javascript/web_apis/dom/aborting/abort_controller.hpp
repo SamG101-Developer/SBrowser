@@ -19,13 +19,13 @@ public: constructors
     abort_controller();
 
 public: methods
-    void abort(ext::cany& reason) const;
+    auto abort(ext::cany& reason) const -> void;
 
 public: properties
     ext::dom_property<abort_signal*, _F> signal;
 
 public: internal_methods
-    ext::any v8(v8::Isolate* isolate) const override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

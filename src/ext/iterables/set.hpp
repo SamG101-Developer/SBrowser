@@ -15,7 +15,7 @@ public: constructors
     set(const std::set<T>& o);
 
 public: methods
-    func push(const T& item) -> ext::set<T>&;
+    auto push(const T& item) -> ext::set<T>&;
 };
 
 
@@ -28,7 +28,7 @@ ext::set<T>::set(const std::set<T>& o)
 
 
 template <typename T>
-func ext::set<T>::push(const T& item) -> ext::set<T>&
+auto ext::set<T>::push(const T& item) -> ext::set<T>&
 {
     // insert the item in the middle of the iterable, and return the reference to the iterable
     this->m_iterable.emplace(item);

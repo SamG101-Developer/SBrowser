@@ -27,40 +27,40 @@ public: constructors
 
     virtual ~iterable() = default;
 
-    func front() const noexcept(false) -> T&;
-    func back() const noexcept(false) -> T&;
-    func at(const size_t i) const noexcept(false) -> T&;
-    func at(const_iterator i) const noexcept(false) -> T&;
+    auto front() const noexcept(false) -> T&;
+    auto back() const noexcept(false) -> T&;
+    auto at(const size_t i) const noexcept(false) -> T&;
+    auto at(const_iterator i) const noexcept(false) -> T&;
 
-    func begin() -> iterator;
-    func begin() const -> const_iterator ;
-    func end() -> iterator;
-    func end() const -> const_iterator;
+    auto begin() -> iterator;
+    auto begin() const -> const_iterator ;
+    auto end() -> iterator;
+    auto end() const -> const_iterator;
 
-    func empty() const noexcept -> bool;
-    func length() const noexcept -> size_t;
+    auto empty() const noexcept -> bool;
+    auto length() const noexcept -> size_t;
 
-    virtual func clear() -> iterable<T, C>&;
-    template <class F> func remove_if(F&& function, bool all = false) -> iterable<T, C>&;
-    template <class F> func replace_if(F&& function, const T& new_item, bool all = false) -> iterable<T, C>&;
-    func remove(const T& item, bool all = false) -> iterable<T, C>&;
-    func replace(const T& old_item, const T& new_item, bool all = false) -> iterable<T, C>&;
-    func reverse() -> iterable<T, C>&;
-    func sort() -> iterable<T, C>&;
-    func clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
+    virtual auto clear() -> iterable<T, C>&;
+    template <class F> auto remove_if(F&& function, bool all = false) -> iterable<T, C>&;
+    template <class F> auto replace_if(F&& function, const T& new_item, bool all = false) -> iterable<T, C>&;
+    auto remove(const T& item, bool all = false) -> iterable<T, C>&;
+    auto replace(const T& old_item, const T& new_item, bool all = false) -> iterable<T, C>&;
+    auto reverse() -> iterable<T, C>&;
+    auto sort() -> iterable<T, C>&;
+    auto clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
 
-    func reversed() const -> iterable<T, C>;
-    func sorted() const -> iterable<T, C>;
+    auto reversed() const -> iterable<T, C>;
+    auto sorted() const -> iterable<T, C>;
 
-    func find(const T& object, const size_t offset = 0) const -> size_t;
-    func contains(const T& item) const -> bool;
-    func print() const -> void;
+    auto find(const T& object, const size_t offset = 0) const -> size_t;
+    auto contains(const T& item) const -> bool;
+    auto print() const -> void;
 
 public: operators
     operator bool() const;
-    virtual func operator!() const -> bool;
-    func operator==(const iterable<T, C>& o) const -> bool;
-    func operator!=(const iterable<T, C>& o) const -> bool;
+    virtual auto operator!() const -> bool;
+    auto operator==(const iterable<T, C>& o) const -> bool;
+    auto operator!=(const iterable<T, C>& o) const -> bool;
 
 protected: internal_properties
     C m_iterable;
@@ -68,7 +68,7 @@ protected: internal_properties
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::front() const noexcept(false) -> T&
+auto ext::iterable<T, C>::front() const noexcept(false) -> T&
 {
     // throws error if accessing the front of an empty iterable
     if (empty())
@@ -80,7 +80,7 @@ func ext::iterable<T, C>::front() const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::back() const noexcept(false) -> T&
+auto ext::iterable<T, C>::back() const noexcept(false) -> T&
 {
     // throws error if accessing the back of an empty iterable
     if (empty())
@@ -92,7 +92,7 @@ func ext::iterable<T, C>::back() const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::at(const size_t i) const noexcept(false) -> T&
+auto ext::iterable<T, C>::at(const size_t i) const noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -104,7 +104,7 @@ func ext::iterable<T, C>::at(const size_t i) const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::at(const_iterator i) const noexcept(false) -> T&
+auto ext::iterable<T, C>::at(const_iterator i) const noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -116,7 +116,7 @@ func ext::iterable<T, C>::at(const_iterator i) const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::begin() -> ext::iterable<T, C>::iterator
+auto ext::iterable<T, C>::begin() -> ext::iterable<T, C>::iterator
 {
     // return the begin iterator for the iterable
     return m_iterable.begin();
@@ -124,7 +124,7 @@ func ext::iterable<T, C>::begin() -> ext::iterable<T, C>::iterator
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::begin() const -> ext::iterable<T, C>::const_iterator
+auto ext::iterable<T, C>::begin() const -> ext::iterable<T, C>::const_iterator
 {
     // return the const begin iterator for the iterable
     return m_iterable.begin();
@@ -132,7 +132,7 @@ func ext::iterable<T, C>::begin() const -> ext::iterable<T, C>::const_iterator
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::end() -> ext::iterable<T, C>::iterator
+auto ext::iterable<T, C>::end() -> ext::iterable<T, C>::iterator
 {
     // return the end iterator for the iterable
     return m_iterable.end();
@@ -140,7 +140,7 @@ func ext::iterable<T, C>::end() -> ext::iterable<T, C>::iterator
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::end() const -> ext::iterable<T, C>::const_iterator
+auto ext::iterable<T, C>::end() const -> ext::iterable<T, C>::const_iterator
 {
     // return the const end iterator for the iterable
     return m_iterable.end();
@@ -148,7 +148,7 @@ func ext::iterable<T, C>::end() const -> ext::iterable<T, C>::const_iterator
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::empty() const noexcept -> bool
+auto ext::iterable<T, C>::empty() const noexcept -> bool
 {
     // return if the iterable is empty or not
     return m_iterable.empty();
@@ -156,7 +156,7 @@ func ext::iterable<T, C>::empty() const noexcept -> bool
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::length() const noexcept -> size_t
+auto ext::iterable<T, C>::length() const noexcept -> size_t
 {
     // return the size of the iterable
     return m_iterable.size();
@@ -164,7 +164,7 @@ func ext::iterable<T, C>::length() const noexcept -> size_t
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::clear() -> ext::iterable<T, C>&
+auto ext::iterable<T, C>::clear() -> ext::iterable<T, C>&
 {
     // clear the iterable, and return the reference to it
     m_iterable.clear();
@@ -174,7 +174,7 @@ func ext::iterable<T, C>::clear() -> ext::iterable<T, C>&
 
 template <typename T, typename C>
 template <class F>
-func ext::iterable<T, C>::remove_if(
+auto ext::iterable<T, C>::remove_if(
         F&& function,
         bool all)
         -> ext::iterable<T, C>&
@@ -194,7 +194,7 @@ func ext::iterable<T, C>::remove_if(
 
 template <typename T, typename C>
 template <class F>
-func ext::iterable<T, C>::replace_if(
+auto ext::iterable<T, C>::replace_if(
         F&& function,
         const T& new_item,
         bool all)
@@ -214,7 +214,7 @@ func ext::iterable<T, C>::replace_if(
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::remove(
+auto ext::iterable<T, C>::remove(
         const T& item,
         bool all)
         -> ext::iterable<T, C>&
@@ -233,7 +233,7 @@ func ext::iterable<T, C>::remove(
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::replace(
+auto ext::iterable<T, C>::replace(
         const T& old_item,
         const T& new_item,
         bool all)
@@ -253,7 +253,7 @@ func ext::iterable<T, C>::replace(
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::reverse() -> ext::iterable<T, C>&
+auto ext::iterable<T, C>::reverse() -> ext::iterable<T, C>&
 {
     // reverse the iterable, and return the reference to it
     std::reverse(m_iterable.begin(), m_iterable.end());
@@ -262,7 +262,7 @@ func ext::iterable<T, C>::reverse() -> ext::iterable<T, C>&
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::sort() -> ext::iterable<T, C>&
+auto ext::iterable<T, C>::sort() -> ext::iterable<T, C>&
 {
     // sort the iterable, and return the reference to it
     std::sort(m_iterable.begin(), m_iterable.end());
@@ -271,7 +271,7 @@ func ext::iterable<T, C>::sort() -> ext::iterable<T, C>&
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_pointer_v<T>
+auto ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_pointer_v<T>
 {
     // remove all the nullptr from the iterable, and return the reference to it
     remove(nullptr, true);
@@ -280,7 +280,7 @@ func ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_point
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::reversed() const -> ext::iterable<T, C>
+auto ext::iterable<T, C>::reversed() const -> ext::iterable<T, C>
 {
     // reverse a duplicate iterable, and return the reference to it
     return iterable<T, C>{*this}.reverse();
@@ -288,7 +288,7 @@ func ext::iterable<T, C>::reversed() const -> ext::iterable<T, C>
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::sorted() const -> ext::iterable<T, C>
+auto ext::iterable<T, C>::sorted() const -> ext::iterable<T, C>
 {
     // sort a duplicate iterable, and return the reference to it
     return iterable<T, C>{*this}.sort();
@@ -296,7 +296,7 @@ func ext::iterable<T, C>::sorted() const -> ext::iterable<T, C>
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::find(const T& object, const size_t offset) const -> size_t
+auto ext::iterable<T, C>::find(const T& object, const size_t offset) const -> size_t
 {
     // return the index of an item in the iterable by comparing iterator positions
     return std::distance(begin(), std::find(begin() + offset, end(), object));
@@ -304,7 +304,7 @@ func ext::iterable<T, C>::find(const T& object, const size_t offset) const -> si
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::contains(const T& item) const -> bool
+auto ext::iterable<T, C>::contains(const T& item) const -> bool
 {
     // check if the iterable contains an item by comparing its iterator location to the end iterator
     return begin() + find(item) != end();
@@ -312,7 +312,7 @@ func ext::iterable<T, C>::contains(const T& item) const -> bool
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::print() const -> void
+auto ext::iterable<T, C>::print() const -> void
 {
     // serialize the iterable by output the list as a string - TODO: MOVE TO OPERATOR <<
     std::cout << std::copy(begin(), end(), std::ostream_iterator<std::string>(std::cout, ", ")) << std::endl;
@@ -320,7 +320,7 @@ func ext::iterable<T, C>::print() const -> void
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::operator!() const -> bool
+auto ext::iterable<T, C>::operator!() const -> bool
 {
     // the iterable evaluates to false if the list is empty (inverse operator ie -> true)
     return empty();
@@ -328,7 +328,7 @@ func ext::iterable<T, C>::operator!() const -> bool
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
+auto ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
 {
     // guard to check that the lengths match
     if (length() != o.length())
@@ -344,7 +344,7 @@ func ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
 
 
 template <typename T, typename C>
-func ext::iterable<T, C>::operator!=(const iterable<T, C>& o) const -> bool
+auto ext::iterable<T, C>::operator!=(const iterable<T, C>& o) const -> bool
 {
     // guard to check that the lengths don't match
     if (length() == o.length())

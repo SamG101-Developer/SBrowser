@@ -28,16 +28,16 @@ public: constructors
     abort_signal();
 
 public: methods
-    static abort_signal abort(ext::any reason = "");
-    void throw_if_aborted() const;
-    static abort_signal* timeout(unsigned long long milliseconds);
+    static auto abort(ext::any reason = "") -> abort_signal;
+    static auto timeout(unsigned long long milliseconds) -> abort_signal;
+    auto throw_if_aborted() const -> void;
 
 public properties:
     ext::dom_property<bool    , _F> aborted;
     ext::dom_property<ext::any, _F> reason;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected: internal_properties
     abort_signal_callbacks m_abort_algorithms;

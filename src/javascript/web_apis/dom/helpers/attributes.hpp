@@ -14,33 +14,33 @@ namespace dom {
 
 
 struct dom::helpers::attributes {
-    static void handle_attributes_changes(const nodes::attr* attribute, const nodes::element* owner_element, ext::cstring& old_value, ext::cstring& new_value);
+    static auto handle_attributes_changes(const nodes::attr* attribute, const nodes::element* owner_element, ext::cstring& old_value, ext::cstring& new_value) -> void;
 
-    static void change(nodes::attr* attribute, ext::cstring& new_value);
-    static void append(nodes::attr* attribute, nodes::element* new_owner_element);
-    static void remove(nodes::attr* attribute);
-    static void replace(nodes::attr* old_attribute, nodes::attr* new_attribute);
+    static auto change(nodes::attr* attribute, ext::cstring& new_value) -> void;
+    static auto append(nodes::attr* attribute, nodes::element* new_owner_element) -> void;
+    static auto remove(nodes::attr* attribute) -> void;
+    static auto replace(nodes::attr* old_attribute, nodes::attr* new_attribute) -> void;
 
     // TODO : move owner_element parameter to be the first parameter in all these methods
 
-    static ext::string get_attribute_value(const nodes::element* owner_element, ext::cstring& namespace_, ext::cstring& local_name = "");
-    static nodes::attr* get_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element);
-    static nodes::attr* get_attribute_by_ns(ext::cstring& namespace_, ext::cstring& local_name, const nodes::element* owner_element);
+    static auto get_attribute_value(const nodes::element* owner_element,  ext::cstring& local_name, ext::cstring& namespace_) -> ext::string;
+    static auto get_attribute_by_name(const nodes::element* owner_element, ext::cstring& qualified_name) -> nodes::attr*;
+    static auto get_attribute_by_ns(const nodes::element* owner_element, ext::cstring& local_name, ext::cstring& namespace_) -> nodes::attr*;
 
-    static nodes::attr* set_attribute_value(nodes::element* owner_element, ext::cstring& local_name, ext::cstring& value, ext::cstring& prefix = "", ext::cstring& namespace_ = "");
-    static nodes::attr* set_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element, ext::cstring& value);
-    static nodes::attr* set_attribute_by_ns(ext::cstring& namespace_, ext::cstring& qualified_name, const nodes::element* owner_element, ext::cstring& value);
-    static nodes::attr* set_attribute(nodes::attr* attribute, nodes::element* new_owner_element);
+    static auto set_attribute_value(nodes::element* owner_element, ext::cstring& local_name, ext::cstring& value, ext::cstring& prefix = "", ext::cstring& namespace_ = "") -> nodes::attr*;
+    static auto set_attribute_by_name(nodes::element* owner_element, ext::cstring& qualified_name, ext::cstring& value) -> nodes::attr*;
+    static auto set_attribute_by_ns(nodes::element* owner_element, ext::cstring& qualified_name, ext::cstring& namespace_, ext::cstring& value) -> nodes::attr*;
+    static auto set_attribute(nodes::element* new_owner_element, nodes::attr* attribute) -> nodes::attr*;
 
-    static nodes::attr* remove_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element);
-    static nodes::attr* remove_attribute_by_ns(ext::cstring& namespace_, ext::cstring& local_name, const nodes::element* owner_element);
-    static nodes::attr* remove_attribute(nodes::attr* attribute, nodes::element* owner_element);
+    static auto remove_attribute_by_name(nodes::element* owner_element, ext::cstring& qualified_name) -> nodes::attr*;
+    static auto remove_attribute_by_ns(nodes::element* owner_element, ext::cstring& local_name, ext::cstring& namespace_) -> nodes::attr*;
+    static auto remove_attribute(nodes::element* owner_element, nodes::attr* attribute) -> nodes::attr*;
 
-    static nodes::attr* toggle_attribute_by_name(ext::cstring& qualified_name, const nodes::element* owner_element, bool force);
-    static nodes::attr* toggle_attribute_by_ns(ext::cstring& namespace_, ext::cstring& local_name, const nodes::element* owner_element, bool force);
-    static nodes::attr* toggle_attribute(nodes::attr* attribute, bool force);
+    static auto toggle_attribute_by_name(const nodes::element* owner_element, ext::cstring& qualified_name, bool force) -> nodes::attr*;
+    static auto toggle_attribute_by_ns(const nodes::element* owner_element, ext::cstring& local_name, ext::cstring& namespace_, bool force) -> nodes::attr*;
+    static auto toggle_attribute(nodes::attr* attribute, bool force) -> nodes::attr*;
 
-    static void set_existing_attribute_value(nodes::attr* attribute, ext::cstring& value);
+    static auto set_existing_attribute_value(nodes::attr* attribute, ext::cstring& value) -> void;
 };
 
 

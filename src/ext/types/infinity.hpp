@@ -14,8 +14,8 @@ struct ext::infinity {
 public: operators
     operator T() const;
 
-    func operator -() const -> ext::infinity<T> requires (std::is_signed_v<T>);
-    func operator +() const -> ext::infinity<T> requires (std::is_signed_v<T>);
+    auto operator -() const -> ext::infinity<T> requires (std::is_signed_v<T>);
+    auto operator +() const -> ext::infinity<T> requires (std::is_signed_v<T>);
 
 private: internal_properties
     bool m_positive = true;
@@ -31,7 +31,7 @@ ext::infinity<T>::operator T() const
 
 
 template <arithmetic T>
-func ext::infinity<T>::operator -() const -> ext::infinity<T> requires (std::is_signed_v<T>)
+auto ext::infinity<T>::operator -() const -> ext::infinity<T> requires (std::is_signed_v<T>)
 {
     // applying the negative operator flips the sign
     return infinity<T>{.m_positive = not m_positive};
@@ -39,7 +39,7 @@ func ext::infinity<T>::operator -() const -> ext::infinity<T> requires (std::is_
 
 
 template <arithmetic T>
-func ext::infinity<T>::operator +() const -> ext::infinity<T> requires (std::is_signed_v<T>)
+auto ext::infinity<T>::operator +() const -> ext::infinity<T> requires (std::is_signed_v<T>)
 {
     // applying the positive operator makes the sign positive
     return infinity<T>{.m_positive = m_positive};

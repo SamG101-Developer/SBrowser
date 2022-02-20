@@ -16,6 +16,7 @@ namespace ext {
     template <typename U, typename T> U property_const_cast(const ext::property<T>& o);
     template <typename U, typename T> U property_reinterpret_cast(const ext::property<T>& o);
     template <typename U, typename T> U property_any_cast(const ext::property<T>& o);
+    template <typename U, typename T> U property_bit_cast(const ext::property<T>& o);
 }
 
 
@@ -36,6 +37,7 @@ public: friends
     template <typename U, typename T> friend U property_const_cast(const ext::property<T>& o);
     template <typename U, typename T> friend U property_reinterpret_cast(const ext::property<T>& o);
     template <typename U, typename T> friend U property_any_cast(const ext::property<T>& o);
+    template <typename U, typename T> friend U property_bit_cast(const ext::property<T>& o);
 
 public: constructors
     property();
@@ -580,6 +582,14 @@ U ext::property_any_cast(const ext::property<T>& o)
 {
     // any_cast the internal value into a new value
     return any_cast<U>(o.m_internal);
+}
+
+
+template <typename U, typename T>
+U ext::property_bit_cast(const ext::property<T>& o)
+{
+    // bit_cast the internal value into a new value
+    return std::bit_cast<U>(o);
 }
 
 

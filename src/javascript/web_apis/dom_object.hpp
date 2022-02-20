@@ -19,12 +19,12 @@ public: constructors
     virtual ~dom_object() = default;
 
 public: internal_methods
-    virtual ext::any v8(v8::Isolate* isolate) const = 0;
+    virtual auto v8(v8::Isolate* isolate) const -> ext::any = 0;
 };
 
 
 template <typename ...Args, typename U>
-inline bool multi_cast(U* cls)
+auto multi_cast(U* cls) -> bool
 {
     return (... ||(nullptr != dynamic_cast<Args>(cls)));
 }

@@ -33,13 +33,13 @@ public: constructors
     template <typename T> any& operator=(T&& other) noexcept {m_value = other; return *this;}
 
 public: methods
-    func type() const -> const type_info&;
-    func empty() const -> bool;
-    func contains_pointer() const -> bool;
-    func is_numeric() const -> bool;
-    template <typename T> func emplace() -> void;
-    template <typename T> func emplace(T&& element) -> void;
-    template <typename T> func to() const -> T;
+    auto type() const -> const type_info&;
+    auto empty() const -> bool;
+    auto contains_pointer() const -> bool;
+    auto is_numeric() const -> bool;
+    template <typename T> auto emplace() -> void;
+    template <typename T> auto emplace(T&& element) -> void;
+    template <typename T> auto to() const -> T;
 
 public: operators
     operator bool() const;
@@ -77,7 +77,7 @@ bool ext::any::contains_pointer() const
 }
 
 
-func ext::any::is_numeric() const -> bool
+auto ext::any::is_numeric() const -> bool
 {
     // return is the internal type is numeric
     try
