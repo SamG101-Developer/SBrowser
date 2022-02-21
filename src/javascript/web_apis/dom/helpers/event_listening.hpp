@@ -14,12 +14,12 @@ namespace dom {
 
 
 struct dom::helpers::event_listening {
-    static ext::string_any_map flatten_more(std::variant<bool, ext::string_any_map> options);
-    static bool flatten (std::variant<bool, ext::string_any_map> options);
-    static void add_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener);
-    static void remove_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener);
-    static void remove_all_event_listeners(nodes::event_target* event_target);
-    static bool dispatch(events::event* node, nodes::event_target* event_target);
+    static auto flatten_more(std::variant<bool, ext::string_any_map> options) -> ext::string_any_map;
+    static auto flatten (std::variant<bool, ext::string_any_map> options) -> bool;
+    static auto add_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener) -> void;
+    static auto remove_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener) -> void;
+    static auto remove_all_event_listeners(nodes::event_target* event_target) -> void;
+    static auto dispatch(events::event* node, nodes::event_target* event_target) -> bool;
 };
 
 

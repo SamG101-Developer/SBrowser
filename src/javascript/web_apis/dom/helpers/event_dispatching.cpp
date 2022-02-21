@@ -13,14 +13,14 @@
 #include <QtGui/QGuiApplication>
 
 
-void
-dom::helpers::event_dispatching::append_to_event_path(
+auto dom::helpers::event_dispatching::append_to_event_path(
         events::event* event,
-        const nodes::event_target* invocation_target,
-        const nodes::event_target* shadow_adjusted_target,
-        const nodes::event_target* related_target,
+        nodes::event_target* invocation_target,
+        nodes::event_target* shadow_adjusted_target,
+        nodes::event_target* related_target,
         ext::cvector<const nodes::event_target*>& touch_targets,
         const bool slot_in_closed_tree)
+        -> void
 {
     // get the invocation target (cast as a shadow root), and if the invocation target is in the shadow tree or the root
     // of a closed tree
@@ -32,7 +32,8 @@ dom::helpers::event_dispatching::append_to_event_path(
             and invocation_target_as_shadow_root->mode == "closed";
 
     // add a new struct into the event path traversal list
-    event->path->append(new internal::event_path_struct {
+    event->path->append(new internal::event_path_struct
+    {
         .invocation_target = invocation_target,
         .shadow_adjusted_target = shadow_adjusted_target,
         .related_target = related_target,
@@ -44,11 +45,11 @@ dom::helpers::event_dispatching::append_to_event_path(
 }
 
 
-void
-dom::helpers::event_dispatching::invoke(
+auto dom::helpers::event_dispatching::invoke(
         internal::event_path_struct* event_path_struct,
         events::event* event,
         unsigned char phase)
+        -> void
 {
     // create a copy of the event path, upto the event path struct being invoked
     ext::vector<internal::event_path_struct*> temp_vector {
@@ -77,11 +78,11 @@ dom::helpers::event_dispatching::invoke(
 }
 
 
-void
-dom::helpers::event_dispatching::inner_invoke(
+auto dom::helpers::event_dispatching::inner_invoke(
         events::event* event,
         ext::vector<ext::string_any_map>& event_listeners,
         unsigned char phase)
+        -> void
 {
     // create a callback_t for casting
     using callback_t = std::function<void()>;
@@ -119,11 +120,11 @@ dom::helpers::event_dispatching::inner_invoke(
 
 
 template <typename T>
-bool
-dom::helpers::event_dispatching::fire_event(
+auto dom::helpers::event_dispatching::fire_event(
         ext::cstring& e,
         nodes::event_target* target,
         ext::cstring_any_map& init)
+        -> bool
 {
     // create a new event of type T and dispatch it through the event paths
     T* event = new T{e, init};
@@ -131,11 +132,11 @@ dom::helpers::event_dispatching::fire_event(
 }
 
 
-bool
-dom::helpers::event_dispatching::fire_synthetic_pointer_event(
+auto dom::helpers::event_dispatching::fire_synthetic_pointer_event(
         ext::cstring& e,
         nodes::event_target* target,
         bool not_trusted_flag)
+        -> bool
 {
 
 //    auto* event = new pointer_events::events::pointer_event{e, {{"bubbles", true}, {"cancelable", true}, {"composed", true}}};

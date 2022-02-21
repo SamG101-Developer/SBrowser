@@ -15,8 +15,7 @@
 #include <dom/nodes/shadow_root.hpp>
 
 
-ext::string_any_map
-dom::helpers::event_listening::flatten_more(std::variant<bool, ext::string_any_map> options)
+auto dom::helpers::event_listening::flatten_more(std::variant<bool, ext::string_any_map> options) -> ext::string_any_map
 {
     // return {capture: true} if the options is a bool value, otherwise the map already being held in the variant
     return std::holds_alternative<bool>(options)
@@ -25,8 +24,7 @@ dom::helpers::event_listening::flatten_more(std::variant<bool, ext::string_any_m
 }
 
 
-bool
-dom::helpers::event_listening::flatten(std::variant<bool, ext::string_any_map> options)
+auto dom::helpers::event_listening::flatten(std::variant<bool, ext::string_any_map> options) -> bool
 {
     // return the boolean if a boolean value is being stored in the variant, otherwise the capture option of the map
     return std::holds_alternative<bool>(options)
@@ -35,10 +33,10 @@ dom::helpers::event_listening::flatten(std::variant<bool, ext::string_any_map> o
 }
 
 
-void
-dom::helpers::event_listening::add_event_listener(
+auto dom::helpers::event_listening::add_event_listener(
         nodes::event_target* event_target,
         ext::string_any_map& event_listener)
+        -> void
 {
     // get the abort signal from the event listener
     auto* signal = event_listener.at("signal").to<aborting::abort_signal*>();
@@ -64,10 +62,10 @@ dom::helpers::event_listening::add_event_listener(
 }
 
 
-void
-dom::helpers::event_listening::remove_event_listener(
+auto dom::helpers::event_listening::remove_event_listener(
         nodes::event_target* event_target,
         ext::string_any_map& event_listener)
+        -> void
 {
     // create a callback_t for casting
     using callback_t = std::function<void()>;
@@ -85,8 +83,7 @@ dom::helpers::event_listening::remove_event_listener(
 }
 
 
-void
-dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* event_target)
+auto dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* event_target) -> void
 {
     // iterate over event listeners and remove them all
     for (ext::string_any_map& event_listener: event_target->m_event_listeners)
@@ -94,15 +91,15 @@ dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* e
 }
 
 
-bool
-dom::helpers::event_listening::dispatch(
+auto dom::helpers::event_listening::dispatch(
         events::event* event,
         nodes::event_target* event_target)
+        -> bool
 {
     // set the dispatch_flag to true
     event->m_dispatch_flag = true;
-    internal::event_path_struct* clear_targets_struct;
-    bool clear_targets;
+    internal::event_path_struct* clear_targets_struct = nullptr;
+    bool clear_targets = false;
 
     // set the related target to the event's related target retargeted against the event_target
     nodes::event_target* related_target = shadows::retarget(event->related_target, event_target);
