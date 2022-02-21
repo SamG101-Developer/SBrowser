@@ -14,37 +14,34 @@
 #include <dom/ranges/range.hpp>
 
 
-bool
-dom::helpers::range_internals::contains(
+auto dom::helpers::range_internals::contains(
         nodes::node* node,
         ranges::range* range)
+        -> bool
 {
-
     return range->m_root == trees::root(node)
             and position_relative(node, 0, range->start_container, range->start_offset) == internal::AFTER
             and position_relative(node, trees::length(node), range->end_container, range->end_offset) == internal::BEFORE;
 }
 
 
-bool
-dom::helpers::range_internals::partially_contains(
+auto dom::helpers::range_internals::partially_contains(
         nodes::node* node,
         ranges::range* range)
+        -> bool
 {
-
     return trees::is_ancestor(node, range->start_container) and not trees::is_ancestor(node, range->end_container)
             or trees::is_ancestor(node, range->end_container) and not trees::is_ancestor(node, range->start_container);
 }
 
 
-void
-dom::helpers::range_internals::set_start_or_end(
+auto dom::helpers::range_internals::set_start_or_end(
         ranges::range* range,
         nodes::node* container,
         unsigned long offset,
         bool start)
+        -> void
 {
-
     exceptions::throw_v8_exception(
             "node must be a non-document_type node",
             INVALID_NODE_TYPE_ERR,
@@ -93,12 +90,12 @@ dom::helpers::range_internals::set_start_or_end(
 }
 
 
-dom::internal::boundary_point_comparison_position
-dom::helpers::range_internals::position_relative(
+auto dom::helpers::range_internals::position_relative(
         nodes::node* start_container,
         unsigned long start_offset,
         nodes::node* end_container,
         unsigned long end_offset)
+        -> dom::internal::boundary_point_comparison_position
 {
     // the start and end container hava to be from the same tree, as a range only covers part of one tree
     assert(trees::root(start_container) == trees::root(end_container));
@@ -122,11 +119,11 @@ dom::helpers::range_internals::position_relative(
 }
 
 
-std::tuple<dom::nodes::node*, dom::nodes::node*, ext::vector<dom::nodes::node*>>
-dom::helpers::range_internals::get_range_helpers_variables(
+auto dom::helpers::range_internals::get_range_helpers_variables(
         ranges::range* range,
         nodes::node* start_container,
         nodes::node* end_container)
+        -> std::tuple<dom::nodes::node*, dom::nodes::node*, ext::vector<dom::nodes::node*>>
 {
     // get the common ancestor between the start and end container
     auto* common_ancestor = trees::common_ancestor(start_container, end_container);
@@ -157,8 +154,7 @@ dom::helpers::range_internals::get_range_helpers_variables(
 }
 
 
-dom::nodes::node*
-dom::helpers::range_internals::check_parent_exists(nodes::node* node)
+auto dom::helpers::range_internals::check_parent_exists(nodes::node* node) -> dom::nodes::node*
 {
     // if the node doesn't have a parent, then throw an invalid node error
     exceptions::throw_v8_exception(
@@ -171,21 +167,20 @@ dom::helpers::range_internals::check_parent_exists(nodes::node* node)
 }
 
 
-bool
-dom::helpers::range_internals::is_textual_based_range_container(nodes::node* node)
+auto dom::helpers::range_internals::is_textual_based_range_container(nodes::node* node) -> bool
 {
     // return true if the node cast be cast to a text node, processing instruction or comment
     return multi_cast<nodes::text*, nodes::processing_instruction*, nodes::comment*>(node);
 }
 
 
-dom::nodes::document_fragment*
-dom::helpers::range_internals::clone_character_data_and_append(
+auto dom::helpers::range_internals::clone_character_data_and_append(
         nodes::node* node,
         nodes::document_fragment* fragment,
         unsigned long start_offset,
         unsigned long end_offset,
         bool replace)
+        -> dom::nodes::document_fragment*
 {
     // cast the node into a character data node, and save a clone of the character data node
     auto* character_data = dynamic_cast<nodes::character_data*>(node);
@@ -204,14 +199,14 @@ dom::helpers::range_internals::clone_character_data_and_append(
 }
 
 
-dom::nodes::document_fragment*
-dom::helpers::range_internals::append_to_sub_fragment(
+auto dom::helpers::range_internals::append_to_sub_fragment(
         nodes::node* node,
         nodes::document_fragment* fragment,
         nodes::node* start_container,
         nodes::node* end_container,
         unsigned long start_offset,
         unsigned long end_offset)
+        -> dom::nodes::document_fragment*
 {
     // save a clone of the node, and append it to the fragment
     auto* clone = node->clone_node();
@@ -233,11 +228,11 @@ dom::helpers::range_internals::append_to_sub_fragment(
 }
 
 
-std::tuple<dom::nodes::node*, unsigned long>
-dom::helpers::range_internals::create_new_node_and_offset(
+auto dom::helpers::range_internals::create_new_node_and_offset(
         nodes::node* start_container,
         nodes::node* end_container,
         unsigned long start_offset)
+        -> std::tuple<dom::nodes::node*, unsigned long>
 {
     // get the common ancestor between the start and end nodes
     auto* common_ancestor = helpers::trees::common_ancestor(start_container, end_container);

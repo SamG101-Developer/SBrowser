@@ -115,7 +115,7 @@ class underscore_case_js {
 ##Class methods:
 ```cpp
 // methods with <= 3 lines in the body can have parameters on one line (short types)
-underscore_case(type1 param1, ...) -> void
+static auto underscore_case(type1 param1, ...) const requires ... -> void override
 {
     ...
     ...
@@ -125,9 +125,10 @@ underscore_case(type1 param1, ...) -> void
 
 ```cpp
 // methods with >= 4 lines in the body, or long parameter types and names, have parameters on new lines
-underscore_case(
+auto underscore_case(
         very_long_type1_pointer very_long_param1_name,
         very_long_type2_pointer very_long_param2_name)
+        const requires ...
         -> very_long_return_type1_pointer
 {
     ...

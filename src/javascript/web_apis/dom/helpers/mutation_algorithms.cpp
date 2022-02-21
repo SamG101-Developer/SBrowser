@@ -25,11 +25,11 @@
 #include <html/elements/html_slot_element.hpp>
 
 
-void
-dom::helpers::mutation_algorithms::common_checks(
+auto dom::helpers::mutation_algorithms::common_checks(
         nodes::node* node,
         nodes::node* parent,
         nodes::node* child)
+        -> void
 {
     // if the parent is not a document, document fragment or element, then throw a hierarchy request error
     exceptions::throw_v8_exception(
@@ -70,12 +70,12 @@ dom::helpers::mutation_algorithms::common_checks(
 }
 
 
-void
-dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
+auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
         nodes::node* node,
         nodes::node* parent,
-        nodes::node* child) {
-
+        nodes::node* child)
+        -> void
+{
     // run the common checks
     common_checks(node, parent, child);
 
@@ -167,11 +167,11 @@ dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
 }
 
 
-dom::nodes::node*
-dom::helpers::mutation_algorithms::pre_insert(
+auto dom::helpers::mutation_algorithms::pre_insert(
         nodes::node* node,
         nodes::node* parent,
         nodes::node* child)
+        -> dom::nodes::node*
 {
     // verify that the pre insertion is valid
     ensure_pre_insertion_validity(node, parent, child);
@@ -185,10 +185,10 @@ dom::helpers::mutation_algorithms::pre_insert(
 }
 
 
-dom::nodes::node*
-dom::helpers::mutation_algorithms::pre_remove(
+auto dom::helpers::mutation_algorithms::pre_remove(
         nodes::node* node,
         nodes::node* parent)
+        -> dom::nodes::node*
 {
     // if node's parent doesn't equal the parent, then throw a not found error
     exceptions::throw_v8_exception(
@@ -196,17 +196,17 @@ dom::helpers::mutation_algorithms::pre_remove(
             NOT_FOUND_ERR,
             [node, parent] {return node->parent != parent;});
 
-    // remove the node and return the it
+    // remove the node and return  it
     return remove(node);
 }
 
 
-dom::nodes::node*
-dom::helpers::mutation_algorithms::insert(
+auto dom::helpers::mutation_algorithms::insert(
         nodes::node* node,
         nodes::node* parent,
         nodes::node* child,
-        bool suppress_observers_flag) {
+        bool suppress_observers_flag)
+        -> dom::nodes::node* {
 
     // collect descendant nodes to insert as-well (as children of the node being inserted), empty doc_frag not inserted
     // if the node is a document fragment, then
@@ -275,21 +275,21 @@ dom::helpers::mutation_algorithms::insert(
 }
 
 
-dom::nodes::node*
-dom::helpers::mutation_algorithms::append(
+auto dom::helpers::mutation_algorithms::append(
         nodes::node* node,
         nodes::node* parent)
+        -> dom::nodes::node*
 {
     // append the node by inserting it before nullptr (ie the end of the list)
     return pre_insert(node, parent, nullptr);
 }
 
 
-dom::nodes::node*
-dom::helpers::mutation_algorithms::replace(
+auto dom::helpers::mutation_algorithms::replace(
         nodes::node* node,
         nodes::node* parent,
         nodes::node* child)
+        -> dom::nodes::node*
 {
     // run the common checks
     common_checks(node, parent, child);
@@ -354,10 +354,10 @@ dom::helpers::mutation_algorithms::replace(
 }
 
 
-dom::nodes::node*
-dom::helpers::mutation_algorithms::remove(
+auto dom::helpers::mutation_algorithms::remove(
         nodes::node* node,
-        bool suppress_observers_flag) {
+        bool suppress_observers_flag)
+        -> dom::nodes::node* {
 
     if (not node->parent) return node;
 
@@ -425,10 +425,10 @@ dom::helpers::mutation_algorithms::remove(
 }
 
 
-void
-dom::helpers::mutation_algorithms::replace_all(
+auto dom::helpers::mutation_algorithms::replace_all(
         nodes::node* node,
-        nodes::node* parent) {
+        nodes::node* parent)
+        -> void {
 
     auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node}.remove(nullptr);
     auto removed_nodes = ext::vector<nodes::node*>{*parent->child_nodes};

@@ -17,8 +17,8 @@ struct dom::helpers::namespaces {
 
     struct_string NONE = "";
 
-    static void validate(ext::cstring& qualified_name);
-    static std::tuple<ext::string, ext::string, ext::string> validate_and_extract(ext::cstring& namespace_, ext::cstring& qualified_name);
+    static auto validate(ext::cstring& qualified_name) -> void;
+    static auto validate_and_extract(ext::cstring& namespace_, ext::cstring& qualified_name) -> std::tuple<ext::string, ext::string, ext::string>;
 };
 
 

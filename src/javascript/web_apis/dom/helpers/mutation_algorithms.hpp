@@ -9,18 +9,18 @@ namespace dom {
 
 
 struct dom::helpers::mutation_algorithms {
-    static void common_checks(nodes::node* node, nodes::node* parent, nodes::node* child);
+    static auto common_checks(nodes::node* node, nodes::node* parent, nodes::node* child) -> void;
+    static auto ensure_pre_insertion_validity(nodes::node* node, nodes::node* parent, nodes::node* child) -> void;
 
-    static void ensure_pre_insertion_validity(nodes::node* node, nodes::node* parent, nodes::node* child);
-    static nodes::node* pre_insert(nodes::node* node, nodes::node* parent, nodes::node* child);
-    static nodes::node* pre_remove(nodes::node* node, nodes::node* parent);
+    static auto pre_insert(nodes::node* node, nodes::node* parent, nodes::node* child) -> nodes::node*;
+    static auto pre_remove(nodes::node* node, nodes::node* parent) -> nodes::node*;
 
-    static nodes::node* insert(nodes::node* node, nodes::node* parent, nodes::node* child, bool suppress_observers_flag = false);
-    static nodes::node* append(nodes::node* node, nodes::node* parent);
-    static nodes::node* replace(nodes::node* node, nodes::node* parent, nodes::node* child);
-    static nodes::node* remove(nodes::node* node, bool suppress_observers_flag = false);
+    static auto insert(nodes::node* node, nodes::node* parent, nodes::node* child, bool suppress_observers_flag = false) -> nodes::node*;
+    static auto append(nodes::node* node, nodes::node* parent) -> nodes::node*;
+    static auto replace(nodes::node* node, nodes::node* parent, nodes::node* child) -> nodes::node*;
+    static auto remove(nodes::node* node, bool suppress_observers_flag = false) -> nodes::node*;
 
-    static void replace_all(nodes::node* node, nodes::node* parent);
+    static auto replace_all(nodes::node* node, nodes::node* parent) -> void;
 };
 
 

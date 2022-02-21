@@ -20,11 +20,12 @@
 
 
 template <typename T>
-dom::nodes::node*
-dom::helpers::node_internals::clone(
+auto dom::helpers::node_internals::clone(
         T* node,
         nodes::document* document,
-        bool deep) requires std::is_base_of_v<T, nodes::node>
+        bool deep)
+        -> dom::nodes::node*
+        requires std::is_base_of_v<T, nodes::node>
 {
     // set the document to the node's document if the document is a nullptr, and create a pointer for the cloned_node
     document = document ? dynamic_cast<nodes::document*>(node->owner_document) : document;
@@ -56,10 +57,10 @@ dom::helpers::node_internals::clone(
 }
 
 
-ext::string
-dom::helpers::node_internals::locate_a_namespace_prefix(
+auto dom::helpers::node_internals::locate_a_namespace_prefix(
         const nodes::element* element,
         ext::cstring& namespace_)
+        -> ext::string
 {
     // return the element prefix if the element namespace matches namespace_ and the element has a prefix
     if (element->namespace_uri == namespace_ and element->prefix)
@@ -78,10 +79,10 @@ dom::helpers::node_internals::locate_a_namespace_prefix(
 }
 
 
-ext::string
-dom::helpers::node_internals::locate_a_namespace(
+auto dom::helpers::node_internals::locate_a_namespace(
         const nodes::node* node,
         ext::cstring& prefix)
+        -> ext::string
 {
     // if the node is nullptr then return an empty namespace
     if (not node)
@@ -125,10 +126,10 @@ dom::helpers::node_internals::locate_a_namespace(
 }
 
 
-ext::vector<dom::nodes::element*>
-dom::helpers::node_internals::list_of_elements_with_qualified_name(
+auto dom::helpers::node_internals::list_of_elements_with_qualified_name(
         nodes::node* node,
         ext::cstring& qualified_name)
+        -> ext::vector<dom::nodes::element*>
 {
     // return all the elements, as the namespace and local name have no restrictions when the wild card option is used
     // for the qualified name
@@ -148,11 +149,11 @@ dom::helpers::node_internals::list_of_elements_with_qualified_name(
 }
 
 
-ext::vector<dom::nodes::element*>
-dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
+auto dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
         nodes::node* node,
         ext::cstring& namespace_,
         ext::cstring& local_name)
+        -> ext::vector<dom::nodes::element*>
 {
     // return all the elements, as the namespace and local name have no restrictions when the wild card option is used
     // for the namespace and local name
@@ -184,11 +185,11 @@ dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
 }
 
 
-ext::vector<dom::nodes::element*>
-dom::helpers::node_internals::list_of_elements_with_class_names(
+auto dom::helpers::node_internals::list_of_elements_with_class_names(
         nodes::node* node,
-        ext::cstring& class_names) {
-
+        ext::cstring& class_names)
+        -> ext::vector<dom::nodes::element*>
+{
     // parse the classes into a set, and return an empty list if the set is empty
     auto classes = ordered_sets::ordered_set_parser(class_names);
     if (classes.empty())
@@ -209,10 +210,10 @@ dom::helpers::node_internals::list_of_elements_with_class_names(
 }
 
 
-void
-dom::helpers::node_internals::adopt(
+auto dom::helpers::node_internals::adopt(
         nodes::node* node,
         nodes::document* document)
+        -> void
 {
     // get the old document
     nodes::document* old_document = node->owner_document;
@@ -227,11 +228,11 @@ dom::helpers::node_internals::adopt(
 }
 
 
-void
-dom::helpers::node_internals::string_replace_all(
+auto dom::helpers::node_internals::string_replace_all(
         ext::cstring& string,
-        nodes::node* parent) {
-
+        nodes::node* parent)
+        -> void
+{
     // make sure that the string contains something
     if (not string.empty())
     {
@@ -246,8 +247,7 @@ dom::helpers::node_internals::string_replace_all(
 }
 
 
-bool
-dom::helpers::node_internals::is_document_fully_active(nodes::document* document)
+auto dom::helpers::node_internals::is_document_fully_active(nodes::document* document) -> bool
 {
     // return true if the documents browsing context exists, the document is the active document, and [the container
     // document is active or there is no parent browsing context - auto enables document]
@@ -257,18 +257,15 @@ dom::helpers::node_internals::is_document_fully_active(nodes::document* document
 }
 
 
-bool
-dom::helpers::node_internals::is_html(const nodes::element* element)
+auto dom::helpers::node_internals::is_html(const nodes::element* element) -> bool
 {
     // return if the element is in the html namespace, and the document's type is html
     return element->namespace_uri == namespaces::HTML and element->owner_document->m_type == "html";
 }
 
 
-ext::string
-dom::helpers::node_internals::advisory_information(
-        html::elements::html_element* element) {
-
+auto dom::helpers::node_internals::advisory_information(html::elements::html_element* element) -> ext::string
+{
     // return the element title if it exists, the parent's advisory information if there is a parent, otherwise an empty
     // string - in other words, move directly up the tree until the title attribute is set, otherwise an empty string
     return element->title ? element->title : element->parent_element
@@ -278,10 +275,10 @@ dom::helpers::node_internals::advisory_information(
 
 
 template <typename ...nodes_or_strings>
-dom::nodes::node*
-dom::helpers::node_internals::convert_nodes_into_node(
+auto dom::helpers::node_internals::convert_nodes_into_node(
         nodes::document* document,
         nodes_or_strings ...nodes)
+        -> dom::nodes::node*
 {
     // create an empty converted nodes list, and append a node if the object is a node, otherwise append a text node
     // containing the string as the data

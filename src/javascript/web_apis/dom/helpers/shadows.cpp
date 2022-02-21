@@ -14,38 +14,38 @@
 #include <html/elements/html_slot_element.hpp>
 
 
-bool dom::helpers::shadows::is_connected(const nodes::node* node)
+auto dom::helpers::shadows::is_connected(const nodes::node* node) -> bool
 {
     // a node is connected if the shadow including root is a document
     return dynamic_cast<nodes::document*>(shadow_including_root(node));
 }
 
 
-bool dom::helpers::shadows::is_slot(const nodes::node* node)
+auto dom::helpers::shadows::is_slot(const nodes::node* node) -> bool
 {
     // a node is a slot if the root of the node is a shadow node
     return is_root_shadow_root(node);
 }
 
 
-bool dom::helpers::shadows::is_slottable(const nodes::node* node)
+auto dom::helpers::shadows::is_slottable(const nodes::node* node) -> bool
 {
     // a node is a slottable if it inherits the slottable mixin
     return dynamic_cast<const mixins::slottable<nodes::node>*>(node);
 }
 
 
-bool dom::helpers::shadows::is_assigned(const nodes::node* node)
+auto dom::helpers::shadows::is_assigned(const nodes::node* node) -> bool
 {
     // a node is assigned if it is a slottable, and it has an assigned slot
     return is_slottable(node) and dynamic_cast<const mixins::slottable<nodes::node>*>(node)->assigned_slot;
 }
 
 
-html::elements::html_slot_element*
-dom::helpers::shadows::find_slot(
-        nodes::node* slottable,
+auto dom::helpers::shadows::find_slot(
+        const nodes::node* slottable,
         bool open_flag)
+        -> html::elements::html_slot_element*
 {
     // create a pointer for the shadow root
     nodes::shadow_root* shadow;
@@ -55,7 +55,7 @@ dom::helpers::shadows::find_slot(
         return nullptr;
 
     // return nullptr if the slottable (as an element) doesn't have a shadow root
-    if (not (shadow = dynamic_cast<nodes::element*>(slottable)->shadow_root_node))
+    if (not (shadow = dynamic_cast<const nodes::element*>(slottable)->shadow_root_node))
         return nullptr;
 
     // return nullptr if the open flag is set, but the shadow's mode is not open
@@ -67,13 +67,12 @@ dom::helpers::shadows::find_slot(
     return descendant_slots
             .filter(shadow->slot_assignment == "manual"
                     ? std::function{[slottable](const html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->m_manually_assigned_nodes->contains(slottable);}}
-                    : std::function{[slottable](const html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->name == dynamic_cast<nodes::element*>(slottable)->m_name;}})
+                    : std::function{[slottable](const html::elements::html_slot_element* slot) -> bool {return is_slot(slot) and slot->name == dynamic_cast<const nodes::element*>(slottable)->m_name;}})
             .front();
 }
 
 
-ext::vector<dom::nodes::node*>
-dom::helpers::shadows::find_slottables(html::elements::html_slot_element* slot)
+auto dom::helpers::shadows::find_slottables(const html::elements::html_slot_element* slot) -> ext::vector<dom::nodes::node*>
 {
     // get the shadow root node, returning nullptr if the root is not a shadow root
     nodes::shadow_root* root = dynamic_cast<nodes::shadow_root*>(trees::root(slot));
@@ -88,10 +87,8 @@ dom::helpers::shadows::find_slottables(html::elements::html_slot_element* slot)
 }
 
 
-ext::vector<dom::nodes::node*>
-dom::helpers::shadows::find_flattened_slottables(
-        html::elements::html_slot_element* slot) {
-
+auto dom::helpers::shadows::find_flattened_slottables(const html::elements::html_slot_element* slot) -> ext::vector<dom::nodes::node*>
+{
     // return nullptr if the slot's root is not a shadow root
     if (not is_root_shadow_root(slot))
         return nullptr;
@@ -107,16 +104,14 @@ dom::helpers::shadows::find_flattened_slottables(
 }
 
 
-void
-dom::helpers::shadows::assign_slot(nodes::node* slottable)
+auto dom::helpers::shadows::assign_slot(nodes::node* slottable) -> void
 {
     // assign a slot by assigning slottables to the found slot for the slottable
     return assign_slottables(find_slot(slottable));
 }
 
 
-void
-dom::helpers::shadows::assign_slottables(html::elements::html_slot_element* slot)
+auto dom::helpers::shadows::assign_slottables(html::elements::html_slot_element* slot) -> void
 {
     // the slottables are the found slottables for the slot
     auto slottables = find_slottables(slot);
@@ -136,8 +131,7 @@ dom::helpers::shadows::assign_slottables(html::elements::html_slot_element* slot
 }
 
 
-void
-dom::helpers::shadows::assign_slottables_for_tree(const nodes::node* root)
+auto dom::helpers::shadows::assign_slottables_for_tree(const nodes::node* root) -> void
 {
     // assign slottables for each html slot element in the descendants of the root TODO : filter needed?
     trees::descendants(root)
@@ -147,8 +141,7 @@ dom::helpers::shadows::assign_slottables_for_tree(const nodes::node* root)
 }
 
 
-void
-dom::helpers::shadows::signal_slot_change(const nodes::node* slot)
+auto dom::helpers::shadows::signal_slot_change(const nodes::node* slot) -> void
 {
     // append a nwe slot to the signal_slots list in the javascript context, and observe the microtask
     javascript::realms::relevant_agent().get<ext::vector<const html::elements::html_slot_element*>*>("signal_slots")->append(dynamic_cast<const html::elements::html_slot_element*>(slot));
@@ -167,11 +160,11 @@ dom::helpers::shadows::shadow_including_root(const nodes::node* node_a)
 }
 
 
-dom::nodes::event_target*
-dom::helpers::shadows::retarget(
+auto dom::helpers::shadows::retarget(
         const nodes::event_target* event_target_a,
-        const nodes::event_target* event_target_b) {
-
+        const nodes::event_target* event_target_b)
+        -> dom::nodes::event_target*
+{
     // convert the event targets to nodes
     auto* node_a = dynamic_cast<const nodes::node*>(event_target_a);
     auto* node_b = dynamic_cast<const nodes::node*>(event_target_b);
@@ -185,42 +178,38 @@ dom::helpers::shadows::retarget(
 }
 
 
-dom::nodes::shadow_root*
-dom::helpers::shadows::shadow_root(const nodes::node* node_a)
+auto dom::helpers::shadows::shadow_root(const nodes::node* node_a) -> dom::nodes::shadow_root*
 {
     // return the shadow_root cast root of the node
     return dynamic_cast<nodes::shadow_root*>(trees::root(node_a));
 }
 
 
-bool
-dom::helpers::shadows::is_root_shadow_root(const nodes::node* node_a)
+auto dom::helpers::shadows::is_root_shadow_root(const nodes::node* node_a) -> bool
 {
     // return if the root of the tree is a shadow root
     return is_shadow_root(trees::root(node_a));
 }
 
 
-bool
-dom::helpers::shadows::is_shadow_root(const nodes::node* node_a)
+auto dom::helpers::shadows::is_shadow_root(const nodes::node* node_a) -> bool
 {
     // return if the node cast to a shadow root is nullptr or not
     return dynamic_cast<const nodes::shadow_root*>(node_a);
 }
 
 
-bool
-dom::helpers::shadows::is_shadow_host(const nodes::node* node_a)
+auto dom::helpers::shadows::is_shadow_host(const nodes::node* node_a) -> bool
 {
     // return if the node cast to an element has a shadow root node (ie is hosted)
     return dynamic_cast<const nodes::element*>(node_a)->shadow_root_node;
 }
 
 
-bool
-dom::helpers::shadows::is_shadow_including_descendant(
+auto dom::helpers::shadows::is_shadow_including_descendant(
         const nodes::node* node_a,
         const nodes::node* node_b)
+        -> bool
 {
     // return if node_b is a descendant of node_a (normal text), or node_a is a shadow root and node_a's host is a
     // shadow root that is a shadow including descendant of node_b
@@ -228,10 +217,10 @@ dom::helpers::shadows::is_shadow_including_descendant(
 }
 
 
-bool
-dom::helpers::shadows::is_shadow_including_ancestor(
+auto dom::helpers::shadows::is_shadow_including_ancestor(
         const nodes::node* node_a,
         const nodes::node* node_b)
+        -> bool
 {
     // return if node_b is a shadow including descendant of node_a -> this means that node_a is a shadow including
     // ancestor of node_b
@@ -239,20 +228,20 @@ dom::helpers::shadows::is_shadow_including_ancestor(
 }
 
 
-bool
-dom::helpers::shadows::is_host_including_ancestor(
+auto dom::helpers::shadows::is_host_including_ancestor(
         const nodes::node* node_a,
         const nodes::node* node_b)
+        -> bool
 {
     // TODO
     return trees::is_descendant(node_a, node_b) or shadow_root(node_b) and shadow_root(node_b)->host and is_host_including_ancestor(node_a, shadow_root(node_b)->host);
 }
 
 
-bool
-dom::helpers::shadows::is_closed_shadow_hidden(
+auto dom::helpers::shadows::is_closed_shadow_hidden(
         const nodes::node* node_a,
         const nodes::node* node_b)
+        -> bool
 {
     // get the shadow root of node_a
     auto* shadow_root_a = dynamic_cast<const nodes::shadow_root*>(node_a);

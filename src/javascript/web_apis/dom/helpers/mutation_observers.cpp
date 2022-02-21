@@ -21,7 +21,7 @@
 #include <v8.h>
 
 
-void dom::helpers::mutation_observers::notify_mutation_observers()
+auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
 {
     // set the mutation_observer_microtask_queue object in javascript to false
     javascript::realms::surrounding_agent().set("mutation_observer_microtask_queue", false);
@@ -64,14 +64,13 @@ void dom::helpers::mutation_observers::notify_mutation_observers()
 }
 
 
-void dom::helpers::mutation_observers::queue_microtask(steps_t&& steps)
+auto dom::helpers::mutation_observers::queue_microtask(steps_t&& steps) -> void
 {
     /* TODO */
 }
 
 
-void
-dom::helpers::mutation_observers::queue_mutation_record(
+auto dom::helpers::mutation_observers::queue_mutation_record(
         ext::cstring& type,
         const nodes::event_target* target,
         ext::cstring& name,
@@ -81,6 +80,7 @@ dom::helpers::mutation_observers::queue_mutation_record(
         ext::cvector<nodes::node*>& removed_nodes,
         nodes::node* previous_sibling,
         nodes::node* next_sibling)
+        -> void
 {
     ext::map<mutations::mutation_observer*, ext::string> interested_observers;
     ext::vector<nodes::node*> nodes = trees::ancestors((nodes::node*)target);
@@ -126,28 +126,28 @@ dom::helpers::mutation_observers::queue_mutation_record(
 }
 
 
-void
-dom::helpers::mutation_observers::queue_tree_mutation_record(
+auto dom::helpers::mutation_observers::queue_tree_mutation_record(
         nodes::event_target* target,
         ext::cvector<nodes::node*>& added_nodes,
         ext::cvector<nodes::node*>& removed_nodes,
         nodes::node* previous_sibling,
         nodes::node* next_sibling)
+        -> void
 {
     queue_mutation_record("childList", target, "", "", "", added_nodes, removed_nodes, previous_sibling, next_sibling);
 }
 
 
-void dom::helpers::mutation_observers::queue_mutation_observers_microtask()
+auto dom::helpers::mutation_observers::queue_mutation_observers_microtask() -> void
 {
     queue_microtask(&notify_mutation_observers);
 }
 
 
-void
-dom::helpers::mutation_observers::queue_media_element_task(
+auto dom::helpers::mutation_observers::queue_media_element_task(
         html::elements::html_media_element* element,
         steps_t&& steps)
+        -> void
 {
     // queue_element_task(element->element_event_task_source, element, steps);
 }

@@ -17,31 +17,31 @@ namespace html::elements {class html_slot_element;}
 
 
 struct dom::helpers::shadows {
-    static bool is_connected(const nodes::node* node);
-    static bool is_slot(const nodes::node* node);
-    static bool is_slottable(const nodes::node* node);
-    static bool is_assigned(const nodes::node* node);
+    static auto is_connected(const nodes::node* node) -> bool;
+    static auto is_slot(const nodes::node* node) -> bool;
+    static auto is_slottable(const nodes::node* node) -> bool;
+    static auto is_assigned(const nodes::node* node) -> bool;
 
-    static html::elements::html_slot_element* find_slot(nodes::node* slottable, bool open_flag = false);
-    static ext::vector<nodes::node*> find_slottables(html::elements::html_slot_element* slot);
-    static ext::vector<nodes::node*> find_flattened_slottables(html::elements::html_slot_element* slot);
+    static auto find_slot(const nodes::node* slottable, bool open_flag = false) -> html::elements::html_slot_element*;
+    static auto find_slottables(const html::elements::html_slot_element* slot) -> ext::vector<nodes::node*>;
+    static auto find_flattened_slottables(const html::elements::html_slot_element* slot) -> ext::vector<nodes::node*>;
 
-    static void assign_slot(nodes::node* slottable);
-    static void assign_slottables(html::elements::html_slot_element* slot);
-    static void assign_slottables_for_tree(const nodes::node* descendant);
+    static auto assign_slot(nodes::node* slottable) -> void;
+    static auto assign_slottables(html::elements::html_slot_element* slot) -> void;
+    static auto assign_slottables_for_tree(const nodes::node* descendant) -> void;
 
-    static void signal_slot_change(const nodes::node* slot);
-    static nodes::node* shadow_including_root(const nodes::node* node_a);
-    static nodes::event_target* retarget(const nodes::event_target* event_target_a, const nodes::event_target* event_target_b);
-    static nodes::shadow_root* shadow_root(const nodes::node* node_a);
+    static auto signal_slot_change(const nodes::node* slot) -> void;
+    static auto shadow_including_root(const nodes::node* node_a) -> nodes::node*;
+    static auto retarget(const nodes::event_target* event_target_a, const nodes::event_target* event_target_b) -> nodes::event_target*;
+    static auto shadow_root(const nodes::node* node_a) -> nodes::shadow_root*;
 
-    static bool is_root_shadow_root(const nodes::node* node_a);
-    static bool is_shadow_root(const nodes::node* node_a);
-    static bool is_shadow_host(const nodes::node* node_a);
-    static bool is_shadow_including_descendant(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_shadow_including_ancestor(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_host_including_ancestor(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_closed_shadow_hidden(const nodes::node* node_a, const nodes::node* node_b);
+    static auto is_root_shadow_root(const nodes::node* node_a) -> bool;
+    static auto is_shadow_root(const nodes::node* node_a) -> bool;
+    static auto is_shadow_host(const nodes::node* node_a) -> bool;
+    static auto is_shadow_including_descendant(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_shadow_including_ancestor(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_host_including_ancestor(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_closed_shadow_hidden(const nodes::node* node_a, const nodes::node* node_b) -> bool;
 };
 
 

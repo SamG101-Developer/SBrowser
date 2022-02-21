@@ -10,7 +10,7 @@
 
 namespace dom::other {class dom_exception;}
 
-enum exception_type {
+enum v8_custom_error_t {
     INDEX_SIZE_ERR, DOMSTRING_SIZE_ERR, HIERARCHY_REQUEST_ERR, WRONG_DOCUMENT_ERR, INVALID_CHARACTER_ERR,
     NO_DATA_ALLOWED_ERR, NO_MODIFICATION_ALLOWED_ERR, NOT_FOUND_ERR, NOT_SUPPORTED_ERR, INUSE_ATTRIBUTE_ERR,
     INVALID_STATE_ERR, SYNTAX_ERR, INVALID_MODIFICATION_ERR, NAMESPACE_ERR, INVALID_ACCESS_ERR, VALIDATION_ERR,
@@ -22,11 +22,11 @@ enum exception_type {
 
 class dom::other::dom_exception : public virtual dom_object {
 public: constructors
-    dom_exception(ext::cstring& message, exception_type type);
+    dom_exception(ext::cstring& message, v8_custom_error_t type);
 
 public: properties
     ext::dom_property<ext::string, _F> message;
-    ext::dom_property<exception_type, _F> type;
+    ext::dom_property<v8_custom_error_t, _F> type;
 
 public: internal_methods
     ext::any v8(v8::Isolate *isolate) const override;

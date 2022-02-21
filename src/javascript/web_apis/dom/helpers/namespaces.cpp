@@ -3,15 +3,16 @@
 #include <dom/helpers/exceptions.hpp>
 
 
-void dom::helpers::namespaces::validate(ext::cstring& qualified_name)
+auto dom::helpers::namespaces::validate(ext::cstring& qualified_name) -> void
 {
     /* TODO */
 }
 
-std::tuple<ext::string, ext::string, ext::string>
-dom::helpers::namespaces::validate_and_extract(
+
+auto dom::helpers::namespaces::validate_and_extract(
         ext::cstring& namespace_,
         ext::cstring& qualified_name)
+        -> std::tuple<ext::string, ext::string, ext::string>
 {
     // validate the qualified name, and create the prefix and local name
     validate(qualified_name);
