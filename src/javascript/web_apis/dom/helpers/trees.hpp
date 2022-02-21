@@ -14,35 +14,35 @@ namespace dom {
 
 
 struct dom::helpers::trees {
-    static nodes::node* root(const nodes::node* node);
-    static ext::vector<nodes::node*> descendants(const nodes::node* node);
-    static ext::vector<nodes::node*> ancestors(const nodes::node* node);
+    static auto root(const nodes::node* node) -> nodes::node*;
+    static auto descendants(const nodes::node* node) -> ext::vector<nodes::node*>;
+    static auto ancestors(const nodes::node* node) -> ext::vector<nodes::node*>;
 
-    static bool is_descendant(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_ancestor(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_sibling(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_preceding(const nodes::node* node_a, const nodes::node* node_b);
-    static bool is_following(const nodes::node* node_a, const nodes::node* node_b);
+    static auto is_descendant(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_ancestor(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_sibling(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_preceding(const nodes::node* node_a, const nodes::node* node_b) -> bool;
+    static auto is_following(const nodes::node* node_a, const nodes::node* node_b) -> bool;
 
-    static unsigned long index(const nodes::node* node_a);
-    static unsigned long length(const nodes::node* node_a);
+    static auto index(const nodes::node* node_a) -> unsigned long;
+    static auto length(const nodes::node* node_a) -> unsigned long;
 
-    template <typename T=nodes::node*> static ext::vector<nodes::node*> all_following(const nodes::node* node_a);
-    template <typename T=nodes::node*> static ext::vector<nodes::node*> all_preceding(const nodes::node* node_a);
-    template <typename T=nodes::node*> static ext::vector<nodes::node*> all_following_siblings(const nodes::node* node_a);
-    template <typename T=nodes::node*> static ext::vector<nodes::node*> all_preceding_siblings(const nodes::node* node_a);
+    template <typename T=nodes::node*> static auto all_following(const nodes::node* node_a) -> ext::vector<nodes::node*>;
+    template <typename T=nodes::node*> static auto all_preceding(const nodes::node* node_a) -> ext::vector<nodes::node*>;
+    template <typename T=nodes::node*> static auto all_following_siblings(const nodes::node* node_a) -> ext::vector<nodes::node*>;
+    template <typename T=nodes::node*> static auto all_preceding_siblings(const nodes::node* node_a) -> ext::vector<nodes::node*>;
 
-    static bool is_element_node(const nodes::node* node_a);
-    static bool is_text_node(const nodes::node* node_a);
-    static bool is_document_type_node(const nodes::node* node_a);
+    static auto is_element_node(const nodes::node* node_a) -> bool;
+    static auto is_text_node(const nodes::node* node_a) -> bool;
+    static auto is_document_type_node(const nodes::node* node_a) -> bool;
 
-    static ext::string descendant_text_content(const nodes::node* node_a);
-    static ext::string child_text_content(const nodes::node* node_a);
-    static ext::vector<nodes::text*> descendant_text_nodes(const nodes::node* node_a);
-    static ext::vector<nodes::text*> contiguous_text_nodes(const nodes::node* node_a);
-    static bool is_exclusive_text_node(const nodes::node* node_a);
+    static auto descendant_text_content(const nodes::node* node_a) -> ext::string;
+    static auto child_text_content(const nodes::node* node_a) -> ext::string;
+    static auto descendant_text_nodes(const nodes::node* node_a) -> ext::vector<nodes::text*>;
+    static auto contiguous_text_nodes(const nodes::node* node_a) -> ext::vector<nodes::text*>;
+    static auto is_exclusive_text_node(const nodes::node* node_a) -> bool;
 
-    static nodes::node* common_ancestor(const nodes::node* node_a, const nodes::node* node_b);
+    static auto common_ancestor(const nodes::node* node_a, const nodes::node* node_b) -> nodes::node*;
 };
 
 

@@ -11,8 +11,8 @@ namespace dom {
 
 
 struct dom::helpers::signal_aborting {
-    static void signal_abort(aborting::abort_signal* signal, ext::cany& reason);
-    static void follow_signal(aborting::abort_signal* following_signal, aborting::abort_signal* parent_signal);
+    static auto signal_abort(aborting::abort_signal* signal, ext::cany& reason) -> void;
+    static auto follow_signal(aborting::abort_signal* following_signal, aborting::abort_signal* parent_signal) -> void;
 };
 
 

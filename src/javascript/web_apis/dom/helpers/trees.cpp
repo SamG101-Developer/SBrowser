@@ -9,8 +9,7 @@
 #include <dom/nodes/text.hpp>
 
 
-dom::nodes::node*
-dom::helpers::trees::root(const nodes::node* node)
+auto dom::helpers::trees::root(const nodes::node* node) -> dom::nodes::node*
 {
     // return nullptr if the node is nullptr
     if (not node)
@@ -21,8 +20,7 @@ dom::helpers::trees::root(const nodes::node* node)
 }
 
 
-ext::vector<dom::nodes::node*>
-dom::helpers::trees::descendants(const nodes::node* node)
+auto dom::helpers::trees::descendants(const nodes::node* node) -> ext::vector<dom::nodes::node*>
 {
     // return an empty list if there are no children, otherwise return the flattened child nodes of the node; this
     // method runs recursively
@@ -32,8 +30,7 @@ dom::helpers::trees::descendants(const nodes::node* node)
 }
 
 
-ext::vector<dom::nodes::node*>
-dom::helpers::trees::ancestors(const nodes::node* node)
+auto dom::helpers::trees::ancestors(const nodes::node* node) -> ext::vector<dom::nodes::node*>
 {
     // create the empty ancestors list and get the first parent (non-const node)
     ext::vector<nodes::node*> ancestors {};
@@ -48,56 +45,49 @@ dom::helpers::trees::ancestors(const nodes::node* node)
 }
 
 
-bool
-dom::helpers::trees::is_descendant(const nodes::node* node_a, const nodes::node* node_b)
+auto dom::helpers::trees::is_descendant(const nodes::node* node_a, const nodes::node* node_b) -> bool
 {
     // return if node_b is contained in node_a's descendants (more efficient to flip nodes and check ancestors)
     return ancestors(node_a).contains(const_cast<nodes::node*>(node_b));
 }
 
 
-bool
-dom::helpers::trees::is_ancestor(const nodes::node* node_a, const nodes::node* node_b)
+auto dom::helpers::trees::is_ancestor(const nodes::node* node_a, const nodes::node* node_b) -> bool
 {
     // return if node_b is contained in node_a's ancestors
     return ancestors(node_b).contains(const_cast<nodes::node*>(node_a));
 }
 
 
-bool
-dom::helpers::trees::is_sibling(const nodes::node* node_a, const nodes::node* node_b)
+auto dom::helpers::trees::is_sibling(const nodes::node* node_a, const nodes::node* node_b) -> bool
 {
     // return if the two parents are the same (and therefore must be siblings)
     return node_a->parent == node_b->parent;
 }
 
 
-bool
-dom::helpers::trees::is_preceding(const nodes::node* node_a, const nodes::node* node_b)
+auto dom::helpers::trees::is_preceding(const nodes::node* node_a, const nodes::node* node_b) -> bool
 {
     // return if node_a comes before node_b by comparing node indexes
     return index(node_a) < index(node_b);
 }
 
 
-bool
-dom::helpers::trees::is_following(const nodes::node* node_a, const nodes::node* node_b)
+auto dom::helpers::trees::is_following(const nodes::node* node_a, const nodes::node* node_b) -> bool
 {
     // return if node_a comes after node_b by comparing node indexes
     return index(node_a) > index(node_b);
 }
 
 
-unsigned long
-dom::helpers::trees::index(const nodes::node* node_a)
+auto dom::helpers::trees::index(const nodes::node* node_a) -> unsigned long
 {
     // return the index of the node in the descendants of the tree root
     return descendants(root(node_a)).find(const_cast<nodes::node*>(node_a));
 }
 
 
-unsigned long
-dom::helpers::trees::length(const nodes::node* node_a)
+auto dom::helpers::trees::length(const nodes::node* node_a) -> unsigned long
 {
     // return 0 if the node is an attribute or document type (no way to determine a length)
     if (multi_cast<const nodes::attr*, const nodes::document_type*>(node_a))
@@ -113,8 +103,7 @@ dom::helpers::trees::length(const nodes::node* node_a)
 
 
 template <typename T>
-ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_following(const nodes::node* node_a)
+auto dom::helpers::trees::all_following(const nodes::node* node_a) -> ext::vector<dom::nodes::node*>
 {
     // get the index of the node, and return all nodes that come after it, and can be cast to type T
     const auto index_a = index(node_a);
@@ -125,8 +114,7 @@ dom::helpers::trees::all_following(const nodes::node* node_a)
 
 
 template <typename T>
-ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_preceding(const nodes::node* node_a)
+auto dom::helpers::trees::all_preceding(const nodes::node* node_a) -> ext::vector<dom::nodes::node*>
 {
     // get the index of the node, and return all nodes that come before it, and can be cast to type T
     const auto index_a = index(node_a);
@@ -137,8 +125,7 @@ dom::helpers::trees::all_preceding(const nodes::node* node_a)
 
 
 template <typename T>
-ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_following_siblings(const nodes::node* node_a)
+auto dom::helpers::trees::all_following_siblings(const nodes::node* node_a) -> ext::vector<dom::nodes::node*>
 {
     // get the index of the node, and return all siblings that come after it, and can be cast to type T
     const auto index_a = index(node_a);
@@ -149,8 +136,7 @@ dom::helpers::trees::all_following_siblings(const nodes::node* node_a)
 
 
 template <typename T>
-ext::vector<dom::nodes::node*>
-dom::helpers::trees::all_preceding_siblings(const nodes::node* node_a)
+auto dom::helpers::trees::all_preceding_siblings(const nodes::node* node_a) -> ext::vector<dom::nodes::node*>
 {
     // get the index of the node, and return all siblings that come before it, and can be cast to type T
     const auto index_a = index(node_a);
@@ -160,29 +146,28 @@ dom::helpers::trees::all_preceding_siblings(const nodes::node* node_a)
 }
 
 
-bool dom::helpers::trees::is_element_node(const nodes::node* node_a)
+auto dom::helpers::trees::is_element_node(const nodes::node* node_a) -> bool
 {
     // syntactic sugar for checking if a node can be cast to an element pointer
     return dynamic_cast<const nodes::element*>(node_a) != nullptr;
 }
 
 
-bool dom::helpers::trees::is_text_node(const nodes::node* node_a)
+auto dom::helpers::trees::is_text_node(const nodes::node* node_a) -> bool
 {
     // syntactic sugar for checking if a node can be cast to a text node pointer
     return dynamic_cast<const nodes::text*>(node_a) != nullptr;
 }
 
 
-bool dom::helpers::trees::is_document_type_node(const nodes::node* node_a)
+auto dom::helpers::trees::is_document_type_node(const nodes::node* node_a) -> bool
 {
     // syntactic sugar for checking if a node can be cast to a document type pointer
     return dynamic_cast<const nodes::document_type*>(node_a) != nullptr;
 }
 
 
-ext::string
-dom::helpers::trees::descendant_text_content(const nodes::node* node_a)
+auto dom::helpers::trees::descendant_text_content(const nodes::node* node_a) -> ext::string
 {
     // get the descendant nodes that are text nodes, and join the data stored in them
     auto text_content = descendants(node_a)
@@ -195,8 +180,7 @@ dom::helpers::trees::descendant_text_content(const nodes::node* node_a)
 }
 
 
-ext::string
-dom::helpers::trees::child_text_content(const nodes::node* node_a)
+auto dom::helpers::trees::child_text_content(const nodes::node* node_a) -> ext::string
 {
     // get the child nodes that are text nodes, and join the data stored in them
     auto text_content = node_a->child_nodes
@@ -209,15 +193,13 @@ dom::helpers::trees::child_text_content(const nodes::node* node_a)
 }
 
 
-ext::vector<dom::nodes::text*>
-dom::helpers::trees::descendant_text_nodes(const nodes::node* node_a)
+auto dom::helpers::trees::descendant_text_nodes(const nodes::node* node_a) -> ext::vector<dom::nodes::text*>
 {
     return descendants(node_a).template cast_all<nodes::text*>();
 }
 
 
-ext::vector<dom::nodes::text*>
-dom::helpers::trees::contiguous_text_nodes(const nodes::node* node_a)
+auto dom::helpers::trees::contiguous_text_nodes(const nodes::node* node_a) -> ext::vector<dom::nodes::text*>
 {
 
     ext::vector<nodes::node*> siblings = node_a->parent->child_nodes;
@@ -228,18 +210,17 @@ dom::helpers::trees::contiguous_text_nodes(const nodes::node* node_a)
 }
 
 
-bool
-dom::helpers::trees::is_exclusive_text_node(const nodes::node* node_a)
+auto dom::helpers::trees::is_exclusive_text_node(const nodes::node* node_a) -> bool
 {
 
     return not dynamic_cast<const nodes::cdata_section*>(node_a) and dynamic_cast<const nodes::text*>(node_a);
 }
 
 
-dom::nodes::node*
-dom::helpers::trees::common_ancestor(
+auto dom::helpers::trees::common_ancestor(
         const nodes::node* node_a,
         const nodes::node* node_b)
+        -> dom::nodes::node*
 {
     auto node_a_ancestors = ancestors(node_a);
     auto node_b_ancestors = ancestors(node_b);

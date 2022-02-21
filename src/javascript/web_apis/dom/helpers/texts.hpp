@@ -14,10 +14,10 @@ namespace dom {
 }
 
 struct dom::helpers::texts {
-    static void replace_data(nodes::character_data* text_node, unsigned long offset, unsigned long count, ext::cstring& data);
-    static nodes::text* split(nodes::text* text_node, unsigned long offset);
-    static ext::string substring_data(const nodes::character_data* text_node, unsigned long offset, unsigned long count);
-    static ext::string advisory_information(nodes::element* element);
+    static auto replace_data(nodes::character_data* text_node, unsigned long offset, unsigned long count, ext::cstring& data) -> void;
+    static auto split(nodes::text* text_node, unsigned long offset) -> nodes::text*;
+    static auto substring_data(const nodes::character_data* text_node, unsigned long offset, unsigned long count) -> ext::string;
+    static auto advisory_information(nodes::element* element) -> ext::string;
 };
 
 

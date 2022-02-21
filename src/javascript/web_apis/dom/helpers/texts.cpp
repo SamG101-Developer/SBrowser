@@ -14,12 +14,12 @@
 #include <dom/ranges/range.hpp>
 
 
-void
-dom::helpers::texts::replace_data(
+auto dom::helpers::texts::replace_data(
         nodes::character_data* text_node,
         unsigned long offset,
         unsigned long count,
         ext::cstring& data)
+        -> void
 {
     // get the text node's text and the length of the text node
     auto current_data = text_node->data;
@@ -71,11 +71,11 @@ dom::helpers::texts::replace_data(
 }
 
 
-dom::nodes::text*
-dom::helpers::texts::split(
+auto dom::helpers::texts::split(
         nodes::text* text_node,
-        unsigned long offset) {
-
+        unsigned long offset)
+        -> dom::nodes::text*
+{
     const auto length = trees::length(text_node);
     const auto count = length - offset;
     const auto new_data = substring_data(text_node, offset, count);
@@ -119,12 +119,11 @@ dom::helpers::texts::split(
 }
 
 
-ext::string
-dom::helpers::texts::substring_data(
+auto dom::helpers::texts::substring_data(
         const nodes::character_data* text_node,
         unsigned long offset,
-        unsigned long count) {
-
+        unsigned long count) -> ext::string
+{
     const auto length = trees::length(text_node);
     exceptions::throw_v8_exception(
             "offset must be <= length of the text node",

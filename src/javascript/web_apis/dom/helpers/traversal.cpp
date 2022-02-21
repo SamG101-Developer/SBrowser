@@ -9,12 +9,14 @@
 
 #include <dom/nodes/node.hpp>
 
+// TODO : this file is making me sick - tidy it
 
-unsigned short
-dom::helpers::traversal::filter(
+
+auto dom::helpers::traversal::filter(
         const nodes::node* node,
-        iterators::abstract_iterator* iterator) {
-
+        iterators::abstract_iterator* iterator)
+        -> unsigned short
+{
     exceptions::throw_v8_exception(
             "an iterator must be inactive in order to be filtered",
             INVALID_STATE_ERR,
@@ -33,30 +35,38 @@ dom::helpers::traversal::filter(
 }
 
 
-dom::nodes::node*
-dom::helpers::traversal::traverse(
+auto dom::helpers::traversal::traverse(
         iterators::node_iterator* iterator,
-        const traversal_direction direction) {
-
+        const traversal_direction direction)
+        -> dom::nodes::node*
+{
     nodes::node* node = iterator->reference_node;
     bool before_node = iterator->pointer_before_reference_node;
     auto result = iterators::node_filter::FILTER_REJECT;
 
-    while (result != iterators::node_filter::FILTER_ACCEPT) {
-        if (direction == traversal_direction::NEXT) {
+    while (result != iterators::node_filter::FILTER_ACCEPT)
+    {
+        if (direction == traversal_direction::NEXT)
+        {
             node = not before_node
                     ? iterator->iterator_collection.first_match([node](nodes::node* following_node) {return trees::is_following(node, following_node);})
                     : node;
 
-            if (before_node) return nullptr;
+            if (before_node)
+                return nullptr;
+
             before_node = false;
         }
-        else if (direction == traversal_direction::PREVIOUS) {
+
+        else if (direction == traversal_direction::PREVIOUS)
+        {
             node = before_node
                     ? iterator->iterator_collection.last_match([node](nodes::node* preceding_node) {return trees::is_preceding(node, preceding_node);})
                     : node;
 
-            if (not before_node) return nullptr;
+            if (not before_node)
+                return nullptr;
+
             before_node = true;
         }
 
@@ -69,11 +79,11 @@ dom::helpers::traversal::traverse(
 }
 
 
-dom::nodes::node*
-dom::helpers::traversal::traverse_children(
+auto dom::helpers::traversal::traverse_children(
         iterators::tree_walker* iterator,
-        const traversal_child type) {
-
+        const traversal_child type)
+        -> dom::nodes::node*
+{
     bool continue_traversing = true;
     nodes::node* node = type == FIRST_CHILD
             ? iterator->current_node->first_child
@@ -85,7 +95,8 @@ dom::helpers::traversal::traverse_children(
         if (result == iterators::node_filter::FILTER_ACCEPT)
             return iterator->current_node = node;
 
-        else if (result == iterators::node_filter::FILTER_SKIP) {
+        else if (result == iterators::node_filter::FILTER_SKIP)
+        {
             nodes::node* child = type == FIRST_CHILD
                     ? iterator->current_node->first_child
                     : iterator->current_node->last_child;
@@ -94,8 +105,8 @@ dom::helpers::traversal::traverse_children(
                 node = child, continue_traversing = false;
         }
 
-        while (node and continue_traversing) {
-
+        while (node and continue_traversing)
+        {
             nodes::node* sibling = type == FIRST_CHILD
                     ? node->next_sibling
                     : node->previous_sibling;
@@ -115,22 +126,23 @@ dom::helpers::traversal::traverse_children(
 }
 
 
-dom::nodes::node*
-dom::helpers::traversal::traverse_siblings(
-        iterators::tree_walker* iterator,
-        const traversal_sibling type) {
 
+auto dom::helpers::traversal::traverse_siblings(
+        iterators::tree_walker* iterator,
+        const traversal_sibling type) -> dom::nodes::node*
+{
     nodes::node* node = iterator->current_node;
     if (node == iterator->root)
         return nullptr;
 
-    while (true) {
-
+    while (true)
+    {
         nodes::node* sibling = type == NEXT_SIBLING
                 ? node->next_sibling
                 : node->previous_sibling;
 
-        while (sibling) {
+        while (sibling)
+        {
             node = sibling;
             auto result = filter(node, iterator);
 
@@ -156,14 +168,13 @@ dom::helpers::traversal::traverse_siblings(
 }
 
 
-dom::nodes::node*
-dom::helpers::traversal::traverse_node_previous(
-        iterators::tree_walker* iterator) {
-
+auto dom::helpers::traversal::traverse_node_previous(iterators::tree_walker* iterator) -> dom::nodes::node*
+{
     nodes::node* node = iterator->current_node;
     auto result = iterators::node_filter::FILTER_ACCEPT;
 
-    while (node != iterator->root) {
+    while (node != iterator->root)
+    {
         nodes::node* sibling = node->previous_sibling;
         while (sibling) {
             node = sibling;
@@ -188,15 +199,14 @@ dom::helpers::traversal::traverse_node_previous(
 }
 
 
-dom::nodes::node*
-dom::helpers::traversal::traverse_node_next(
-        iterators::tree_walker* iterator) {
-
+auto dom::helpers::traversal::traverse_node_next(iterators::tree_walker* iterator) -> dom::nodes::node*
+{
     nodes::node* node = iterator->current_node;
     auto result = iterators::node_filter::FILTER_ACCEPT;
 
     while (true) {
-        while (result != iterators::node_filter::FILTER_REJECT) {
+        while (result != iterators::node_filter::FILTER_REJECT)
+        {
             node = node->first_child;
             result = filter(node, iterator);
             if (result == iterators::node_filter::FILTER_ACCEPT)
@@ -205,7 +215,8 @@ dom::helpers::traversal::traverse_node_next(
 
         auto* temporary = node;
 
-        while (temporary) {
+        while (temporary)
+        {
             if (temporary == iterator->root) return nullptr;
             temporary->next_sibling ? node = temporary->next_sibling : temporary = temporary->parent;
         }

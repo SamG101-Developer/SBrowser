@@ -17,12 +17,12 @@ enum traversal_sibling {NEXT_SIBLING, PREVIOUS_SIBLING};
 
 
 struct dom::helpers::traversal {
-    static unsigned short filter(const nodes::node* node, iterators::abstract_iterator* iterator);
-    static nodes::node* traverse(iterators::node_iterator* iterator, const traversal_direction direction);
-    static nodes::node* traverse_children(iterators::tree_walker* iterator, const traversal_child type);
-    static nodes::node* traverse_siblings(iterators::tree_walker* iterator, const traversal_sibling type);
-    static nodes::node* traverse_node_previous(iterators::tree_walker* iterator);
-    static nodes::node* traverse_node_next(iterators::tree_walker* iterator);
+    static auto filter(const nodes::node* node, iterators::abstract_iterator* iterator) -> unsigned short;
+    static auto traverse(iterators::node_iterator* iterator, const traversal_direction direction) -> nodes::node*;
+    static auto traverse_children(iterators::tree_walker* iterator, const traversal_child type) -> nodes::node*;
+    static auto traverse_siblings(iterators::tree_walker* iterator, const traversal_sibling type) -> nodes::node*;
+    static auto traverse_node_previous(iterators::tree_walker* iterator) -> nodes::node*;
+    static auto traverse_node_next(iterators::tree_walker* iterator) -> nodes::node*;
 };
 
 

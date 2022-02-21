@@ -4,10 +4,10 @@
 #include <dom/helpers/event_dispatching.hpp>
 
 
-void
-dom::helpers::signal_aborting::signal_abort(
+auto dom::helpers::signal_aborting::signal_abort(
         aborting::abort_signal* signal,
         ext::cany& reason)
+        -> void
 {
     // return if the signal ahs already been aborted
     if (signal->aborted)
@@ -25,10 +25,10 @@ dom::helpers::signal_aborting::signal_abort(
 }
 
 
-void
-dom::helpers::signal_aborting::follow_signal(
+auto dom::helpers::signal_aborting::follow_signal(
         aborting::abort_signal* following_signal,
         aborting::abort_signal* parent_signal)
+        -> void
 {
     // return if the following signal has aborted
     if (following_signal->aborted)
