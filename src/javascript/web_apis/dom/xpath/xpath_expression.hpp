@@ -8,7 +8,8 @@
 
 namespace dom {
     namespace nodes {class node;}
-    namespace xpath {
+    namespace xpath
+    {
         class xpath_expression;
         class xpath_result;
     }
@@ -20,10 +21,10 @@ public: constructors
     xpath_expression();
 
 public: methods
-    xpath_result* evaluate(nodes::node* context_node, unsigned short type = 0, xpath_result* result = nullptr);
+    auto evaluate(nodes::node* context_node, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result*;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

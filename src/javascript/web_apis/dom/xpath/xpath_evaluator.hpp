@@ -9,7 +9,8 @@
 
 namespace dom {
     namespace nodes {class node;}
-    namespace xpath {
+    namespace xpath
+    {
         class xpath_evaluator;
         class xpath_expression;
         class xpath_result;
@@ -24,12 +25,12 @@ public: constructors
     xpath_evaluator();
 
 public: methods
-    xpath_expression* create_expression(ext::cstring& expression, xpath_ns_resolver* resolver = nullptr);
-    xpath_ns_resolver* create_ns_resolver(nodes::node* node_resolver);
-    xpath_result evaluate(ext::cstring& expression, nodes::node* context_node, xpath_ns_resolver* resolver = nullptr, unsigned short type = 0, xpath_result* result = nullptr);
+    auto create_expression(ext::cstring& expression, xpath_ns_resolver* resolver = nullptr) -> xpath_expression*;
+    auto create_ns_resolver(nodes::node* node_resolver) -> xpath_ns_resolver*;
+    auto evaluate(ext::cstring& expression, nodes::node* context_node, xpath_ns_resolver* resolver = nullptr, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

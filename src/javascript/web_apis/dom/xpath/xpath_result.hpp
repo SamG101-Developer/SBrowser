@@ -4,10 +4,10 @@
 
 #include <ext/macros/decorators.hpp>
 #include <ext/properties/dom_property.hpp>
-
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace nodes {class node;}
     namespace xpath {class xpath_result;}
 }
@@ -30,8 +30,8 @@ public: static_constants
     static const unsigned short FIRST_ORDERED_NODE_TYPE = 9;
 
 public: methods
-    nodes::node* iterate_next();
-    nodes::node* snapshot_item(unsigned long index);
+    auto iterate_next() -> nodes::node*;
+    auto snapshot_item(unsigned long index) -> nodes::node*;
 
 public: properties
     ext::dom_property<unsigned short, _F> result_type;
@@ -43,7 +43,7 @@ public: properties
     ext::dom_property<unsigned long, _F> snapshot_length;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 
