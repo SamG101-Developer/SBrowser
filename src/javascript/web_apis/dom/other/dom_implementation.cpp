@@ -26,11 +26,11 @@ dom::other::dom_implementation::~dom_implementation()
 }
 
 
-dom::nodes::document_type*
-dom::other::dom_implementation::create_document_type(
+auto dom::other::dom_implementation::create_document_type(
         ext::cstring& qualified_name,
         ext::cstring& public_id,
         ext::cstring& system_id)
+        -> dom::nodes::document_type*
 {
     // check that the qualified name is valid
     helpers::namespaces::validate(qualified_name);
@@ -45,12 +45,12 @@ dom::other::dom_implementation::create_document_type(
 }
 
 
-dom::nodes::xml_document*
-dom::other::dom_implementation::create_document(
+auto dom::other::dom_implementation::create_document(
         ext::cstring& namespace_,
         ext::cstring& qualified_name,
-        nodes::document_type* document_type) {
-
+        nodes::document_type* document_type)
+        -> dom::nodes::xml_document*
+{
     // create a new non-html document, and set the document element to a created element if a qualified name is given
     auto* document = new nodes::xml_document{};
     auto* document_element = not qualified_name.empty()
@@ -86,8 +86,7 @@ dom::other::dom_implementation::create_document(
 }
 
 
-dom::nodes::document*
-dom::other::dom_implementation::create_html_document(ext::cstring& title)
+auto dom::other::dom_implementation::create_html_document(ext::cstring& title) -> dom::nodes::document*
 {
     // create a new document, and set its type and content type to html
     auto* document = new nodes::document{};
@@ -123,12 +122,11 @@ dom::other::dom_implementation::create_html_document(ext::cstring& title)
 }
 
 
-ext::any
-dom::other::dom_implementation::v8(v8::Isolate* isolate) const
+auto dom::other::dom_implementation::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom_implementation>{isolate}
-            .function("createDocumentType", &dom::other::dom_implementation::create_document_type)
-            .function("createDocument", &dom::other::dom_implementation::create_document)
-            .function("createHTMLDocument", &dom::other::dom_implementation::create_html_document)
+            .function("createDocumentType", &dom_implementation::create_document_type)
+            .function("createDocument", &dom_implementation::create_document)
+            .function("createHTMLDocument", &dom_implementation::create_html_document)
             .auto_wrap_objects();
 }

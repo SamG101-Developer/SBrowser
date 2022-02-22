@@ -28,10 +28,10 @@ dom::ranges::range::range() : abstract_range()
 }
 
 
-void
-dom::ranges::range::set_start(
+auto dom::ranges::range::set_start(
         nodes::node* node,
         unsigned long offset)
+        -> void
 {
     // if the parent exists, set the start node and offset to (node, offset), using the set_start_or_end helper method
     helpers::range_internals::check_parent_exists(node);
@@ -39,9 +39,7 @@ dom::ranges::range::set_start(
 }
 
 
-void
-dom::ranges::range::set_start_before(
-        nodes::node* node)
+auto dom::ranges::range::set_start_before(nodes::node* node) -> void
 {
     // if the parent exists, set the start node and offset to (node, index of the node - so that the range starts before
     // the node), using the set_start_or_end helper method
@@ -50,9 +48,7 @@ dom::ranges::range::set_start_before(
 }
 
 
-void
-dom::ranges::range::set_start_after(
-        nodes::node* node)
+auto dom::ranges::range::set_start_after(nodes::node* node) -> void
 {
     // if the parent exists, set the start node and offset to (node, index of the node + 1 - so that the range starts
     // after the node), using the set_start_or_end helper method
@@ -61,10 +57,10 @@ dom::ranges::range::set_start_after(
 }
 
 
-void
-dom::ranges::range::set_end(
+auto dom::ranges::range::set_end(
         nodes::node* node,
         unsigned long offset)
+        -> void
 {
     // if the parent exists, set the end node and offset to (node, offset), using the set_start_or_end helper method
     helpers::range_internals::check_parent_exists(node);
@@ -72,9 +68,7 @@ dom::ranges::range::set_end(
 }
 
 
-void
-dom::ranges::range::set_end_before(
-        nodes::node* node)
+auto dom::ranges::range::set_end_before(nodes::node* node) -> void
 {
     // if the parent exists, set the end node and offset to (node, index of the node - so that the range starts after
     // the node), using the set_start_or_end helper method
@@ -83,9 +77,7 @@ dom::ranges::range::set_end_before(
 }
 
 
-void
-dom::ranges::range::set_end_after(
-        nodes::node* node)
+auto dom::ranges::range::set_end_after(nodes::node* node) -> void
 {
     // if the parent exists, set the end node and offset to (node, index of the node + 1 - so that the range starts
     // after the node), using the set_start_or_end helper method
@@ -94,9 +86,8 @@ dom::ranges::range::set_end_after(
 }
 
 
-void
-dom::ranges::range::insert_node(
-        nodes::node* node) {
+auto dom::ranges::range::insert_node(nodes::node* node) -> void
+{
 
     // if the start node is a textually based range container, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
@@ -114,7 +105,7 @@ dom::ranges::range::insert_node(
     // at start_offset position in the child_nodes list
     reference_node = start_container_text_node
             ? start_container
-            : start_container->child_nodes->at(start_offset);
+            : start_container->child_nodes->at((size_t)start_offset);
 
     // if the reference node is nullptr, then set the parent to the start node, otherwise the reference_node's parent
     parent = not reference_node
@@ -163,9 +154,7 @@ dom::ranges::range::insert_node(
 }
 
 
-bool
-dom::ranges::range::intersects_node(
-        nodes::node* node)
+auto dom::ranges::range::intersects_node(nodes::node* node) -> bool
 {
     // if this range's root isn't the same root as the node's root, then return false, as they are both in different
     // trees
@@ -194,9 +183,7 @@ dom::ranges::range::intersects_node(
 }
 
 
-void
-dom::ranges::range::select_node(
-        nodes::node* node)
+auto dom::ranges::range::select_node(nodes::node* node) -> void
 {
     // set the parent to the node's parent (if it exists), and the index to the index of the node
     auto* parent = helpers::range_internals::check_parent_exists(node);
@@ -211,9 +198,7 @@ dom::ranges::range::select_node(
 }
 
 
-void
-dom::ranges::range::select_node_contents(
-        nodes::node* node)
+auto dom::ranges::range::select_node_contents(nodes::node* node) -> void
 {
     // if the node is a document fragment, then throw an invalid node type error
     helpers::exceptions::throw_v8_exception(
@@ -230,10 +215,10 @@ dom::ranges::range::select_node_contents(
 }
 
 
-short
-dom::ranges::range::compare_boundary_points(
+auto dom::ranges::range::compare_boundary_points(
         unsigned short how,
         ranges::range* source_range)
+        -> short
 {
     // if how isn't a known value, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -307,10 +292,10 @@ dom::ranges::range::compare_boundary_points(
 }
 
 
-short
-dom::ranges::range::compare_point(
+auto dom::ranges::range::compare_point(
         nodes::node* node,
         unsigned long offset)
+        -> short
 {
     // if this range's root isn't the same root as the node's root, then throw a wrong document error
     helpers::exceptions::throw_v8_exception(
@@ -343,8 +328,7 @@ dom::ranges::range::compare_point(
 }
 
 
-dom::nodes::document_fragment*
-dom::ranges::range::extract_contents()
+auto dom::ranges::range::extract_contents() -> dom::nodes::document_fragment*
 {
     // create a new document fragment, and if the range is collapsed, then return the document fragment as is (empty)
     auto* fragment = new nodes::document_fragment{};
@@ -389,8 +373,7 @@ dom::ranges::range::extract_contents()
 }
 
 
-dom::nodes::document_fragment*
-dom::ranges::range::clone_contents()
+auto dom::ranges::range::clone_contents() -> dom::nodes::document_fragment*
 {
     // create a new document fragment, and if the range is collapsed, then return the document fragment as is (empty)
     auto* fragment = new nodes::document_fragment{};
@@ -403,12 +386,12 @@ dom::ranges::range::clone_contents()
         return helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, end_offset - start_offset, false);
 
     // extract information from this range and the start and end nodes into a set of variables
-    auto [first_partially_contained_child, last_partially_contained_child, contained_children] = helpers::range_internals::get_range_helper_variables(this, start_container, end_container);
+    auto [first_partially_contained_child, last_partially_contained_child, contained_children] = helpers::range_internals::get_range_helpers_variables(this, start_container, end_container);
 
     // if the first partially contained child is a textually based range container, then clone the character data and
     // append it to the fragment, otherwise append the first partially contained child to the fragment
     helpers::range_internals::is_textual_based_range_container(first_partially_contained_child)
-            ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, helpers::trees::length(start_container) - start_offset, false)
+            ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, helpers::trees::length(start_container) - (long)start_offset, false)
             : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, fragment, start_container, first_partially_contained_child, start_offset, helpers::trees::length(first_partially_contained_child));
 
     // for each node stored in the contained children, append them to the fragment sequentially
@@ -426,8 +409,8 @@ dom::ranges::range::clone_contents()
 }
 
 
-dom::nodes::document_fragment*
-dom::ranges::range::delete_contents() { // TODO : check this method against the DOM spec (or add replace_data offset info into comments)
+auto dom::ranges::range::delete_contents() -> dom::nodes::document_fragment*
+{ // TODO : check this method against the DOM spec (or add replace_data offset info into comments)
 
     // return nullptr if the range is collapsed
     if (collapsed)
@@ -474,8 +457,7 @@ dom::ranges::range::delete_contents() { // TODO : check this method against the 
 }
 
 
-dom::nodes::document_fragment*
-dom::ranges::range::surround_contents(nodes::node* new_parent)
+auto dom::ranges::range::surround_contents(nodes::node* new_parent) -> dom::nodes::document_fragment*
 {
     // if there are text node descendants of this range's root that are partially contained, throw an invalid state error
     helpers::exceptions::throw_v8_exception(
@@ -504,8 +486,7 @@ dom::ranges::range::surround_contents(nodes::node* new_parent)
 }
 
 
-void
-dom::ranges::range::collapse(bool to_start)
+auto dom::ranges::range::collapse(bool to_start) -> void
 {
     // if to_start is true, the set the end container to the start container, otherwise the other awayaround
     to_start
@@ -514,8 +495,7 @@ dom::ranges::range::collapse(bool to_start)
 }
 
 
-dom::ranges::range*
-dom::ranges::range::clone_range()
+auto dom::ranges::range::clone_range() -> dom::ranges::range*
 {
     // create a new range with the same nodes and offsets as this node
     auto range_object = new range{};
@@ -529,10 +509,10 @@ dom::ranges::range::clone_range()
 }
 
 
-bool
-dom::ranges::range::is_point_in_range(
+auto dom::ranges::range::is_point_in_range(
         nodes::node* node,
         unsigned long offset)
+        -> bool
 {
     // return false if this range's root isn't the same root as the node's root
     if (m_root != helpers::trees::root(node))
@@ -556,8 +536,7 @@ dom::ranges::range::is_point_in_range(
 }
 
 
-ext::string
-dom::ranges::range::to_json()
+auto dom::ranges::range::to_json() -> ext::string
 {
     // create the output string, and the start and end containers as text nodes
     ext::string s;
@@ -601,37 +580,29 @@ dom::ranges::range::v8(v8::Isolate* isolate) const
     return v8pp::class_<range>{isolate}
             .ctor<>()
             .inherit<abstract_range>()
-
             .static_("START_TO_START", range::START_TO_START)
             .static_("START_TO_END", range::START_TO_END)
             .static_("END_TO_END", range::END_TO_END)
             .static_("END_TO_START", range::END_TO_START)
-
             .function("setStart", &range::set_start)
             .function("setStartAfter", &range::set_start_after)
             .function("setStartBefore", &range::set_start_before)
-
             .function("setEnd", &range::set_end)
             .function("setEndAfter", &range::set_end_after)
             .function("setEndBefore", &range::set_end_before)
-
             .function("insertNode", &range::insert_node)
             .function("intersectsNode", &range::intersects_node)
             .function("selectNode", &range::select_node)
             .function("selectNodeContents", &range::select_node_contents)
-
             .function("compareBoundaryPoints", &range::compare_boundary_points)
             .function("comparePoint", &range::compare_point)
-
             .function("extractContents", &range::extract_contents)
             .function("cloneContents", &range::clone_contents)
             .function("deleteContents", &range::delete_contents)
             .function("surroundContents", &range::surround_contents)
-
             .function("collapse", &range::collapse)
             .function("cloneRange", &range::clone_range)
             .function("isPointInRange", &range::is_point_in_range)
-
             .function("toJSON", &range::to_json)
             .var("commonAncestorContainer", &range::common_ancestor_container)
             .auto_wrap_objects();

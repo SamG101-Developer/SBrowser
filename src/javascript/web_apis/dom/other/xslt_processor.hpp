@@ -3,7 +3,6 @@
 #define SBROWSER_XSLT_PROCESSOR_HPP
 
 #include <ext/macros/decorators.hpp>
-
 #include <dom_object.hpp>
 
 namespace dom {
@@ -21,19 +20,19 @@ public: constructors
     xslt_processor();
 
 public: methods
-    void import_stylesheet(nodes::node* style);
+    auto import_stylesheet(nodes::node* style) -> void;
 
-    nodes::document_fragment* transform_to_fragment(nodes::node* source, nodes::document* output);
-    nodes::document* transform_to_document(nodes::node* source);
+    auto transform_to_fragment(nodes::node* source, nodes::document* output) -> nodes::document_fragment*;
+    auto transform_to_document(nodes::node* source) -> nodes::document*;
 
-    void set_parameter(ext::cstring& namespace_uri, ext::cstring& local_name, ext::any value);
-    ext::any get_parameter(ext::cstring& namespace_uri, ext::cstring& local_name);
-    void remove_parameter(ext::cstring& namespace_uri, ext::cstring& local_name);
-    void clear_parameters();
-    void reset();
+    auto set_parameter(ext::cstring& namespace_uri, ext::cstring& local_name, ext::any value) -> void;
+    auto get_parameter(ext::cstring& namespace_uri, ext::cstring& local_name) -> ext::any;
+    auto remove_parameter(ext::cstring& namespace_uri, ext::cstring& local_name) -> void;
+    auto clear_parameters() -> void;
+    auto reset() -> void;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

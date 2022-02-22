@@ -30,7 +30,7 @@ public: properties
     ext::dom_property<v8_custom_error_t, _F> type;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

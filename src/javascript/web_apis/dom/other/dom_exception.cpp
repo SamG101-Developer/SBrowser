@@ -13,14 +13,12 @@ dom::other::dom_exception::dom_exception(
 }
 
 
-ext::any
-dom::other::dom_exception::v8(v8::Isolate* isolate) const
+auto dom::other::dom_exception::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom_exception>{isolate}
             .ctor<ext::cstring&, v8_custom_error_t>()
             .var("message", &dom::other::dom_exception::message)
             .var("type", &dom::other::dom_exception::type)
-
             .static_("INDEX_SIZE_ERR", v8_custom_error_t::INDEX_SIZE_ERR)
             .static_("DOMSTRING_SIZE_ERR", v8_custom_error_t::DOMSTRING_SIZE_ERR)
             .static_("HIERARCHY_REQUEST_ERR", v8_custom_error_t::HIERARCHY_REQUEST_ERR)
@@ -56,6 +54,5 @@ dom::other::dom_exception::v8(v8::Isolate* isolate) const
             .static_("VERSION_ERR", v8_custom_error_t::VERSION_ERR)
             .static_("OPERATION_ERR", v8_custom_error_t::OPERATION_ERR)
             .static_("NOT_ALLOWED_ERR", v8_custom_error_t::NOT_ALLOWED_ERR)
-
             .auto_wrap_objects();
 }

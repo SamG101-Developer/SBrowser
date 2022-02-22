@@ -9,7 +9,12 @@
 
 namespace dom {
     namespace other {class dom_implementation;}
-    namespace nodes {class document_type; class document; class xml_document;}
+    namespace nodes
+    {
+        class document_type;
+        class document;
+        class xml_document;
+    }
 }
 
 
@@ -19,12 +24,12 @@ public: constructors
     ~dom_implementation() override;
 
 public: methods
-    nodes::document_type* create_document_type(ext::cstring& qualified_name, ext::cstring& public_id, ext::cstring& system_id);
-    nodes::xml_document* create_document(ext::cstring& namespace_, ext::cstring& qualified_name, nodes::document_type* document_type = nullptr);
-    nodes::document* create_html_document(ext::cstring& title = "");
+    auto create_document_type(ext::cstring& qualified_name, ext::cstring& public_id, ext::cstring& system_id) -> nodes::document_type*;
+    auto create_document(ext::cstring& namespace_, ext::cstring& qualified_name, nodes::document_type* document_type = nullptr) -> nodes::xml_document*;
+    auto create_html_document(ext::cstring& title = "") -> nodes::document*;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: internal_properties
     nodes::document* m_associated_document;

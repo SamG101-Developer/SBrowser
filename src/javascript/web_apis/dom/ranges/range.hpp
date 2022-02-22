@@ -28,48 +28,48 @@ public: static_constants
 
 public: methods
     // dom
-    void set_start(nodes::node* node, unsigned long offset);
-    void set_start_before(nodes::node* node);
-    void set_start_after(nodes::node* node);
+    auto set_start(nodes::node* node, unsigned long offset) -> void;
+    auto set_start_before(nodes::node* node) -> void;
+    auto set_start_after(nodes::node* node) -> void;
 
-    void set_end(nodes::node* node, unsigned long offset);
-    void set_end_before(nodes::node* node);
-    void set_end_after(nodes::node* node);
+    auto set_end(nodes::node* node, unsigned long offset) -> void;
+    auto set_end_before(nodes::node* node) -> void;
+    auto set_end_after(nodes::node* node) -> void;
 
-    void insert_node(nodes::node* node);
-    bool intersects_node(nodes::node* node);
-    void select_node(nodes::node* node);
-    void select_node_contents(nodes::node* node);
+    auto insert_node(nodes::node* node) -> void;
+    auto intersects_node(nodes::node* node) -> bool;
+    auto select_node(nodes::node* node) -> void;
+    auto select_node_contents(nodes::node* node) -> void;
 
-    short compare_boundary_points(unsigned short how, ranges::range* source_range);
-    short compare_point(nodes::node* node, unsigned long offset);
+    auto compare_boundary_points(unsigned short how, ranges::range* source_range) -> short;
+    auto compare_point(nodes::node* node, unsigned long offset) -> short;
 
-    nodes::document_fragment* extract_contents();
-    nodes::document_fragment* clone_contents();
-    nodes::document_fragment* delete_contents();
-    nodes::document_fragment* surround_contents(nodes::node* new_parent);
+    auto extract_contents() -> nodes::document_fragment*;
+    auto clone_contents() -> nodes::document_fragment*;
+    auto delete_contents() -> nodes::document_fragment*;
+    auto surround_contents(nodes::node* new_parent) -> nodes::document_fragment*;
 
-    void collapse(bool to_start = false);
-    ranges::range* clone_range();
-    bool is_point_in_range(nodes::node* node, unsigned long offset);
+    auto collapse(bool to_start = false) -> void;
+    auto clone_range() -> ranges::range*;
+    auto is_point_in_range(nodes::node* node, unsigned long offset) -> bool;
 
-    ext::string to_json();
+    auto to_json() -> ext::string;
 
     // cssom-view TODO into cssom-view mixin?
-    ext::vector<geometry::shapes::dom_rect> get_client_rects();
-    geometry::shapes::dom_rect get_bounding_client_rect();
+    // ext::vector<geometry::shapes::dom_rect> get_client_rects();
+    // geometry::shapes::dom_rect get_bounding_client_rect();
 
 public properties:
     ext::dom_property<nodes::node*, _F> common_ancestor_container;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: internal_properties
     nodes::node* m_root;
 
 private accessors:
-    nodes::node* get_common_ancestor_container() const;
+    auto get_common_ancestor_container() const -> nodes::node*;
 };
 
 

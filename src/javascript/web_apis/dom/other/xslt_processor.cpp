@@ -6,8 +6,7 @@ dom::other::xslt_processor::xslt_processor() : dom_object()
 }
 
 
-ext::any
-dom::other::xslt_processor::v8(v8::Isolate* isolate) const
+auto dom::other::xslt_processor::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<xslt_processor>{isolate}
             .ctor<>()
