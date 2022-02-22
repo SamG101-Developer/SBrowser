@@ -323,10 +323,3 @@ auto dom::helpers::custom_elements::is_custom_node(const nodes::element* element
 }
 
 
-auto dom::helpers::custom_elements::element_interface(
-        ext::cstring& local_name,
-        ext::cstring& namespace_)
-        -> dom::nodes::element*
-{
-    return new nodes::element{}; // TODO types
-}

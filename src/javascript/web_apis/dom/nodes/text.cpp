@@ -27,24 +27,21 @@ dom::nodes::text::text(ext::cstring& new_data)
 }
 
 
-dom::nodes::text*
-dom::nodes::text::split_text(unsigned long offset)
+auto dom::nodes::text::split_text(unsigned long offset) -> text*
 {
     // return the split helper method output by splitting this text node at offset position
     return helpers::texts::split(this, offset);
 }
 
 
-QLabel*
-dom::nodes::text::render()
+auto dom::nodes::text::render() const -> QLabel*
 {
     // cast the QWidget to a QLabel
     return qobject_cast<QLabel*>(m_rendered_widget);
 }
 
 
-INLINE ext::string
-dom::nodes::text::get_whole_text() const
+auto dom::nodes::text::get_whole_text() const -> ext::string
 {
     // join the text from contiguous text nodes
     return helpers::trees::contiguous_text_nodes(this)
@@ -53,7 +50,7 @@ dom::nodes::text::get_whole_text() const
 }
 
 
-INLINE void dom::nodes::text::set_data(ext::cstring& val)
+auto dom::nodes::text::set_data(ext::cstring& val) -> void
 {
     // set the data and update the label to show the new text
     data << val;
@@ -63,12 +60,12 @@ INLINE void dom::nodes::text::set_data(ext::cstring& val)
 
 auto dom::nodes::text::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::nodes::text>{isolate}
+    return v8pp::class_<text>{isolate}
             .ctor<>()
             .ctor<ext::cstring&>()
-            .inherit<dom::nodes::character_data>()
-            .inherit<dom::mixins::slottable<dom::nodes::text>>()
-            .function("splitText", &dom::nodes::text::split_text)
-            .var("wholeText", &dom::nodes::text::whole_text, true)
+            .inherit<character_data>()
+            .inherit<mixins::slottable<text>>()
+            .function("splitText", &text::split_text)
+            .var("wholeText", &text::whole_text, true)
             .auto_wrap_objects();
 }

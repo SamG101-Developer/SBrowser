@@ -23,6 +23,8 @@ namespace ext {
     template <class ...args> using are_strings = std::conjunction<std::is_same<ext::string, args>...>;
     template <class ...args> using are_strings_v = typename are_strings<args...>::value;
     template <class ...args> string concatenate_strings(args&&... strings);
+
+    using string_vector = ext::vector<ext::string>;
 }
 
 
@@ -36,8 +38,10 @@ class ext::string : public ext::iterable<char, std::string> {
 public: constructors
     string() = default;
     string(const string&) = default;
-    string(string&&) noexcept = default;
     string(const char* other) {m_iterable = other;}
+    string(const std::string& other) {m_iterable = other;}
+    string(const QString& other) {m_iterable = other.toStdString();}
+    string(v8::Local<v8::String> other) {m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});}
 
     auto operator=(const string&) -> string& = default;
     auto operator=(const char* other) -> string&;

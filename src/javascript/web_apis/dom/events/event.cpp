@@ -138,17 +138,14 @@ auto dom::events::event::v8(v8::Isolate* isolate) const -> ext::any
     return v8pp::class_<event>{isolate}
             .ctor<ext::cstring&, ext::cstring_any_map&>()
             .inherit<dom_object>()
-
             .static_("NONE", event::NONE)
             .static_("CAPTURING_PHASE", event::CAPTURING_PHASE)
             .static_("AT_TARGET", event::AT_TARGET)
             .static_("BUBBLING_PHASE", event::BUBBLING_PHASE)
-
             .function("stopImmediatePropagation", &event::stop_immediate_propagation)
             .function("stopPropagation", &event::stop_propagation)
             .function("preventDefault", &event::prevent_default)
             .function("composedPath", &event::composed_path)
-
             .var("type", &event::type)
             .var("bubbles", &event::bubbles)
             .var("cancelable", &event::cancelable)
@@ -161,6 +158,5 @@ auto dom::events::event::v8(v8::Isolate* isolate) const -> ext::any
             .var("isTrusted", &event::is_trusted)
             .var("touchTargets", &event::touch_targets)
             .var("path", &event::path)
-
             .auto_wrap_objects();
 }

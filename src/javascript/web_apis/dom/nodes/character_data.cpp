@@ -99,18 +99,18 @@ auto dom::nodes::character_data::set_text_content(ext::cstring& val) -> void
 
 auto dom::nodes::character_data::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::nodes::character_data>{isolate}
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
-            .inherit<dom::mixins::non_document_type_child_node<dom::nodes::character_data>>()
+    return v8pp::class_<character_data>{isolate}
+            .inherit<node>()
+            .inherit<dom::mixins::child_node<character_data>>()
+            .inherit<dom::mixins::non_document_type_child_node<character_data>>()
 
-            .function("substringData", &dom::nodes::character_data::substring_data)
-            .function("appendData", &dom::nodes::character_data::append_data)
-            .function("insertData", &dom::nodes::character_data::insert_data)
-            .function("replaceData", &dom::nodes::character_data::replace_data)
-            .function("deleteData", &dom::nodes::character_data::delete_data)
-            .var("data", &dom::nodes::character_data::data)
-            .var("length", &dom::nodes::character_data::length, true)
+            .function("substringData", &character_data::substring_data)
+            .function("appendData", &character_data::append_data)
+            .function("insertData", &character_data::insert_data)
+            .function("replaceData", &character_data::replace_data)
+            .function("deleteData", &character_data::delete_data)
+            .var("data", &character_data::data)
+            .var("length", &character_data::length, true)
             .auto_wrap_objects();
 }
 

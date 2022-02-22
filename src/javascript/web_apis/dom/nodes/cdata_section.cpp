@@ -11,7 +11,7 @@ dom::nodes::cdata_section::cdata_section() : text()
 
 auto dom::nodes::cdata_section::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::nodes::cdata_section>{isolate}
-            .inherit<dom::nodes::text>()
+    return v8pp::class_<cdata_section>{isolate}
+            .inherit<text>()
             .auto_wrap_objects();
 }

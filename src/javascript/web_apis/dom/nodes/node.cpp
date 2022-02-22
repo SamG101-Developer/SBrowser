@@ -443,7 +443,7 @@ auto dom::nodes::node::set_parent_node(node* val) -> void
 auto dom::nodes::node::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<node>{isolate}
-            .inherit<dom::nodes::event_target>()
+            .inherit<event_target>()
             .static_("DOCUMENT_POSITION_DISCONNECTED", node::DOCUMENT_POSITION_DISCONNECTED)
             .static_("DOCUMENT_POSITION_PRECEDING", node::DOCUMENT_POSITION_PRECEDING)
             .static_("DOCUMENT_POSITION_FOLLOWING", node::DOCUMENT_POSITION_FOLLOWING)

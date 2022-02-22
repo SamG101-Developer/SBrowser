@@ -32,9 +32,9 @@ auto dom::nodes::document_fragment::set_text_content(ext::cstring& val) -> void
 
 auto dom::nodes::document_fragment::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::nodes::document_fragment>{isolate}
+    return v8pp::class_<document_fragment>{isolate}
             .ctor<>()
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::non_element_parent_node<dom::nodes::document_fragment>>()
+            .inherit<node>()
+            .inherit<mixins::non_element_parent_node<document_fragment>>()
             .auto_wrap_objects();
 }

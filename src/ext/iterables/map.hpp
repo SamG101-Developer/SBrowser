@@ -32,6 +32,8 @@ public: methods
     auto has_key(const K& key) -> bool;
 
     template <typename U> auto cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
+    template <typename F> auto filter_keys(F&& function) -> ext::vector<K>;
+    template <typename F> auto filter_values(F&& function) -> ext::vector<V>;
 
 public: operators
     auto operator==(ext::cmap<K, V>& o) -> bool;
@@ -84,6 +86,42 @@ auto ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext
 
     // return the cast map
     return copy;
+}
+
+
+template <typename K, typename V>
+template <typename F>
+auto ext::map<K, V>::filter_keys(F&& function) -> ext::vector<K>
+{
+    // create the empty keys list
+    ext::vector<K> filtered_keys;
+
+    // filter the keys into a list
+    for (auto [key, val]: this->m_iterable)
+    {
+        if (function(key)) filtered_keys.append(key);
+    }
+
+    // return the filtered keys
+    return filtered_keys;
+}
+
+
+template <typename K, typename V>
+template <typename F>
+auto ext::map<K, V>::filter_values(F&& function) -> ext::vector<V>
+{
+    // create the empty values list
+    ext::vector<V> filtered_values;
+
+    // filter the values into a list
+    for (auto [key, val]: this->m_iterable)
+    {
+        if (function) filtered_values.append(val);
+    }
+
+    // return the filtered keys
+    return filtered_values;
 }
 
 

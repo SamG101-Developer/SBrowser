@@ -76,8 +76,8 @@ auto dom::nodes::event_target::v8(v8::Isolate* isolate) const -> ext::any
     return v8pp::class_<event_target>{isolate}
             .ctor<>()
             .inherit<dom_object>()
-            .function("addEventListener", &dom::nodes::event_target::add_event_listener)
-            .function("removeEventListener", &dom::nodes::event_target::remove_event_listener)
-            .function("dispatchEvent", &dom::nodes::event_target::dispatch_event)
+            .function("addEventListener", &event_target::add_event_listener)
+            .function("removeEventListener", &event_target::remove_event_listener)
+            .function("dispatchEvent", &event_target::dispatch_event)
             .auto_wrap_objects();
 }

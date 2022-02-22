@@ -14,9 +14,9 @@ dom::nodes::comment::comment(ext::cstring& new_data) : character_data()
 
 auto dom::nodes::comment::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::nodes::comment>{isolate}
+    return v8pp::class_<comment>{isolate}
             .ctor<>()
             .ctor<ext::cstring&>()
-            .inherit<dom::nodes::character_data>()
+            .inherit<character_data>()
             .auto_wrap_objects();
 }

@@ -41,7 +41,6 @@ public: friends
 
 public: constructors
     property();
-    property(T val);
     property(const property<T>&) = default;
     property(property<T>&&) noexcept = default;
     property<T>& operator=(const property<T>& o);
@@ -122,14 +121,6 @@ ext::property<T>::property()
     del = [this]()      -> void {};
     get = [this]()      -> T {return m_internal;};
     set = [this](T val) -> void {m_internal = val;};
-}
-
-
-template <typename T>
-FAST INLINE ext::property<T>::property(T val) : property()
-{
-    // set the internal value directly as the initialization value
-    m_internal = val;
 }
 
 

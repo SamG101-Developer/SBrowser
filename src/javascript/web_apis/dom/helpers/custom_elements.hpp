@@ -25,7 +25,6 @@ struct dom::helpers::custom_elements {
     static auto upgrade_element(internal::custom_element_definition* definition, const nodes::element* element) -> void;
     static auto try_to_upgrade_element(const nodes::element* element) -> void;
     static auto lookup_custom_element_definition(const nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& is) -> internal::custom_element_definition*;
-    static auto element_interface(ext::cstring& local_name, ext::cstring& namespace_) -> nodes::element*;
 
     static auto enqueue_element_on_appropriate_element_queue(const nodes::element* element) -> void;
     static auto enqueue_custom_element_callback_reaction(const nodes::element* element, ext::cstring& callback_name, ext::vector<ext::string>&& args) -> void;

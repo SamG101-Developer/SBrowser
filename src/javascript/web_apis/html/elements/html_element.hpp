@@ -2,9 +2,8 @@
 #ifndef SBROWSER_HTML_ELEMENT_HPP
 #define SBROWSER_HTML_ELEMENT_HPP
 
-#include <ext/properties/html_property.hpp>
-
 #include <dom/nodes/element.hpp>
+
 
 namespace html {
     namespace elements {class html_element;}
@@ -14,8 +13,8 @@ namespace html {
 
 class html::elements::html_element
         : public dom::nodes::element {
-//        , mixins::html_or_svg_element
-//        , mixins::element_content_editable {
+        // , mixins::html_or_svg_element
+        // , mixins::element_content_editable {
 
 public: constructors
     html_element();
@@ -26,41 +25,49 @@ public: methods
 
 public:
     // html
-    ext::dom_property<ext::string> title;
-    ext::dom_property<ext::string> lang;
-    ext::dom_property<ext::string> dir;
-    ext::dom_property<ext::string> translate;
+    ext::dom_property<ext::string, _T> title;
+    ext::dom_property<ext::string, _T> lang;
+    ext::dom_property<ext::string, _T> translate;
+    ext::dom_property<ext::string, _T> dir;
 
-    ext::dom_property<ext::string> accessKeyLabel;
-    ext::dom_property<ext::string> accessKey{true};
-    ext::dom_property<ext::string> autocapitalize{true};
-    ext::dom_property<ext::string> innerText{true};
-    ext::dom_property<ext::string> outerText{true};
+    ext::dom_property<ext::string, _F> accessKeyLabel;
+    ext::dom_property<ext::string, _T> accessKey;
+    ext::dom_property<ext::string, _T> autocapitalize;
+    ext::dom_property<ext::string, _T> innerText;
+    ext::dom_property<ext::string, _T> outerText;
 
-    ext::dom_property<bool> hidden{true};
-    ext::dom_property<bool> draggable{true};
-    ext::dom_property<bool> spellcheck{true};
+    ext::dom_property<bool, _T> hidden;
+    ext::dom_property<bool, _T> draggable;
+    ext::dom_property<bool, _T> spellcheck;
 
     // cssom-view
-    ext::dom_property<element*> offsetParent;
-    ext::dom_property<long> offsetTop;
-    ext::dom_property<long> offsetLeft;
-    ext::dom_property<long> offsetWidth;
-    ext::dom_property<long> offsetHeight;
+    ext::dom_property<element*, _F> offsetParent;
+    ext::dom_property<long, _F> offsetTop;
+    ext::dom_property<long, _F> offsetLeft;
+    ext::dom_property<long, _F> offsetWidth;
+    ext::dom_property<long, _F> offsetHeight;
+
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: accessors
     // html
-    ext::string get_inner_text() const;
-    ext::string get_outer_text() const;
+    auto get_inner_text() const -> ext::string;
+    auto get_outer_text() const -> ext::string;
 
-    void set_inner_text(ext::cstring& val);
-    void set_outer_text(ext::cstring& val);
+    auto set_inner_text(ext::cstring& val) -> void;
+    auto set_outer_text(ext::cstring& val) -> void;
 
     // cssom-view
-    long get_offset_top() const;
-    long get_offset_left() const;
-    long get_offset_width() const;
-    long get_offset_height() const;
+    auto get_offset_top() const -> long;
+    auto get_offset_left() const -> long;
+    auto get_offset_width() const -> long;
+    auto get_offset_height() const -> long;
+
+    auto set_offset_top(long val) -> void;
+    auto set_offset_left(long val) -> void;
+    auto set_offset_width(long val) -> void;
+    auto set_offset_height(long val) -> void;
 };
 
 

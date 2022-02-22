@@ -28,8 +28,8 @@ auto dom::mixins::slottable<T>::get_assigned_slot() const -> html::elements::htm
 template <typename T>
 auto dom::mixins::slottable<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::mixins::slottable<dom::nodes::node>>{isolate}
-            .var("assignedSlot", &dom::mixins::slottable<dom::nodes::node>::assigned_slot)
+    return v8pp::class_<slottable<dom::nodes::node>>{isolate}
+            .var("assignedSlot", &slottable<dom::nodes::node>::assigned_slot)
             .auto_wrap_objects();
 }
 

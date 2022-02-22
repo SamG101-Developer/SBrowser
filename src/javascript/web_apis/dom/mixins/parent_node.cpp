@@ -103,17 +103,17 @@ auto dom::mixins::parent_node<T>::get_child_element_count() const -> size_t
 template <typename T>
 auto dom::mixins::parent_node<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::mixins::parent_node<dom::nodes::node>>{isolate}
-            .function("prepend", &dom::mixins::parent_node<T>::prepend)
-            .function("append", &dom::mixins::parent_node<T>::append)
-            .function("replaceChildren", &dom::mixins::parent_node<dom::nodes::node>::replace_children)
-            .function("querySelector", &dom::mixins::parent_node<dom::nodes::node>::query_selector)
-            .function("querySelectorAll", &dom::mixins::parent_node<dom::nodes::node>::query_selector_all)
+    return v8pp::class_<parent_node<dom::nodes::node>>{isolate}
+            .function("prepend", &parent_node<T>::prepend)
+            .function("append", &parent_node<T>::append)
+            .function("replaceChildren", &parent_node<dom::nodes::node>::replace_children)
+            .function("querySelector", &parent_node<dom::nodes::node>::query_selector)
+            .function("querySelectorAll", &parent_node<dom::nodes::node>::query_selector_all)
 
-            .var("children", &dom::mixins::parent_node<dom::nodes::node>::children)
-            .var("firstElementChild", &dom::mixins::parent_node<dom::nodes::node>::first_element_child)
-            .var("lastElementChild", &dom::mixins::parent_node<dom::nodes::node>::last_element_child)
-            .var("childElementCount", &dom::mixins::parent_node<dom::nodes::node>::child_element_count)
+            .var("children", &parent_node<dom::nodes::node>::children)
+            .var("firstElementChild", &parent_node<dom::nodes::node>::first_element_child)
+            .var("lastElementChild", &parent_node<dom::nodes::node>::last_element_child)
+            .var("childElementCount", &parent_node<dom::nodes::node>::child_element_count)
             .auto_wrap_objects();
 }
 

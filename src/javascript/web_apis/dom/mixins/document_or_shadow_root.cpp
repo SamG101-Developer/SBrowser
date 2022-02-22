@@ -7,10 +7,10 @@
 template <typename T>
 auto dom::mixins::document_or_shadow_root<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::mixins::document_or_shadow_root<dom::nodes::node>>{isolate}
-            .var("activeElement", &dom::mixins::document_or_shadow_root<dom::nodes::node>::active_element)
-            .var("styleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::style_sheets)
-            .var("adoptedStyleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::adopted_style_sheets)
+    return v8pp::class_<document_or_shadow_root<T>>{isolate}
+            .var("activeElement", &document_or_shadow_root<T>::active_element)
+            .var("styleSheets", &document_or_shadow_root<T>::style_sheets)
+            .var("adoptedStyleSheets", &document_or_shadow_root<T>::adopted_style_sheets)
             .auto_wrap_objects();
 }
 

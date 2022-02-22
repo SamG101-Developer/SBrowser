@@ -20,8 +20,8 @@ auto dom::mixins::non_element_parent_node<T>::get_element_by_id(ext::cstring& el
 template <typename T>
 auto dom::mixins::non_element_parent_node<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::mixins::non_element_parent_node<dom::nodes::node>>{isolate}
-            .function("getElementById", &dom::mixins::non_element_parent_node<dom::nodes::node>::get_element_by_id)
+    return v8pp::class_<non_element_parent_node<dom::nodes::node>>{isolate}
+            .function("getElementById", &non_element_parent_node<dom::nodes::node>::get_element_by_id)
             .auto_wrap_objects();
 }
 

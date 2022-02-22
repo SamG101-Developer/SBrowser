@@ -254,7 +254,7 @@ auto dom::nodes::element::attach_shadow(ext::cstring_any_map& options) -> dom::n
 
     // if the local name is unknown, or not a known custom element, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
-            local_name + " element is incompatible with shadow root attachment",
+            local_name + ext::string{" element is incompatible with shadow root attachment"},
             NOT_SUPPORTED_ERR,
             [this] {return not m_shadow_attachable_local_names.contains(local_name) or not helpers::custom_elements::is_valid_custom_element_name(local_name);});
 
@@ -376,10 +376,10 @@ ext::any dom::nodes::element::v8(v8::Isolate* isolate) const
 {
     return v8pp::class_<element>{isolate}
             .inherit<node>()
-            .inherit<dom::mixins::child_node<element>>()
-            .inherit<dom::mixins::document_or_element_node<element>>()
-            .inherit<dom::mixins::non_document_type_child_node<element>>()
-            .inherit<dom::mixins::slottable<element>>()
+            .inherit<mixins::child_node<element>>()
+            .inherit<mixins::document_or_element_node<element>>()
+            .inherit<mixins::non_document_type_child_node<element>>()
+            .inherit<mixins::slottable<element>>()
 
             .function("hasAttributes", &element::has_attributes)
             .function("getAttributeNames", &element::get_attribute_names)

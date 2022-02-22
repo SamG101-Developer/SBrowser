@@ -34,8 +34,8 @@ namespace css {
 
 class dom::nodes::window
         : public event_target
-//        , public html::mixins::window_or_worker_global_scope
-//        , public css::cssom_view::mixins::scrollable
+        // , public html::mixins::window_or_worker_global_scope
+        // , public css::cssom_view::mixins::scrollable
         , public ext::listlike<ext::string> {
 
 public constructors:
@@ -43,33 +43,32 @@ public constructors:
 
 public methods:
     // current browsing context
-    void close();
-    void stop();
-    void focus();
+    auto close() -> void;
+    auto stop() -> void;
+    auto focus() -> void;
 
-    window_proxy* open(ext::cstring& url = "", ext::cstring& target = "", ext::cstring& features="");
+    auto open(ext::cstring& url = "", ext::cstring& target = "", ext::cstring& features="") -> window_proxy*;
 
     // user prompts
-    void print();
-    void alert(ext::cstring& message = "");
-    void confirm(ext::cstring& message = "");
-    ext::string prompt(ext::cstring& message="", ext::cstring& default_ = "");
-    void post_message(ext::string message, ext::cstring_any_map& options = {});
+    auto print() -> void;
+    auto alert(ext::cstring& message = "") -> void;
+    auto confirm(ext::cstring& message = "") -> void;
+    auto prompt(ext::cstring& message="", ext::cstring& default_ = "") -> ext::string;
+    auto post_message(ext::string message, ext::cstring_any_map& options = {}) -> void;
 
 public: methods
-    new_obj css::cssom::other::css_style_declaration* get_computed_style(element* elem, ext::cstring& pseudo_element);
-
+    new_obj auto get_computed_style(element* elem, ext::cstring& pseudo_element) -> css::cssom::other::css_style_declaration*;
 
 public: methods
     // spatial navigation
-    void navigate(ext::cstring& direction);
+    auto navigate(ext::cstring& direction) -> void;
 
 public: methods
     // cssom-view browsing context
-    void move_to(long x, long y);
-    void move_by(long x, long y);
-    void resize_to(long width, long height);
-    void resize_by(long width, long height);
+    auto move_to(long x, long y) -> void;
+    auto move_by(long x, long y) -> void;
+    auto resize_to(long width, long height) -> void;
+    auto resize_by(long width, long height) -> void;
 
 public: properties
     // current browsing context
@@ -128,18 +127,18 @@ public: properties
     ext::dom_property<css::cssom_view::other::screen*, _F> screen;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: accessors
-    long get_inner_width();
-    long get_inner_height();
-    long get_outer_width();
-    long get_outer_height();
+    auto get_inner_width() -> long;
+    auto get_inner_height() -> long;
+    auto get_outer_width() -> long;
+    auto get_outer_height() -> long;
 
-    double get_scroll_x();
-    double get_scroll_y();
-    double get_page_x_offset();
-    double get_page_y_offset();
+    auto get_scroll_x() -> double;
+    auto get_scroll_y() -> double;
+    auto get_page_x_offset() -> double;
+    auto get_page_y_offset() -> double;
 };
 
 

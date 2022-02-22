@@ -41,10 +41,10 @@ dom::mixins::document_or_element_node<T>::get_elements_by_class_name(ext::cstrin
 template <typename T>
 auto dom::mixins::document_or_element_node<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::mixins::document_or_element_node<dom::nodes::node>>{isolate}
-            .function("getElementsByTagName", &dom::mixins::document_or_element_node<T>::get_elements_by_tag_name)
-            .function("getElementsByTagNameNS", &dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns)
-            .function("getElementsByClassName", &dom::mixins::document_or_element_node<T>::get_elements_by_class_name)
+    return v8pp::class_<document_or_element_node<dom::nodes::node>>{isolate}
+            .function("getElementsByTagName", &document_or_element_node<T>::get_elements_by_tag_name)
+            .function("getElementsByTagNameNS", &document_or_element_node<T>::get_elements_by_tag_name_ns)
+            .function("getElementsByClassName", &document_or_element_node<T>::get_elements_by_class_name)
             .auto_wrap_objects();
 
 }

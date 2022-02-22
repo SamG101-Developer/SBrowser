@@ -14,11 +14,11 @@ dom::nodes::document_type::document_type()
 
 auto dom::nodes::document_type::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<dom::nodes::document_type>{isolate}
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::document_type>>()
-            .var("name", &dom::nodes::document_type::name)
-            .var("publicId", &dom::nodes::document_type::public_id)
-            .var("systemId", &dom::nodes::document_type::system_id)
+    return v8pp::class_<document_type>{isolate}
+            .inherit<node>()
+            .inherit<mixins::child_node<document_type>>()
+            .var("name", &document_type::name)
+            .var("publicId", &document_type::public_id)
+            .var("systemId", &document_type::system_id)
             .auto_wrap_objects();
 }

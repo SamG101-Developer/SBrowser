@@ -18,18 +18,18 @@ public constructors:
     text(ext::cstring& new_data = "");
 
 public methods:
-    text* split_text(unsigned long offset);
+    auto split_text(unsigned long offset) -> text*;
 
 public properties:
     ext::dom_property<ext::string, _F> whole_text;
 
 public internal_methods:
-    QLabel* render() override;
+    auto render() const -> QLabel* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private accessors:
-    ext::string get_whole_text() const;
-    void set_data(ext::cstring& val);
+    auto get_whole_text() const -> ext::string;
+    auto set_data(ext::cstring& val) -> void;
 };
 
 
