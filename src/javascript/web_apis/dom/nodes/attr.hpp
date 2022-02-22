@@ -22,17 +22,20 @@ public properties:
     ext::dom_property<ext::string, _F> value;
     ext::dom_property<element*, _F> owner_element;
 
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
+
 protected internal_properties:
     ext::property<ext::string> m_qualified_name;
 
 private accessors:
-    ext::string get_node_value() const override;
-    ext::string get_text_content() const override;
-    ext::string get_m_qualified_name() const;
+    auto get_node_value() const -> ext::string override;
+    auto get_text_content() const -> ext::string override;
+    auto get_m_qualified_name() const -> ext::string;
 
-    void set_node_value(ext::cstring& val) override;
-    void set_text_content(ext::cstring& val) override;
-    void set_value(ext::cstring& val);
+    auto set_node_value(ext::cstring& val) -> void override;
+    auto set_text_content(ext::cstring& val) -> void override;
+    auto set_value(ext::cstring& val) -> void;
 };
 
 

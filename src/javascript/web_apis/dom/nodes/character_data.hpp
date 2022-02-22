@@ -19,23 +19,26 @@ public constructors:
     character_data();
 
 public methods:
-    ext::string substring_data(unsigned long offset, unsigned long count) const;
-    void append_data(ext::cstring& new_data);
-    void insert_data(unsigned long offset, ext::cstring& new_data);
-    void delete_data(unsigned long offset, unsigned long count);
-    void replace_data(unsigned long offset, unsigned long count, ext::cstring& new_data);
+    auto substring_data(unsigned long offset, unsigned long count) const -> ext::string;
+    auto append_data(ext::cstring& new_data) -> void;
+    auto insert_data(unsigned long offset, ext::cstring& new_data) -> void;
+    auto delete_data(unsigned long offset, unsigned long count) -> void;
+    auto replace_data(unsigned long offset, unsigned long count, ext::cstring& new_data) -> void;
 
 public properties:
     ext::dom_property<ext::string, _F> data;
     ext::dom_property<unsigned long, _F> length;
 
-private accessors:
-    ext::string get_node_value() const override;
-    ext::string get_text_content() const override;
-    unsigned long get_length() const;
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-    void set_node_value(ext::cstring& val) override;
-    void set_text_content(ext::cstring& val) override;
+private accessors:
+    auto get_node_value() const -> ext::string override;
+    auto get_text_content() const -> ext::string override;
+    auto get_length() const -> unsigned long;
+
+    auto set_node_value(ext::cstring& val) -> void override;
+    auto set_text_content(ext::cstring& val) -> void override;
 };
 
 

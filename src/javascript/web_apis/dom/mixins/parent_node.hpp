@@ -4,10 +4,13 @@
 
 #include <ext/iterables/vector.hpp>
 #include <ext/properties/dom_property.hpp>
+#include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace mixins {template <typename T> class parent_node;}
-    namespace nodes {
+    namespace nodes
+    {
         class element;
         class node;
     }
@@ -15,29 +18,32 @@ namespace dom {
 
 
 template <typename T>
-class dom::mixins::parent_node {
+class dom::mixins::parent_node : virtual public dom_object {
 public: constructors
     parent_node();
 
 public: methods
-    template<typename ...nodes_or_strings_t> void prepend(nodes_or_strings_t... nodes);
-    template<typename ...nodes_or_strings_t> void append(nodes_or_strings_t... nodes);
-    template<typename ...nodes_or_strings_t> void replace_children(nodes_or_strings_t... nodes);
+    template<typename ...nodes_or_strings_t> auto prepend(nodes_or_strings_t... nodes) -> void;
+    template<typename ...nodes_or_strings_t> auto append(nodes_or_strings_t... nodes) -> void;
+    template<typename ...nodes_or_strings_t> auto replace_children(nodes_or_strings_t... nodes) -> void;
 
-    nodes::element* query_selector(ext::string selectors);
-    ext::vector<nodes::node*> query_selector_all(ext::string selectors);
+    auto query_selector(ext::string selectors) -> nodes::element*;
+    auto query_selector_all(ext::string selectors) -> ext::vector<nodes::node*>;
 
 public: properties
-    ext::dom_property<ext::vector<nodes::element*>*, _F> children;
+    ext::dom_property<ext::vector<nodes::element*>, _F> children;
     ext::dom_property<nodes::element*, _F> first_element_child;
     ext::dom_property<nodes::element*, _F> last_element_child;
     ext::dom_property<size_t, _F> child_element_count;
 
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
+
 private: accessors
-    ext::vector<nodes::element*>* get_children() const;
-    nodes::element* get_first_element_child() const;
-    nodes::element* get_last_element_child() const;
-    size_t get_child_element_count() const;
+    auto get_children() const -> ext::vector<nodes::element*>;
+    auto get_first_element_child() const -> nodes::element*;
+    auto get_last_element_child() const -> nodes::element*;
+    auto get_child_element_count() const -> size_t;
 };
 
 

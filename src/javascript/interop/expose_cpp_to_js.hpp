@@ -2,7 +2,6 @@
 #define SBROWSER_EXPOSE_CPP_TO_JS_HPP
 
 #include <javascript/environment/modules.hpp>
-#include <javascript/interop/javascript_namespace.hpp>
 
 #include <dom/aborting/abort_controller.hpp>
 #include <dom/aborting/abort_signal.hpp>
@@ -88,230 +87,7 @@ javascript::interop::expose_cpp_to_js::expose(
     v8::Local<v8::Context> local_context = v8::Local<v8::Context>::New(isolate, persistent_context);
     local_context->Enter();
 
-    v8pp::class_<dom::mixins::child_node<dom::nodes::node>> v8_child_node{isolate};
-    v8_child_node
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mixins::document_or_element_node<dom::nodes::node>> v8_document_or_element_node{isolate};
-    v8_document_or_element_node
-            .function("getElementsByTagName", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_tag_name)
-            .function("getElementsByTagNameNS", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_tag_name_ns)
-            .function("getElementsByClassName", &dom::mixins::document_or_element_node<dom::nodes::node>::get_elements_by_class_name)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mixins::document_or_shadow_root<dom::nodes::node>> v8_document_or_shadow_root{isolate};
-    v8_document_or_shadow_root
-            .var("activeElement", &dom::mixins::document_or_shadow_root<dom::nodes::node>::active_element)
-            .var("styleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::style_sheets)
-            .var("adoptedStyleSheets", &dom::mixins::document_or_shadow_root<dom::nodes::node>::adopted_style_sheets)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mixins::non_document_type_child_node<dom::nodes::node>> v8_non_document_type_child_node{isolate};
-    v8_non_document_type_child_node
-            .var("previousElementSibling", &dom::mixins::non_document_type_child_node<dom::nodes::node>::previous_element_sibling)
-            .var("nextElementSibling", &dom::mixins::non_document_type_child_node<dom::nodes::node>::next_element_sibling)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mixins::non_element_parent_node<dom::nodes::node>> v8_non_element_parent_node{isolate};
-    v8_non_element_parent_node
-            .function("getElementById", &dom::mixins::non_element_parent_node<dom::nodes::node>::get_element_by_id)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mixins::parent_node<dom::nodes::node>> v8_parent_node{isolate};
-    v8_parent_node
-//            .function("prepend", &dom::mixins::parent_node<dom::nodes::node>::prepend)
-//            .function("append", &dom::mixins::parent_node<dom::nodes::node>::append)
-//            .function("replaceChildren", &dom::mixins::parent_node<dom::nodes::node>::replace_children)
-            .function("querySelector", &dom::mixins::parent_node<dom::nodes::node>::query_selector)
-            .function("querySelectorAll", &dom::mixins::parent_node<dom::nodes::node>::query_selector_all)
-
-            .var("children", &dom::mixins::parent_node<dom::nodes::node>::children)
-            .var("firstElementChild", &dom::mixins::parent_node<dom::nodes::node>::first_element_child)
-            .var("lastElementChild", &dom::mixins::parent_node<dom::nodes::node>::last_element_child)
-            .var("childElementCount", &dom::mixins::parent_node<dom::nodes::node>::child_element_count)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mixins::slottable<dom::nodes::node>> v8_slottable{isolate};
-    v8_slottable
-            .var("assignedSlot", &dom::mixins::slottable<dom::nodes::node>::assigned_slot)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::mutations::mutation_record> v8_mutation_record{isolate};
-    v8_mutation_record
-            .var("type", &dom::mutations::mutation_record::type)
-            .var("target", &dom::mutations::mutation_record::target)
-            .var("addedNodes", &dom::mutations::mutation_record::added_nodes)
-            .var("removedNodes", &dom::mutations::mutation_record::removed_nodes)
-            .var("previousSibling", &dom::mutations::mutation_record::previous_sibling)
-            .var("nextSibling", &dom::mutations::mutation_record::next_sibling)
-            .var("attributeName", &dom::mutations::mutation_record::attribute_name)
-            .var("attributeNamespace", &dom::mutations::mutation_record::attribute_namespace)
-            .var("oldValue", &dom::mutations::mutation_record::old_value)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::attr> v8_attr{isolate};
-    v8_attr
-            .inherit<dom::nodes::node>()
-            .var("namespaceURI", &dom::nodes::attr::namespace_uri, true)
-            .var("prefix", &dom::nodes::attr::prefix, true)
-            .var("localName", &dom::nodes::attr::local_name, true)
-            .var("name", &dom::nodes::attr::name, true)
-            .var("value", &dom::nodes::attr::value)
-            .var("ownerElement", &dom::nodes::attr::owner_element, true);
-
-    v8pp::class_<dom::nodes::cdata_section> v8_cdata_section{isolate};
-    v8_cdata_section
-            .inherit<dom::nodes::text>()
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::character_data> v8_character_data{isolate};
-    v8_character_data
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::character_data>>()
-            .inherit<dom::mixins::non_document_type_child_node<dom::nodes::character_data>>()
-
-            .function("substringData", &dom::nodes::character_data::substring_data)
-            .function("appendData", &dom::nodes::character_data::append_data)
-            .function("insertData", &dom::nodes::character_data::insert_data)
-            .function("replaceData", &dom::nodes::character_data::replace_data)
-            .function("deleteData", &dom::nodes::character_data::delete_data)
-            .var("data", &dom::nodes::character_data::data)
-            .var("length", &dom::nodes::character_data::length, true)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::comment> v8_comment{isolate};
-    v8_comment
-            .ctor<>()
-            .ctor<ext::cstring&>()
-            .inherit<dom::nodes::character_data>()
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::document> v8_document{isolate};
-    v8_document
-            .ctor<>()
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::document_or_element_node<dom::nodes::document>>()
-            .inherit<dom::mixins::document_or_shadow_root<dom::nodes::document>>()
-            .inherit<dom::mixins::parent_node<dom::nodes::document>>()
-            .inherit<dom::mixins::non_element_parent_node<dom::nodes::document>>()
-            .inherit<dom::xpath::xpath_evaluator>()
-            .inherit<ext::listlike<dom::nodes::node*>>()
-
-            .function("createElement", &dom::nodes::document::create_element)
-            .function("createElementNS", &dom::nodes::document::create_element_ns)
-            .function("createDocumentFragment", &dom::nodes::document::create_document_fragment)
-            .function("createTextNode", &dom::nodes::document::create_text_node)
-            .function("createCDataSectionNode", &dom::nodes::document::create_cdata_section_node)
-            .function("createComment", &dom::nodes::document::create_comment)
-            .function("createProcessingInstruction", &dom::nodes::document::create_processing_instruction)
-            .function("createAttribute", &dom::nodes::document::create_attribute)
-            .function("createAttributeNS", &dom::nodes::document::create_attribute_ns)
-            .function("createRange", &dom::nodes::document::create_range)
-            .function("createNodeIterator", &dom::nodes::document::create_node_iterator)
-            .function("createTreeWalker", &dom::nodes::document::create_tree_walker)
-            .function("importNode", &dom::nodes::document::import_node)
-            .function("adoptNode", &dom::nodes::document::adopt_node)
-
-            .function("getElementsByName", &dom::nodes::document::get_elements_by_name)
-//            .function("open", &dom::nodes::document::open)
-            .function("close", &dom::nodes::document::close)
-//            .function("write", &dom::nodes::document::write)
-//            .function("writeln", &dom::nodes::document::writeln)
-            .function("hasFocus", &dom::nodes::document::has_focus)
-            .function("execCommand", &dom::nodes::document::exec_command)
-            .function("queryCommandEnabled", &dom::nodes::document::query_command_enabled)
-            .function("queryCommandIndeterm", &dom::nodes::document::query_command_indeterm)
-            .function("queryCommandState", &dom::nodes::document::query_command_state)
-            .function("queryCommandSupported", &dom::nodes::document::query_command_supported)
-            .function("queryCommandValue", &dom::nodes::document::query_command_value)
-
-            .function("elementFromPoint", &dom::nodes::document::element_from_point)
-            .function("elementsFromPoint", &dom::nodes::document::elements_from_point)
-            .function("caretPositionFromPoint", &dom::nodes::document::caret_position_from_point)
-
-            .var("URL", &dom::nodes::document::url, true)
-            .var("compatMode", &dom::nodes::document::compat_mode, true)
-            .var("characterSet", &dom::nodes::document::character_set, true)
-            .var("contentType", &dom::nodes::document::content_type, true)
-            .var("doctype", &dom::nodes::document::doctype, true)
-            .var("documentElement", &dom::nodes::document::document_element, true)
-            .var("implementation", &dom::nodes::document::implementation, true)
-
-            .var("domain", &dom::nodes::document::domain, true)
-            .var("cookie", &dom::nodes::document::cookie)
-            .var("referrer", &dom::nodes::document::referrer, true)
-            .var("lastModified", &dom::nodes::document::last_modified, true)
-            .var("readyState", &dom::nodes::document::ready_state, true)
-            .var("dir", &dom::nodes::document::dir)
-            .var("designMode", &dom::nodes::document::design_mode)
-            .var("title", &dom::nodes::document::title)
-            .var("location", &dom::nodes::document::location)
-            .var("body", &dom::nodes::document::body)
-            .var("head", &dom::nodes::document::head, true)
-            .var("images", &dom::nodes::document::images, true)
-            .var("links", &dom::nodes::document::links, true)
-            .var("forms", &dom::nodes::document::forms, true)
-            .var("scripts", &dom::nodes::document::scripts, true)
-            .var("defaultView", &dom::nodes::document::default_view, true)
-
-            .var("scrollingElement", &dom::nodes::document::scrolling_element)
-
-            .var("namedFlows", &dom::nodes::document::named_flows)
-
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::document_fragment> v8_document_fragment{isolate};
-    v8_document_fragment
-            .ctor<>()
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::non_element_parent_node<dom::nodes::document_fragment>>()
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::document_type> v8_document_type{isolate};
-    v8_document_type
-            .inherit<dom::nodes::node>()
-            .inherit<dom::mixins::child_node<dom::nodes::document_type>>()
-
-            .var("name", &dom::nodes::document_type::name)
-            .var("publicId", &dom::nodes::document_type::public_id)
-            .var("systemId", &dom::nodes::document_type::system_id)
-            .auto_wrap_objects();
-
-
-    v8pp::class_<dom::nodes::processing_instruction> v8_processing_instruction{isolate};
-    v8_processing_instruction
-            .inherit<dom::nodes::node>()
-            .var("target", &dom::nodes::processing_instruction::target)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::shadow_root> v8_shadow_root{isolate};
-    v8_shadow_root
-            .inherit<dom::nodes::document_fragment>()
-            .inherit<dom::mixins::document_or_shadow_root<dom::nodes::shadow_root>>()
-
-            .var("mode", &dom::nodes::shadow_root::mode, true)
-            .var("delegatesFocus", &dom::nodes::shadow_root::delegates_focus, true)
-            .var("slotAssignment", &dom::nodes::shadow_root::slot_assignment, true)
-            .var("host", &dom::nodes::shadow_root::host, true)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::text> v8_text{isolate};
-    v8_text
-            .ctor<>()
-            .ctor<ext::cstring&>()
-            .inherit<dom::nodes::character_data>()
-            .inherit<dom::mixins::slottable<dom::nodes::text>>()
-
-            .function("splitText", &dom::nodes::text::split_text)
-            .var("wholeText", &dom::nodes::text::whole_text, true)
-            .auto_wrap_objects();
-
-    v8pp::class_<dom::nodes::xml_document> v8_xml_document{isolate};
-    v8_xml_document
-            .inherit<dom::nodes::document>()
-            .auto_wrap_objects();
-
-
+    // TODO : formatting - templating makes me feel ill
     auto v8_abort_controller = object_to_v8<dom::aborting::abort_controller>(isolate);
     auto v8_abort_signal = object_to_v8<dom::aborting::abort_signal>(isolate);
 
@@ -324,12 +100,24 @@ javascript::interop::expose_cpp_to_js::expose(
     auto v8_tree_walker = object_to_v8<dom::iterators::tree_walker>(isolate);
 
     auto v8_mutation_observer = object_to_v8<dom::mutations::mutation_observer>(isolate);
+    auto v8_mutation_record = object_to_v8<dom::mutations::mutation_record>(isolate);
 
+    auto v8_attr = object_to_v8<dom::nodes::attr>(isolate);
+    auto v8_cdata_section = object_to_v8<dom::nodes::cdata_section>(isolate);
+    auto v8_character_data = object_to_v8<dom::nodes::character_data>(isolate);
+    auto v8_comment = object_to_v8<dom::nodes::comment>(isolate);
+    auto v8_document = object_to_v8<dom::nodes::document>(isolate);
+    auto v8_document_fragment = object_to_v8<dom::nodes::document_fragment>(isolate);
+    auto v8_document_type = object_to_v8<dom::nodes::document_type>(isolate);
     auto v8_element = object_to_v8<dom::nodes::element>(isolate);
     auto v8_event_target = object_to_v8<dom::nodes::event_target>(isolate);
     auto v8_node = object_to_v8<dom::nodes::node>(isolate);
+    auto v8_processing_instruction = object_to_v8<dom::nodes::processing_instruction>(isolate);
+    auto v8_shadow_root = object_to_v8<dom::nodes::shadow_root>(isolate);
+    auto v8_text = object_to_v8<dom::nodes::text>(isolate);
     auto v8_window_proxy = object_to_v8<dom::nodes::window_proxy>(isolate);
     auto v8_window = object_to_v8<dom::nodes::window>(isolate);
+    auto v8_xml_document = object_to_v8<dom::nodes::xml_document>(isolate);
 
     auto v8_dom_exception = object_to_v8<dom::other::dom_exception>(isolate);
     auto v8_dom_implementation = object_to_v8<dom::other::dom_implementation>(isolate);

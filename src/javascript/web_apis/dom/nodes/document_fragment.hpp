@@ -14,16 +14,18 @@ class dom::nodes::document_fragment
         , public mixins::non_element_parent_node<dom::nodes::document_fragment>
         , public mixins::parent_node<dom::nodes::document_fragment> {
 
-public constructors:
+public: constructors
     document_fragment();
 
-public properties:
+public: properties
     ext::dom_property<dom::nodes::element*, _F> host;
 
-private accessors:
-    ext::string get_text_content() const override;
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-    void set_text_content(ext::cstring& val) override;
+private: accessors
+    auto get_text_content() const -> ext::string override;
+    auto set_text_content(ext::cstring& val) -> void override;
 };
 
 

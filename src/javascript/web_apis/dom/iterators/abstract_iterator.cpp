@@ -4,8 +4,7 @@
 dom::iterators::abstract_iterator::abstract_iterator() = default;
 
 
-ext::any
-dom::iterators::abstract_iterator::v8(v8::Isolate* isolate) const
+auto dom::iterators::abstract_iterator::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<abstract_iterator>{isolate}
             .inherit<dom_object>()

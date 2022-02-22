@@ -21,8 +21,7 @@ dom::mixins::parent_node<T>::parent_node()
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-void
-dom::mixins::parent_node<T>::prepend(nodes_or_strings_t ...nodes)
+auto dom::mixins::parent_node<T>::prepend(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into, and the node
     auto* base = reinterpret_cast<T*>(this);
@@ -38,8 +37,7 @@ dom::mixins::parent_node<T>::prepend(nodes_or_strings_t ...nodes)
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-void
-dom::mixins::parent_node<T>::append(nodes_or_strings_t ...nodes)
+auto dom::mixins::parent_node<T>::append(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into, and the node
     auto* base = reinterpret_cast<T*>(this);
@@ -55,8 +53,7 @@ dom::mixins::parent_node<T>::append(nodes_or_strings_t ...nodes)
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-void
-dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes)
+auto dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into, and the node
     auto* base = reinterpret_cast<T*>(this);
@@ -72,17 +69,15 @@ dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes)
 
 
 template <typename T>
-INLINE ext::vector<dom::nodes::element*>*
-dom::mixins::parent_node<T>::get_children() const
+auto dom::mixins::parent_node<T>::get_children() const -> ext::vector<dom::nodes::element*>
 {
     // return all the children that are element type nodes
-    return reinterpret_cast<const nodes::node*>(this)->child_nodes->cast_all<nodes::element*>();
+    return static_cast<const T*>(this)->child_nodes->template cast_all<nodes::element*>();
 }
 
 
 template <typename T>
-INLINE dom::nodes::element*
-dom::mixins::parent_node<T>::get_first_element_child() const
+auto dom::mixins::parent_node<T>::get_first_element_child() const -> dom::nodes::element*
 {
     // return the first item from the element child list
     return children->front();
@@ -90,8 +85,7 @@ dom::mixins::parent_node<T>::get_first_element_child() const
 
 
 template <typename T>
-INLINE dom::nodes::element*
-dom::mixins::parent_node<T>::get_last_element_child() const
+auto dom::mixins::parent_node<T>::get_last_element_child() const -> dom::nodes::element*
 {
     // return the last item from the element child list
     return children->back();
@@ -99,11 +93,28 @@ dom::mixins::parent_node<T>::get_last_element_child() const
 
 
 template <typename T>
-INLINE size_t
-dom::mixins::parent_node<T>::get_child_element_count() const
+auto dom::mixins::parent_node<T>::get_child_element_count() const -> size_t
 {
     // return the length of the element child list
     return children->length();
+}
+
+
+template <typename T>
+auto dom::mixins::parent_node<T>::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::mixins::parent_node<dom::nodes::node>>{isolate}
+            .function("prepend", &dom::mixins::parent_node<T>::prepend)
+            .function("append", &dom::mixins::parent_node<T>::append)
+            .function("replaceChildren", &dom::mixins::parent_node<dom::nodes::node>::replace_children)
+            .function("querySelector", &dom::mixins::parent_node<dom::nodes::node>::query_selector)
+            .function("querySelectorAll", &dom::mixins::parent_node<dom::nodes::node>::query_selector_all)
+
+            .var("children", &dom::mixins::parent_node<dom::nodes::node>::children)
+            .var("firstElementChild", &dom::mixins::parent_node<dom::nodes::node>::first_element_child)
+            .var("lastElementChild", &dom::mixins::parent_node<dom::nodes::node>::last_element_child)
+            .var("childElementCount", &dom::mixins::parent_node<dom::nodes::node>::child_element_count)
+            .auto_wrap_objects();
 }
 
 

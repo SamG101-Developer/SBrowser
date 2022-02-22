@@ -102,42 +102,42 @@ private aliases:
 
 public methods:
     // dom
-    new_obj element* create_element(ext::cstring& local_name, ext::cstring_any_map& options = {}) const;
-    new_obj element* create_element_ns(ext::cstring& namespace_, ext::cstring& qualified_name, ext::cstring_any_map& options = {}) const;
-    new_obj document_fragment* create_document_fragment() const;
-    new_obj text* create_text_node(ext::cstring& data) const;
-    new_obj cdata_section* create_cdata_section_node(ext::cstring& data) const;
-    new_obj comment* create_comment(ext::cstring& data) const;
-    new_obj processing_instruction* create_processing_instruction(ext::cstring& target, ext::cstring& data) const;
-    new_obj attr* create_attribute(ext::cstring& local_name) const;
-    new_obj attr* create_attribute_ns(ext::cstring& namespace_, ext::cstring& qualified_name) const;
+    new_obj auto create_element(ext::cstring& local_name, ext::cstring_any_map& options = {}) const -> element*;
+    new_obj auto create_element_ns(ext::cstring& namespace_, ext::cstring& qualified_name, ext::cstring_any_map& options = {}) const -> element*;
+    new_obj auto create_document_fragment() const -> document_fragment*;
+    new_obj auto create_text_node(ext::cstring& data) const -> text*;
+    new_obj auto create_cdata_section_node(ext::cstring& data) const -> cdata_section*;
+    new_obj auto create_comment(ext::cstring& data) const -> comment*;
+    new_obj auto create_processing_instruction(ext::cstring& target, ext::cstring& data) const -> processing_instruction*;
+    new_obj auto create_attribute(ext::cstring& local_name) const -> attr*;
+    new_obj auto create_attribute_ns(ext::cstring& namespace_, ext::cstring& qualified_name) const -> attr*;
 
-    new_obj ranges::range* create_range();
-    new_obj iterators::node_iterator* create_node_iterator(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr);
-    new_obj iterators::tree_walker* create_tree_walker(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr);
+    new_obj auto create_range() -> ranges::range*;
+    new_obj auto create_node_iterator(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator*;
+    new_obj auto create_tree_walker(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::tree_walker*;
 
-    same_obj node* import_node(node* node, bool deep = false);
-    same_obj node* adopt_node(node* node);
+    same_obj auto import_node(node* new_node, bool deep = false) -> node*;
+    same_obj auto adopt_node(node* new_node) -> node*;
 
     // html
-    ext::vector<node*> get_elements_by_name(ext::cstring& element_name) const;
-    document* open() const;
-    window_proxy* open(ext::cstring& url, ext::cstring& name, ext::cstring& features) const;
-    void close() const;
-    template <typename ...strings> void write(strings... text) const;
-    template <typename ...strings> void writeln(strings... text) const;
-    bool has_focus() const;
-    bool exec_command(ext::cstring& command_id, bool show_ui = false, ext::cstring& value = "") const;
-    bool query_command_enabled(ext::cstring& command_id) const;
-    bool query_command_indeterm(ext::cstring& command_id) const;
-    bool query_command_state(ext::cstring& command_id) const;
-    bool query_command_supported(ext::cstring& command_id) const;
-    ext::string query_command_value(ext::cstring& command_id) const;
+    auto get_elements_by_name(ext::cstring& element_name) const -> ext::vector<node*>;
+    auto open() const -> document*;
+    auto open(ext::cstring& url, ext::cstring& name, ext::cstring& features) const -> window_proxy*;
+    auto close() const -> void;
+    template <typename ...strings> auto write(strings... text) const -> void;
+    template <typename ...strings> auto writeln(strings... text) const -> void;
+    auto has_focus() const -> bool;
+    auto exec_command(ext::cstring& command_id, bool show_ui = false, ext::cstring& value = "") const -> bool;
+    auto query_command_enabled(ext::cstring& command_id) const -> bool;
+    auto query_command_indeterm(ext::cstring& command_id) const -> bool;
+    auto query_command_state(ext::cstring& command_id) const -> bool;
+    auto query_command_supported(ext::cstring& command_id) const -> bool;
+    auto query_command_value(ext::cstring& command_id) const -> ext::string;
 
     // cssom-view
-    element* element_from_point(double x, double y) const;
-    ext::vector<element*> elements_from_point(double x, double y) const;
-    css::cssom_view::other::caret_position* caret_position_from_point(double x, double y) const;
+    auto element_from_point(double x, double y) const -> element*;
+    auto elements_from_point(double x, double y) const -> ext::vector<element*>;
+    auto caret_position_from_point(double x, double y) const -> css::cssom_view::other::caret_position*;
 
 public properties:
     // dom
@@ -206,45 +206,46 @@ protected internal_properties:
 
     int m_throw_on_dynamic_markup_insertion_counter;
     int m_ignore_destructive_writes_counter;
+    
+public internal_methods:
+    auto render() const -> QScrollArea* override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected internal_methods:
-    event_target* get_the_parent(events::event* event) override;
-
-public internal_methods:
-    QScrollArea* render() override;
+    auto get_the_parent(events::event* event) -> event_target* override;
 
 private internal_methods:
     html::elements::html_html_element* get_m_html_element() const;
     html::elements::html_head_element* get_m_head_element() const;
     html::elements::html_title_element* get_m_title_element() const;
     html::elements::html_body_element* get_m_body_element() const;
-
+    
 private accessors:
     // dom
-    inline ext::string get_compat_mode() const;
-    inline ext::string get_character_set() const;
-    inline document_type* get_doctype() const;
-    inline element* get_document_element() const;
+    auto get_compat_mode() const -> ext::string;
+    auto get_character_set() const -> ext::string;
+    auto get_doctype() const -> document_type*;
+    auto get_document_element() const -> element*;
 
     // html
-    ext::string get_dir() const;
-    ext::string get_last_modified() const;
-    html::elements::html_body_element* get_body() const;
-    html::elements::html_head_element* get_head() const;
-    ext::string get_title() const;
+    auto get_dir() const -> ext::string;
+    auto get_last_modified() const -> ext::string;
+    auto get_body() const -> html::elements::html_body_element*;
+    auto get_head() const -> html::elements::html_head_element*;
+    auto get_title() const -> ext::string;
 
-    new_obj ext::vector<html::elements::html_image_element*> get_images();
-    new_obj ext::vector<html::elements::html_link_element*> get_links();
-    new_obj ext::vector<html::elements::html_form_element*> get_forms();
-    new_obj ext::vector<html::elements::html_script_element*> get_scripts();
+    new_obj auto get_images() -> ext::vector<html::elements::html_image_element*>;
+    new_obj auto get_links() -> ext::vector<html::elements::html_link_element*>;
+    new_obj auto get_forms() -> ext::vector<html::elements::html_form_element*>;
+    new_obj auto get_scripts() -> ext::vector<html::elements::html_script_element*>;
 
-    void set_title(ext::cstring& val);
-    void set_body(html::elements::html_body_element* val);
-    void set_cookie(ext::cstring& val);
-    void set_ready_state(ext::cstring& val);
+    auto set_title(ext::cstring& val) -> void;
+    auto set_body(html::elements::html_body_element* val) -> void;
+    auto set_cookie(ext::cstring& val) -> void;
+    auto set_ready_state(ext::cstring& val) -> void;
 
     // cssom-view
-    element* get_scrolling_element() const;
+    auto get_scrolling_element() const -> element*;
 };
 
 

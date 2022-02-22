@@ -19,21 +19,21 @@ dom::nodes::attr::attr() : node()
 }
 
 
-ext::string dom::nodes::attr::get_node_value() const
+auto dom::nodes::attr::get_node_value() const -> ext::string
 {
     // the node_value is the attribute's value
     return value;
 }
 
 
-ext::string dom::nodes::attr::get_text_content() const
+auto dom::nodes::attr::get_text_content() const -> ext::string
 {
     // the text_content is the attribute's value
     return value;
 }
 
 
-ext::string dom::nodes::attr::get_m_qualified_name() const
+auto dom::nodes::attr::get_m_qualified_name() const -> ext::string
 {
     // the qualified name is the prefix and local name joined with a colon
     return prefix + ext::string{":"} + local_name;
@@ -58,4 +58,17 @@ void dom::nodes::attr::set_value(ext::cstring& val)
 {
     // setting the value calls a helper set method
     helpers::attributes::set_existing_attribute_value(this, val);
+}
+
+
+auto dom::nodes::attr::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::nodes::attr>{isolate}
+            .inherit<dom::nodes::node>()
+            .var("namespaceURI", &dom::nodes::attr::namespace_uri, true)
+            .var("prefix", &dom::nodes::attr::prefix, true)
+            .var("localName", &dom::nodes::attr::local_name, true)
+            .var("name", &dom::nodes::attr::name, true)
+            .var("value", &dom::nodes::attr::value)
+            .var("ownerElement", &dom::nodes::attr::owner_element, true);
 }

@@ -7,3 +7,11 @@ dom::nodes::cdata_section::cdata_section() : text()
     node_type << CDATA_SECTION_NODE;
     node_name << "#cdata-section";
 }
+
+
+auto dom::nodes::cdata_section::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::nodes::cdata_section>{isolate}
+            .inherit<dom::nodes::text>()
+            .auto_wrap_objects();
+}

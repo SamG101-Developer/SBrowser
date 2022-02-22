@@ -18,11 +18,11 @@ dom::nodes::event_target::~event_target()
 }
 
 
-void
-dom::nodes::event_target::add_event_listener(
+auto dom::nodes::event_target::add_event_listener(
         ext::string type,
         event_listener_callback&& callback,
         ext::cstring_any_map& options)
+        -> void
 {
     // create an event listener that is the flattened options, and insert the callback and type
     auto event_listener = helpers::event_listening::flatten_more(options);
@@ -34,11 +34,11 @@ dom::nodes::event_target::add_event_listener(
 }
 
 
-void
-dom::nodes::event_target::remove_event_listener(
+auto dom::nodes::event_target::remove_event_listener(
         ext::string type,
         event_listener_callback&& callback,
         ext::cstring_any_map& options)
+        -> void
 {
     // create an event listener that is the flattened options, and insert the callback and type
     auto event_listener = helpers::event_listening::flatten_more(options);
@@ -50,8 +50,7 @@ dom::nodes::event_target::remove_event_listener(
 }
 
 
-bool
-dom::nodes::event_target::dispatch_event(events::event* event)
+auto dom::nodes::event_target::dispatch_event(events::event* event) -> bool
 {
     // if the dispatch is already set or the initialized flag isn't set, then throw an invalid state error
     helpers::exceptions::throw_v8_exception(
@@ -65,19 +64,18 @@ dom::nodes::event_target::dispatch_event(events::event* event)
 }
 
 
-dom::nodes::event_target*
-dom::nodes::event_target::get_the_parent(
-        events::event* event)
+auto dom::nodes::event_target::get_the_parent(events::event* event) -> dom::nodes::event_target*
 {
     // default behaviour for getting the parent in event traversal is that there is no parent
     return nullptr;
 }
 
 
-ext::any dom::nodes::event_target::v8(v8::Isolate* isolate) const {
-    v8pp::class_<event_target> v8{isolate};
-    return v8
+auto dom::nodes::event_target::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<event_target>{isolate}
             .ctor<>()
+            .inherit<dom_object>()
             .function("addEventListener", &dom::nodes::event_target::add_event_listener)
             .function("removeEventListener", &dom::nodes::event_target::remove_event_listener)
             .function("dispatchEvent", &dom::nodes::event_target::dispatch_event)

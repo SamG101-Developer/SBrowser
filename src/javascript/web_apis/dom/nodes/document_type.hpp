@@ -22,7 +22,7 @@ public properties:
     ext::dom_property<ext::string, _F> system_id;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

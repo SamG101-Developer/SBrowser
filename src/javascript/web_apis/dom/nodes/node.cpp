@@ -40,7 +40,7 @@ dom::nodes::node::node() : event_target()
     parent.set = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
 
     // set the properties
-    parent << nullptr;
+    parent      << nullptr;
     child_nodes << new ext::vector<node*>{};
 
     // TODO : set the m_registered_observer_list when the type has been implemented
@@ -53,8 +53,7 @@ dom::nodes::node::~node()
 }
 
 
-void
-dom::nodes::node::normalize() const
+auto dom::nodes::node::normalize() const -> void
 {
     // iterator over the text nodes that are descendants of this node
     for (const text* text_node: helpers::trees::descendant_text_nodes(this))
@@ -119,19 +118,19 @@ dom::nodes::node::normalize() const
 }
 
 
-bool dom::nodes::node::has_child_nodes() const
+auto dom::nodes::node::has_child_nodes() const -> bool
 {
     // return if there are any children
     return not child_nodes->empty();
 }
 
-bool dom::nodes::node::contains(node* other) const
+auto dom::nodes::node::contains(node* other) const -> bool
 {
     // return if the other node is a descendant of this node
     return helpers::trees::is_descendant(other, this);
 }
 
-bool dom::nodes::node::is_equal_node(node* other) const
+auto dom::nodes::node::is_equal_node(node* other) const -> bool
 {
     // base implementation (derived nodes will extend this method)
 
@@ -153,15 +152,14 @@ bool dom::nodes::node::is_equal_node(node* other) const
     return true;
 }
 
-bool dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const
+auto dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const -> bool
 {
     // return if the namespace of this node equals namespace generated from locating the empty namespace in this node
     return namespace_ == helpers::node_internals::locate_a_namespace(this, "");
 }
 
 
-ext::string
-dom::nodes::node::lookup_prefix(ext::cstring& namespace_) const
+auto dom::nodes::node::lookup_prefix(ext::cstring& namespace_) const -> ext::string
 {
     // element node: return the lookup for the element
     if (auto* element_node = dynamic_cast<const element*>(this))
@@ -190,14 +188,14 @@ dom::nodes::node::lookup_prefix(ext::cstring& namespace_) const
 }
 
 
-ext::string dom::nodes::node::lookup_namespace_uri(ext::cstring& prefix) const
+auto dom::nodes::node::lookup_namespace_uri(ext::cstring& prefix) const -> ext::string
 {
     // lookup the namespace with the prefix
     return helpers::node_internals::locate_a_namespace(this, prefix);
 }
 
-unsigned short
-dom::nodes::node::compare_document_position(node* other) const
+
+auto dom::nodes::node::compare_document_position(node* other) const -> unsigned short
 {
     // if the nodes are the same then return 0 ie there is no comparison to be done
     if (this == other) return 0;
@@ -264,8 +262,7 @@ dom::nodes::node::compare_document_position(node* other) const
 }
 
 
-dom::nodes::node*
-dom::nodes::node::get_root_node(ext::cstring_any_map& options) const
+auto dom::nodes::node::get_root_node(ext::cstring_any_map& options) const -> node*
 {
     // return the shadow root if the <composed> option is true, otherwise the exposed tree root
     return options.at("composed").to<bool>()
@@ -274,8 +271,7 @@ dom::nodes::node::get_root_node(ext::cstring_any_map& options) const
 }
 
 
-dom::nodes::node*
-dom::nodes::node::clone_node(bool deep) const
+auto dom::nodes::node::clone_node(bool deep) const -> node*
 {
     // if the root of the tree of this node is a shadow root, then throw a not support error
     helpers::exceptions::throw_v8_exception(
@@ -288,10 +284,10 @@ dom::nodes::node::clone_node(bool deep) const
 }
 
 
-dom::nodes::node*
-dom::nodes::node::insert_before(
+auto dom::nodes::node::insert_before(
         node* new_node,
         node* child)
+        -> node*
 {
     // pre-insert the new_node before the child
     helpers::mutation_algorithms::pre_insert(new_node, this, child);
@@ -301,9 +297,7 @@ dom::nodes::node::insert_before(
 }
 
 
-dom::nodes::node*
-dom::nodes::node::append_child(
-        node* new_node)
+auto dom::nodes::node::append_child(node* new_node) -> node*
 {
     // append the new_node
     helpers::mutation_algorithms::append(new_node, this);
@@ -313,10 +307,10 @@ dom::nodes::node::append_child(
 }
 
 
-dom::nodes::node*
-dom::nodes::node::replace_child(
+auto dom::nodes::node::replace_child(
         node* old_node,
         node* new_node)
+        -> node*
 {
     // replace the old_node with the new_node
     helpers::mutation_algorithms::replace(new_node, old_node, this);
@@ -326,9 +320,7 @@ dom::nodes::node::replace_child(
 }
 
 
-dom::nodes::node*
-dom::nodes::node::remove_child(
-        node* old_node)
+auto dom::nodes::node::remove_child(node* old_node) -> node*
 {
     // remove the old node
     helpers::mutation_algorithms::pre_remove(old_node, this);
@@ -338,81 +330,71 @@ dom::nodes::node::remove_child(
 }
 
 
-INLINE ext::string
-dom::nodes::node::get_node_value() const
+auto dom::nodes::node::get_node_value() const -> ext::string
 {
     // return the default node value - empty (abstract class)
     return "";
 }
 
 
-INLINE ext::string
-dom::nodes::node::get_text_content() const
+auto dom::nodes::node::get_text_content() const -> ext::string
 {
     // return the default text content - empty (abstract class)
     return "";
 }
 
 
-INLINE bool
-dom::nodes::node::get_is_connected() const
+auto dom::nodes::node::get_is_connected() const -> bool
 {
     // return if this node is connected, by calling the is_connected helper method
     return helpers::shadows::is_connected(this);
 }
 
 
-INLINE ext::string
-dom::nodes::node::get_base_uri() const
+auto dom::nodes::node::get_base_uri() const -> ext::string
 {
     // return the serialization if the document's base uri
     return url::helpers::serializing::serialize_url(owner_document->base_uri);
 }
 
 
-INLINE dom::nodes::node*
-dom::nodes::node::get_first_child() const
+auto dom::nodes::node::get_first_child() const -> node*
 {
     // return the first child node
     return child_nodes->front();
 }
 
 
-INLINE dom::nodes::node*
-dom::nodes::node::get_last_child() const
+auto dom::nodes::node::get_last_child() const -> node*
 {
     // return the last child node
     return child_nodes->back();
 }
 
 
-INLINE dom::nodes::node*
-dom::nodes::node::get_previous_sibling() const
+auto dom::nodes::node::get_previous_sibling() const -> node*
 {
     // return the previous sibling of this node by getting the item before this node in the parent's child list
     return parent->child_nodes->item_before(this);
 }
 
 
-INLINE dom::nodes::node*
-dom::nodes::node::get_next_sibling() const
+auto dom::nodes::node::get_next_sibling() const -> node*
 {
     // return the next sibling of this node by getting the item after this node in the parent's child list
     return parent->child_nodes->item_after(this);
 }
 
 
-INLINE dom::nodes::element*
-dom::nodes::node::get_parent_element() const
+auto dom::nodes::node::get_parent_element() const -> element*
 {
     // get the parent node of this noe if it is element, otherwise null (dynamic_cast handles both cases)
     return ext::property_dynamic_cast<element*>(parent);
 }
 
 
-INLINE void
-dom::nodes::node::set_parent_node(node* val) {
-
+auto dom::nodes::node::set_parent_node(node* val) -> void
+{
     // remove this node from the current parent's child node list TODO : move to mutation algorithms?
     if (parent and parent_element->child_nodes->contains(this))
         parent->child_nodes->remove(this);
@@ -458,7 +440,7 @@ dom::nodes::node::set_parent_node(node* val) {
 }
 
 
-ext::any dom::nodes::node::v8(v8::Isolate* isolate) const
+auto dom::nodes::node::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<node>{isolate}
             .inherit<dom::nodes::event_target>()

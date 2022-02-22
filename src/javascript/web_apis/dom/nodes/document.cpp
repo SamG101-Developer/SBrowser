@@ -46,37 +46,37 @@ dom::nodes::document::document()
         , ext::listlike<node*>()
 {
     // set the custom accessors
-    compat_mode.get = [this] {return get_compat_mode();};
-    character_set.get = [this] {return get_character_set();};
-    doctype.get = [this] {return get_doctype();};
+    compat_mode.get      = [this] {return get_compat_mode();};
+    character_set.get    = [this] {return get_character_set();};
+    doctype.get          = [this] {return get_doctype();};
     document_element.get = [this] {return get_document_element();};
 
-    dir.get = [this] {return get_compat_mode();};
+    dir.get           = [this] {return get_compat_mode();};
     last_modified.get = [this] {return get_last_modified();};
-    body.get = [this] {return get_body();};
-    head.get = [this] {return get_head();};
-    title.get = [this] {return get_title();};
-    images.get = [this] {return get_images();};
-    links.get = [this] {return get_links();};
-    forms.get = [this] {return get_forms();};
-    scripts.get = [this] {return get_scripts();};
+    body.get          = [this] {return get_body();};
+    head.get          = [this] {return get_head();};
+    title.get         = [this] {return get_title();};
+    images.get        = [this] {return get_images();};
+    links.get         = [this] {return get_links();};
+    forms.get         = [this] {return get_forms();};
+    scripts.get       = [this] {return get_scripts();};
 
-    title.set = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
-    body.set = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
-    cookie.set = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
+    title.set       = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
+    body.set        = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
+    cookie.set      = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
     ready_state.set = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
 
     // set the properties
-    node_type << DOCUMENT_NODE;
-    node_name << "#document";
-    url << "about:blank";
-    content_type << "application/xml";
+    node_type      << DOCUMENT_NODE;
+    node_name      << "#document";
+    url            << "about:blank";
+    content_type   << "application/xml";
     implementation << new other::dom_implementation{};
-    ready_state << "complete";
+    ready_state    << "complete";
 
     // set the attributes
-    m_type = "xml";
-    m_mode = "no-quirks";
+    m_type   = "xml";
+    m_mode   = "no-quirks";
     m_origin = javascript::realms::surrounding_agent().get<ext::cstring&>("origin");
 
     // create the widget representation
@@ -88,10 +88,10 @@ dom::nodes::document::document()
 }
 
 
-dom::nodes::element*
-dom::nodes::document::create_element(
+auto dom::nodes::document::create_element(
         ext::cstring& local_name,
         ext::cstring_any_map& options) const
+        -> dom::nodes::element*
 {
     // get the <is> option as a string TODO : type is string or bool -> custom elements helpers have it as string?
     auto is = options.at("is").to<ext::string>();
@@ -102,7 +102,7 @@ dom::nodes::document::create_element(
             : local_name;
 
     // if the document type or content type is html then set the namespace to HTML, otherwise NONE
-    ext::string namespace_ = m_type == "html" or content_type == "application/xhtml+xml"
+    ext::string namespace_ = m_type == "html" or content_type == ext::string{"application/xhtml+xml"}
             ? helpers::namespaces::HTML
             : helpers::namespaces::NONE;
 
@@ -111,11 +111,11 @@ dom::nodes::document::create_element(
 }
 
 
-dom::nodes::element*
-dom::nodes::document::create_element_ns(
+auto dom::nodes::document::create_element_ns(
         ext::cstring& namespace_,
         ext::cstring& qualified_name,
         ext::cstring_any_map& options) const
+        -> dom::nodes::element*
 {
     // get the <is> option as a string
     auto is = options.at("is").to<ext::string>();
@@ -128,33 +128,30 @@ dom::nodes::document::create_element_ns(
 }
 
 
-dom::nodes::document_fragment*
-dom::nodes::document::create_document_fragment() const
+auto dom::nodes::document::create_document_fragment() const -> dom::nodes::document_fragment*
 {
     // create a new document fragment, and set the owner document to this document
     auto* document_fragment_node = new document_fragment{};
-    document_fragment_node->owner_document = this;
+    document_fragment_node->owner_document = const_cast<document*>(this);
 
     // return the document fragment
     return document_fragment_node;
 }
 
 
-dom::nodes::text*
-dom::nodes::document::create_text_node(ext::cstring& data) const
+auto dom::nodes::document::create_text_node(ext::cstring& data) const -> dom::nodes::text*
 {
     // create a new text node, set the text to data, and set the owner document to this document
     auto* text_node = new text{};
     text_node->data = data;
-    text_node->owner_document = this;
+    text_node->owner_document = const_cast<document*>(this);
 
     // return the text node
     return text_node;
 }
 
 
-dom::nodes::cdata_section*
-dom::nodes::document::create_cdata_section_node(ext::cstring& data) const {
+auto dom::nodes::document::create_cdata_section_node(ext::cstring& data) const -> dom::nodes::cdata_section* {
 
     // if the document type is html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -178,8 +175,7 @@ dom::nodes::document::create_cdata_section_node(ext::cstring& data) const {
 }
 
 
-dom::nodes::comment*
-dom::nodes::document::create_comment(ext::cstring& data) const
+auto dom::nodes::document::create_comment(ext::cstring& data) const -> dom::nodes::comment*
 {
     // create a new comment node, and set the owner document to this document
     auto* comment_node = new dom::nodes::comment{};
@@ -191,10 +187,10 @@ dom::nodes::document::create_comment(ext::cstring& data) const
 }
 
 
-dom::nodes::processing_instruction*
-dom::nodes::document::create_processing_instruction(
+auto dom::nodes::document::create_processing_instruction(
         ext::cstring& target,
         ext::cstring& data) const
+        -> dom::nodes::processing_instruction*
 {
     // if '?>' is in the data, then throw an invalid character error
     helpers::exceptions::throw_v8_exception(
@@ -213,8 +209,7 @@ dom::nodes::document::create_processing_instruction(
 }
 
 
-dom::nodes::attr*
-dom::nodes::document::create_attribute(ext::cstring& local_name) const
+auto dom::nodes::document::create_attribute(ext::cstring& local_name) const -> dom::nodes::attr*
 {
     // if the document type is html then set the local name to lowercase
     ext::string html_qualified_namespace = m_type == "html"
@@ -231,10 +226,10 @@ dom::nodes::document::create_attribute(ext::cstring& local_name) const
 }
 
 
-dom::nodes::attr*
-dom::nodes::document::create_attribute_ns(
+auto dom::nodes::document::create_attribute_ns(
         ext::cstring& namespace_,
         ext::cstring& qualified_name) const
+        -> dom::nodes::attr*
 {
     // extract the namespace, prefix and local name from the namespace and qualified name
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
@@ -251,8 +246,7 @@ dom::nodes::document::create_attribute_ns(
 }
 
 
-dom::ranges::range*
-dom::nodes::document::create_range()
+auto dom::nodes::document::create_range() -> dom::ranges::range*
 {
     // create a new range, and set the starting and ending nodes to this node, with the offsets at 0
     auto* range = new ranges::range{};
@@ -266,11 +260,11 @@ dom::nodes::document::create_range()
 }
 
 
-dom::iterators::node_iterator*
-dom::nodes::document::create_node_iterator(
+auto dom::nodes::document::create_node_iterator(
         node* root,
         unsigned long what_to_show,
         iterators::node_filter* filter)
+        -> dom::iterators::node_iterator*
 {
     // create a new node iterator
     auto* iterator = new iterators::node_iterator{};
@@ -285,11 +279,11 @@ dom::nodes::document::create_node_iterator(
 }
 
 
-dom::iterators::tree_walker*
-dom::nodes::document::create_tree_walker(
+auto dom::nodes::document::create_tree_walker(
         node* root,
         unsigned long what_to_show,
         iterators::node_filter* filter)
+        -> dom::iterators::tree_walker*
 {
     // create a new tree walker
     auto* walker = new iterators::tree_walker{};
@@ -303,10 +297,10 @@ dom::nodes::document::create_tree_walker(
 }
 
 
-dom::nodes::node*
-dom::nodes::document::import_node(
+auto dom::nodes::document::import_node(
         node* node,
         bool deep)
+        -> dom::nodes::node*
 {
     // if the node being imported is a document, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -325,8 +319,7 @@ dom::nodes::document::import_node(
 }
 
 
-dom::nodes::node*
-dom::nodes::document::adopt_node(node* node)
+auto dom::nodes::document::adopt_node(node* node) -> dom::nodes::node*
 {
     // if the node being adopted is a document, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -350,8 +343,7 @@ dom::nodes::document::adopt_node(node* node)
 }
 
 
-ext::vector<dom::nodes::node*>
-dom::nodes::document::get_elements_by_name(ext::cstring& element_name) const
+auto dom::nodes::document::get_elements_by_name(ext::cstring& element_name) const -> ext::vector<dom::nodes::node*>
 {
     // filter the element descendants, by matching the elements with the same qualified name as element name, and
     // convert them back into nodes before returning the list
@@ -362,19 +354,18 @@ dom::nodes::document::get_elements_by_name(ext::cstring& element_name) const
 }
 
 
-dom::nodes::document*
-dom::nodes::document::open() const
+auto dom::nodes::document::open() const -> dom::nodes::document*
 {
     // TODO
     return html::helpers::elements::document_open_steps(this);
 }
 
 
-dom::nodes::window_proxy*
-dom::nodes::document::open(
+auto dom::nodes::document::open(
         ext::cstring& url,
         ext::cstring& name,
         ext::cstring& features) const
+        -> dom::nodes::window_proxy*
 {
     // TODO
     helpers::exceptions::throw_v8_exception(
@@ -386,8 +377,7 @@ dom::nodes::document::open(
 }
 
 
-void
-dom::nodes::document::close() const
+auto dom::nodes::document::close() const -> void
 {
     // TODO
     helpers::exceptions::throw_v8_exception(
@@ -405,8 +395,7 @@ dom::nodes::document::close() const
 
 
 template <typename ...strings>
-void
-dom::nodes::document::write(strings... text) const
+auto dom::nodes::document::write(strings... text) const -> void
 {
     // TODO
     html::helpers::elements::document_write_steps(this, ext::concatenate_strings(text...))
@@ -414,8 +403,7 @@ dom::nodes::document::write(strings... text) const
 
 
 template <typename ...strings>
-void
-dom::nodes::document::writeln(strings... text) const
+auto dom::nodes::document::writeln(strings... text) const -> void
 {
     // TODO
     ext::vector<ext::string> new_lined_text;
@@ -425,28 +413,28 @@ dom::nodes::document::writeln(strings... text) const
 }
 
 
-bool dom::nodes::document::has_focus() const
+auto dom::nodes::document::has_focus() const -> bool
 {
     //TODO
     return html::helpers::elements::has_focus_steps(this);
 }
 
 
-dom::nodes::element*
-dom::nodes::document::element_from_point(
+auto dom::nodes::document::element_from_point(
         double x,
         double y) const
+        -> dom::nodes::element*
 {
     // TODO
     return elements_from_point(x, y).front(); // TODO at first found doesn't happen currently
 }
 
 
-ext::vector<dom::nodes::element*>
-dom::nodes::document::elements_from_point(
+auto dom::nodes::document::elements_from_point(
         double x,
-        double y) const {
-
+        double y) const
+        -> ext::vector<dom::nodes::element*>
+{
     if (x < 0 or y < 0)
         return ext::vector<element*>{nullptr};
 
@@ -456,13 +444,17 @@ dom::nodes::document::elements_from_point(
 }
 
 
-css::cssom_view::other::caret_position*
-dom::nodes::document::caret_position_from_point(
+auto dom::nodes::document::caret_position_from_point(
         double x,
-        double y) const {
+        double y) const
+        -> css::cssom_view::other::caret_position*
+{
 
-    if (not render()->widget()) return nullptr;
-    if (x < 0 or y < 0) return nullptr;
+    if (not render()->widget())
+        return nullptr;
+    
+    if (x < 0 or y < 0)
+        return nullptr;
 
     auto* caret_position = nullptr;
     if (auto* text_insertion_widget = dynamic_cast<QLineEdit*>(render()->widget()->childAt(x, y))) {
@@ -476,155 +468,136 @@ dom::nodes::document::caret_position_from_point(
 }
 
 
-dom::nodes::event_target*
-dom::nodes::document::get_the_parent(events::event* event)
+auto dom::nodes::document::get_the_parent(events::event* event) -> dom::nodes::event_target*
 {
     return event->type == "load" or not m_browsing_context ? nullptr : &javascript::realms::relevant_global_object();
 }
 
 
-INLINE html::elements::html_html_element*
-dom::nodes::document::get_m_html_element() const
+auto dom::nodes::document::get_m_html_element() const -> html::elements::html_html_element*
 {
     // the html element is the document element that is a html_html_element type
     return ext::property_dynamic_cast<html::elements::html_html_element*>(document_element);
 }
 
 
-INLINE html::elements::html_head_element*
-dom::nodes::document::get_m_head_element() const
+auto dom::nodes::document::get_m_head_element() const -> html::elements::html_head_element*
 {
     // the head element is the first html_head_element that is a child of the html element
     return get_m_html_element()->children->cast_all<html::elements::html_head_element*>().front();
 }
 
 
-INLINE html::elements::html_title_element*
-dom::nodes::document::get_m_title_element() const
+auto dom::nodes::document::get_m_title_element() const -> html::elements::html_title_element*
 {
     // the title element is the first child of this document that is a html_title_element
     return helpers::trees::descendants(this).cast_all<html::elements::html_title_element*>().front();
 }
 
 
-INLINE html::elements::html_body_element*
-dom::nodes::document::get_m_body_element() const
+auto dom::nodes::document::get_m_body_element() const -> html::elements::html_body_element*
 {
     // the body element is the first child of this document that is a html_body_element
     return children->cast_all<html::elements::html_body_element*>().front();
 }
 
 
-INLINE ext::string
-dom::nodes::document::get_compat_mode() const
+auto dom::nodes::document::get_compat_mode() const -> ext::string
 {
     // the compat mode depends on if the document mode is 'quirks' or not
     return m_mode == "quirks" ? "BackCompat" : "CSS1Compat";
 }
 
 
-INLINE ext::string
-dom::nodes::document::get_character_set() const
+auto dom::nodes::document::get_character_set() const -> ext::string
 {
     // the character set is the name of the encoding used in the document
     return m_encoding->name;
 }
 
 
-INLINE dom::nodes::document_type*
-dom::nodes::document::get_doctype() const
+auto dom::nodes::document::get_doctype() const -> dom::nodes::document_type*
 {
     // the doctype is the first child of this document that is a doctype node
     return child_nodes->cast_all<document_type*>().front();
 }
 
 
-INLINE dom::nodes::element*
-dom::nodes::document::get_document_element() const
+auto dom::nodes::document::get_document_element() const -> dom::nodes::element*
 {
     // the document element is the first child of this document that is an element
     return child_nodes->cast_all<element*>().front();
 }
 
 
-INLINE ext::string
-dom::nodes::document::get_dir() const
+auto dom::nodes::document::get_dir() const -> ext::string
 {
     // the dir is a wrapper for the html element's dir attribute
     return get_m_html_element()->dir;
 }
 
 
-INLINE ext::string
-dom::nodes::document::get_last_modified() const
+auto dom::nodes::document::get_last_modified() const -> ext::string
 {
     // TODO
     return "" /* TODO from header */;
 }
 
 
-INLINE html::elements::html_body_element*
-dom::nodes::document::get_body() const
+auto dom::nodes::document::get_body() const -> html::elements::html_body_element*
 {
     // the body is the document's body element
     return get_m_body_element();
 }
 
 
-INLINE html::elements::html_head_element*
-dom::nodes::document::get_head() const
+auto dom::nodes::document::get_head() const -> html::elements::html_head_element*
 {
     // the head is the document's head element
     return get_m_head_element();
 }
 
 
-INLINE ext::string
-dom::nodes::document::get_title() const
+auto dom::nodes::document::get_title() const -> ext::string
 {
     // the title is the child text content of the title element
     return helpers::trees::child_text_content(get_m_title_element());
 }
 
 
-INLINE ext::vector<html::elements::html_image_element*>
-dom::nodes::document::get_images()
+auto dom::nodes::document::get_images() -> ext::vector<html::elements::html_image_element*>
 {
     // the images are the children of this document that are html_image_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_image_element*>();
 }
 
 
-INLINE ext::vector<html::elements::html_link_element*>
-dom::nodes::document::get_links()
+auto dom::nodes::document::get_links() -> ext::vector<html::elements::html_link_element*>
 {
     // the links are the children of this document that are html_link_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_link_element*>();
 }
 
 
-INLINE ext::vector<html::elements::html_form_element*>
-dom::nodes::document::get_forms()
+auto dom::nodes::document::get_forms() -> ext::vector<html::elements::html_form_element*>
 {
     // the forms are the children of this document that are html_form_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_form_element*>();
 }
 
 
-INLINE ext::vector<html::elements::html_script_element*>
-dom::nodes::document::get_scripts()
+auto dom::nodes::document::get_scripts() -> ext::vector<html::elements::html_script_element*>
 {
     // the scripts are the children of this document that are html_script_element nodes which have the href attribute set
     return helpers::trees::descendants(this).cast_all<html::elements::html_script_element*>().filter([](auto* element) {return element->href;});
 }
 
 
-INLINE void
-dom::nodes::document::set_title(ext::cstring& val)
+auto dom::nodes::document::set_title(ext::cstring& val) -> void
 {
     // case for when the document element is a svg element
-    if (dynamic_cast<svg::nodes::svg_element*>(document_element)) {
-
+    if (dynamic_cast<svg::nodes::svg_element*>(document_element))
+    {
         // the title element is the first child of the document that is a svg title element
         auto* title_element = document_element->child_nodes->cast_all<svg::nodes::svg_title_element*>().front();
 
@@ -641,8 +614,8 @@ dom::nodes::document::set_title(ext::cstring& val)
     }
 
     // case for when the document element is a html element
-    else if (document_element->namespace_uri == helpers::namespaces::HTML) {
-
+    else if (document_element->namespace_uri == helpers::namespaces::HTML)
+    {
         // do nothing if there is no title or head element in the document
         if (not get_m_title_element() and not get_m_head_element())
             return;
@@ -666,8 +639,7 @@ dom::nodes::document::set_title(ext::cstring& val)
 }
 
 
-INLINE void
-dom::nodes::document::set_body(html::elements::html_body_element* val)
+auto dom::nodes::document::set_body(html::elements::html_body_element* val) -> void
 {
     // if the new val isn't a html_body_element, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
@@ -686,8 +658,7 @@ dom::nodes::document::set_body(html::elements::html_body_element* val)
 }
 
 
-INLINE void
-dom::nodes::document::set_cookie(ext::cstring& val)
+auto dom::nodes::document::set_cookie(ext::cstring& val) -> void
 {
     // if the document is cookie averse, then return
     if (html::helpers::cookies::is_cookie_averse_document(this))
@@ -704,8 +675,7 @@ dom::nodes::document::set_cookie(ext::cstring& val)
 }
 
 
-INLINE void
-dom::nodes::document::set_ready_state(ext::cstring& val)
+auto dom::nodes::document::set_ready_state(ext::cstring& val) -> void
 {
     if (ready_state == val) return;
     // TODO : parser stuff
@@ -713,10 +683,81 @@ dom::nodes::document::set_ready_state(ext::cstring& val)
 }
 
 
-INLINE dom::nodes::element*
-dom::nodes::document::get_scrolling_element() const
+auto dom::nodes::document::get_scrolling_element() const -> dom::nodes::element*
 {
     return m_mode == "quirks" and body
             ? ext::property_dynamic_cast<element*>(body)
             : dynamic_cast<element*>(helpers::trees::root(this));
+}
+
+
+auto dom::nodes::document::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::nodes::document>{isolate}
+            .ctor<>()
+            .inherit<dom::nodes::node>()
+            .inherit<dom::mixins::document_or_element_node<dom::nodes::document>>()
+            .inherit<dom::mixins::document_or_shadow_root<dom::nodes::document>>()
+            .inherit<dom::mixins::parent_node<dom::nodes::document>>()
+            .inherit<dom::mixins::non_element_parent_node<dom::nodes::document>>()
+            .inherit<dom::xpath::xpath_evaluator>()
+            .inherit<ext::listlike<dom::nodes::node*>>()
+
+            .function("createElement", &dom::nodes::document::create_element)
+            .function("createElementNS", &dom::nodes::document::create_element_ns)
+            .function("createDocumentFragment", &dom::nodes::document::create_document_fragment)
+            .function("createTextNode", &dom::nodes::document::create_text_node)
+            .function("createCDataSectionNode", &dom::nodes::document::create_cdata_section_node)
+            .function("createComment", &dom::nodes::document::create_comment)
+            .function("createProcessingInstruction", &dom::nodes::document::create_processing_instruction)
+            .function("createAttribute", &dom::nodes::document::create_attribute)
+            .function("createAttributeNS", &dom::nodes::document::create_attribute_ns)
+            .function("createRange", &dom::nodes::document::create_range)
+            .function("createNodeIterator", &dom::nodes::document::create_node_iterator)
+            .function("createTreeWalker", &dom::nodes::document::create_tree_walker)
+            .function("importNode", &dom::nodes::document::import_node)
+            .function("adoptNode", &dom::nodes::document::adopt_node)
+            .function("getElementsByName", &dom::nodes::document::get_elements_by_name)
+            // .function("open", &dom::nodes::document::open)
+            .function("close", &dom::nodes::document::close)
+            // .function("write", &dom::nodes::document::write)
+            //.function("writeln", &dom::nodes::document::writeln)
+            .function("hasFocus", &dom::nodes::document::has_focus)
+            .function("execCommand", &dom::nodes::document::exec_command)
+            .function("queryCommandEnabled", &dom::nodes::document::query_command_enabled)
+            .function("queryCommandIndeterm", &dom::nodes::document::query_command_indeterm)
+            .function("queryCommandState", &dom::nodes::document::query_command_state)
+            .function("queryCommandSupported", &dom::nodes::document::query_command_supported)
+            .function("queryCommandValue", &dom::nodes::document::query_command_value)
+            .function("elementFromPoint", &dom::nodes::document::element_from_point)
+            .function("elementsFromPoint", &dom::nodes::document::elements_from_point)
+            .function("caretPositionFromPoint", &dom::nodes::document::caret_position_from_point)
+
+            .var("URL", &dom::nodes::document::url, true)
+            .var("compatMode", &dom::nodes::document::compat_mode, true)
+            .var("characterSet", &dom::nodes::document::character_set, true)
+            .var("contentType", &dom::nodes::document::content_type, true)
+            .var("doctype", &dom::nodes::document::doctype, true)
+            .var("documentElement", &dom::nodes::document::document_element, true)
+            .var("implementation", &dom::nodes::document::implementation, true)
+            .var("domain", &dom::nodes::document::domain, true)
+            .var("cookie", &dom::nodes::document::cookie)
+            .var("referrer", &dom::nodes::document::referrer, true)
+            .var("lastModified", &dom::nodes::document::last_modified, true)
+            .var("readyState", &dom::nodes::document::ready_state, true)
+            .var("dir", &dom::nodes::document::dir)
+            .var("designMode", &dom::nodes::document::design_mode)
+            .var("title", &dom::nodes::document::title)
+            .var("location", &dom::nodes::document::location)
+            .var("body", &dom::nodes::document::body)
+            .var("head", &dom::nodes::document::head, true)
+            .var("images", &dom::nodes::document::images, true)
+            .var("links", &dom::nodes::document::links, true)
+            .var("forms", &dom::nodes::document::forms, true)
+            .var("scripts", &dom::nodes::document::scripts, true)
+            .var("defaultView", &dom::nodes::document::default_view, true)
+            .var("scrollingElement", &dom::nodes::document::scrolling_element)
+            .var("namedFlows", &dom::nodes::document::named_flows)
+
+            .auto_wrap_objects();
 }

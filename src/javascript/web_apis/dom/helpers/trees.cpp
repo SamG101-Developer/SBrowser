@@ -212,7 +212,7 @@ auto dom::helpers::trees::contiguous_text_nodes(const nodes::node* node_a) -> ex
 
 auto dom::helpers::trees::is_exclusive_text_node(const nodes::node* node_a) -> bool
 {
-
+    // return if the node is a text node and not a cdatasection node (ie not inherited from)
     return not dynamic_cast<const nodes::cdata_section*>(node_a) and dynamic_cast<const nodes::text*>(node_a);
 }
 

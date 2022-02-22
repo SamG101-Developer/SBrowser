@@ -10,3 +10,13 @@ dom::nodes::comment::comment(ext::cstring& new_data) : character_data()
     data << new_data;
     owner_document << javascript::realms::current_global_object().get<document*>("associated_document");
 }
+
+
+auto dom::nodes::comment::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::nodes::comment>{isolate}
+            .ctor<>()
+            .ctor<ext::cstring&>()
+            .inherit<dom::nodes::character_data>()
+            .auto_wrap_objects();
+}

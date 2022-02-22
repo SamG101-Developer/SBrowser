@@ -14,7 +14,8 @@
 namespace dom {
     namespace helpers {class mutation_observers;}
     namespace nodes {class node;}
-    namespace mutations {
+    namespace mutations
+    {
         class mutation_observer;
         struct mutation_record;
     }
@@ -33,12 +34,12 @@ public: constructors
     mutation_observer(mutation_callback&& callback);
 
 public: methods
-    void observe(nodes::node* target, ext::string_any_map&& options = {});
-    void disconnect();
-    ext::vector<mutation_record*> take_records();
+    auto observe(nodes::node* target, ext::string_any_map&& options = {}) -> void;
+    auto disconnect() -> void;
+    auto take_records() -> ext::vector<mutation_record*>;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: internal_properties
     mutation_callback m_callback;

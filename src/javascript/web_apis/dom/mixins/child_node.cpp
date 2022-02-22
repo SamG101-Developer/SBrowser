@@ -13,8 +13,7 @@
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-void
-dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes)
+auto dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes) -> void
 {
     // get the class that this mixin is being mixed into
     T* base = reinterpret_cast<T*>(this);
@@ -44,8 +43,7 @@ dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes)
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-void
-dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes)
+auto dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes) -> void
 {
     // get the class that this mixin is being mixed into
     T* base = reinterpret_cast<T*>(this);
@@ -70,11 +68,10 @@ dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes)
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-void
-dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes)
+auto dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into
-    T* base = reinterpret_cast<T*>(this);
+    T* base = static_cast<T*>(this);
 
     // check that the node has a parent (otherwise has no siblings)
     if (nodes::node* parent = base->parent)
@@ -97,11 +94,10 @@ dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes)
 
 
 template <typename T>
-void
-dom::mixins::child_node<T>::remove() {
-
+auto dom::mixins::child_node<T>::remove() -> void
+{
     // get the class that this mixin is being mixed into
-    T* base = reinterpret_cast<T*>(this);
+    T* base = static_cast<T*>(this);
 
     // remove this node if it has a parent
     if (base->parent)
@@ -109,6 +105,14 @@ dom::mixins::child_node<T>::remove() {
 
     // custom element reactions
     handle_ce_reactions(&child_node<T>::remove);
+}
+
+
+template <typename T>
+auto dom::mixins::child_node<T>::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::mixins::child_node<dom::nodes::node>>{isolate}
+            .auto_wrap_objects();
 }
 
 

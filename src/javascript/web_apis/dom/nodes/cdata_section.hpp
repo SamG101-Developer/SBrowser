@@ -8,8 +8,11 @@ namespace dom::nodes {class cdata_section;}
 
 
 class dom::nodes::cdata_section : public text {
-public constructors:
+public: constructors
     cdata_section();
+
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

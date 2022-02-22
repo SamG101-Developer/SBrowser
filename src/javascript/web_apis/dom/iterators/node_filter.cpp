@@ -1,8 +1,12 @@
 #include "node_filter.hpp"
 
 
-ext::any
-dom::iterators::node_filter::v8(v8::Isolate* isolate) const
+auto dom::iterators::node_filter::accept_node(nodes::node* node) const -> unsigned short {
+    return 0x0; /* TODO : Find the impl or remove for legacy? */
+}
+
+
+auto dom::iterators::node_filter::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom::iterators::node_filter>{isolate}
             .static_("FILTER_ACCEPT", dom::iterators::node_filter::FILTER_ACCEPT)

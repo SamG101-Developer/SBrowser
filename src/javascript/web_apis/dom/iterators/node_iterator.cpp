@@ -6,24 +6,21 @@
 dom::iterators::node_iterator::node_iterator() = default;
 
 
-dom::nodes::node*
-dom::iterators::node_iterator::next_node()
+auto dom::iterators::node_iterator::next_node() -> dom::nodes::node*
 {
     // get the next node in the iterator by calling the traverse helper method
     return helpers::traversal::traverse(this, NEXT);
 }
 
 
-dom::nodes::node*
-dom::iterators::node_iterator::previous_node()
+auto dom::iterators::node_iterator::previous_node() -> dom::nodes::node*
 {
     // get the previous node in the iterator by calling the traverse helper method
     return helpers::traversal::traverse(this, PREVIOUS);
 }
 
 
-ext::any
-dom::iterators::node_iterator::v8(v8::Isolate* isolate) const
+auto dom::iterators::node_iterator::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<node_iterator>{isolate}
             .inherit<abstract_iterator>()

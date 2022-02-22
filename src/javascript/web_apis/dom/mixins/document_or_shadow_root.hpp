@@ -4,6 +4,7 @@
 
 #include <ext/iterables/vector.hpp>
 #include <ext/properties/dom_property.hpp>
+#include <dom_object.hpp>
 
 namespace css::cssom::style_sheets {class css_style_sheet;}
 
@@ -14,7 +15,7 @@ namespace dom {
 
 
 template <typename T>
-class dom::mixins::document_or_shadow_root {
+class dom::mixins::document_or_shadow_root : public dom_object {
 
 public: constructors
     // dom
@@ -23,6 +24,9 @@ public: constructors
     // cssom
     ext::dom_property<ext::vector<css::cssom::style_sheets::css_style_sheet*>*, _F> style_sheets;
     ext::dom_property<ext::vector<css::cssom::style_sheets::css_style_sheet*>*, _F> adopted_style_sheets;
+
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

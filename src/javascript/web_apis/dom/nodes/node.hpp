@@ -57,20 +57,20 @@ public: static_constants
     static const unsigned short DOCUMENT_FRAGMENT_NODE = 11;
 
 public: methods
-    void normalize() const;
-    bool has_child_nodes() const;
-    bool contains(node* other) const;
-    bool is_equal_node(node* other) const;
-    bool is_default_namespace(ext::cstring& namespace_) const;
-    ext::string lookup_prefix(ext::cstring& namespace_) const;
-    ext::string lookup_namespace_uri(ext::cstring& prefix) const;
-    unsigned short compare_document_position(node* other) const;
-    dom::nodes::node* get_root_node(ext::cstring_any_map& options) const;
-    dom::nodes::node* clone_node(bool deep = false) const;
-    dom::nodes::node* insert_before(node* new_node, node* child);
-    dom::nodes::node* append_child(node* new_node);
-    dom::nodes::node* replace_child(node* old_node, node* new_node);
-    dom::nodes::node* remove_child(node* old_node);
+    auto normalize() const -> void;
+    auto has_child_nodes() const -> bool;
+    auto contains(node* other) const -> bool;
+    auto is_equal_node(node* other) const -> bool;
+    auto is_default_namespace(ext::cstring& namespace_) const -> bool;
+    auto lookup_prefix(ext::cstring& namespace_) const -> ext::string;
+    auto lookup_namespace_uri(ext::cstring& prefix) const -> ext::string;
+    auto compare_document_position(node* other) const -> unsigned short;
+    auto get_root_node(ext::cstring_any_map& options) const -> node*;
+    auto clone_node(bool deep = false) const -> node*;
+    auto insert_before(node* new_node, node* child) -> node*;
+    auto append_child(node* new_node) -> node*;
+    auto replace_child(node* old_node, node* new_node) -> node*;
+    auto remove_child(node* old_node) -> node*;
 
 public properties:
     ext::dom_property<unsigned short, _F> node_type;
@@ -89,33 +89,32 @@ public properties:
     ext::dom_property<node*, _F> next_sibling;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected: accessors
-    virtual ext::string get_node_value() const;
-    virtual ext::string get_text_content() const;
+    virtual auto get_node_value() const -> ext::string;
+    virtual auto get_text_content() const -> ext::string;
 
-    virtual void set_node_value(ext::cstring& val);
-    virtual void set_text_content(ext::cstring& val);
+    virtual auto set_node_value(ext::cstring& val) -> void;
+    virtual auto set_text_content(ext::cstring& val) -> void;
 
 protected: internal_methods
-    virtual QWidget* render() {return nullptr;};
+    virtual auto render() const -> QWidget*;
 
 protected: internal_properties
     QWidget* m_rendered_widget;
+    ext::vector<internal::registered_observer*>* m_registered_observer_list;
 
 private: accessors
-    bool get_is_connected() const;
-    ext::string get_base_uri() const;
-    node* get_first_child() const;
-    node* get_last_child() const;
-    node* get_previous_sibling() const;
-    node* get_next_sibling() const;
-    element* get_parent_element() const;
+    auto get_is_connected() const -> bool;
+    auto get_base_uri() const -> ext::string;
+    auto get_first_child() const -> node*;
+    auto get_last_child() const -> node*;
+    auto get_previous_sibling() const -> node*;
+    auto get_next_sibling() const -> node*;
+    auto get_parent_element() const -> element*;
 
-    void set_parent_node(node* val);
-
-    ext::vector<internal::registered_observer*>* m_registered_observer_list;
+    auto set_parent_node(node* val) -> void;
 };
 
 

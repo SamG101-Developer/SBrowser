@@ -25,6 +25,7 @@ public properties:
 
 public internal_methods:
     QLabel* render() override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private accessors:
     ext::string get_whole_text() const;

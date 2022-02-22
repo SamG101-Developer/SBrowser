@@ -59,3 +59,16 @@ INLINE void dom::nodes::text::set_data(ext::cstring& val)
     data << val;
     render()->setText(data);
 }
+
+
+auto dom::nodes::text::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom::nodes::text>{isolate}
+            .ctor<>()
+            .ctor<ext::cstring&>()
+            .inherit<dom::nodes::character_data>()
+            .inherit<dom::mixins::slottable<dom::nodes::text>>()
+            .function("splitText", &dom::nodes::text::split_text)
+            .var("wholeText", &dom::nodes::text::whole_text, true)
+            .auto_wrap_objects();
+}

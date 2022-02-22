@@ -51,7 +51,9 @@ public: constructors
     virtual operator T() const;
     virtual property<T>& operator=(const T& o);
     virtual property<T>& operator=(T&& o) noexcept;
-    template<typename U> property<T>& operator=(const ext::property<U>& o);
+
+    template <typename U> operator U() const requires (not std::is_same_v<T, U>);
+    template <typename U> property<T>& operator=(const ext::property<U>& o) requires (not std::is_same_v<T, U>);
 
     T* operator->() const requires (!std::is_pointer_v<T>);
     T operator->() const requires (std::is_pointer_v<T>);
@@ -182,6 +184,26 @@ FAST INLINE ext::property<T>& ext::property<T>::operator=(T&& o) noexcept
     set(std::forward<T&>(o));
     return *this;
 }
+
+
+template <typename T>
+template <typename U>
+FAST INLINE ext::property<T>::operator U() const requires (not std::is_same_v<T, U>)
+{
+    // TODO
+    return (U)m_internal;
+}
+
+
+template <typename T>
+template <typename U>
+FAST INLINE ext::property<T>& ext::property<T>::operator=(const ext::property<U>& o) requires (not std::is_same_v<T, U>)
+{
+    // TODO
+    m_internal = (T)o;
+    return *this;
+}
+
 
 
 template <typename T>

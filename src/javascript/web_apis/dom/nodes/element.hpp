@@ -12,15 +12,15 @@
 #include <dom/mixins/slottable.hpp>
 
 namespace dom {
-    namespace helpers {
+    namespace helpers
+    {
         struct attributes;
         struct custom_elements;
         struct node_internals;
     }
-
     namespace internal {struct custom_element_definition;}
-
-    namespace nodes {
+    namespace nodes
+    {
         class attr;
         class element;
         class shadow_root;
@@ -52,50 +52,50 @@ public: constructors
 
 public: methods
     // dom
-    bool has_attributes() const;
-    ext::vector<ext::string> get_attribute_names() const;
+    auto has_attributes() const -> bool;
+    auto get_attribute_names() const -> ext::vector<ext::string>;
 
-    bool has_attribute(ext::cstring& name) const;
-    bool has_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const;
-    bool has_attribute_node(attr* attribute);
-    bool has_attribute_node_ns(attr* attribute);
+    auto has_attribute(ext::cstring& name) const -> bool;
+    auto has_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> bool;
+    auto has_attribute_node(attr* attribute) -> bool;
+    auto has_attribute_node_ns(attr* attribute) -> bool;
 
-    ext::string get_attribute(ext::cstring& qualified_name) const;
-    ext::string get_attribute_ns(ext::cstring& namespace_, ext::string local_name) const;
-    attr* get_attribute_node(ext::cstring& qualified_name) const;
-    attr* get_attribute_node_ns(ext::cstring& namespace_, ext::cstring& local_name) const;
+    auto get_attribute(ext::cstring& qualified_name) const -> ext::string;
+    auto get_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> ext::string;
+    auto get_attribute_node(ext::cstring& qualified_name) const -> attr*;
+    auto get_attribute_node_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> attr*;
 
-    void set_attribute(ext::cstring& qualified_name, ext::cstring& value);
-    void set_attribute_ns(ext::cstring& namespace_, ext::cstring& qualified_name, ext::cstring& value);
-    attr* set_attribute_node(attr* attribute);
-    attr* set_attribute_node_ns(attr* attribute);
+    auto set_attribute(ext::cstring& qualified_name, ext::cstring& value) -> void;
+    auto set_attribute_ns(ext::cstring& namespace_, ext::cstring& qualified_name, ext::cstring& value) -> void;
+    auto set_attribute_node(attr* attribute) -> attr*;
+    auto set_attribute_node_ns(attr* attribute) -> attr*;
 
-    void remove_attribute(ext::cstring& qualified_name);
-    void remove_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name);
-    attr* remove_attribute_node(attr* attribute);
-    attr* remove_attribute_node_ns(attr* attribute);
+    auto remove_attribute(ext::cstring& qualified_name) -> void;
+    auto remove_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) -> void;
+    auto remove_attribute_node(attr* attribute) -> attr*;
+    auto remove_attribute_node_ns(attr* attribute) -> attr*;
 
-    bool toggle_attribute(ext::cstring& qualified_name, bool force = false);
-    bool toggle_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name, bool force = false);
-    attr* toggle_attribute_node(attr* attribute, bool force = false);
-    attr* toggle_attribute_node_ns(attr* attribute, bool force = false);
+    auto toggle_attribute(ext::cstring& qualified_name, bool force = false) -> bool;
+    auto toggle_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name, bool force = false) -> bool;
+    auto toggle_attribute_node(attr* attribute, bool force = false) -> attr*;
+    auto toggle_attribute_node_ns(attr* attribute, bool force = false) -> attr*;
 
-    shadow_root* attach_shadow(ext::cstring_any_map& options);
-    element* closest(ext::cstring& selectors);
-    bool matches(ext::cstring& selectors);
+    auto attach_shadow(ext::cstring_any_map& options) -> shadow_root*;
+    auto closest(ext::cstring& selectors) -> element*;
+    auto matches(ext::cstring& selectors) -> bool;
 
     // css-spatial-navigation
-    node* get_spatial_navigation_container();
-    node* spatial_navigation_search(ext::cstring& direction, ext::cstring_any_map& options = {});
-    ext::vector<node*> focusable_areas(ext::cstring_any_map& options = {});
+    auto get_spatial_navigation_container() -> node*;
+    auto spatial_navigation_search(ext::cstring& direction, ext::cstring_any_map& options = {}) -> node*;
+    auto focusable_areas(ext::cstring_any_map& options = {}) -> ext::vector<node*>;
 
     // css-pseudo
 //    css::css_pseudo::elements::pseudo_element* pseudo(ext::cstring& type); TODO
 
     // cssom-view
-    ext::vector<geometry::shapes::dom_rect> get_client_rects();
-    geometry::shapes::dom_rect get_bounding_client_rect();
-    void scroll_into_view(ext::cstring_any_map& options = {});
+    auto get_client_rects() const -> ext::vector<geometry::shapes::dom_rect>;
+    auto get_bounding_client_rect() const -> geometry::shapes::dom_rect;
+    auto scroll_into_view(ext::cstring_any_map& options = {}) -> void;
 
 public: properties
     // dom
@@ -134,30 +134,30 @@ protected: internal_properties
 
 private: accessors
     // dom
-    inline ext::string get_text_content() const override;
-    inline ext::string get_tag_name() const;
-    inline shadow_root* get_shadow_root() const;
+    auto get_text_content() const -> ext::string override;
+    auto get_tag_name() const -> ext::string;
+    auto get_shadow_root() const -> shadow_root*;
 
-    inline void set_text_content(ext::cstring& val) override;
+    auto set_text_content(ext::cstring& val) -> void override;
 
     // cssom-view
-    inline double get_scroll_top() const;
-    inline double get_scroll_left() const;
-    inline double get_scroll_width() const;
-    inline double get_scroll_height() const;
-    inline double get_client_top() const;
-    inline double get_client_left() const;
-    inline double get_client_width() const;
-    inline double get_client_height() const;
+    auto get_scroll_top() const -> double;
+    auto get_scroll_left() const -> double;
+    auto get_scroll_width() const -> double;
+    auto get_scroll_height() const -> double;
+    auto get_client_top() const -> double;
+    auto get_client_left() const -> double;
+    auto get_client_width() const -> double;
+    auto get_client_height() const -> double;
 
-    inline void set_scroll_top(double val);
-    inline void set_scroll_left(double val);
+    auto set_scroll_top(double val) -> void;
+    auto set_scroll_left(double val) -> void;
 
-    inline ext::string get_m_qualified_name() const;
-    inline ext::string get_m_html_qualified_uppercase_name() const;
+    auto get_m_qualified_name() const -> ext::string;
+    auto get_m_html_qualified_uppercase_name() const -> ext::string;
 
 public: internal_methods
-    QWidget* render() override;
+    QWidget* render() const override;
     ext::any v8(v8::Isolate *isolate) const override;
 
 private: internal_properties

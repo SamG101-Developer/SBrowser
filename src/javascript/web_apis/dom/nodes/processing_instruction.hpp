@@ -9,13 +9,16 @@ namespace dom::nodes {class processing_instruction;}
 
 class dom::nodes::processing_instruction
         : public character_data {
-//        , public css::cssom::mixins::link_style {
+        // , public css::cssom::mixins::link_style {
 
 public constructors:
     processing_instruction();
 
 public properties:
     ext::dom_property<ext::string, _F> target;
+
+public: internal_methods
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

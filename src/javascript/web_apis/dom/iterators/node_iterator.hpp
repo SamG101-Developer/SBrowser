@@ -18,15 +18,15 @@ public: constructors
     node_iterator();
 
 public: methods
-    nodes::node* next_node();
-    nodes::node* previous_node();
+    auto next_node() -> nodes::node*;
+    auto previous_node() -> nodes::node*;
 
 public: properties
     ext::dom_property<nodes::node*, _F> reference_node;
     ext::dom_property<bool, _F> pointer_before_reference_node;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: internal_properties
     ext::vector<nodes::node*> iterator_collection;

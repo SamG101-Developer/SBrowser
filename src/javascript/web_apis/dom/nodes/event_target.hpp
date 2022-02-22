@@ -30,15 +30,15 @@ public: constructors
     ~event_target() override;
 
 public: methods
-    void add_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options);
-    void remove_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options);
-    bool dispatch_event(events::event* event);
+    auto add_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options) -> void;
+    auto remove_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options) -> void;
+    auto dispatch_event(events::event* event) -> bool;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected: internal_methods
-    virtual event_target* get_the_parent(events::event* event);
+    virtual auto get_the_parent(events::event* event) -> event_target*;
 
 private: internal_properties
     ext::vector<ext::string_any_map> m_event_listeners;

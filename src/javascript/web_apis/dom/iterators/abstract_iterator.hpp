@@ -29,7 +29,7 @@ public: properties
     ext::dom_property<unsigned long, _F> what_to_show;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private:
     bool m_active_flag;

@@ -19,10 +19,10 @@ dom::mutations::mutation_observer::mutation_observer(
 }
 
 
-void
-dom::mutations::mutation_observer::observe(
+auto dom::mutations::mutation_observer::observe(
         nodes::node* target,
         ext::string_any_map&& options)
+        -> void
 {
     // extract the attribute filter as a vector of strings
     auto attribute_filter = options.at("attribute_filter").to<ext::vector<ext::string>>();
@@ -87,8 +87,7 @@ dom::mutations::mutation_observer::observe(
 }
 
 
-void
-dom::mutations::mutation_observer::disconnect()
+auto dom::mutations::mutation_observer::disconnect() -> void
 {
     // iterate over each node that the observer is listening to and remove them if their observer is this object
     for (auto* node: *m_node_list)
@@ -99,8 +98,7 @@ dom::mutations::mutation_observer::disconnect()
 }
 
 
-ext::vector<dom::mutations::mutation_record*>
-dom::mutations::mutation_observer::take_records()
+auto dom::mutations::mutation_observer::take_records() -> ext::vector<dom::mutations::mutation_record*>
 {
     // copy the queue into a vector
     ext::vector<mutation_record*> vector {};
@@ -115,8 +113,7 @@ dom::mutations::mutation_observer::take_records()
 }
 
 
-ext::any
-dom::mutations::mutation_observer::v8(v8::Isolate* isolate) const
+auto dom::mutations::mutation_observer::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom::mutations::mutation_record>{isolate}
             .ctor<dom::mutations::mutation_observer::mutation_callback&&>()

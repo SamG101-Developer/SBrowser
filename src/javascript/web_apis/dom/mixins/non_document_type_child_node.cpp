@@ -16,30 +16,37 @@ dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
 
 
 template <typename T>
-INLINE dom::nodes::element*
-dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const
+auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const -> dom::nodes::element*
 {
     // get the class that this mixin is being mixed into
-    auto* base = reinterpret_cast<const T*>(this);
+    const nodes::node* base = static_cast<const T*>(this);
 
     // return the last node whose index precedes this node's
     return base->child_nodes
-            ->cast_all<nodes::element*>()
+            ->template cast_all<nodes::element*>()
             .last_match([base](auto* child) {return helpers::trees::index(child) < helpers::trees::index(base);});
 }
 
 
 template <typename T>
-INLINE dom::nodes::element*
-dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const
+auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const -> dom::nodes::element*
 {
     // get the class that this mixin is being mixed into
-    auto* base = reinterpret_cast<const T*>(this);
+    const nodes::node* base = static_cast<const T*>(this);
 
     // return the first node whose index succeeds this node's
     return base->child_nodes
-            ->cast_all<nodes::element*>()
+            ->template cast_all<nodes::element*>()
             .first_match([base](auto* child) {return helpers::trees::index(child) > helpers::trees::index(base);});
+}
+
+
+template <typename T>
+auto dom::mixins::non_document_type_child_node<T>::v8(v8::Isolate* isolate) const -> ext::any {
+    return v8pp::class_<dom::mixins::non_document_type_child_node<T>>{isolate}
+            .var("previousElementSibling", &dom::mixins::non_document_type_child_node<T>::previous_element_sibling)
+            .var("nextElementSibling", &dom::mixins::non_document_type_child_node<T>::next_element_sibling)
+            .auto_wrap_objects();
 }
 
 
