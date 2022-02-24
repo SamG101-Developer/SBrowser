@@ -4,13 +4,15 @@
 #include <ext/iterables/string.hpp>
 #include <ext/properties/property.hpp>
 
-namespace ext {
+namespace ext
+{
     struct css_property;
     struct css_shorthand_property;
 }
 
 
-struct ext::css_property : public property<ext::string> {
+struct ext::css_property : public property<ext::string>
+{
 public: friends
     friend struct css_shorthand_property;
 
@@ -21,7 +23,7 @@ public: enums
     enum media_t {VISUAL, HIDDEN};
 
 public: constructors
-    css_property(
+    explicit css_property(
             string&& name, string&& initial, bool&& inherited = false, animation_t&& animation_type = NOT_ANIMATABLE,
             percentage_t&& percentage_type = NA, canonical_order_t&& canonical_order_type = PER_GRAMMAR,
             media_t&& media_type = HIDDEN);

@@ -10,7 +10,8 @@ template <typename function> void handle_ce_reactions(const function& f);
 
 
 template <typename T, bool ce_reactions>
-struct ext::dom_property : public property<T> {
+struct ext::dom_property : public property<T>
+{
 public: constructors
     dom_property() = default;
     dom_property(const dom_property<T, ce_reactions>&) = default;
@@ -18,8 +19,8 @@ public: constructors
 
 public: operators
     operator T() const override;
-    dom_property<T, ce_reactions>& operator=(const T& o) override;
-    dom_property<T, ce_reactions>& operator=(T&& o) override;
+    auto operator=(const T& o) -> dom_property<T, ce_reactions>& override;
+    auto operator=(T&& o) -> dom_property<T, ce_reactions>& override;
 };
 
 
@@ -41,7 +42,7 @@ FAST INLINE ext::dom_property<T, ce_reactions>::operator T() const
 
 
 template <typename T, bool ce_reactions>
-FAST INLINE ext::dom_property<T, ce_reactions>& ext::dom_property<T, ce_reactions>::operator=(const T& o)
+FAST INLINE auto ext::dom_property<T, ce_reactions>::operator=(const T& o) -> dom_property<T, ce_reactions>&
 {
     // handle any custom element reactions, and perform default setting operations (for const reference)
     if constexpr(ce_reactions) handle_ce_reactions(*this);
@@ -51,7 +52,7 @@ FAST INLINE ext::dom_property<T, ce_reactions>& ext::dom_property<T, ce_reaction
 
 
 template <typename T, bool ce_reactions>
-FAST INLINE ext::dom_property<T, ce_reactions>& ext::dom_property<T, ce_reactions>::operator=(T&& o)
+FAST INLINE auto ext::dom_property<T, ce_reactions>::operator=(T&& o) -> dom_property<T, ce_reactions>&
 {
     // handle any custom element reactions, and perform default setting operations (for const reference)
     if constexpr(ce_reactions) handle_ce_reactions(*this);

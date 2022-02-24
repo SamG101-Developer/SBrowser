@@ -4,19 +4,19 @@
 #include <ext/properties/css_property.hpp>
 
 namespace ext {struct css_shorthand_property;}
-namespace {ext::vector<ext::css_property*> contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand);}
+namespace {auto contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand) -> ext::vector<ext::css_property*>;}
 
 
 struct ext::css_shorthand_property : property<ext::string> {
 public: constructors
-    css_shorthand_property(string&& name);
+    explicit css_shorthand_property(string&& name);
 
 public: methods
-    css_shorthand_property& add_css_property(css_property2& css_longhand_property);
-    operator string() const override;
+    auto add_css_property(css_property& css_longhand_property) -> css_shorthand_property&;
 
 public: operators
-    css_shorthand_property& operator=(cstring& o) override;
+    auto operator=(cstring& o) -> css_shorthand_property& override;
+    operator string() const override;
 
 public: internal_properties
     vector<css_property> css_properties;
@@ -33,13 +33,27 @@ ext::css_shorthand_property::css_shorthand_property(string&& name)
 {}
 
 
-ext::css_shorthand_property& ext::css_shorthand_property::add_css_property(css_property& css_longhand_property)
+auto ext::css_shorthand_property::add_css_property(css_property& css_longhand_property) -> ext::css_shorthand_property&
 {
     // append the property and update the initial string to include it ie for margins [0px 0px 0px -> 0px 0px 0px 0px]
     css_properties.append(css_longhand_property);
     m_initial += (string)" " + css_longhand_property.m_initial;
 
     // return a reference to the css shorthand property
+    return *this;
+}
+
+
+auto ext::css_shorthand_property::operator=(cstring& o) -> ext::css_shorthand_property&
+{
+    // extract the contained values from the string, and set them sequentially to each property in the list
+    auto sub_items = ::contained_items(*this, o);
+    css_properties.for_each([&sub_items](css_property* longhand_property) {
+        *longhand_property << *sub_items.front();
+        sub_items.pop(0);
+    });
+
+    // return the reference to the property
     return *this;
 }
 
@@ -54,21 +68,8 @@ ext::css_shorthand_property::operator string() const
 }
 
 
-ext::css_shorthand_property& ext::css_shorthand_property::operator=(cstring& o)
+auto contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand) -> ext::vector<ext::css_property*>
 {
-    // extract the contained values from the string, and set them sequentially to each property in the list
-    auto sub_items = ::contained_items(*this, o);
-    css_properties.for_each([&sub_items](css_property* longhand_property) {
-        *longhand_property << *sub_items.front();
-        sub_items.pop(0);
-    });
-
-    // return the reference to the property
-    return *this;
-}
-
-
-ext::vector<ext::css_property*> contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand) {
     // split the items out of the string, and determine how many there should be for the given property
     auto sub_items = shorthand.split(' ');
     auto sub_items_desired_length = property.css_properties.length();
