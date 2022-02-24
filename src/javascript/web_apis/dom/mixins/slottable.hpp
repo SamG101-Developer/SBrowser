@@ -18,7 +18,8 @@ namespace html::elements
 
 
 template <typename T>
-class dom::mixins::slottable : virtual public dom_object {
+class dom::mixins::slottable : virtual public dom_object
+{
 public: friends
     friend struct helpers::shadows;
 

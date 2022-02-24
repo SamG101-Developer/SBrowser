@@ -8,16 +8,17 @@
 #include <ext/iterables/string.hpp>
 #include <ext/iterables/vector.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct mutation_observers;}
-    namespace internal {
+    namespace internal
+    {
         struct registered_observer;
         struct transient_registered_observer;
     }
-    namespace mutations {
-        class mutation_observer;
-    }
-    namespace nodes {
+    namespace mutations {class mutation_observer;}
+    namespace nodes
+    {
         class event_target;
         class node;
     }
@@ -26,7 +27,8 @@ namespace dom {
 namespace html::elements {class html_media_element;}
 
 
-struct dom::helpers::mutation_observers {
+struct dom::helpers::mutation_observers
+{
 private:
     using steps_t = std::function<void()>;
 
@@ -43,13 +45,15 @@ public:
 };
 
 
-struct dom::internal::registered_observer {
+struct dom::internal::registered_observer
+{
     mutations::mutation_observer* observer;
     ext::string_any_map options;
 };
 
 
-struct dom::internal::transient_registered_observer : public registered_observer {
+struct dom::internal::transient_registered_observer : public registered_observer
+{
     registered_observer* source;
 };
 

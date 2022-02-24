@@ -4,24 +4,25 @@
 
 #include <ext/iterables/string.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct attributes;}
-    namespace nodes {
+    namespace nodes
+    {
         class attr;
         class element;
     }
 }
 
 
-struct dom::helpers::attributes {
+struct dom::helpers::attributes
+{
     static auto handle_attributes_changes(const nodes::attr* attribute, const nodes::element* owner_element, ext::cstring& old_value, ext::cstring& new_value) -> void;
 
     static auto change(nodes::attr* attribute, ext::cstring& new_value) -> void;
     static auto append(nodes::attr* attribute, nodes::element* new_owner_element) -> void;
     static auto remove(nodes::attr* attribute) -> void;
     static auto replace(nodes::attr* old_attribute, nodes::attr* new_attribute) -> void;
-
-    // TODO : move owner_element parameter to be the first parameter in all these methods
 
     static auto get_attribute_value(const nodes::element* owner_element,  ext::cstring& local_name, ext::cstring& namespace_) -> ext::string;
     static auto get_attribute_by_name(const nodes::element* owner_element, ext::cstring& qualified_name) -> nodes::attr*;

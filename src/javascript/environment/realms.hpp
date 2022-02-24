@@ -6,7 +6,8 @@
 #include <v8.h>
 #include <v8pp/convert.hpp>
 
-namespace javascript::realms {
+namespace javascript::realms
+{
     class realm;
 
     realm relevant_agent();

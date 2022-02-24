@@ -11,7 +11,8 @@
 
 namespace {std::unique_ptr<v8::Platform> platform;}
 
-namespace javascript::environment {
+namespace javascript::environment
+{
     namespace modules {enum module_type;}
 
     namespace stages {

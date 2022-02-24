@@ -9,9 +9,11 @@
 
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace events {class event;}
-    namespace helpers {
+    namespace helpers
+    {
         struct event_dispatching;
         struct event_listening;
     }
@@ -20,7 +22,8 @@ namespace dom {
 }
 
 
-class dom::events::event : virtual public dom_object {
+class dom::events::event : virtual public dom_object
+{
 public: friends
     friend class dom::nodes::event_target;
     friend struct dom::helpers::event_dispatching;
@@ -29,6 +32,7 @@ public: friends
 public: constructors
     event();
     event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
+
     ~event() override;
 
 public: static_constants

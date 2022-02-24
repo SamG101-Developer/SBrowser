@@ -4,9 +4,11 @@
 
 #include <ext/iterables/vector.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct shadows;}
-    namespace nodes {
+    namespace nodes
+    {
         class event_target;
         class node;
         class shadow_root;
@@ -16,7 +18,8 @@ namespace dom {
 namespace html::elements {class html_slot_element;}
 
 
-struct dom::helpers::shadows {
+struct dom::helpers::shadows
+{
     static auto is_connected(const nodes::node* node) -> bool;
     static auto is_slot(const nodes::node* node) -> bool;
     static auto is_slottable(const nodes::node* node) -> bool;

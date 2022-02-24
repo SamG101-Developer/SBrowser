@@ -4,9 +4,11 @@
 
 #include <ext/iterables/string.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct node_internals;}
-    namespace nodes {
+    namespace nodes
+    {
         class document;
         class element;
         class node;
@@ -18,7 +20,8 @@ namespace dom {
 namespace html::elements {class html_element;}
 
 
-struct dom::helpers::node_internals {
+struct dom::helpers::node_internals
+{
     template <typename T> static auto clone(T* node, nodes::document* document = nullptr, bool deep = false) -> dom::nodes::node* requires std::is_base_of_v<T, nodes::node>;
     static auto locate_a_namespace_prefix(const nodes::element* element, ext::cstring& namespace_) -> ext::string;
     static auto locate_a_namespace(const nodes::node* node, ext::cstring& prefix) -> ext::string;

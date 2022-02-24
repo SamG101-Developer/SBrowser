@@ -5,13 +5,15 @@
 #include <ext/macros/decorators.hpp>
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace iterators {struct node_filter;}
     namespace nodes {class node;}
 }
 
 
-struct dom::iterators::node_filter : virtual public dom_object {
+struct dom::iterators::node_filter : virtual public dom_object
+{
 public: static_constants
     static const unsigned short FILTER_ACCEPT = 1;
     static const unsigned short FILTER_REJECT = 2;

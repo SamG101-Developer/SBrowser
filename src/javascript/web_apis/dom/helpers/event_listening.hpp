@@ -5,7 +5,8 @@
 #include <ext/iterables/map.hpp>
 #include <ext/iterables/string.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace events {class event;}
     namespace helpers {struct event_listening;}
     namespace internal {struct event_path_struct;}
@@ -13,7 +14,8 @@ namespace dom {
 }
 
 
-struct dom::helpers::event_listening {
+struct dom::helpers::event_listening
+{
     static auto flatten_more(std::variant<bool, ext::string_any_map> options) -> ext::string_any_map;
     static auto flatten (std::variant<bool, ext::string_any_map> options) -> bool;
     static auto add_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener) -> void;
@@ -23,7 +25,8 @@ struct dom::helpers::event_listening {
 };
 
 
-struct dom::internal::event_path_struct {
+struct dom::internal::event_path_struct
+{
     nodes::event_target* invocation_target = nullptr;
     nodes::event_target* shadow_adjusted_target = nullptr;
     nodes::event_target* related_target = nullptr;

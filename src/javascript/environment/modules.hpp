@@ -5,7 +5,8 @@
 namespace javascript::environment::modules {enum module_type;}
 
 
-enum javascript::environment::modules::module_type {
+enum javascript::environment::modules::module_type
+{
     window,
     worker,
     audio_worklet

@@ -6,21 +6,24 @@
 #include <ext/iterables/map.hpp>
 #include <ext/iterables/string.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct custom_elements;}
-    namespace internal {
+    namespace internal
+    {
         struct custom_element_definition;
         using lifecycle_callback = std::function<void()>;
     }
-
-    namespace nodes {
+    namespace nodes
+    {
         class document;
         class element;
     }
 }
 
 
-struct dom::helpers::custom_elements {
+struct dom::helpers::custom_elements
+{
     static auto create_an_element(nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& prefix = "", ext::cstring& is = "", const bool synchronous_custom_elements_flag = false) -> dom::nodes::element*;
     static auto upgrade_element(internal::custom_element_definition* definition, const nodes::element* element) -> void;
     static auto try_to_upgrade_element(const nodes::element* element) -> void;
@@ -36,7 +39,8 @@ struct dom::helpers::custom_elements {
 };
 
 
-struct dom::internal::custom_element_definition {
+struct dom::internal::custom_element_definition
+{
     bool form_associated;
     bool disable_internals;
     bool disable_shadow;

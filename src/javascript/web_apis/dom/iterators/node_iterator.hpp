@@ -4,13 +4,15 @@
 
 #include <dom/iterators/abstract_iterator.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace iterators {class node_iterator;}
     namespace nodes {class node;}
 }
 
 
-class dom::iterators::node_iterator : public abstract_iterator {
+class dom::iterators::node_iterator : public abstract_iterator
+{
 public: friends
     friend struct helpers::traversal;
 

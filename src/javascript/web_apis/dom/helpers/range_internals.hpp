@@ -6,10 +6,12 @@
 
 #include <ext/iterables/vector.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct range_internals;}
     namespace internal {enum boundary_point_comparison_position;}
-    namespace nodes {
+    namespace nodes
+    {
         class character_data;
         class document_fragment;
         class node;
@@ -18,7 +20,8 @@ namespace dom {
 }
 
 
-struct dom::helpers::range_internals {
+struct dom::helpers::range_internals
+{
     static auto contains(nodes::node* node, ranges::range* range) -> bool;
     static auto partially_contains(nodes::node* node, ranges::range* range) -> bool;
     static auto set_start_or_end(ranges::range* range, nodes::node* container, unsigned long offset, bool start) -> void;

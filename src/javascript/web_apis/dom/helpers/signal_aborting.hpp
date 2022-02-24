@@ -4,13 +4,15 @@
 
 #include <ext/types/any.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct signal_aborting;}
     namespace aborting {class abort_signal;}
 }
 
 
-struct dom::helpers::signal_aborting {
+struct dom::helpers::signal_aborting
+{
     static auto signal_abort(aborting::abort_signal* signal, ext::cany& reason) -> void;
     static auto follow_signal(aborting::abort_signal* following_signal, aborting::abort_signal* parent_signal) -> void;
 };

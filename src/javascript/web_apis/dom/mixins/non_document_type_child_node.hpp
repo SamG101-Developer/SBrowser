@@ -5,15 +5,16 @@
 #include <ext/properties/dom_property.hpp>
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace mixins {template <typename T> class non_document_type_child_node;}
     namespace nodes {class element;}
 }
 
 
 template <typename T>
-class dom::mixins::non_document_type_child_node : public dom_object {
-
+class dom::mixins::non_document_type_child_node : public dom_object
+{
 public: constructors
     non_document_type_child_node();
 

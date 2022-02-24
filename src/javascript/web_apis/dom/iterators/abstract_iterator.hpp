@@ -6,9 +6,11 @@
 #include <ext/properties/dom_property.hpp>
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct traversal;}
-    namespace iterators {
+    namespace iterators
+    {
         class abstract_iterator;
         struct node_filter;
     }
@@ -16,7 +18,8 @@ namespace dom {
 }
 
 
-class dom::iterators::abstract_iterator : virtual public dom_object {
+class dom::iterators::abstract_iterator : virtual public dom_object
+{
 public: friends
     friend struct dom::helpers::traversal;
 

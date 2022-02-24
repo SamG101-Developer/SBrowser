@@ -13,7 +13,8 @@ namespace dom
 
 
 template <typename T>
-class dom::mixins::non_element_parent_node : public dom_object {
+class dom::mixins::non_element_parent_node : public dom_object
+{
 public: methods
     auto get_element_by_id(ext::cstring& element_id) -> nodes::element*;
 

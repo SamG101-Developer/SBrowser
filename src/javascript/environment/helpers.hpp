@@ -3,7 +3,8 @@
 
 #include <v8.h>
 
-namespace javascript::helpers {
+namespace javascript::helpers
+{
     static auto new_target() -> v8::Object;
     static auto active_function_object() -> v8::Object;
 }

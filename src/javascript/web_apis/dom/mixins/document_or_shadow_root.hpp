@@ -8,15 +8,16 @@
 
 namespace css::cssom::style_sheets {class css_style_sheet;}
 
-namespace dom {
+namespace dom
+{
     namespace mixins {template <typename T> class document_or_shadow_root;}
     namespace nodes {class element;}
 }
 
 
 template <typename T>
-class dom::mixins::document_or_shadow_root : public dom_object {
-
+class dom::mixins::document_or_shadow_root : public dom_object
+{
 public: constructors
     // dom
     ext::dom_property<nodes::element*, _F> active_element;

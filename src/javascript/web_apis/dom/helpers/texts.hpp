@@ -4,16 +4,19 @@
 
 #include <ext/iterables/string.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct texts;}
-    namespace nodes {
+    namespace nodes
+    {
         class character_data;
         class element;
         class text;
     }
 }
 
-struct dom::helpers::texts {
+struct dom::helpers::texts
+{
     static auto replace_data(nodes::character_data* text_node, unsigned long offset, unsigned long count, ext::cstring& data) -> void;
     static auto split(nodes::text* text_node, unsigned long offset) -> nodes::text*;
     static auto substring_data(const nodes::character_data* text_node, unsigned long offset, unsigned long count) -> ext::string;

@@ -12,7 +12,8 @@
 namespace dom::helpers {struct exceptions;}
 
 
-struct dom::helpers::exceptions {
+struct dom::helpers::exceptions
+{
     using exception_condiditional_t = std::function<bool()>&&;
     using v8_primitive_error_t = std::function<v8::Local<v8::Value>(v8::Local<v8::String>)>;
 

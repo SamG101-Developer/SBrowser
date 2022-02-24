@@ -7,7 +7,8 @@
 namespace dom::helpers {struct namespaces;}
 
 
-struct dom::helpers::namespaces {
+struct dom::helpers::namespaces
+{
     struct_string HTML = "http://www.w3.org/1999/xhtml";
     struct_string MATHML = "http://www.w3.org/1998/Math/MathML";
     struct_string SVG = "http://www.w3.org/2000/svg";

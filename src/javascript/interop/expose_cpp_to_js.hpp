@@ -64,16 +64,16 @@
 #include <v8pp/module.hpp>
 
 
-namespace javascript::interop::expose_cpp_to_js {
+namespace javascript::interop::expose_cpp_to_js
+{
     template <typename T> auto object_to_v8(v8::Isolate* isolate)  requires std::is_base_of_v<dom_object, T>;
     void expose(v8::Isolate* isolate, v8::Persistent<v8::Context>& persistent_context, javascript::environment::modules::module_type module_type);
 }
 
 
 template <typename T>
-auto javascript::interop::expose_cpp_to_js::object_to_v8(
-        v8::Isolate* isolate) requires std::is_base_of_v<dom_object, T> {
-
+auto javascript::interop::expose_cpp_to_js::object_to_v8(v8::Isolate* isolate) requires std::is_base_of_v<dom_object, T>
+{
     return T{}.v8(isolate).template to<v8pp::class_<T>>();
 }
 
@@ -82,8 +82,8 @@ void
 javascript::interop::expose_cpp_to_js::expose(
         v8::Isolate* isolate,
         v8::Persistent<v8::Context>& persistent_context,
-        javascript::environment::modules::module_type module_type) {
-
+        javascript::environment::modules::module_type module_type)
+{
     v8::Local<v8::Context> local_context = v8::Local<v8::Context>::New(isolate, persistent_context);
     local_context->Enter();
 

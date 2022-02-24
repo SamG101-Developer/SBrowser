@@ -4,9 +4,11 @@
 
 #include <ext/iterables/vector.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct trees;}
-    namespace nodes {
+    namespace nodes
+    {
         class node;
         class text;
     }

@@ -6,16 +6,19 @@
 #include <ext/properties/dom_property.hpp>
 #include <dom/nodes/event_target.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace aborting {class abort_signal;}
-    namespace helpers {
+    namespace helpers
+    {
         class event_listening;
         class signal_aborting;
     }
 }
 
 
-class dom::aborting::abort_signal : public nodes::event_target {
+class dom::aborting::abort_signal : public nodes::event_target
+{
 public: friends
     friend class helpers::event_listening;
     friend class helpers::signal_aborting;
