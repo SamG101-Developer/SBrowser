@@ -1,9 +1,12 @@
-#pragma once
+    #pragma once
 #ifndef SBROWSER_ITERABLE_HPP
 #define SBROWSER_ITERABLE_HPP
 
 #include <algorithm>
 #include <iostream>
+#include <map>
+#include <set>
+#include <queue>
 #include <numeric>
 #include <stdexcept>
 
@@ -12,9 +15,10 @@
 
 namespace ext {template <typename T, typename C> class iterable;}
 
+
 template <typename T, typename C>
 class ext::iterable {
-aliases
+public: aliases
     using iterator = typename C::iterator;
     using const_iterator = typename C::const_iterator;
 
@@ -27,10 +31,10 @@ public: constructors
 
     virtual ~iterable() = default;
 
-    auto front() const noexcept(false) -> T&;
-    auto back() const noexcept(false) -> T&;
-    auto at(const size_t i) const noexcept(false) -> T&;
-    auto at(const_iterator i) const noexcept(false) -> T&;
+    auto front() noexcept(false) -> T&;
+    auto back() noexcept(false) -> T&;
+    auto at(const size_t i) noexcept(false) -> T&;
+    auto at(const_iterator i) noexcept(false) -> T&;
 
     auto begin() -> iterator;
     auto begin() const -> const_iterator ;
@@ -68,7 +72,7 @@ protected: internal_properties
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::front() const noexcept(false) -> T&
+auto ext::iterable<T, C>::front() noexcept(false) -> T&
 {
     // throws error if accessing the front of an empty iterable
     if (empty())
@@ -80,7 +84,7 @@ auto ext::iterable<T, C>::front() const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::back() const noexcept(false) -> T&
+auto ext::iterable<T, C>::back() noexcept(false) -> T&
 {
     // throws error if accessing the back of an empty iterable
     if (empty())
@@ -92,7 +96,7 @@ auto ext::iterable<T, C>::back() const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::at(const size_t i) const noexcept(false) -> T&
+auto ext::iterable<T, C>::at(const size_t i) noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -104,7 +108,7 @@ auto ext::iterable<T, C>::at(const size_t i) const noexcept(false) -> T&
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::at(const_iterator i) const noexcept(false) -> T&
+auto ext::iterable<T, C>::at(const_iterator i) noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -365,6 +369,14 @@ ext::iterable<T, C>::operator bool() const
     // the iterable evaluates to true if the list has at least 1 item in
     return not empty();
 }
+
+
+template class ext::iterable<int, std::vector<int>>;
+template class ext::iterable<int, std::deque<int>>;
+template class ext::iterable<int, std::list<int>>;
+
+// template class ext::iterable<int, std::map<int, int>>;
+// template class ext::iterable<int, std::map<int*, int*>>;
 
 
 
