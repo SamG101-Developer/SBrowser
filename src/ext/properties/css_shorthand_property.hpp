@@ -7,7 +7,8 @@ namespace ext {struct css_shorthand_property;}
 namespace {auto contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand) -> ext::vector<ext::css_property*>;}
 
 
-struct ext::css_shorthand_property : property<ext::string> {
+struct ext::css_shorthand_property : property<ext::string>
+{
 public: constructors
     explicit css_shorthand_property(string&& name);
 

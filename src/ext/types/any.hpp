@@ -3,8 +3,8 @@
 
 #include <any>
 
-#include <ext/macros/decorators.hpp>
 #include <ext/iterables/string.hpp>
+#include <ext/macros/decorators.hpp>
 
 
 //inline bool operator< (const std::any& first, const std::any& second) {return &first <  &second;}
@@ -12,25 +12,27 @@
 //inline bool operator==(const std::any& first, const std::any& second) {return &first == &second;}
 
 
-namespace ext {
+namespace ext
+{
     class any;
     using cany = const any;
 }
 namespace {template <class T> T any_cast(ext::any value);}
 
 
-class ext::any {
+class ext::any
+{
 public: constructors
     any() = default;
-    any(const ext::any&) = default;
-    any(ext::any&&) noexcept = default;
-    ext::any& operator=(const ext::any&) = default;
-    ext::any& operator=(ext::any&&) noexcept = default;
+    any(const any&) = default;
+    any(any&&) noexcept = default;
+    auto operator=(const any&) -> any& = default;
+    auto operator=(any&&) noexcept -> any& = default;
 
     template <typename T> any(const T& other) {m_value = other;};
     template <typename T> any(T&& other) noexcept {m_value = other;};
-    template <typename T> any& operator=(const T& other) {m_value = other; return *this;}
-    template <typename T> any& operator=(T&& other) noexcept {m_value = other; return *this;}
+    template <typename T> auto operator=(const T& other) -> any& {m_value = other; return *this;}
+    template <typename T> auto operator=(T&& other) noexcept -> any& {m_value = std::forward<T&>(other); return *this;}
 
 public: methods
     auto type() const -> const type_info&;
@@ -49,28 +51,21 @@ private: internal_properties
 };
 
 
-bool operator==(ext::cany& first, ext::cany& second)
-{
-    // equality check by comparing the addresses of the two objects
-    return &first == &second;
-}
-
-
-const type_info& ext::any::type() const
+auto ext::any::type() const -> const type_info&
 {
     // return the type of the internal object wrapped with the ext::any
     return m_value.type();
 }
 
 
-bool ext::any::empty() const
+auto ext::any::empty() const -> bool
 {
     // return if the ext::any object is empty ie there is no internal object wrapped
     return not m_value.has_value();
 }
 
 
-bool ext::any::contains_pointer() const
+auto ext::any::contains_pointer() const -> bool
 {
     // return if the internal object wrapped is a pointer type TODO : this implementation makes me feel sick
     return ext::string{type().name()}.contains("* __ptr64");
@@ -92,7 +87,7 @@ auto ext::any::is_numeric() const -> bool
 
 
 template <typename T>
-void ext::any::emplace(T&& element)
+auto ext::any::emplace(T&& element) -> void
 {
     // emplace an object of type T as the internal object being wrapped by ext::any
     m_value.template emplace<T>(element);
@@ -100,7 +95,7 @@ void ext::any::emplace(T&& element)
 
 
 template <typename T>
-void ext::any::emplace()
+auto ext::any::emplace() -> void
 {
     // emplace an empty object of type T (ie assign the type as T but .empty() will return true)
     m_value.template emplace<T>();
@@ -108,7 +103,7 @@ void ext::any::emplace()
 
 
 template <typename T>
-T ext::any::to() const
+auto ext::any::to() const -> T
 {
     // cast the internal object wrapped to any type T
     return any_cast<T>(m_value);
@@ -123,7 +118,7 @@ ext::any::operator bool() const
 
 
 template <class T>
-T any_cast(ext::cany& value)
+auto any_cast(ext::cany& value) -> T
 {
     // if the value is empty or a void, then return a nullptr for pointer types, otherwise a new stack object of type T
     if (value.empty() or value.type() == typeid(void))

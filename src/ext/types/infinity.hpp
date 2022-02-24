@@ -9,8 +9,8 @@ namespace ext {template <arithmetic T> class infinity;}
 
 
 template <arithmetic T>
-struct ext::infinity {
-
+struct ext::infinity
+{
 public: operators
     operator T() const;
 
