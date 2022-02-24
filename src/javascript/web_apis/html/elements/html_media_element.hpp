@@ -26,7 +26,8 @@ namespace webidl::types
 }
 
 
-class html::elements::html_media_element : public html_element {
+class html::elements::html_media_element : public html_element
+{
 public: constructors
     html_media_element();
 

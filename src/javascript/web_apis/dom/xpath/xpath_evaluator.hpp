@@ -7,7 +7,8 @@
 
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace nodes {class node;}
     namespace xpath
     {
@@ -18,7 +19,8 @@ namespace dom {
 }
 
 
-class dom::xpath::xpath_evaluator : public dom_object {
+class dom::xpath::xpath_evaluator : public dom_object
+{
     struct xpath_ns_resolver {ext::string lookup_namespace_uri(ext::cstring& prefix = "");};
 
 public: constructors

@@ -13,7 +13,8 @@ namespace dom
 }
 
 
-class dom::xpath::xpath_result : public dom_object {
+class dom::xpath::xpath_result : public dom_object
+{
 public: constructors
     xpath_result();
 

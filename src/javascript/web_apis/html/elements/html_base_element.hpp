@@ -7,7 +7,8 @@
 namespace html::elements {class html_base_element;}
 
 
-class html::elements::html_base_element : public html_element {
+class html::elements::html_base_element : public html_element
+{
 public: constructors
     html_base_element();
 

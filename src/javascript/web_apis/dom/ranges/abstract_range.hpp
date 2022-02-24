@@ -7,13 +7,15 @@
 
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace nodes {class node;}
     namespace ranges {class abstract_range;}
 }
 
 
-class dom::ranges::abstract_range : public dom_object {
+class dom::ranges::abstract_range : public dom_object
+{
 public constructors:
     abstract_range();
 

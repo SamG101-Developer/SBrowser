@@ -8,7 +8,8 @@
 namespace dom::ranges {class static_range;}
 
 
-class dom::ranges::static_range : public abstract_range {
+class dom::ranges::static_range : public abstract_range
+{
 public: constructors
     static_range(): abstract_range() {};
     static_range(ext::cstring_any_map& init);

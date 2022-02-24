@@ -7,7 +7,8 @@
 
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace other {class dom_implementation;}
     namespace nodes
     {
@@ -18,7 +19,8 @@ namespace dom {
 }
 
 
-class dom::other::dom_implementation : virtual public dom_object {
+class dom::other::dom_implementation : virtual public dom_object
+{
 public: constructors
     dom_implementation();
     ~dom_implementation() override;

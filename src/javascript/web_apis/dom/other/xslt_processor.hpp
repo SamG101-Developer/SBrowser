@@ -5,9 +5,11 @@
 #include <ext/macros/decorators.hpp>
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace other {class xslt_processor;}
-    namespace nodes {
+    namespace nodes
+    {
         class document;
         class document_fragment;
         class node;
@@ -15,7 +17,8 @@ namespace dom {
 }
 
 
-class dom::other::xslt_processor : virtual public dom_object {
+class dom::other::xslt_processor : virtual public dom_object
+{
 public: constructors
     xslt_processor();
 

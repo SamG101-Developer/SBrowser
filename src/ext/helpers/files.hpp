@@ -19,4 +19,4 @@ auto file_read(ext::cstring& file_path) -> ext::string
         output += file_line;
 
     // return the output as an ext object
-    return ext::string{ou
+    return ext::string{output};

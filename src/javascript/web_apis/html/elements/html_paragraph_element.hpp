@@ -7,7 +7,8 @@
 namespace html::elements {class html_paragraph_element;}
 
 
-class html::elements::html_paragraph_element : public html_element {
+class html::elements::html_paragraph_element : public html_element
+{
 public: constructors
     html_paragraph_element();
 };

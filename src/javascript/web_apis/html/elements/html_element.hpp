@@ -12,9 +12,10 @@ namespace html {
 
 
 class html::elements::html_element
-        : public dom::nodes::element {
+        : public dom::nodes::element
         // , mixins::html_or_svg_element
-        // , mixins::element_content_editable {
+        // , mixins::element_content_editable
+{
 
 public: constructors
     html_element();

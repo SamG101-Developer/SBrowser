@@ -5,12 +5,12 @@
 #include <ext/iterables/string.hpp>
 #include <ext/macros/decorators.hpp>
 #include <ext/properties/dom_property.hpp>
-
 #include <dom_object.hpp>
 
 namespace dom::other {class dom_exception;}
 
-enum v8_custom_error_t {
+enum v8_custom_error_t
+{
     INDEX_SIZE_ERR, DOMSTRING_SIZE_ERR, HIERARCHY_REQUEST_ERR, WRONG_DOCUMENT_ERR, INVALID_CHARACTER_ERR,
     NO_DATA_ALLOWED_ERR, NO_MODIFICATION_ALLOWED_ERR, NOT_FOUND_ERR, NOT_SUPPORTED_ERR, INUSE_ATTRIBUTE_ERR,
     INVALID_STATE_ERR, SYNTAX_ERR, INVALID_MODIFICATION_ERR, NAMESPACE_ERR, INVALID_ACCESS_ERR, VALIDATION_ERR,
@@ -20,7 +20,8 @@ enum v8_custom_error_t {
 };
 
 
-class dom::other::dom_exception : public virtual dom_object {
+class dom::other::dom_exception : public virtual dom_object
+{
 public: constructors
     dom_exception() = default;
     dom_exception(ext::cstring& message, v8_custom_error_t type);

@@ -6,7 +6,8 @@
 
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace nodes {class node;}
     namespace xpath
     {
@@ -16,7 +17,8 @@ namespace dom {
 }
 
 
-class dom::xpath::xpath_expression : public dom_object {
+class dom::xpath::xpath_expression : public dom_object
+{
 public: constructors
     xpath_expression();
 

@@ -4,7 +4,8 @@
 
 #include <dom/ranges/abstract_range.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct range_internals;}
     namespace nodes {class document_fragment;}
     namespace ranges {class range;}
@@ -13,7 +14,8 @@ namespace dom {
 namespace geometry::shapes {class dom_rect;}
 
 
-class dom::ranges::range : public abstract_range {
+class dom::ranges::range : public abstract_range
+{
 public: friends
     friend struct helpers::range_internals;
 

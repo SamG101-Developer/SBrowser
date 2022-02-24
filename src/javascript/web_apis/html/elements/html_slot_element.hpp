@@ -4,14 +4,16 @@
 
 #include <html/elements/html_element.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {struct shadows;}
     namespace nodes {class node;}
 }
 namespace html::elements {class html_slot_element;}
 
 
-class html::elements::html_slot_element : public html_element {
+class html::elements::html_slot_element : public html_element
+{
 public: friends
     friend struct dom::helpers::shadows;
     friend struct dom::helpers::mutation_algorithms;
