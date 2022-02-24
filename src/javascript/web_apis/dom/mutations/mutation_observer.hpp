@@ -11,7 +11,8 @@
 
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers {class mutation_observers;}
     namespace nodes {class node;}
     namespace mutations
@@ -22,7 +23,8 @@ namespace dom {
 }
 
 
-class dom::mutations::mutation_observer : virtual public dom_object {
+class dom::mutations::mutation_observer : virtual public dom_object
+{
 public: friends
     friend struct helpers::mutation_observers;
 

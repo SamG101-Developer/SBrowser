@@ -8,17 +8,19 @@
 
 #include <dom/nodes/event_target.hpp>
 
-namespace dom::nodes {
+namespace dom::nodes
+{
     class document;
     class element;
     class window;
     class window_proxy;
 }
 
-namespace html {
+namespace html
+{
     namespace custom_elements {struct custom_element_registry;}
-
-    namespace other {
+    namespace other
+    {
         class location;
         class history;
         class navigator;
@@ -26,7 +28,8 @@ namespace html {
     }
 }
 
-namespace css {
+namespace css
+{
     namespace cssom_view::other {class screen;}
     namespace cssom::other {class css_style_declaration;}
 }
@@ -36,8 +39,8 @@ class dom::nodes::window
         : public event_target
         // , public html::mixins::window_or_worker_global_scope
         // , public css::cssom_view::mixins::scrollable
-        , public ext::listlike<ext::string> {
-
+        , public ext::listlike<ext::string>
+{
 public constructors:
     window();
 

@@ -4,13 +4,15 @@
 
 #include <dom/nodes/node.hpp>
 
-namespace dom::nodes {
+namespace dom::nodes
+{
     class attr;
     class element;
 }
 
 
-class dom::nodes::attr : public node {
+class dom::nodes::attr : public node
+{
 public constructors:
     attr();
 

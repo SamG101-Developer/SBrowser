@@ -12,8 +12,8 @@ namespace dom::nodes {class text;}
 
 class dom::nodes::text
         : public character_data
-        , public mixins::slottable<text> {
-
+        , public mixins::slottable<text>
+{
 public constructors:
     text(ext::cstring& new_data = "");
 

@@ -14,21 +14,24 @@ namespace dom::nodes {
 
 
 // Pre-wrapped JavaScript Class
-class dom::nodes::window_proxy : public virtual dom_object {
+class dom::nodes::window_proxy : public virtual dom_object
+{
 public: constructors
     window_proxy();
 
+    ~window_proxy() override; // TODO -> delete active document etc?
+
 public: javascript_slot_methods
-    v8::Local<v8::Object> get_prototype_of();
-    void set_prototype_of(v8::Local<v8::Object> V);
-    constexpr v8::Local<v8::Boolean> is_extensible_prototype_of();
-    constexpr v8::Local<v8::Boolean> prevent_extensions();
-    v8::PropertyDescriptor get_own_property(v8::Local<v8::Integer> P);
+    auto get_prototype_of() -> v8::Local<v8::Object>;
+    auto set_prototype_of(v8::Local<v8::Object> V) -> void;
+    auto is_extensible_prototype_of() -> v8::Local<v8::Boolean>;
+    auto prevent_extensions() -> v8::Local<v8::Boolean>;
+    auto get_own_property(v8::Local<v8::Integer> P) -> v8::PropertyDescriptor;
     void define_property(v8::Local<v8::Integer> P, v8::Local<v8::String> D);
-    v8::Local<v8::Object> get(v8::Local<v8::Integer> P, v8::Local<v8::Object> R);
-    v8::Local<v8::Object> set(v8::Local<v8::Integer> P, v8::Local<v8::Object> V, v8::Local<v8::Object> R);
-    v8::Local<v8::Boolean> delete_(v8::Local<v8::Number> P);
-    v8::Local<v8::Array> own_property_keys();
+    auto get(v8::Local<v8::Integer> P, v8::Local<v8::Object> R) -> v8::Local<v8::Object>;
+    auto set(v8::Local<v8::Integer> P, v8::Local<v8::Object> V, v8::Local<v8::Object> R) -> v8::Local<v8::Object>;
+    auto delete_(v8::Local<v8::Number> P) -> v8::Local<v8::Boolean>;
+    auto own_property_keys() -> v8::Local<v8::Array>;
 
 public: javascript_slots
     window* s_window;

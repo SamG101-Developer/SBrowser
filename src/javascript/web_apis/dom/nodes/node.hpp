@@ -10,14 +10,17 @@
 
 #include <QtWidgets/QWidget>
 
-namespace dom {
-    namespace nodes {
+namespace dom
+{
+    namespace nodes
+    {
         class document;
         class element;
         class node;
     }
 
-    namespace helpers {
+    namespace helpers
+    {
         struct mutation_algorithms;
         struct mutation_observers;
     }
@@ -27,9 +30,9 @@ namespace dom {
 }
 
 
-class dom::nodes::node : public event_target {
-
-friends
+class dom::nodes::node : public event_target
+{
+public: friends
     friend struct helpers::mutation_algorithms;
     friend struct helpers::mutation_observers;
     friend class mutations::mutation_observer;

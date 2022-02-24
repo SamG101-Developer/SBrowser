@@ -11,8 +11,8 @@ namespace dom::other {class dom_implementation;}
 
 class dom::nodes::document_type
         : public node
-        , public mixins::child_node<document_type> {
-
+        , public mixins::child_node<document_type>
+{
 public constructors:
     document_type();
 

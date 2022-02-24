@@ -11,7 +11,8 @@
 #include <dom/mixins/parent_node.hpp>
 #include <dom/mixins/slottable.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace helpers
     {
         struct attributes;
@@ -36,10 +37,10 @@ class dom::nodes::element
         , public mixins::non_document_type_child_node<element>
         , public mixins::child_node<element>
         , public mixins::slottable<element>
-        , public mixins::document_or_element_node<element> {
-//        , public css::cssom_view::mixins::scrollable<element>
-//        , public css::cssom_view::mixins::geometry_utils<element> {
-
+        , public mixins::document_or_element_node<element>
+        // , public css::cssom_view::mixins::scrollable<element>
+        // , public css::cssom_view::mixins::geometry_utils<element> {
+{
 public: friends
     friend class document;
     friend struct helpers::attributes;
@@ -48,6 +49,7 @@ public: friends
 
 public: constructors
     element();
+
     ~element() override;
 
 public: methods
@@ -90,7 +92,7 @@ public: methods
     auto focusable_areas(ext::cstring_any_map& options = {}) -> ext::vector<node*>;
 
     // css-pseudo
-//    css::css_pseudo::elements::pseudo_element* pseudo(ext::cstring& type); TODO
+    // css::css_pseudo::elements::pseudo_element* pseudo(ext::cstring& type); TODO
 
     // cssom-view
     auto get_client_rects() const -> ext::vector<geometry::shapes::dom_rect>;
@@ -122,6 +124,10 @@ public: properties
 
     // cs-shadow-parts
     ext::dom_property<ext::vector<ext::string>*, _F> parts;
+
+public: internal_methods
+    auto render() const -> QWidget* override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected: internal_properties
     ext::property<ext::string> m_qualified_name;
@@ -155,10 +161,6 @@ private: accessors
 
     auto get_m_qualified_name() const -> ext::string;
     auto get_m_html_qualified_uppercase_name() const -> ext::string;
-
-public: internal_methods
-    QWidget* render() const override;
-    ext::any v8(v8::Isolate *isolate) const override;
 
 private: internal_properties
     ext::vector<ext::string> m_shadow_attachable_local_names = {

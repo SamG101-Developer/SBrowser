@@ -54,16 +54,16 @@
  * class properties only ever executed by c++
  * javascript exposed: NO
  */
- 
-#define javascript_slots \
-/*
- * javascript slots accessible by [[slot_name]] syntax
- * javascript exposed: YES
- */
- 
+
 #define javascript_slot_methods \
 /*
  * javascript slot methods accessible by [[slot_method]]() syntax
+ * javascript exposed: YES
+ */
+
+#define javascript_slots \
+/*
+ * javascript slots accessible by [[slot_name]] syntax
  * javascript exposed: YES
  */
 

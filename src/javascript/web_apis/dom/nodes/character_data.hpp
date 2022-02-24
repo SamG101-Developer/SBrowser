@@ -13,8 +13,8 @@ namespace dom::nodes {class character_data;}
 class dom::nodes::character_data
         : public node
         , public mixins::child_node<character_data>
-        , public mixins::non_document_type_child_node<character_data> {
-
+        , public mixins::non_document_type_child_node<character_data>
+{
 public constructors:
     character_data();
 

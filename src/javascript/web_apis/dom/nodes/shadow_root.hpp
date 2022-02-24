@@ -10,8 +10,8 @@ namespace dom::nodes {class shadow_root;}
 
 class dom::nodes::shadow_root
         : public document_fragment
-        , public mixins::document_or_shadow_root<dom::nodes::shadow_root> {
-
+        , public mixins::document_or_shadow_root<dom::nodes::shadow_root>
+{
 public: friends
     friend class element;
 

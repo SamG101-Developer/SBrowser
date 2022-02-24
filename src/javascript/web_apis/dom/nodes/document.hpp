@@ -20,19 +20,23 @@
 namespace css::cssom_view::other {class caret_position;}
 namespace css::css_regions::elements {class named_flow;}
 
-namespace dom {
-    namespace helpers {
+namespace dom
+{
+    namespace helpers
+    {
         struct custom_elements;
         struct node_internals;
     }
 
-    namespace iterators {
+    namespace iterators
+    {
         class node_filter;
         class node_iterator;
         class tree_walker;
     }
 
-    namespace nodes {
+    namespace nodes
+    {
         class attr;
         class cdata_section;
         class comment;
@@ -50,8 +54,10 @@ namespace dom {
 
 namespace encoding {class encoding;}
 
-namespace html {
-    namespace elements {
+namespace html
+{
+    namespace elements
+    {
         class html_body_element;
         class html_head_element;
         class html_html_element;
@@ -62,7 +68,8 @@ namespace html {
         class html_title_element;
     }
 
-    namespace internal {
+    namespace internal
+    {
         struct policy_container;
         struct permissions_policy;
         struct module_map;
@@ -95,6 +102,7 @@ friends
 
 public constructors:
     document();
+
     ~document() override;
 
 private aliases:
