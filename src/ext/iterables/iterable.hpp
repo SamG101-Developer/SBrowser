@@ -46,10 +46,10 @@ public: constructors
     auto length() const noexcept -> size_t;
 
     virtual auto clear() -> iterable<T, C>&;
-    template <class F> auto remove_if(F&& function, bool all = false) -> iterable<T, C>&;
-    template <class F> auto replace_if(F&& function, const T& new_item, bool all = false) -> iterable<T, C>&;
-    auto remove(const T& item, bool all = false) -> iterable<T, C>&;
-    auto replace(const T& old_item, const T& new_item, bool all = false) -> iterable<T, C>&;
+    template <class F> auto remove_if(const F& function, const bool all = false) -> iterable<T, C>&;
+    template <class F> auto replace_if(const F& function, const T& new_item, const bool all = false) -> iterable<T, C>&;
+    auto remove(const T& item, const bool all = false) -> iterable<T, C>&;
+    auto replace(const T& old_item, const T& new_item, const bool all = false) -> iterable<T, C>&;
     auto reverse() -> iterable<T, C>&;
     auto sort() -> iterable<T, C>&;
     auto clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
@@ -62,10 +62,8 @@ public: constructors
     auto print() const -> void;
 
 public: operators
-    operator bool() const;
     virtual auto operator!() const -> bool;
     auto operator==(const iterable<T, C>& o) const -> bool;
-    auto operator!=(const iterable<T, C>& o) const -> bool;
 
 protected: internal_properties
     C m_iterable;
@@ -180,8 +178,8 @@ auto ext::iterable<T, C>::clear() -> ext::iterable<T, C>&
 template <typename T, typename C>
 template <class F>
 auto ext::iterable<T, C>::remove_if(
-        F&& function,
-        bool all)
+        const F& function,
+        const bool all)
         -> ext::iterable<T, C>&
 {
     // continue to loop while the function matches items in the iterable
@@ -200,9 +198,9 @@ auto ext::iterable<T, C>::remove_if(
 template <typename T, typename C>
 template <class F>
 auto ext::iterable<T, C>::replace_if(
-        F&& function,
+        const F& function,
         const T& new_item,
-        bool all)
+        const bool all)
         -> ext::iterable<T, C>&
 {
     // continue to loop while the function matches items in the iterable
@@ -221,14 +219,14 @@ auto ext::iterable<T, C>::replace_if(
 template <typename T, typename C>
 auto ext::iterable<T, C>::remove(
         const T& item,
-        bool all)
+        const bool all)
         -> ext::iterable<T, C>&
 {
     // continue to loop while the item is in the iterable
     while (contains(item))
     {
         // remove the item, and continue looping if looking for all matches
-        std::remove(begin(), end(), item);
+        auto _ = std::remove(begin(), end(), item);
         if (not all) break;
     }
 
@@ -241,7 +239,7 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::replace(
         const T& old_item,
         const T& new_item,
-        bool all)
+        const bool all)
         -> ext::iterable<T, C>&
 {
     // continue to loop while the item is in the iterable
@@ -261,7 +259,7 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::reverse() -> ext::iterable<T, C>&
 {
     // reverse the iterable, and return the reference to it
-    std::reverse(m_iterable.begin(), m_iterable.end());
+    std::ranges::reverse(m_iterable.begin(), m_iterable.end());
     return *this;
 }
 
@@ -270,7 +268,7 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::sort() -> ext::iterable<T, C>&
 {
     // sort the iterable, and return the reference to it
-    std::sort(m_iterable.begin(), m_iterable.end());
+    std::ranges::sort(m_iterable.begin(), m_iterable.end());
     return *this;
 }
 
@@ -348,36 +346,9 @@ auto ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
 }
 
 
-template <typename T, typename C>
-auto ext::iterable<T, C>::operator!=(const iterable<T, C>& o) const -> bool
-{
-    // guard to check that the lengths don't match
-    if (length() == o.length())
-        return false;
-
-    // create a range of indexes the length of the iterable
-    std::array<size_t, length()> range;
-    std::iota(range.begin(), range.end(), 0);
-
-    // inequality check by comparing the items in the two iterables
-    return std::any_of(range.begin(), range.end(), [this, o](const size_t i) {return at(i) != o.at(i);});
-}
-
-
-template <typename T, typename C>
-ext::iterable<T, C>::operator bool() const
-{
-    // the iterable evaluates to true if the list has at least 1 item in
-    return not empty();
-}
-
 
 template class ext::iterable<int, std::vector<int>>;
 template class ext::iterable<int, std::deque<int>>;
-template class ext::iterable<int, std::list<int>>;
-
-// template class ext::iterable<int, std::map<int, int>>;
-// template class ext::iterable<int, std::map<int*, int*>>;
 
 
 

@@ -20,3 +20,6 @@ auto file_read(ext::cstring& file_path) -> ext::string
 
     // return the output as an ext object
     return ext::string{output};
+}
+
+#endif //SBROWSER_FILES_HPP
