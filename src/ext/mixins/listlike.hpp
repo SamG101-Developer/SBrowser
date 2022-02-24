@@ -4,25 +4,29 @@
 
 #include <ext/properties/property.hpp>
 
-namespace ext {
+namespace ext
+{
     template <typename T> class vector;
     template <typename T> class listlike;
 }
 
 template <typename T>
-class ext::listlike {
-public:
-    listlike(ext::vector<T>* linked_list = {});
+class ext::listlike
+{
+public: constructors
+    explicit listlike(ext::vector<T>* linked_list = {});
 
+public: operators
     virtual auto operator[] (size_t index) -> T&;
     virtual auto operator[] (ext::cstring& index) -> T&;
 
+public: properties
     ext::property<size_t> length;
 
-protected:
+protected: internal_methods
     ext::vector<T>* m_linked_list;
 
-private:
+private: accessors
     auto get_length() -> size_t;
 };
 

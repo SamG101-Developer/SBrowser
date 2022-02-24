@@ -46,7 +46,7 @@ auto dom::nodes::text::get_whole_text() const -> ext::string
     // join the text from contiguous text nodes
     return helpers::trees::contiguous_text_nodes(this)
             .transform<ext::string>([](text* text_node) -> ext::string {return text_node->data;})
-            .join(EMPTY);
+            .join(EMPTY_CHAR);
 }
 
 

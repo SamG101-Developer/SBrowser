@@ -16,7 +16,8 @@
 #include <v8.h>
 #include <v8pp/convert.hpp>
 
-namespace ext {
+namespace ext
+{
     class string;
     using cstring = const string;
 
@@ -28,7 +29,8 @@ namespace ext {
 }
 
 
-class ext::string : public ext::iterable<char, std::string> {
+class ext::string : public ext::iterable<char, std::string>
+{
     friend std::ostream& operator<<(std::ostream& stream, ext::cstring& string)
     {
         stream << string.m_iterable;

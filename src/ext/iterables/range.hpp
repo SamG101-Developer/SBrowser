@@ -8,7 +8,8 @@ namespace ext {template <typename T> class range;}
 
 
 template <typename T>
-class ext::range : public ext::iterable<size_t, std::deque<T>>{
+class ext::range : public ext::iterable<size_t, std::deque<T>>
+{
 public: constructors
     range(T low, T high) requires std::is_arithmetic_v<T>;
 
@@ -25,7 +26,7 @@ private: internal_properties
 template <typename T>
 ext::range<T>::range(T low, T high) requires std::is_arithmetic_v<T> : m_low(low) , m_high(high)
 {
-
+    // construct a range with a lower and upper bound
 }
 
 

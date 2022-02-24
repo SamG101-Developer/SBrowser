@@ -17,7 +17,8 @@ namespace ext {template <typename T, typename C> class iterable;}
 
 
 template <typename T, typename C>
-class ext::iterable {
+class ext::iterable
+{
 public: aliases
     using iterator = typename C::iterator;
     using const_iterator = typename C::const_iterator;

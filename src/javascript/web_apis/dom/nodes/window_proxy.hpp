@@ -18,7 +18,7 @@ class dom::nodes::window_proxy : public virtual dom_object {
 public: constructors
     window_proxy();
 
-public: internal_slot_methods
+public: javascript_slot_methods
     v8::Local<v8::Object> get_prototype_of();
     void set_prototype_of(v8::Local<v8::Object> V);
     constexpr v8::Local<v8::Boolean> is_extensible_prototype_of();
@@ -30,7 +30,7 @@ public: internal_slot_methods
     v8::Local<v8::Boolean> delete_(v8::Local<v8::Number> P);
     v8::Local<v8::Array> own_property_keys();
 
-public: internal_slots
+public: javascript_slots
     window* s_window;
 
 public: internal_methods

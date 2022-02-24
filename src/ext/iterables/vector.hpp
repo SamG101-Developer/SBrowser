@@ -10,13 +10,15 @@
 
 #include <veque/include/veque.hpp>
 
-namespace ext {
+namespace ext
+{
     template <typename T> class vector;
     template <typename T> using cvector = const vector<T>;
     class string;
 }
 
-namespace {
+namespace
+{
     template <typename T, class = void> struct is_iterator : std::false_type{};
     template <typename T> struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::pointer, typename std::iterator_traits<T>::reference>> : std::true_type {};
     template <typename T> constexpr bool is_iterator_v = is_iterator<T>::value;
@@ -28,7 +30,8 @@ namespace {
 
 
 template <typename T>
-class ext::vector : public ext::iterable<T, veque::veque<T>> {
+class ext::vector : public ext::iterable<T, veque::veque<T>>
+{
 public: constructors
     vector() = default;
     vector(const vector&) = default;

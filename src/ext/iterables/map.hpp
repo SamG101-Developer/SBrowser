@@ -7,7 +7,8 @@
 #include <ext/types/any.hpp>
 #include <ext/iterables/iterable.hpp>
 
-namespace ext {
+namespace ext
+{
     template <typename K, typename V> class map;
     template <typename K, typename V> using cmap = const map<K, V>;
 
@@ -17,7 +18,8 @@ namespace ext {
 
 
 template <typename K, typename V>
-class ext::map : public ext::iterable<V, std::map<K, V>> {
+class ext::map : public ext::iterable<V, std::map<K, V>>
+{
 public: constructors
     map() = default;
     map(const map<K, V>&) = default;

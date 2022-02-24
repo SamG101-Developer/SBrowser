@@ -69,7 +69,7 @@ auto dom::nodes::node::normalize() const -> void
         // combine the text from the next consecutive text nodes into the text node TODO : remove '(const node*)'
         ext::string data = helpers::trees::contiguous_text_nodes((const node*)text_node)
                 .transform<ext::string>([](text* contiguous_text_node) -> ext::string {return contiguous_text_node->data;})
-                .join(EMPTY);
+                .join(EMPTY_CHAR);
 
         // replace the data in this node with the combined data from the contiguous nodes
         helpers::texts::replace_data(text_node, length, 0, data);

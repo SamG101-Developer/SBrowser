@@ -9,7 +9,8 @@ namespace ext {template <typename T> class set;}
 
 
 template <typename T>
-class ext::set : public ext::iterable<T, std::set<T>> {
+class ext::set : public ext::iterable<T, std::set<T>>
+{
 public: constructors
     set() = default;
     set(const std::set<T>& o);
