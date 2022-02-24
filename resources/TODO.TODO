@@ -1,0 +1,7 @@
+const correctness for every class
+mark classes as final
+fix access modifier: macro (colon position)
+optimise ext library
+decide how to organise multi-spec classes (separate functions by spec? etc)
+organise one line methods in .cpp files
+update v8 to v9.8.177.4 (VS2022 v143 installation)

@@ -1,0 +1,28 @@
+create a macro
+
+
+all functions that are decorated with ce_reactions need a final optional parameter (bool) that defaults to false
+the parameter will always be left false when called from non-macro code in c++
+
+the macro will then do pre-fixing, recall the function with the final parameter set to true, and then post-fixing
+
+
+example:
+
+
+template <typename T>
+dom::nodes::node* prepend(dom::nodes::node* new_node, bool ce_reactions) {
+    if (not ce_reactions)
+        return CE_REACTIONS(&parent_node<T>::prepend);
+
+    ...
+    return ...
+}
+
+
+#define CE_REACTIONS (function)
+    ... <pre-fixing>
+
+    std::mem_fn(function)()
+
+    ... <post-fixing>
