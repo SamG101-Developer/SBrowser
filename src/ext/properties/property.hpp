@@ -120,9 +120,9 @@ template <typename T>
 ext::property<T>::property()
 {
     // set the deleter, getter and setter functions to the defaults
-    del = [this]()      -> void {};
-    get = [this]()      -> T {return m_internal;};
-    set = [this](T val) -> void {m_internal = val;};
+    del = [this]()      {/* Default : do nothing on deletion */};
+    get = [this]()      {return m_internal;};
+    set = [this](T val) {m_internal = val;};
 }
 
 

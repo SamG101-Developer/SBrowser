@@ -23,7 +23,7 @@ public: operators
 public: properties
     ext::property<size_t> length;
 
-protected: internal_methods
+private: internal_methods
     ext::vector<T>* m_linked_list;
 
 private: accessors
@@ -35,7 +35,7 @@ template <typename T>
 ext::listlike<T>::listlike(ext::vector<T>* linked_list) : m_linked_list(linked_list)
 {
     // set the custom accessors
-    length.get = std::bind(&listlike<T>::get_length, this);
+    length.get = [this] {return get_length();};
 }
 
 
