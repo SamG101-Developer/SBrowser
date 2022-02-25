@@ -39,15 +39,15 @@ class ext::string : public ext::iterable<char, std::string>
 
 public: constructors
     string() = default;
-    string(const string&) = default;
-    string(const char* other) {m_iterable = other;}
-    string(const std::string& other) {m_iterable = other;}
+    string(cstring&) = default;
+    string(const char* const other) {m_iterable = other;}
+    string(const std::string_view other) {m_iterable = other;}
     string(const QString& other) {m_iterable = other.toStdString();}
-    string(v8::Local<v8::String> other) {m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});}
+    string(const v8::Local<v8::String> other) {m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});}
 
-    auto operator=(const string&) -> string& = default;
+    auto operator=(cstring&) -> string& = default;
     auto operator=(const char* other) -> string&;
-    auto operator=(const std::string& other) -> string&;
+    auto operator=(std::string_view other) -> string&;
     auto operator=(const QString& other) -> string&;
     auto operator=(const v8::Local<v8::String> other) -> string&;
 
@@ -74,24 +74,21 @@ public: methods
     constexpr auto c_str() const -> const char*;
 
 public: operators
-    operator std::string() const;
-    operator QString() const;
-    operator v8::Local<v8::String>() const;
+    auto to_std_string() const -> std::string;
+    auto to_qt_string() const -> QString;
+    auto to_v8_string() const -> v8::Local<v8::String>;
 
     auto operator+(cstring& other) const -> string;
-    auto operator+(const char* other) const -> string;
+    auto operator+(const char* const other) const -> string;
     auto operator+=(cstring& other) -> string&;
 
-    auto operator<(cstring& other) const -> bool;
-    auto operator>(cstring& other) const -> bool;
-
-    auto operator!() const -> bool;
-    auto operator==(const string& other) const -> bool;
-    auto operator==(const char* other) const -> bool;
+    auto operator!() const -> bool override;
+    auto operator<=>(const string& other) const -> signed char;
+    auto operator==(const char* const other) const -> bool;
 };
 
 
-auto ext::string::operator=(const char* other) -> ext::string&
+auto ext::string::operator=(const char* const other) -> ext::string&
 {
     // set the iterable from a const char* type, and return the reference to the string
     m_iterable = std::string{other};
@@ -99,7 +96,7 @@ auto ext::string::operator=(const char* other) -> ext::string&
 }
 
 
-auto ext::string::operator=(const std::string& other) -> ext::string&
+auto ext::string::operator=(const std::string_view other) -> ext::string&
 {
     // set the iterable from a std::string l-value reference type, and return the reference to the string
     m_iterable = other;
@@ -134,7 +131,7 @@ auto ext::string::operator=(char&& other) -> ext::string&
 auto ext::string::operator=(std::string&& other) -> ext::string&
 {
     // set the iterable from a std::string r-value reference type, and return the reference to the string
-    m_iterable = std::forward<std::string&>(other);
+    m_iterable = std::move(other);
     return *this;
 }
 
@@ -142,7 +139,7 @@ auto ext::string::operator=(std::string&& other) -> ext::string&
 auto ext::string::operator=(QString&& other) -> ext::string&
 {
     // set the iterable from a QString r-value reference type, and return the reference to the string
-    m_iterable = std::forward<QString&>(other).toStdString();
+    m_iterable = std::move(other).toStdString();
     return *this;
 }
 
@@ -175,7 +172,7 @@ auto ext::string::trim() -> ext::string&
 auto ext::string::to_lowercase() -> ext::string&
 {
     // convert the string to lowercase by transforming each character individually, and return a reference to thr string
-    std::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::tolower(c);});
+    std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](const char c){return std::tolower(c);});
     return *this;
 }
 
@@ -183,7 +180,7 @@ auto ext::string::to_lowercase() -> ext::string&
 auto ext::string::to_uppercase() -> ext::string&
 {
     // convert the string to uppercase by transforming each character individually, and return a reference to thr string
-    std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](char c){return std::toupper(c);});
+    std::ranges::transform(m_iterable.begin(), m_iterable.end(), m_iterable.begin(), [](const char c){return std::toupper(c);});
     return *this;
 }
 
@@ -210,14 +207,14 @@ auto ext::string::substring(const size_t offset, const size_t count) const -> ex
 }
 
 
-auto ext::string::replace(size_t offset, size_t count, cstring& replacement) -> ext::string
+auto ext::string::replace(const size_t offset, const size_t count, cstring& replacement) -> ext::string
 {
     // replace count characters starting at offset with replacement
     m_iterable.replace(offset, count, replacement);
 }
 
 
-auto ext::string::split(char delimiter, size_t max_delimiters) const -> ext::vector<ext::string>
+auto ext::string::split(const char delimiter, const size_t max_delimiters) const -> ext::vector<ext::string>
 {
     // create an empty output vector, and initialize position variables to 0
     ext::vector<string> out {};
@@ -226,7 +223,7 @@ auto ext::string::split(char delimiter, size_t max_delimiters) const -> ext::vec
     size_t delimiter_count = 0;
     return out; // TODO
 
-    // loop until condition inside the loop breaks out TODO: move break condition to while(...)
+    // loop until condition inside the loop breaks out
     while (true)
     {
         // move the current position to the first instance of the delimiter
@@ -277,7 +274,7 @@ constexpr auto ext::string::c_str() const -> const char*
  * tidy code
  * @return std::string string
  */
-ext::string::operator std::string() const
+auto ext::string::to_std_string() const -> std::string
 {
     // return the std::string representation of the string
     return m_iterable;
@@ -288,7 +285,7 @@ ext::string::operator std::string() const
  * use the operator QString() to interact with the Qt6 APIs
  * @return QString string
  */
-ext::string::operator QString() const
+auto ext::string::to_qt_string() const -> QString
 {
     // return the QString representation of the string
     return {m_iterable.c_str()};
@@ -299,7 +296,7 @@ ext::string::operator QString() const
  * use the operator v8::Local<v8::String> to interact with te v8 APIs
  * @return v8::Local<v8::String> string
  */
-ext::string::operator v8::Local<v8::String>() const
+auto ext::string::to_v8_string() const -> v8::Local<v8::String>
 {
     // return the v8::Local<v8::String> representation of the string
     return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), (const char*)this).ToLocalChecked();
@@ -314,7 +311,7 @@ auto ext::string::operator+(cstring& other) const -> ext::string
 }
 
 
-auto ext::string::operator+(const char* other) const -> ext::string
+auto ext::string::operator+(const char* const other) const -> ext::string
 {
     // create a new string composed of adding the two strings, and return it
     ext::string new_string;
@@ -330,20 +327,6 @@ auto ext::string::operator+=(cstring& other) -> ext::string&
 }
 
 
-auto ext::string::operator<(cstring& other) const -> bool
-{
-    // do comparisons by pointer comparison
-    return this < &other;
-}
-
-
-auto ext::string::operator>(cstring& other) const -> bool
-{
-    // do comparisons by pointer comparison
-    return this > &other;
-}
-
-
 auto ext::string::operator!() const -> bool
 {
     // check if the string is empty
@@ -351,14 +334,16 @@ auto ext::string::operator!() const -> bool
 }
 
 
-auto ext::string::operator==(const string& other) const -> bool
+auto ext::string::operator<=>(const string& other) const -> signed char
 {
     // equality check by comparing the two strings
-    return m_iterable == other.m_iterable;
+    if (m_iterable == other.m_iterable) return 0;
+    else if (this < &other) return -1;
+    else if (this > &other) return 1;
 }
 
 
-auto ext::string::operator==(const char* other) const -> bool
+auto ext::string::operator==(const char* const other) const -> bool
 {
     // inequality check by comparing the two strings
     return m_iterable.c_str() == other;

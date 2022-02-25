@@ -34,8 +34,8 @@ public: methods
     auto has_key(const K& key) -> bool;
 
     template <typename U> auto cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
-    template <typename F> auto filter_keys(F&& function) -> ext::vector<K>;
-    template <typename F> auto filter_values(F&& function) -> ext::vector<V>;
+    template <typename F> auto filter_keys(const F& function) -> ext::vector<K>;
+    template <typename F> auto filter_values(const F& function) -> ext::vector<V>;
 
 public: operators
     auto operator==(ext::cmap<K, V>& o) -> bool;
@@ -93,7 +93,7 @@ auto ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext
 
 template <typename K, typename V>
 template <typename F>
-auto ext::map<K, V>::filter_keys(F&& function) -> ext::vector<K>
+auto ext::map<K, V>::filter_keys(const F& function) -> ext::vector<K>
 {
     // create the empty keys list
     ext::vector<K> filtered_keys;
@@ -111,7 +111,7 @@ auto ext::map<K, V>::filter_keys(F&& function) -> ext::vector<K>
 
 template <typename K, typename V>
 template <typename F>
-auto ext::map<K, V>::filter_values(F&& function) -> ext::vector<V>
+auto ext::map<K, V>::filter_values(const F& function) -> ext::vector<V>
 {
     // create the empty values list
     ext::vector<V> filtered_values;
@@ -135,7 +135,7 @@ auto ext::map<K, V>::operator==(ext::cmap<K, V>& o) -> bool
         return false;
 
     // inequality check by comparing the items in the two iterables
-    return std::all_of(this->begin(), this->end(), [this, o](const K& key) {return at(key) == o.at(key);});
+    return std::ranges::all_of(this->begin(), this->end(), [this, o](const K& key) {return at(key) == o.at(key);});
 }
 
 

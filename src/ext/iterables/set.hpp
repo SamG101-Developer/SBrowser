@@ -13,7 +13,7 @@ class ext::set : public ext::iterable<T, std::set<T>>
 {
 public: constructors
     set() = default;
-    set(const std::set<T>& o);
+    explicit set(const std::set<T>& o);
 
 public: methods
     auto push(const T& item) -> ext::set<T>&;
