@@ -30,7 +30,7 @@ auto dom::aborting::abort_signal::throw_if_aborted() const -> void
     helpers::exceptions::throw_v8_exception(
             ext::property_any_cast<other::dom_exception>(reason).message,
             ABORT_ERR,
-            [this] -> bool {return reason;});
+            [this] {return reason->to<bool>();});
 }
 
 
@@ -46,9 +46,9 @@ auto dom::aborting::abort_signal::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<abort_signal>{isolate}
             .inherit<event_target>()
+            .static_("timeout", &abort_signal::timeout)
             .function("abort", &abort_signal::abort)
             .function("throwIfAborted", &abort_signal::throw_if_aborted)
-            .function("timeout", &abort_signal::timeout) // TODO -> static function?
             .var("aborted", &abort_signal::aborted)
             .var("reason", &abort_signal::reason)
             .auto_wrap_objects();

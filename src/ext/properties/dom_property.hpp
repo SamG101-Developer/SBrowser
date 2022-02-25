@@ -14,6 +14,8 @@ struct ext::dom_property : public property<T>
 {
 public: constructors
     dom_property() = default;
+    explicit dom_property(const T& val) {this->m_internal = val;}
+    explicit dom_property(T&& val) {this->m_internal = std::forward<T&>(val);}
     dom_property(const dom_property<T, ce_reactions>&) = default;
     ~dom_property() override;
 

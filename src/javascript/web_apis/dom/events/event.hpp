@@ -52,14 +52,17 @@ public: properties
     ext::dom_property<bool, _F> bubbles;
     ext::dom_property<bool, _F> cancelable;
     ext::dom_property<bool, _F> composed;
+
     ext::dom_property<nodes::event_target*, _F> target;
     ext::dom_property<nodes::event_target*, _F> current_target;
     ext::dom_property<nodes::event_target*, _F> related_target;
+
     ext::dom_property<unsigned short, _F> event_phase;
     ext::dom_property<double, _F> time_stamp;
     ext::dom_property<bool, _F> is_trusted;
-    ext::dom_property<ext::vector<nodes::event_target*>*, _F> touch_targets;
-    ext::dom_property<ext::vector<internal::event_path_struct*>*, _F> path;
+
+    ext::dom_property<std::unique_ptr<ext::vector<std::unique_ptr<nodes::event_target>>>, _F> touch_targets;
+    ext::dom_property<std::unique_ptr<ext::vector<std::unique_ptr<internal::event_path_struct>>>, _F> path;
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;

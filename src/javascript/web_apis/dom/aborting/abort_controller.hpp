@@ -23,7 +23,7 @@ public: methods
     auto abort(ext::cany& reason) const -> void;
 
 public: properties
-    ext::dom_property<abort_signal*, _F> signal;
+    ext::dom_property<std::unique_ptr<abort_signal>, _F> signal;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

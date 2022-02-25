@@ -17,13 +17,13 @@ namespace dom
 }
 
 
-class dom::aborting::abort_signal : public nodes::event_target
+class dom::aborting::abort_signal final: public nodes::event_target
 {
 public: friends
     friend class helpers::event_listening;
     friend class helpers::signal_aborting;
 
-private: aliases
+public: aliases
     using abort_signal_callback  = std::function<void()>;
     using abort_signal_callbacks = ext::vector<abort_signal_callback>;
 
@@ -42,7 +42,7 @@ public properties:
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-protected: internal_properties
+private: internal_properties
     abort_signal_callbacks m_abort_algorithms;
 
 };

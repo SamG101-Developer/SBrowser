@@ -8,41 +8,40 @@
 dom::events::event::event() : dom_object()
 {
     // set the flag attributes
-    m_stop_propagation_flag = false;
-    m_stop_immediate_propagation_flag = false;
-    m_canceled_flag = false;
-    m_in_passive_listener_flag = false;
     m_initialized_flag = true;
-    m_dispatch_flag = false;
 }
 
 
 dom::events::event::event(
         ext::cstring& event_type,
-        ext::cstring_any_map& event_init):
+        ext::cstring_any_map& event_init)
 
-        event()
+        : m_stop_propagation_flag(false)
+        , m_stop_immediate_propagation_flag(false)
+        , m_canceled_flag(false)
+        , m_in_passive_listener_flag(false)
+        , m_initialized_flag(false)
+        , m_dispatch_flag(false)
+        , type(event_type)
+        , bubbles(event_init.at("bubbles").to<bool>())
+        , cancelable(event_init.at("cancelable").to<bool>())
+        , composed(event_init.at("composed").to<bool>())
+        , target(nullptr)
+        , current_target(nullptr)
+        , related_target(nullptr)
+        , event_phase(NONE)
+        , time_stamp(performance::time::dom_high_res_timestamp())
+        , touch_targets(std::make_unique<ext::vector<std::unique_ptr<nodes::event_target>>>())
+        , path(std::make_unique<ext::vector<std::unique_ptr<internal::event_path_struct>>>())
 {
-    // set the attributes from the options dictionary
-    type = event_type;
-    bubbles = event_init.at("bubbles").to<bool>();
-    cancelable = event_init.at("cancelable").to<bool>();
-    composed = event_init.at("composed").to<bool>();
-    target = nullptr;
-    current_target = nullptr;
-    related_target = nullptr;
-    event_phase = NONE;
-    time_stamp = performance::time::dom_high_res_timestamp();
-    touch_targets = new ext::vector<nodes::event_target*>{};
-    path = new ext::vector<internal::event_path_struct*>{};
 }
 
 
 dom::events::event::~event()
 {
     // clear the pointer lists
-    delete touch_targets;
-    delete path;
+    touch_targets->get()->clear();
+    path->get()->clear();
 }
 
 

@@ -4,10 +4,10 @@
 #include <dom/helpers/signal_aborting.hpp>
 
 
-dom::aborting::abort_controller::abort_controller() : dom_object()
+dom::aborting::abort_controller::abort_controller()
+        : dom_object()
+        , signal(std::make_unique<abort_signal>())
 {
-    // set the properties
-    signal = new abort_signal{};
 }
 
 
