@@ -51,8 +51,8 @@ public: methods
     auto slice(size_t front_index, size_t back_index) const -> vector<T>&;
     auto item_before(const T& item) const -> T&;
     auto item_after(const T& item) const -> T&;
-    template <typename F> auto first_match(F&& function) const -> T&;
-    template <typename F> auto last_match(F&& function) const -> T&;
+    template <typename F> auto first_match(const F& function) const -> T&;
+    template <typename F> auto last_match(const F& function) const -> T&;
 
     auto reserve(size_t count) -> void;
     auto append(const T& item) -> vector<T>&;
@@ -64,12 +64,12 @@ public: methods
     auto max_element() const -> T&;
     auto min_element() const -> T&;
 
-    template <typename F> auto all_of(F&& function) const -> bool;
-    template <typename F> auto any_of(F&& function) const -> bool;
-    template <typename F> auto for_each(F&& function) -> vector<T>&;
-    template <typename F> auto for_each(F&& function) const -> cvector<T>&;
-    template <typename F> auto filter(F&& function) const -> vector<T>;
-    template <typename U=T, typename F> auto transform(F&& function) const -> vector<U>;
+    template <typename F> auto all_of(const F& function) const -> bool;
+    template <typename F> auto any_of(const F& function) const -> bool;
+    template <typename F> auto for_each(const F& function) -> vector<T>&;
+    template <typename F> auto for_each(const F& function) const -> cvector<T>&;
+    template <typename F> auto filter(const F& function) const -> vector<T>;
+    template <typename U=T, typename F> auto transform(const F& function) const -> vector<U>;
     template <typename U=T> auto cast_all() const -> vector<U>;
 
     auto intersection(vector<T>& other) const -> vector<T>&;
@@ -170,18 +170,20 @@ auto ext::vector<T>::item_after(const T& item) const -> T&
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::first_match(F&& function) const -> T&
+auto ext::vector<T>::first_match(const F& function) const -> T&
 {
-    // get the first match by filtering the veque and returning the first item TODO : break on first item
+    // get the first match by filtering the veque and returning the first item
+    // TODO : break on first item
     return filter(function).front();
 }
 
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::last_match(F&& function) const -> T&
+auto ext::vector<T>::last_match(const F& function) const -> T&
 {
-    // get the last match by filtering the veque and returning the last match TODO : break on last item (reverse)
+    // get the last match by filtering the veque and returning the last match
+    // TODO : break on last item (reverse)
     return filter(function).back();
 }
 
@@ -226,7 +228,7 @@ auto ext::vector<T>::extend(const vector<T>& other, size_t index) -> ext::vector
 {
     // reverse the other list so that it can be inserted in the correct order ie 3 then 2 then 1 so {1, 2, 3} is added
     auto reversed_other = other.reversed();
-    reversed_other.for_each([this, other, index = index % this->length()](const T& item) -> void {insert(item, index);});
+    reversed_other.for_each([this, other, index = index % this->length()](const T& item) {insert(item, index);});
 
     // return a reference to the veque
     return *this;
@@ -258,7 +260,7 @@ template <typename T>
 auto ext::vector<T>::max_element() const -> T&
 {
     // get the maximum element, and return the item at this iterator
-    return this->at_iter(std::max_element(this->begin(), this->end()));
+    return this->at_iter(std::ranges::max_element(this->begin(), this->end()));
 }
 
 
@@ -266,49 +268,37 @@ template <typename T>
 auto ext::vector<T>::min_element() const -> T&
 {
     // get the minimum element, and return the item at this iterator
-    return this->at_iter(std::min_element(this->begin(), this->end()));
+    return this->at_iter(std::ranges::min_element(this->begin(), this->end()));
 }
 
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::all_of(F&& function) const -> bool
+auto ext::vector<T>::all_of(const F& function) const -> bool
 {
-    // set the flag to true by default
-    bool flag = true;
-
-    // check if a condition matches all items in the veque, break early if 1 element doesn't match
-    for_each([&flag, function](const T& item) {
-        flag &= function(T{item});
-        if (not flag) return;
-    });
-
-    // return the modified flag
-    return flag;
+    // check if a condition matches all items in the veque, return early if 1 element doesn't match
+    for (const T& item: *this)
+    {
+        if (not function(T{item})) return false;
+    }
 }
 
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::any_of(F&& function) const -> bool
+auto ext::vector<T>::any_of(const F& function) const -> bool
 {
-    // set the flag to false by default
-    bool flag = false;
-
-    // check if a condition matches any items in the veque, brake early if 1 element does match
-    for_each([&flag, function](const T& item) {
-        flag |= function(item);
-        if (flag) return;
-    });
-
-    // return the modified flag
-    return flag;
+    // check if a condition matches any items in the veque, return early if 1 element does match
+    for (const T& item: *this)
+    {
+        if (function(T{item})) return true;
+    }
 }
 
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::for_each(F&& function) -> ext::vector<T>&
+auto ext::vector<T>::for_each(const F& function) -> ext::vector<T>&
 {
     // apply a function to each item in this veque, and return a reference to it
     for (T item: this->m_iterable) function(item);
@@ -318,7 +308,7 @@ auto ext::vector<T>::for_each(F&& function) -> ext::vector<T>&
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::for_each(F&& function) const -> ext::cvector<T>&
+auto ext::vector<T>::for_each(const F& function) const -> ext::cvector<T>&
 {
     // apply a const function to each item in this veque, and return a reference to it (for all_of, any_of etc...)
     for (const T item: this->m_iterable) function(item);
@@ -328,20 +318,20 @@ auto ext::vector<T>::for_each(F&& function) const -> ext::cvector<T>&
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::filter(F&& function) const -> ext::vector<T>
+auto ext::vector<T>::filter(const F& function) const -> ext::vector<T>
 {
     // remove non-matching items from a duplicate of the veque, and return it
-    return vector<T>{*this}.remove_if([function](const T& item) -> bool {return not function(item);});
+    return vector<T>{*this}.remove_if([function](const T& item) {return not function(item);});
 }
 
 
 template <typename T>
 template <typename U, typename F>
-auto ext::vector<T>::transform(F&& function) const -> ext::vector<U>
+auto ext::vector<T>::transform(const F& function) const -> ext::vector<U>
 {
     // create a duplicate of the veque, transform all the items in it, and return a reference to it
     vector<U> copy{*this};
-    std::transform(this->begin(), this->end(), copy.begin(), function);
+    std::ranges::transform(this->begin(), this->end(), copy.begin(), function);
     return copy;
 }
 
@@ -353,8 +343,8 @@ auto ext::vector<T>::cast_all() const -> ext::vector<U>
     // create a duplicate empty veque, and cast all the items from T to U
     vector<U> copy;
     copy = std::is_pointer_v<T>
-           ? transform<U>([](const T& item) -> U {return dynamic_cast<U>(item);})
-           : transform<U>([](const T& item) -> U {return static_cast<U>(item);});
+           ? transform<U>([](const T& item) {return dynamic_cast<U>(item);})
+           : transform<U>([](const T& item) {return static_cast<U>(item);});
 
     // remove all empty elements from the copied list, and return a  reference to it
     if (std::is_pointer_v<T>) copy.clean(nullptr, true);
@@ -375,7 +365,7 @@ auto ext::vector<T>::join(char&& delimiter) const -> const char*
 {
     // create a string and join each item in the veque to it
     std::string joined;
-    for_each([&joined, delimiter](const T item) -> void {joined += delimiter + item;});
+    for_each([&joined, delimiter](const T item) {joined += delimiter + item;});
 
     // return teh const char( representation of the string
     return joined.c_str();
