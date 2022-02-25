@@ -21,7 +21,7 @@ namespace javascript::realms
 
 class javascript::realms::realm {
 public:
-    explicit realm(v8::Local<v8::Context> context): m_context(context) {};
+    explicit realm(const v8::Local<v8::Context> context): m_context(context) {};
 
     template <typename T> auto get(ext::string&& attribute_name) const -> T;
     template <typename T> auto set(ext::string&& attribute_name, T new_value) -> void;
@@ -35,7 +35,7 @@ template <typename T>
 auto javascript::realms::realm::get(ext::string&& attribute_name) const -> T
 {
     // get the v8 object from the javascript context and cast it to its c++ type
-    auto v8_object = m_context->Global()->Get(m_context, attribute_name).ToLocalChecked();
+    auto v8_object = m_context->Global()->Get(m_context, v8pp::convert<ext::string>::to_v8(m_context->GetIsolate(), attribute_name)).ToLocalChecked();
 
     // return the cast value
     return v8pp::convert<T>::from_v8(v8::Isolate::GetCurrent(), v8_object);
@@ -51,9 +51,6 @@ auto javascript::realms::realm::set(ext::string&& attribute_name, T new_value) -
     // update the value in javascript
     m_context->Global()->Set(m_context, attribute_name, v8_value);
 }
-
-
-//
 
 
 javascript::realms::realm javascript::realms::relevant_agent()

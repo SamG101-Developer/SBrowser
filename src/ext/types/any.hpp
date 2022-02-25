@@ -67,7 +67,8 @@ auto ext::any::empty() const -> bool
 
 auto ext::any::contains_pointer() const -> bool
 {
-    // return if the internal object wrapped is a pointer type TODO : this implementation makes me feel sick
+    // return if the internal object wrapped is a pointer type
+    // TODO : this implementation makes me feel sick
     return ext::string{type().name()}.contains("* __ptr64");
 }
 

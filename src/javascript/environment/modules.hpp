@@ -2,10 +2,10 @@
 #define SBROWSER_MODULES_HPP
 
 
-namespace javascript::environment::modules {enum module_type;}
+namespace javascript::environment::modules {enum class module_type;}
 
 
-enum javascript::environment::modules::module_type
+enum class javascript::environment::modules::module_type
 {
     window,
     worker,
