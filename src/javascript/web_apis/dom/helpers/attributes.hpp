@@ -15,6 +15,11 @@ namespace dom
 }
 
 
+/*
+ * Group of helper methods designed to help handle custom attribute setting, getting, deleting etc on an owner_element;
+ * the attributes are accessible via their (owner_element ([local_name namespace] | qualified_name) prefix?) or a very
+ * similar syntax
+ */
 struct dom::helpers::attributes
 {
     static auto handle_attributes_changes(const nodes::attr* attribute, const nodes::element* owner_element, ext::cstring& old_value, ext::cstring& new_value) -> void;

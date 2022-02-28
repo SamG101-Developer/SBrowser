@@ -12,7 +12,6 @@
  */
 dom::events::event::event() : dom_object()
 {
-    // set the flag attributes
 }
 
 

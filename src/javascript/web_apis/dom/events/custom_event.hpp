@@ -10,16 +10,22 @@
 namespace dom::events {class custom_event;}
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-customevent
+ * https://developer.mozilla.org/en-US/docs/Web/API/CustomEvent
+ *
+ * The CustomEvent interface represents events initialized by an application for any purpose.
+ */
 class dom::events::custom_event : public event
 {
-public: constructors
+public constructors:
     using event::event;
     custom_event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
 
-public: properties
+public properties:
     ext::dom_property<ext::any, _F> detail;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
