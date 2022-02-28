@@ -12,10 +12,10 @@ template<typename T>
 dom::mixins::parent_node<T>::parent_node()
 {
     // set the custom accessors
-    children.get = [this] {return get_children();};
-    first_element_child.get = [this] {return get_first_element_child();};
-    last_element_child.get = [this] {return get_last_element_child();};
-    child_element_count.get = [this] {return get_child_element_count();};
+    children.getter = [this] {return get_children();};
+    first_element_child.getter = [this] {return get_first_element_child();};
+    last_element_child.getter = [this] {return get_last_element_child();};
+    child_element_count.getter = [this] {return get_child_element_count();};
 }
 
 

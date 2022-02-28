@@ -4,7 +4,6 @@
 
 #include <ext/macros/decorators.hpp>
 #include <ext/properties/dom_property.hpp>
-
 #include <dom_object.hpp>
 
 namespace dom::aborting
@@ -14,18 +13,26 @@ namespace dom::aborting
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-AbortSignal
+ * https://developer.mozilla.org/en-US/docs/Web/API/AbortController
+ *
+ * The AbortController interface represents a controller object that allows you to abort one or more Web requests as and
+ * when desired. You can create a new AbortController object using the AbortController() constructor. Communicating with
+ * a DOM request is done using an AbortSignal object.
+ */
 class dom::aborting::abort_controller final : virtual public dom_object
 {
-public: constructors
+public constructors:
     abort_controller();
 
-public: methods
+public methods:
     auto abort(ext::cany& reason) const -> void;
 
-public: properties
-    ext::dom_property<std::unique_ptr<abort_signal>, _F> signal;
+public properties:
+    ext::dom_property<abort_signal*, _F> signal;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

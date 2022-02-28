@@ -46,25 +46,25 @@ dom::nodes::document::document()
         , ext::listlike<node*>()
 {
     // set the custom accessors
-    compat_mode.get      = [this] {return get_compat_mode();};
-    character_set.get    = [this] {return get_character_set();};
-    doctype.get          = [this] {return get_doctype();};
-    document_element.get = [this] {return get_document_element();};
+    compat_mode.getter      = [this] {return get_compat_mode();};
+    character_set.getter    = [this] {return get_character_set();};
+    doctype.getter          = [this] {return get_doctype();};
+    document_element.getter = [this] {return get_document_element();};
 
-    dir.get           = [this] {return get_compat_mode();};
-    last_modified.get = [this] {return get_last_modified();};
-    body.get          = [this] {return get_body();};
-    head.get          = [this] {return get_head();};
-    title.get         = [this] {return get_title();};
-    images.get        = [this] {return get_images();};
-    links.get         = [this] {return get_links();};
-    forms.get         = [this] {return get_forms();};
-    scripts.get       = [this] {return get_scripts();};
+    dir.getter           = [this] {return get_compat_mode();};
+    last_modified.getter = [this] {return get_last_modified();};
+    body.getter          = [this] {return get_body();};
+    head.getter          = [this] {return get_head();};
+    title.getter         = [this] {return get_title();};
+    images.getter        = [this] {return get_images();};
+    links.getter         = [this] {return get_links();};
+    forms.getter         = [this] {return get_forms();};
+    scripts.getter       = [this] {return get_scripts();};
 
-    title.set       = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
-    body.set        = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
-    cookie.set      = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
-    ready_state.set = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
+    title.setter       = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
+    body.setter        = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
+    cookie.setter      = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
+    ready_state.setter = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
 
     // set the properties
     node_type      << DOCUMENT_NODE;

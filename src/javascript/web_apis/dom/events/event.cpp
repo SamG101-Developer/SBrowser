@@ -2,13 +2,17 @@
 
 #include <dom/helpers/event_listening.hpp>
 
-#include <performance/time/dom_high_res_timestamp.hpp>
 
-
+/*
+ * https://dom.spec.whatwg.org/#dom-event-event
+ * https://developer.mozilla.org/en-US/docs/Web/API/Event/Event
+ *
+ * The Event() constructor creates a new Event object. An event created in this way is called a synthetic event, as
+ * opposed to an event fired by the browser, and can be dispatched by a script.
+ */
 dom::events::event::event() : dom_object()
 {
     // set the flag attributes
-    m_initialized_flag = true;
 }
 
 
@@ -16,56 +20,84 @@ dom::events::event::event(
         ext::cstring& event_type,
         ext::cstring_any_map& event_init)
 
-        : m_stop_propagation_flag(false)
-        , m_stop_immediate_propagation_flag(false)
-        , m_canceled_flag(false)
-        , m_in_passive_listener_flag(false)
-        , m_initialized_flag(false)
-        , m_dispatch_flag(false)
-        , type(event_type)
+        : type(event_type)
         , bubbles(event_init.at("bubbles").to<bool>())
-        , cancelable(event_init.at("cancelable").to<bool>())
+        , cancelable(event_init.at("bubbles").to<bool>())
         , composed(event_init.at("composed").to<bool>())
-        , target(nullptr)
-        , current_target(nullptr)
-        , related_target(nullptr)
-        , event_phase(NONE)
-        , time_stamp(performance::time::dom_high_res_timestamp())
-        , touch_targets(std::make_unique<ext::vector<std::unique_ptr<nodes::event_target>>>())
-        , path(std::make_unique<ext::vector<std::unique_ptr<internal::event_path_struct>>>())
 {
+    // set the properties
+    event_phase = NONE;
+    touch_targets = std::make_unique<ext::vector<nodes::event_target*>>().get();
+    path = std::make_unique<ext::vector<internal::event_path_struct*>>().get();
 }
 
 
 dom::events::event::~event()
 {
     // clear the pointer lists
-    touch_targets->get()->clear();
-    path->get()->clear();
+    touch_targets->clear();
+    path->clear();
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-event-stoppropagation
+ * https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
+ *
+ * The stopPropagation() method of the Event interface prevents further propagation of the current event in the
+ * capturing and bubbling phases. It does not, however, prevent any default behaviors from occurring; for instance,
+ * clicks on links are still processed. If you want to stop those behaviors, see the preventDefault() method. It also
+ * does not prevent immediate propagation to other event-handlers. If you want to stop those, see
+ * stopImmediatePropagation().
+ */
 auto dom::events::event::stop_propagation() -> void
 {
-    // set the stop propagation flag so that the recursive method to find the next node will stop
+    // set the stop propagation flag, to stop the event propagating to the next target
     m_stop_propagation_flag = true;
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-event-stopimmediatepropagation
+ * https://developer.mozilla.org/en-US/docs/Web/API/Event/stopImmediatePropagation
+ *
+ * The stopImmediatePropagation() method of the Event interface prevents other listeners of the same event from being
+ * called. If several listeners are attached to the same element for the same event type, they are called in the order
+ * in which they were added. If stopImmediatePropagation() is invoked during one such call, no remaining listeners will
+ * be called.
+ */
 auto dom::events::event::stop_immediate_propagation() -> void
 {
-    // set the stop immediate propagation flat so that the recursive method to find the next listener will stop
+    // set the stop immediate propagation flag, to stop the event propagating to the next listener
     m_stop_immediate_propagation_flag = true;
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-event-preventdefault
+ * https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
+ *
+ * The preventDefault() method of the Event interface tells the user agent that if the event does not get explicitly
+ * handled, its default action should not be taken as it normally would be. The event continues to propagate as usual,
+ * unless one of its event listeners calls stopPropagation() or stopImmediatePropagation(), either of which terminates
+ * propagation at once. As noted below, calling preventDefault() for a non-cancelable event, such as one dispatched via
+ * EventTarget.dispatchEvent(), without specifying cancelable: true has no effect.
+ */
 auto dom::events::event::prevent_default() -> void
 {
-    // set the cancelled flag, as long as the event is cancelable and not in a passive listener
+    // set the cancelled flag if the event is cancelled and isn't in a passive listener
     m_canceled_flag = cancelable and not m_in_passive_listener_flag;
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-event-composedpath
+ * https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath
+ *
+ * The composedPath() method of the Event interface returns the event's path which is an array of the objects on which
+ * listeners will be invoked. This does not include nodes in shadow trees if the shadow root was created with its
+ * ShadowRoot.mode closed.
+ */
 auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_target*>
 {
     // create the default vectors, and return if the current event traversal path is empty
@@ -86,7 +118,7 @@ auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_
     while (index >= 0)
     {
         if (path_vector.at(index)->root_of_closed_tree) ++current_target_hidden_subtree_level;
-        if (path_vector.at(index)->invocation_target == current_target) {current_target_index = index; break;}
+        if (path_vector.at(index)->invocation_target == current_target) {current_target_index = (int)index; break;}
         if (path_vector.at(index)->slot_in_closed_tree) --current_target_hidden_subtree_level;
         --index;
     }

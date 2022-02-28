@@ -19,15 +19,15 @@ public: constructors
     non_document_type_child_node();
 
 public: properties
-    ext::dom_property<nodes::element*, _F> previous_element_sibling;
-    ext::dom_property<nodes::element*, _F> next_element_sibling;
+    ext::dom_property<std::shared_ptr<nodes::element>, _F> previous_element_sibling;
+    ext::dom_property<std::shared_ptr<nodes::element>, _F> next_element_sibling;
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private: accessors
-    auto get_previous_element_sibling() const -> nodes::element*;
-    auto get_next_element_sibling() const -> nodes::element*;
+    auto get_previous_element_sibling() const -> std::shared_ptr<nodes::element>;
+    auto get_next_element_sibling() const -> std::shared_ptr<nodes::element>;
 };
 
 

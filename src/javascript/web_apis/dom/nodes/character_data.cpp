@@ -10,7 +10,7 @@ dom::nodes::character_data::character_data()
         , mixins::non_document_type_child_node<dom::nodes::character_data>()
 {
     // set the custom accessors
-    length.get = [this] {return get_length();};
+    length.getter = [this] {return get_length();};
 }
 
 

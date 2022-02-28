@@ -29,11 +29,11 @@ auto dom::helpers::event_dispatching::append_to_event_path(
     bool root_of_closed_tree =
             shadows::is_shadow_root(dynamic_cast<const nodes::node*>(invocation_target))
             and invocation_target_as_shadow_root
-            and invocation_target_as_shadow_root->mode == "closed";
+            and invocation_target_as_shadow_root->mode == ext::string{"closed"};
 
     // add a new struct into the event path traversal list
-    event->path->append(new internal::event_path_struct
-    {
+    event->path->append(std::make_unique<internal::event_path_struct>
+    (
         .invocation_target = invocation_target,
         .shadow_adjusted_target = shadow_adjusted_target,
         .related_target = related_target,
@@ -41,7 +41,7 @@ auto dom::helpers::event_dispatching::append_to_event_path(
         .invocation_target_in_shadow_tree = invocation_target_in_shadow_tree,
         .root_of_closed_tree = root_of_closed_tree,
         .slot_in_closed_tree = slot_in_closed_tree
-    });
+    ));
 }
 
 

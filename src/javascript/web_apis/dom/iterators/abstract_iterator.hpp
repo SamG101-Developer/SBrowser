@@ -27,9 +27,9 @@ public: constructors
     abstract_iterator();
 
 public: properties
-    ext::dom_property<nodes::node*, _F> root;
-    ext::dom_property<node_filter*, _F> filter;
-    ext::dom_property<unsigned long, _F> what_to_show;
+    ext::dom_property<std::shared_ptr<nodes::node>, _F> root;
+    ext::dom_property<std::shared_ptr<node_filter>, _F> filter;
+    ext::dom_property<std::shared_ptr<unsigned long>, _F> what_to_show;
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;

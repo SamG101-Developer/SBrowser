@@ -20,6 +20,13 @@ namespace ext
     template <typename U, typename T> auto property_bit_cast(const ext::property<T>& o) -> U;
 }
 
+//namespace
+//{
+//    template <typename T, class = void> struct is_unique_ptr : std::false_type{};
+//    template <typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
+//    template <typename T> constexpr bool is_unique_ptr_v = is_unique_ptr<T>::value;
+//}
+
 
 template <typename T>
 struct ext::property
@@ -49,6 +56,7 @@ public: constructors
     auto operator=(property<T>&& o) noexcept -> property<T>&;
     virtual ~property();
 
+public: operators
     virtual operator T() const;
     virtual auto operator=(const T& o) -> property<T>&;
     virtual auto operator=(T&& o) noexcept -> property<T>&;
@@ -56,8 +64,8 @@ public: constructors
     template <typename U> operator U() const requires (not std::is_same_v<T, U>);
     template <typename U> auto operator=(const ext::property<U>& o) -> property<T>& requires (not std::is_same_v<T, U>);
 
+    auto operator->() const -> T  requires (std::is_pointer_v<T>);
     auto operator->() const -> T* requires (!std::is_pointer_v<T>);
-    auto operator->() const -> T  requires ( std::is_pointer_v<T>);
 
     auto operator==(const T& o) const -> bool;
     auto operator!=(const T& o) const -> bool;
@@ -107,9 +115,9 @@ public: constructors
     operator bool() const requires (!std::is_same_v<T, bool>);
 
 public: internal_properties
-    std::function<void()> del;
-    std::function<T()> get;
-    std::function<void(T)> set;
+    std::function<void()> deleter;
+    std::function<std::remove_extent_t<T>()> getter;
+    std::function<void(std::remove_extent_t<T>)> setter;
 
 private: internal_properties
     T m_internal;
@@ -120,9 +128,9 @@ template <typename T>
 ext::property<T>::property()
 {
     // set the deleter, getter and setter functions to the defaults
-    del = [this]()      {/* Default : do nothing on deletion */};
-    get = [this]()      {return m_internal;};
-    set = [this](T val) {m_internal = val;};
+    deleter = [this]()      {/* Default : do nothing on deletion TODO : [delete m_internal; m_internal = nullptr] for pointers */};
+    getter  = [this]()      {return m_internal;};
+    setter  = [this](T val) {m_internal = val;};
 }
 
 
@@ -148,8 +156,8 @@ template <typename T>
 FAST INLINE ext::property<T>::~property<T>()
 {
     // call the deleter method on destruction, and delete the internal value if it is a pointer
-    del();
-    if constexpr(std::is_pointer_v<T>) delete m_internal;
+    deleter();
+    if constexpr(std::is_pointer_v<T>) {delete m_internal; m_internal = nullptr;}
 }
 
 
@@ -157,7 +165,7 @@ template <typename T>
 FAST INLINE ext::property<T>::operator T() const
 {
     // conversion to T acts as the getter, so return the value from the get() accessor
-    return get();
+    return getter();
 }
 
 
@@ -165,7 +173,7 @@ template<typename T>
 FAST INLINE auto ext::property<T>::operator=(const T& o) -> ext::property<T>&
 {
     // assignment operator to set an l-value reference, and return the pointer to the property
-    set(o);
+    setter(o);
     return *this;
 }
 
@@ -174,7 +182,7 @@ template <typename T>
 FAST INLINE auto ext::property<T>::operator=(T&& o) noexcept -> ext::property<T>&
 {
     // assignment operator to set an r-value reference, and return the pointer to the property
-    set(std::forward<T&>(o));
+    setter(std::forward<T&>(o));
     return *this;
 }
 
@@ -198,20 +206,19 @@ FAST INLINE auto ext::property<T>::operator=(const ext::property<U>& o) -> ext::
 }
 
 
+template <typename T>
+FAST INLINE auto ext::property<T>::operator->() const -> T requires (std::is_pointer_v<T>)
+{
+    // accessor operator for pointer types needs to return the stored object
+    return m_internal;
+}
+
 
 template <typename T>
 FAST INLINE auto ext::property<T>::operator->() const -> T* requires (!std::is_pointer_v<T>)
 {
     // accessor operator for non-pointer types needs to return the address of the stored object
     return &m_internal;
-}
-
-
-template <typename T>
-FAST INLINE auto ext::property<T>::operator->() const -> T requires (std::is_pointer_v<T>)
-{
-    // accessor operator for pointer types needs to return the stored object
-    return m_internal;
 }
 
 

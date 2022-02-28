@@ -13,8 +13,8 @@ html::elements::html_media_element::html_media_element()
     HTML_CONSTRUCTOR
 
     // set the custom accessors
-    current_time.get = [this] {return get_current_time();};
-    current_time.set = [this](auto&& PH1) {set_current_time(std::forward<decltype(PH1)>(PH1));};
+    current_time.getter = [this] {return get_current_time();};
+    current_time.setter = [this](auto&& PH1) {set_current_time(std::forward<decltype(PH1)>(PH1));};
 
     text_tracks = new ext::vector<html::media::text_track*>{};
 

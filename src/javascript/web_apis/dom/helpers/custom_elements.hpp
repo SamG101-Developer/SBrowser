@@ -25,7 +25,7 @@ namespace dom
 struct dom::helpers::custom_elements
 {
     static auto create_an_element(nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& prefix = "", ext::cstring& is = "", const bool synchronous_custom_elements_flag = false) -> dom::nodes::element*;
-    static auto upgrade_element(internal::custom_element_definition* definition, const nodes::element* element) -> void;
+    static auto upgrade_element(internal::custom_element_definition* definition, nodes::element* element) -> void;
     static auto try_to_upgrade_element(const nodes::element* element) -> void;
     static auto lookup_custom_element_definition(const nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& is) -> internal::custom_element_definition*;
 

@@ -149,7 +149,7 @@ auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
             exceptions::throw_v8_exception(
                     "document_type node with a document parent can not have document_type siblings",
                     HIERARCHY_REQUEST_ERR,
-                    [parent] -> bool {return parent->child_nodes->filter(&trees::is_document_type_node);});
+                    [parent] -> bool {return not parent->child_nodes->filter(&trees::is_document_type_node).empty();});
 
             // if child is non-nullptr and there is an element (document element) preceding the child, then throw a hierarchy request
             exceptions::throw_v8_exception(
@@ -250,7 +250,7 @@ auto dom::helpers::mutation_algorithms::insert(
         // then assign a slot to child
         if (shadows::is_shadow_host(parent)
                 and shadows::is_slottable(child)
-                and dynamic_cast<nodes::shadow_root*>(trees::root(parent))->slot_assignment == "named")
+                and dynamic_cast<nodes::shadow_root*>(trees::root(parent))->slot_assignment == ext::string{"named"})
             shadows::assign_slot(child);
 
         // if the parent's root is a shadow root, the parent is a slot, and the parent has assigned nodes, then signal
@@ -326,7 +326,7 @@ auto dom::helpers::mutation_algorithms::replace(
             exceptions::throw_v8_exception(
                     "element node with a document parent can not have an element child that != 'child'",
                     HIERARCHY_REQUEST_ERR,
-                    [node, child] {return not node->child_nodes->filter(&trees::is_element_node).remove(child).empty();;});
+                    [node, child] {return not node->child_nodes->filter(&trees::is_element_node).remove(child).empty();});
 
             exceptions::throw_v8_exception(
                     "element node with a document parent can not be inserted before a document type node",

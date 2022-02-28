@@ -155,7 +155,7 @@ auto dom::helpers::custom_elements::create_an_element(
         // if the namespace is the html namespace and the local name is a valid custom element, or <is> is set, then
         // set the custom element state to "undefined", because the element has a valid custom name, but has no custim
         // element definition
-        if (namespace_ == namespaces::HTML and is_valid_custom_element_name(local_name) or is)
+        if (namespace_ == namespaces::HTML and is_valid_custom_element_name(local_name) or not is.empty())
             result->m_custom_element_state = "undefined";
     }
 
@@ -167,7 +167,7 @@ auto dom::helpers::custom_elements::create_an_element(
 
 auto dom::helpers::custom_elements::upgrade_element(
         internal::custom_element_definition* definition,
-        const nodes::element* element)
+        nodes::element* element)
         -> void
 {
     // elements whose custom element state that is "undefined" or "uncustomized" cannot be upgraded, so return from the

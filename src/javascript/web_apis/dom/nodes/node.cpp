@@ -30,14 +30,14 @@
 dom::nodes::node::node() : event_target()
 {
     // set the custom accessors
-    base_uri.get         = [this] {return get_base_uri();};
-    is_connected.get     = [this] {return get_is_connected();};
-    first_child.get      = [this] {return get_first_child();};
-    last_child.get       = [this] {return get_last_child();};
-    previous_sibling.get = [this] {return get_previous_sibling();};
-    next_sibling.get     = [this] {return get_next_sibling();};
+    base_uri.getter         = [this] {return get_base_uri();};
+    is_connected.getter     = [this] {return get_is_connected();};
+    first_child.getter      = [this] {return get_first_child();};
+    last_child.getter       = [this] {return get_last_child();};
+    previous_sibling.getter = [this] {return get_previous_sibling();};
+    next_sibling.getter     = [this] {return get_next_sibling();};
 
-    parent.set = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
+    parent.setter = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
 
     // set the properties
     parent      << nullptr;

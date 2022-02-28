@@ -29,8 +29,8 @@ dom::nodes::element::element()
         // , css::cssom_view::mixins::geometry_utils<element>()
 {
     // set the custom accessors
-    tag_name.get         = [this] {return get_tag_name();};
-    shadow_root_node.get = [this] {return get_shadow_root();};
+    tag_name.getter         = [this] {return get_tag_name();};
+    shadow_root_node.getter = [this] {return get_shadow_root();};
 
     // set the properties
     node_type        << ELEMENT_NODE;

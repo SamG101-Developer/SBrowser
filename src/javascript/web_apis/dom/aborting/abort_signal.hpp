@@ -17,20 +17,27 @@ namespace dom
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-AbortSignal
+ * https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal
+ *
+ * The AbortSignal interface represents a signal object that allows you to communicate with a DOM request (such as a
+ * fetch request) and abort it if required via an AbortController object.
+ */
 class dom::aborting::abort_signal final: public nodes::event_target
 {
-public: friends
+public friends:
     friend class helpers::event_listening;
     friend class helpers::signal_aborting;
 
-public: aliases
+public aliases:
     using abort_signal_callback  = std::function<void()>;
     using abort_signal_callbacks = ext::vector<abort_signal_callback>;
 
-public: constructors
+public constructors:
     abort_signal();
 
-public: methods
+public methods:
     static auto abort(ext::any reason = "") -> abort_signal;
     static auto timeout(unsigned long long milliseconds) -> abort_signal;
     auto throw_if_aborted() const -> void;
@@ -39,10 +46,10 @@ public properties:
     ext::dom_property<bool    , _F> aborted;
     ext::dom_property<ext::any, _F> reason;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-private: internal_properties
+private internal_properties:
     abort_signal_callbacks m_abort_algorithms;
 
 };

@@ -14,8 +14,8 @@ struct ext::dom_property : public property<T>
 {
 public: constructors
     dom_property() = default;
-    explicit dom_property(const T& val) {this->m_internal = val;}
-    explicit dom_property(T&& val) {this->m_internal = std::forward<T&>(val);}
+    dom_property(const T& val) {this->m_internal = val;}
+    dom_property(T&& val) {this->m_internal = std::forward<T&>(val);}
     dom_property(const dom_property<T, ce_reactions>&) = default;
     ~dom_property() override;
 
@@ -48,7 +48,7 @@ FAST INLINE auto ext::dom_property<T, ce_reactions>::operator=(const T& o) -> do
 {
     // handle any custom element reactions, and perform default setting operations (for const reference)
     if constexpr(ce_reactions) handle_ce_reactions(*this);
-    this->set(o);
+    this->setter(o);
     return *this;
 }
 
@@ -58,7 +58,7 @@ FAST INLINE auto ext::dom_property<T, ce_reactions>::operator=(T&& o) -> dom_pro
 {
     // handle any custom element reactions, and perform default setting operations (for const reference)
     if constexpr(ce_reactions) handle_ce_reactions(*this);
-    this->set(o);
+    this->setter(o);
     return *this;
 }
 

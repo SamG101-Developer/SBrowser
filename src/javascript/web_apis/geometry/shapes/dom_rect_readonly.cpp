@@ -14,10 +14,10 @@ geometry::shapes::dom_rect_readonly::dom_rect_readonly(
     this->width = width;
     this->height = height;
 
-    this->left.get = [this] {return get_left();};
-    this->top.get = [this] {return get_top();};
-    this->right.get = [this] {return get_right();};
-    this->bottom.get = [this] {return get_bottom();};
+    this->left.getter = [this] {return get_left();};
+    this->top.getter = [this] {return get_top();};
+    this->right.getter = [this] {return get_right();};
+    this->bottom.getter = [this] {return get_bottom();};
 }
 
 

@@ -98,7 +98,7 @@ auto dom::helpers::event_listening::dispatch(
 {
     // set the dispatch_flag to true
     event->m_dispatch_flag = true;
-    internal::event_path_struct* clear_targets_struct = nullptr;
+    std::shared_ptr<internal::event_path_struct> clear_targets_struct = nullptr;
     bool clear_targets = false;
 
     // set the related target to the event's related target retargeted against the event_target
@@ -108,7 +108,7 @@ auto dom::helpers::event_listening::dispatch(
     if (event_target != related_target or event_target == event->related_target) {
 
         // define the is_activation_event and slot_in_closed_tree
-        bool is_activation_event = event->type == "click";
+        bool is_activation_event = event->type == ext::string{"click"};
         bool slot_in_closed_tree = false;
 
         // set the touch target list to a retargeted transform of the event's touch target list, the node to a node
@@ -135,7 +135,7 @@ auto dom::helpers::event_listening::dispatch(
                 // is a closed shadow root
                 assert(shadows::is_slot(parent_node));
                 slottable = nullptr;
-                slot_in_closed_tree = shadows::is_shadow_root(parent_node) and shadows::shadow_root(parent_node)->mode == "closed";
+                slot_in_closed_tree = shadows::is_shadow_root(parent_node) and shadows::shadow_root(parent_node)->mode == ext::string{"closed"};
             }
 
             // set the touch target list, related target and slottable to what they were before, but using the parent
@@ -183,22 +183,23 @@ auto dom::helpers::event_listening::dispatch(
         }
 
         // set the clear_targets_struct to the last struct in tht event's path that has a shadow_adjusted_target
-        clear_targets_struct = event->path->last_match([](internal::event_path_struct* event_path_struct) -> bool {return event_path_struct->shadow_adjusted_target;});
+        clear_targets_struct = event->path->last_match([](std::shared_ptr<internal::event_path_struct> event_path_struct) -> bool {return event_path_struct->shadow_adjusted_target;});
 
         // clear the targets if the shadow_adjusted_target, related_target or any touch_target has a shadow root
-        clear_targets = ext::vector<nodes::event_target*>{clear_targets_struct->shadow_adjusted_target, clear_targets_struct->related_target}
+        clear_targets = not ext::vector<nodes::event_target*>{clear_targets_struct->shadow_adjusted_target, clear_targets_struct->related_target}
                 .extend(clear_targets_struct->touch_targets)
                 .cast_all<nodes::node*>()
-                .filter([](nodes::node* node) {return shadows::is_shadow_root(node);});
+                .filter([](nodes::node* node) {return shadows::is_shadow_root(node);})
+                .empty();
 
         // capturing phase event invocation
-        for (auto* event_path_struct: *event->path) {
+        for (auto event_path_struct: event->path) {
             event->event_phase = event_path_struct->shadow_adjusted_target ? events::event::AT_TARGET : events::event::CAPTURING_PHASE;
             event_dispatching::invoke(event_path_struct, event, events::event::CAPTURING_PHASE);
         }
 
         // bubbling phase event invocation
-        for (auto* event_path_struct: *event->path) {
+        for (auto event_path_struct: event->path) {
             event->event_phase = event_path_struct->shadow_adjusted_target ? events::event::AT_TARGET : events::event::BUBBLING_PHASE;
             event_dispatching::invoke(event_path_struct, event, events::event::BUBBLING_PHASE);
         }

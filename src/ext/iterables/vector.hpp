@@ -19,13 +19,17 @@ namespace ext
 
 namespace
 {
-    template <typename T, class = void> struct is_iterator : std::false_type{};
+    template <typename T, class = void> struct is_iterator : std::false_type {};
     template <typename T> struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::pointer, typename std::iterator_traits<T>::reference>> : std::true_type {};
     template <typename T> constexpr bool is_iterator_v = is_iterator<T>::value;
 
     template <typename T, class = void> struct is_iterable : std::false_type {};
     template <typename T> struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T>())), decltype(std::end  (std::declval<T>()))>> : std::true_type {};
     template <typename T> constexpr bool is_iterable_v = is_iterable<T>::value;
+
+//    template <typename T, class = void> struct is_unique_ptr : std::false_type {};
+//    template <typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
+//    template <typename T> constexpr bool is_shared_ptr_v = is_unique_ptr<T>::value;
 }
 
 
@@ -343,8 +347,8 @@ auto ext::vector<T>::cast_all() const -> ext::vector<U>
     // create a duplicate empty veque, and cast all the items from T to U
     vector<U> copy;
     copy = std::is_pointer_v<T>
-           ? transform<U>([](const T& item) {return dynamic_cast<U>(item);})
-           : transform<U>([](const T& item) {return static_cast<U>(item);});
+            ? transform<U>([](const T* item) {return dynamic_cast<U>(item);})
+            : transform<U>([](const T& item) {return static_cast <U>(item);});
 
     // remove all empty elements from the copied list, and return a  reference to it
     if (std::is_pointer_v<T>) copy.clean(nullptr, true);

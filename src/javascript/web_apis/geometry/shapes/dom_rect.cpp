@@ -9,10 +9,10 @@ geometry::shapes::dom_rect::dom_rect(
 
         : dom_rect_readonly(x, y, width, height) {
 
-    this->x.set = [this](auto && PH1) {set_x(std::forward<decltype(PH1)>(PH1));};
-    this->y.set = [this](auto && PH1) {set_y(std::forward<decltype(PH1)>(PH1));};
-    this->width.set = [this](auto && PH1) {set_width(std::forward<decltype(PH1)>(PH1));};
-    this->height.set = [this](auto && PH1) {set_height(std::forward<decltype(PH1)>(PH1));};
+    this->x.setter = [this](auto && PH1) {set_x(std::forward<decltype(PH1)>(PH1));};
+    this->y.setter = [this](auto && PH1) {set_y(std::forward<decltype(PH1)>(PH1));};
+    this->width.setter = [this](auto && PH1) {set_width(std::forward<decltype(PH1)>(PH1));};
+    this->height.setter = [this](auto && PH1) {set_height(std::forward<decltype(PH1)>(PH1));};
 }
 
 

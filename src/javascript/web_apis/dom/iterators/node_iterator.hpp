@@ -24,7 +24,7 @@ public: methods
     auto previous_node() -> nodes::node*;
 
 public: properties
-    ext::dom_property<nodes::node*, _F> reference_node;
+    ext::dom_property<std::shared_ptr<nodes::node>, _F> reference_node;
     ext::dom_property<bool, _F> pointer_before_reference_node;
 
 public: internal_methods

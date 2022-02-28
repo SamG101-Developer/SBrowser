@@ -27,7 +27,7 @@ public: constructors
     slottable();
 
 public: properties
-    ext::dom_property<html::elements::html_slot_element*, _F> assigned_slot;
+    ext::dom_property<std::shared_ptr<html::elements::html_slot_element>, _F> assigned_slot;
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;

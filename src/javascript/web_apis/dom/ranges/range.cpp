@@ -18,7 +18,7 @@
 dom::ranges::range::range() : abstract_range()
 {
     // set the custom accessors
-    common_ancestor_container.get = [this] {return get_common_ancestor_container();};
+    common_ancestor_container.getter = [this] {return get_common_ancestor_container();};
 
     // set the properties
     start_container << (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");

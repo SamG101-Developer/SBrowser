@@ -10,12 +10,12 @@
 #include <dom/nodes/element.hpp>
 
 
-void
-dom::helpers::attributes::handle_attributes_changes(
+auto dom::helpers::attributes::handle_attributes_changes(
         const nodes::attr* attribute,
         const nodes::element* owner_element,
         ext::cstring& old_value,
         ext::cstring& new_value)
+        -> void
 {
     // queue a mutation record describing the change in the attribute
     mutation_observers::queue_mutation_record("attributes", owner_element, attribute->local_name, attribute->namespace_uri, old_value, {}, {}, nullptr, nullptr);
@@ -26,10 +26,10 @@ dom::helpers::attributes::handle_attributes_changes(
 }
 
 
-void
-dom::helpers::attributes::change(
+auto dom::helpers::attributes::change(
         nodes::attr* attribute,
         ext::cstring& new_value)
+        -> void
 {
     // handle the attribute changes
     handle_attributes_changes(attribute, attribute->owner_element, attribute->value, new_value);
@@ -39,10 +39,10 @@ dom::helpers::attributes::change(
 }
 
 
-void
-dom::helpers::attributes::append(
+auto dom::helpers::attributes::append(
         nodes::attr* attribute,
         nodes::element* new_owner_element)
+        -> void
 {
     // handle the attribute changes
     handle_attributes_changes(attribute, attribute->owner_element, "", attribute->value);
@@ -54,9 +54,7 @@ dom::helpers::attributes::append(
 }
 
 
-void
-dom::helpers::attributes::remove(
-        nodes::attr* attribute)
+auto dom::helpers::attributes::remove(nodes::attr* attribute) -> void
 {
     // handle the attribute changes
     handle_attributes_changes(attribute, attribute->owner_element, attribute->value, "");
@@ -70,10 +68,10 @@ dom::helpers::attributes::remove(
 }
 
 
-void
-dom::helpers::attributes::replace(
+auto dom::helpers::attributes::replace(
         nodes::attr* old_attribute,
         nodes::attr* new_attribute)
+        -> void
 {
     // handle the attribute changes
     handle_attributes_changes(old_attribute, old_attribute->owner_element, old_attribute->value, new_attribute->value);
@@ -89,11 +87,11 @@ dom::helpers::attributes::replace(
 }
 
 
-ext::string
-dom::helpers::attributes::get_attribute_value(
+auto dom::helpers::attributes::get_attribute_value(
         const nodes::element* owner_element,
         ext::cstring& local_name,
         ext::cstring& namespace_)
+        -> ext::string
 {
     // return the first attribute's value in the element's attribute list whose namespace and local name matches
     // namespace_ and local_name
@@ -101,10 +99,10 @@ dom::helpers::attributes::get_attribute_value(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::get_attribute_by_name(
+auto dom::helpers::attributes::get_attribute_by_name(
         const nodes::element* owner_element,
         ext::cstring& qualified_name)
+        -> dom::nodes::attr*
 {
     // if the document type is html then set the html qualified name to lowercase
     ext::cstring html_qualified_name = node_internals::is_html(owner_element)
@@ -116,11 +114,11 @@ dom::helpers::attributes::get_attribute_by_name(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::get_attribute_by_ns(
+auto dom::helpers::attributes::get_attribute_by_ns(
         const nodes::element* owner_element,
         ext::cstring& local_name,
         ext::cstring& namespace_)
+        -> dom::nodes::attr*
 {
     // return the first attribute in the element's attribute list whose namespace and local name matches namespace_ and
     // local_name
@@ -128,13 +126,13 @@ dom::helpers::attributes::get_attribute_by_ns(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::set_attribute_value(
+auto dom::helpers::attributes::set_attribute_value(
         nodes::element* owner_element,
         ext::cstring& local_name,
         ext::cstring& value,
         ext::cstring& prefix,
         ext::cstring& namespace_)
+        -> dom::nodes::attr*
 {
     // get the attribute by matching the namespace, local name and owner_element
     auto* attribute = get_attribute_by_ns(owner_element, local_name, namespace_);
@@ -159,11 +157,11 @@ dom::helpers::attributes::set_attribute_value(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::set_attribute_by_name(
+auto dom::helpers::attributes::set_attribute_by_name(
         nodes::element* owner_element,
         ext::cstring& qualified_name,
         ext::cstring& value)
+        -> dom::nodes::attr*
 {
     // if the document type is html then set the html qualified name to lowercase
     ext::string html_qualified_name = helpers::node_internals::is_html(owner_element)
@@ -188,12 +186,12 @@ dom::helpers::attributes::set_attribute_by_name(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::set_attribute_by_ns(
+auto dom::helpers::attributes::set_attribute_by_ns(
         nodes::element* owner_element,
         ext::cstring& qualified_name,
         ext::cstring& namespace_,
         ext::cstring& value)
+        -> dom::nodes::attr*
 {
     // extract the namespace, prefix and local name from the namespace and qualified name
     auto [html_qualified_namespace, prefix, local_name] = namespaces::validate_and_extract(namespace_, qualified_name);
@@ -220,13 +218,17 @@ dom::helpers::attributes::set_attribute_by_ns(
 
     // change the value to value, so that the mutations are updated
     helpers::attributes::change(attribute, value);
+
+    // return the attribute
+    return attribute;
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::set_attribute(
+auto dom::helpers::attributes::set_attribute(
         nodes::element* new_owner_element,
-        nodes::attr* attribute) {
+        nodes::attr* attribute)
+        -> dom::nodes::attr*
+{
 
     // if the owner element non-nullptr and doesn't match the new owner element, then throw an inuse attribute error
     exceptions::throw_v8_exception(
@@ -252,10 +254,10 @@ dom::helpers::attributes::set_attribute(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::remove_attribute_by_name(
+auto dom::helpers::attributes::remove_attribute_by_name(
         nodes::element* owner_element,
         ext::cstring& qualified_name)
+        -> dom::nodes::attr*
 {
     // get the attribute by matching the name and owner element and remove it
     auto* attribute = get_attribute_by_name(owner_element, qualified_name);
@@ -266,11 +268,11 @@ dom::helpers::attributes::remove_attribute_by_name(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::remove_attribute_by_ns(
+auto dom::helpers::attributes::remove_attribute_by_ns(
         nodes::element* owner_element,
         ext::cstring& local_name,
         ext::cstring& namespace_)
+        -> dom::nodes::attr*
 {
     // get the attribute by matching the namespace, local name and owner element and remove it
     auto* attribute = get_attribute_by_ns(owner_element, local_name, namespace_);
@@ -281,10 +283,10 @@ dom::helpers::attributes::remove_attribute_by_ns(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::remove_attribute(
+auto dom::helpers::attributes::remove_attribute(
         nodes::element* owner_element,
         nodes::attr* attribute)
+        -> dom::nodes::attr*
 {
     // if the attribute isn't in the element's attribute list, then return early
     if (not owner_element->attributes->contains(attribute))
@@ -300,11 +302,11 @@ dom::helpers::attributes::remove_attribute(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::toggle_attribute_by_name(
+auto dom::helpers::attributes::toggle_attribute_by_name(
         const nodes::element* owner_element,
         ext::cstring& qualified_name,
         bool force)
+        -> dom::nodes::attr*
 {
     // get the attribute by matching the name and owner element
     auto* attribute = get_attribute_by_name(owner_element, qualified_name);
@@ -315,13 +317,13 @@ dom::helpers::attributes::toggle_attribute_by_name(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::toggle_attribute_by_ns(
+auto dom::helpers::attributes::toggle_attribute_by_ns(
         const nodes::element* owner_element,
         ext::cstring& local_name,
         ext::cstring& namespace_,
-        bool force) {
-
+        bool force)
+        -> dom::nodes::attr*
+{
     // get the attribute by matching the namespace, local name and owner element
     auto* attribute = get_attribute_by_ns(owner_element, local_name, namespace_);
 
@@ -330,10 +332,10 @@ dom::helpers::attributes::toggle_attribute_by_ns(
 }
 
 
-dom::nodes::attr*
-dom::helpers::attributes::toggle_attribute(
+auto dom::helpers::attributes::toggle_attribute(
         nodes::attr* attribute,
         bool force) // TODO : tidy this method
+        -> dom::nodes::attr*
 {
     if (not attribute)
     {
@@ -358,10 +360,10 @@ dom::helpers::attributes::toggle_attribute(
 }
 
 
-void
-dom::helpers::attributes::set_existing_attribute_value(
+auto dom::helpers::attributes::set_existing_attribute_value(
         nodes::attr* attribute,
         ext::cstring& value)
+        -> void
 {
     // if attribute doesn't have an owner element, then set the value to value
     if (not attribute->owner_element)

@@ -35,7 +35,7 @@ template <typename T>
 ext::listlike<T>::listlike(ext::vector<T>* linked_list) : m_linked_list(linked_list)
 {
     // set the custom accessors
-    length.get = [this] {return get_length();};
+    length.getter = [this] {return get_length();};
 }
 
 
