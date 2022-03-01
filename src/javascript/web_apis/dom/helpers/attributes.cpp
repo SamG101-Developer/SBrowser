@@ -179,6 +179,9 @@ auto dom::helpers::attributes::set_attribute_by_name(
 
     // change the value to value, so that the mutations are updated
     helpers::attributes::change(attribute, value);
+
+    // return the attribute
+    return attribute;
 }
 
 

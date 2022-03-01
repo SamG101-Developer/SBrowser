@@ -11,10 +11,11 @@
 #include <dom/nodes/element.hpp>
 
 #include <html/elements/html_unknown_element.hpp>
+#include <html/helpers/custom_html_elements.hpp>
 
 
 auto dom::helpers::custom_elements::create_an_element(
-        nodes::document* document,
+        nodes::document* const document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
         ext::cstring& prefix,
@@ -25,7 +26,7 @@ auto dom::helpers::custom_elements::create_an_element(
     // create a result pointer to store the created element, and a definition struct holding private information about
     // the custom element (like an PIMPL without the pointer -> uses a lookup table instead)
     nodes::element* result;
-    auto* definition = lookup_custom_element_definition(document, local_name, namespace_, is);
+    auto* const definition = lookup_custom_element_definition(document, local_name, namespace_, is);
 
     // if there is a valid definition for the custom element, and the definition's name doesn't equal the definition's
     // local name, then...
@@ -33,7 +34,7 @@ auto dom::helpers::custom_elements::create_an_element(
     {
         // create an element from the local name, in the html namespace, and an undefined custom element state - the
         // custom element definition is null, because the customization is undefined
-        result = element_interface(local_name, namespaces::HTML);
+        result = html::helpers::custom_html_elements::element_interface(local_name, namespaces::HTML);
         result->namespace_uri = namespaces::HTML;
         result->prefix = prefix;
         result->local_name = local_name;
@@ -79,7 +80,7 @@ auto dom::helpers::custom_elements::create_an_element(
 
             // assert that the custom element state and custom element definition are both non-nullptr, and the
             // namespace is the HTML namespace
-            assert(result->m_custom_element_state and result->m_custom_element_definition);
+            assert(not result->m_custom_element_state.empty() and result->m_custom_element_definition);
             assert(result->namespace_uri == namespaces::HTML);
 
             // if the result's attribute list is not empty, then throw a not supported error
@@ -122,7 +123,7 @@ auto dom::helpers::custom_elements::create_an_element(
                 // TODO console::reporting::report_warning_to_console(exception_handler.Message()->Get());
 
                 // create a html unknown element and set the attributes
-                result = new html::elements::html_unknown_element{};
+                result = std::unique_ptr<html::elements::html_unknown_element>{}.get();
                 result->namespace_uri = namespaces::HTML;
                 result->prefix = prefix;
                 result->local_name = local_name;
@@ -137,7 +138,7 @@ auto dom::helpers::custom_elements::create_an_element(
         else
         {
             // create the result and set the custom element state
-            result = new nodes::element{};
+            result = std::unique_ptr<nodes::element>{}.get();
             result->m_custom_element_state = "undefined";
         }
     }
@@ -147,7 +148,7 @@ auto dom::helpers::custom_elements::create_an_element(
     {
         // set the result to the definition's constructor, and the custom element state to "uncustomized", as there is
         // no custom definition, but the element is still valid ie a normal html element etc
-        result = element_interface(local_name, namespace_);
+        result = html::helpers::custom_html_elements::element_interface(local_name, namespace_);
         result->namespace_uri = namespace_;
         result->m_custom_element_state = "uncustomized";
         result->m_is = is;
@@ -166,8 +167,8 @@ auto dom::helpers::custom_elements::create_an_element(
 
 
 auto dom::helpers::custom_elements::upgrade_element(
-        internal::custom_element_definition* definition,
-        nodes::element* element)
+        internal::custom_element_definition* const definition,
+        nodes::element* const element)
         -> void
 {
     // elements whose custom element state that is "undefined" or "uncustomized" cannot be upgraded, so return from the
@@ -182,7 +183,7 @@ auto dom::helpers::custom_elements::upgrade_element(
 
     // iterate over the attributes in the element's attribute list, and enqueue a custom element reaction for each
     // attribute for attributeChangedCallback
-    for (auto* attribute: *element->attributes)
+    for (auto* const attribute: *element->attributes)
         enqueue_custom_element_callback_reaction(element, "attributeChangedCallback", ext::vector<ext::string>{attribute->local_name, "", attribute->value, attribute->namespace_uri});
 
     // if the element is connected, then enqueue a custom element reaction for the connectedCallback function
@@ -206,7 +207,7 @@ auto dom::helpers::custom_elements::upgrade_element(
     element->m_custom_element_state = "precustomized";
 
     // create a new instance of the upgraded element
-    auto* construction_result = new c{};
+    auto* const construction_result = std::unique_ptr<c>{}.get();
 
     // TODO : javascript::helpers::same_value(...)
     definition->construction_stack.pop();
@@ -228,16 +229,16 @@ auto dom::helpers::custom_elements::upgrade_element(
 }
 
 
-auto dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* element) -> void
+auto dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* const element) -> void
 {
     // only queue a custom upgrade reaction if a definition is found
-    if (auto* definition = lookup_custom_element_definition(element->owner_document, element->namespace_uri, element->local_name, element->m_is))
+    if (auto* const definition = lookup_custom_element_definition(element->owner_document, element->namespace_uri, element->local_name, element->m_is))
         enqueue_custom_element_upgrade_reaction(element, definition);
 }
 
 
 auto dom::helpers::custom_elements::lookup_custom_element_definition(
-        const nodes::document* document,
+        const nodes::document* const document,
         ext::cstring& local_name,
         ext::cstring& namespace_,
         ext::cstring& is)
@@ -251,36 +252,37 @@ auto dom::helpers::custom_elements::lookup_custom_element_definition(
     if (not document->m_browsing_context)
         return nullptr;
 
-//    html::other::custom_element_registry registry {};
-//    auto* definition = registry.get(local_name);
-//
-//    if (definition
-//            and definition->local_name == local_name
-//            and (definition->name == local_name or definition->name == is))
-//        return definition; TODO
+/*
+ * html::other::custom_element_registry registry {};
+ *    auto* definition = registry.get(local_name);
+ *
+ *    if (definition
+ *            and definition->local_name == local_name
+ *            and (definition->name == local_name or definition->name == is))
+ *        return definition;
+ */
 
     return nullptr;
 }
 
 
-auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(const nodes::element* element) -> void
+auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(const nodes::element* const element) -> void
 {
     // TODO
 }
 
 
 auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
-        const nodes::element* element,
+        const nodes::element* const element,
         ext::cstring& callback_name,
         ext::vector<ext::string>&& args)
         -> void
 {
     // get the definition from the element, and the callback from it
-    auto* definition = element->m_custom_element_definition;
-    auto callback = definition->lifecycle_callbacks.at("callback_name");
+    const auto* const definition = element->m_custom_element_definition;
 
     // return if there is no callback
-    if (not callback)
+    if (not definition->lifecycle_callbacks.has_key("callback_name"))
         return;
 
     // if the callback name is attributeChangedCallback
@@ -288,7 +290,7 @@ auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
     {
         // get the attribute name and return if there is no observed attributes on the definition containing the
         // attribute name
-        ext::string attribute_name = args.front();
+        ext::cstring attribute_name = args.front();
         if (not definition->observed_attributes.contains(attribute_name))
             return;
     }
@@ -296,15 +298,15 @@ auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
 
 
 auto dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
-        const nodes::element* element,
-        internal::custom_element_definition* definition)
+        const nodes::element* const element,
+        const internal::custom_element_definition* const definition)
         -> void
 {
     // TODO
 }
 
 
-auto dom::helpers::custom_elements::enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue) -> void
+auto dom::helpers::custom_elements::enqueue_custom_element_reaction(const std::queue<nodes::element*>& element_queue) -> void
 {
     // TODO
 }
@@ -317,7 +319,7 @@ auto dom::helpers::custom_elements::is_valid_custom_element_name(ext::cstring& e
 }
 
 
-auto dom::helpers::custom_elements::is_custom_node(const nodes::element* element) -> bool
+auto dom::helpers::custom_elements::is_custom_node(const nodes::element* const element) -> bool
 {
     return element->m_custom_element_state == "custom";
 }

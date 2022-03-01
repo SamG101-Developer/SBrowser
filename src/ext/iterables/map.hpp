@@ -31,7 +31,7 @@ public: constructors
 public: methods
     auto insert(const K& key, const V& value) -> ext::map<K, V>&;
     auto at(const K& key) const -> V&;
-    auto has_key(const K& key) -> bool;
+    auto has_key(const K& key) const -> bool;
 
     template <typename U> auto cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
     template <typename F> auto filter_keys(const F& function) -> ext::vector<K>;
@@ -68,7 +68,7 @@ auto ext::map<K, V>::at(const K& key) const -> V&
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::has_key(const K& key) -> bool
+auto ext::map<K, V>::has_key(const K& key) const -> bool
 {
     // check if the iterable contains a key by comparing its iterator location to the end iterator
     return this->m_iterable.find(key) != this->m_iterable.end();

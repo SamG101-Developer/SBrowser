@@ -22,6 +22,11 @@ namespace dom
 }
 
 
+/*
+ * Group of helper methods designed to help handle custom elements, and the element upgrade system. Different reaction
+ * types ie custom_element_callbacks, custom_element_upgrades, custom_element_reactions are all queueable using methods
+ * defined here.
+ */
 struct dom::helpers::custom_elements
 {
     static auto create_an_element(nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& prefix = "", ext::cstring& is = "", const bool synchronous_custom_elements_flag = false) -> dom::nodes::element*;
@@ -31,8 +36,8 @@ struct dom::helpers::custom_elements
 
     static auto enqueue_element_on_appropriate_element_queue(const nodes::element* element) -> void;
     static auto enqueue_custom_element_callback_reaction(const nodes::element* element, ext::cstring& callback_name, ext::vector<ext::string>&& args) -> void;
-    static auto enqueue_custom_element_upgrade_reaction(const nodes::element* element, internal::custom_element_definition* definition) -> void;
-    static auto enqueue_custom_element_reaction(std::queue<nodes::element*>& element_queue) -> void;
+    static auto enqueue_custom_element_upgrade_reaction(const nodes::element* element, const internal::custom_element_definition* definition) -> void;
+    static auto enqueue_custom_element_reaction(const std::queue<nodes::element*>& element_queue) -> void;
 
     static auto is_valid_custom_element_name(ext::cstring& element_name) -> bool;
     static auto is_custom_node(const nodes::element* element) -> bool;

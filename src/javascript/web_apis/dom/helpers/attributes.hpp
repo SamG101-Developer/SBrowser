@@ -16,9 +16,9 @@ namespace dom
 
 
 /*
- * Group of helper methods designed to help handle custom attribute setting, getting, deleting etc on an owner_element;
+ * Group of helper methods designed to help handle custom attribute setting, getting, deleting etc on an owner_element -
  * the attributes are accessible via their (owner_element ([local_name namespace] | qualified_name) prefix?) or a very
- * similar syntax
+ * similar syntax.
  */
 struct dom::helpers::attributes
 {
