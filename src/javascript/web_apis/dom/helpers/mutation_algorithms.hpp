@@ -9,9 +9,13 @@ namespace dom
 }
 
 
+/*
+ * Group of helper methods designed to help with mutating the dom tree (ie the lowest level of adding, removing,
+ * inserting and replacing children)
+ */
 struct dom::helpers::mutation_algorithms
 {
-    static auto common_checks(nodes::node* node, nodes::node* parent, nodes::node* child) -> void;
+    static auto common_checks(nodes::node* node, nodes::node* parent, const nodes::node* child) -> void;
     static auto ensure_pre_insertion_validity(nodes::node* node, nodes::node* parent, nodes::node* child) -> void;
 
     static auto pre_insert(nodes::node* node, nodes::node* parent, nodes::node* child) -> nodes::node*;

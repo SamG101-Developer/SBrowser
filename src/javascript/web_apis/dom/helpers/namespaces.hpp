@@ -7,6 +7,10 @@
 namespace dom::helpers {struct namespaces;}
 
 
+/*
+ * Group of helper methods designed to help with namespace validation, as well as a collection of namespace strings
+ * constants
+ */
 struct dom::helpers::namespaces
 {
     struct_string HTML = "http://www.w3.org/1999/xhtml";

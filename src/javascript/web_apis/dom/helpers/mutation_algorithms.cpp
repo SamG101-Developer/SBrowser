@@ -26,16 +26,16 @@
 
 
 auto dom::helpers::mutation_algorithms::common_checks(
-        nodes::node* node,
-        nodes::node* parent,
-        nodes::node* child)
+        nodes::node* const node,
+        nodes::node* const parent,
+        const nodes::node* const child)
         -> void
 {
     // if the parent is not a document, document fragment or element, then throw a hierarchy request error
     exceptions::throw_v8_exception(
             "parent must be a document, document_fragment or element node",
             HIERARCHY_REQUEST_ERR,
-            [parent] {return not multi_cast<nodes::document*, nodes::document_fragment*, nodes::element*>(parent);});
+            [parent] {return not ::multi_cast<nodes::document*, nodes::document_fragment*, nodes::element*>(parent);});
 
     // if the node is a shadow-including ancestor of the parent, then throw a hierarchy request error
     exceptions::throw_v8_exception(
@@ -53,7 +53,7 @@ auto dom::helpers::mutation_algorithms::common_checks(
     exceptions::throw_v8_exception(
             "node must be a document_fragment, document_type, element, text, processing_instruction or comment node",
             HIERARCHY_REQUEST_ERR,
-            [node] {return not multi_cast<nodes::document_fragment*, nodes::document_type*, nodes::element*, nodes::text*, nodes::processing_instruction*, nodes::comment*>(
+            [node] {return not ::multi_cast<nodes::document_fragment*, nodes::document_type*, nodes::element*, nodes::text*, nodes::processing_instruction*, nodes::comment*>(
                     node);});
 
     // if the parent is a document and the node is a text node, then throe a hierarchy request error
@@ -71,9 +71,9 @@ auto dom::helpers::mutation_algorithms::common_checks(
 
 
 auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
-        nodes::node* node,
-        nodes::node* parent,
-        nodes::node* child)
+        nodes::node* const node,
+        nodes::node* const parent,
+        nodes::node* const child)
         -> void
 {
     // run the common checks
@@ -149,7 +149,7 @@ auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
             exceptions::throw_v8_exception(
                     "document_type node with a document parent can not have document_type siblings",
                     HIERARCHY_REQUEST_ERR,
-                    [parent] -> bool {return not parent->child_nodes->filter(&trees::is_document_type_node).empty();});
+                    [parent] {return not parent->child_nodes->filter(&trees::is_document_type_node).empty();});
 
             // if child is non-nullptr and there is an element (document element) preceding the child, then throw a hierarchy request
             exceptions::throw_v8_exception(
@@ -168,16 +168,16 @@ auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
 
 
 auto dom::helpers::mutation_algorithms::pre_insert(
-        nodes::node* node,
-        nodes::node* parent,
-        nodes::node* child)
+        nodes::node* const node,
+        nodes::node* const parent,
+        nodes::node* const child)
         -> dom::nodes::node*
 {
     // verify that the pre insertion is valid
     ensure_pre_insertion_validity(node, parent, child);
 
     // if the child is the node, then set the reference node to child's next sibling, otherwise the child
-    auto* reference_child = child == node ? node->next_sibling : child;
+    nodes::node* const reference_child = child == node ? node->next_sibling : child;
 
     // insert the node into the parent before reference child, and return the node
     insert(node, parent, reference_child);
@@ -186,8 +186,8 @@ auto dom::helpers::mutation_algorithms::pre_insert(
 
 
 auto dom::helpers::mutation_algorithms::pre_remove(
-        nodes::node* node,
-        nodes::node* parent)
+        nodes::node* const node,
+        nodes::node* const parent)
         -> dom::nodes::node*
 {
     // if node's parent doesn't equal the parent, then throw a not found error
@@ -203,15 +203,15 @@ auto dom::helpers::mutation_algorithms::pre_remove(
 
 auto dom::helpers::mutation_algorithms::insert(
         nodes::node* node,
-        nodes::node* parent,
-        nodes::node* child,
-        bool suppress_observers_flag)
+        nodes::node* const parent,
+        nodes::node* const child,
+        const bool suppress_observers_flag)
         -> dom::nodes::node* {
 
     // collect descendant nodes to insert as-well (as children of the node being inserted), empty doc_frag not inserted
     // if the node is a document fragment, then
-    auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
-    auto count = added_nodes.length();
+    const auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
+    const auto count = added_nodes.length();
     if (count <= 0)
         return nullptr;
 
@@ -223,19 +223,19 @@ auto dom::helpers::mutation_algorithms::insert(
 
     // update ranges where one of the contains is the parent and the offset is after the anchor child
     if (child) {
-        auto live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>>("live_ranges");
+        const auto live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>>("live_ranges");
         live_ranges
                 .filter([child, parent](auto* range) {return range->start_container == parent and range->start_offset > trees::index(child);})
-                .for_each([count](auto* range) {range->start_offset += count;});
+                .for_each([count](auto* range) {range->start_offset += (const unsigned long)count;});
 
         live_ranges
                 .filter([child, parent](auto* range) {return range->end_container == parent and range->end_offset > trees::index(child);})
-                .for_each([count](auto* range) {range->end_offset += count;});
+                .for_each([count](auto* range) {range->end_offset += (const unsigned long)count;});
     }
 
     // determine the previous sibling (mutation records) and insert the node
-    nodes::node* previous_sibling = child ? child->previous_sibling : parent->last_child;
-    for (nodes::node* node_to_add: added_nodes) {
+    nodes::node* const previous_sibling = child ? child->previous_sibling : parent->last_child;
+    for (nodes::node* const node_to_add: added_nodes) {
 
         // adopt the node into the document, and append / insert it into the child_nodes list
         parent->owner_document->adopt_node(node_to_add);
@@ -276,8 +276,8 @@ auto dom::helpers::mutation_algorithms::insert(
 
 
 auto dom::helpers::mutation_algorithms::append(
-        nodes::node* node,
-        nodes::node* parent)
+        nodes::node* const node,
+        nodes::node* const parent)
         -> dom::nodes::node*
 {
     // append the node by inserting it before nullptr (ie the end of the list)
@@ -287,7 +287,7 @@ auto dom::helpers::mutation_algorithms::append(
 
 auto dom::helpers::mutation_algorithms::replace(
         nodes::node* node,
-        nodes::node* parent,
+        nodes::node* const parent,
         nodes::node* child)
         -> dom::nodes::node*
 {
@@ -337,10 +337,10 @@ auto dom::helpers::mutation_algorithms::replace(
         else if (dynamic_cast<nodes::document_type*>(node)) {/* TODO */}
     }
 
-    nodes::node* next_sibling = child->next_sibling == node ? node->next_sibling : child->next_sibling;
-    nodes::node* previous_sibling = child->previous_sibling;
+    nodes::node* const next_sibling = child->next_sibling == node ? node->next_sibling : child->next_sibling;
+    nodes::node* const previous_sibling = child->previous_sibling;
 
-    ext::vector<nodes::node*> added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
+    const ext::vector<nodes::node*> added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
     ext::vector<nodes::node*> removed_nodes {};
 
     if (child->parent) {
@@ -356,15 +356,15 @@ auto dom::helpers::mutation_algorithms::replace(
 
 auto dom::helpers::mutation_algorithms::remove(
         nodes::node* node,
-        bool suppress_observers_flag)
+        const bool suppress_observers_flag)
         -> dom::nodes::node* {
 
     if (not node->parent) return node;
 
-    nodes::node* parent = node->parent;
-    auto node_index = trees::index(node);
+    nodes::node* const parent = node->parent;
+    const auto node_index = trees::index(node);
 
-    auto& live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>&>("live_ranges");
+    const auto live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>&>("live_ranges");
     live_ranges
             .filter([node](auto* range) {return trees::is_descendant(range->start_container, node);})
             .for_each([node_index, parent](auto* range) {range->start_container = parent; range->start_offset = node_index;});
@@ -381,8 +381,8 @@ auto dom::helpers::mutation_algorithms::remove(
             .filter([parent, node_index](auto* range) {return range->end_container == parent and range->end_offset > node_index;})
             .for_each([](auto* range) {range->end_offset -= 1;});
 
-    nodes::node* old_previous_sibling = node->previous_sibling;
-    nodes::node* old_next_sibling = node->next_sibling;
+    nodes::node* const old_previous_sibling = node->previous_sibling;
+    nodes::node* const old_next_sibling = node->next_sibling;
     parent->child_nodes->remove(node);
 
     if (shadows::is_assigned(node))
@@ -391,24 +391,24 @@ auto dom::helpers::mutation_algorithms::remove(
     if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and dynamic_cast<html::elements::html_slot_element*>(parent)->m_assigned_nodes->empty())
         shadows::signal_slot_change(parent);
 
-    if (not trees::descendants(node).filter([](nodes::node* child) {return shadows::is_slot(child);}).empty()) {
+    if (not trees::descendants(node).filter([](const nodes::node* const child) {return shadows::is_slot(child);}).empty()) {
         shadows::assign_slottables_for_tree(trees::root(parent));
         shadows::assign_slottables_for_tree(node);
     }
 
-    auto* element = dynamic_cast<nodes::element*>(node);
-    if (element
-            and custom_elements::is_custom_node(element)
-            and shadows::is_connected(parent)) {
-
+    const auto* const element = dynamic_cast<nodes::element*>(node);
+    if (element and custom_elements::is_custom_node(element) and shadows::is_connected(parent))
+    {
         custom_elements::enqueue_custom_element_callback_reaction(element, "disconnectCallback", {});
     }
 
     /* TODO : shadow including ancestors */
 
-    for (auto* ancestor: trees::ancestors(parent)) {
-        for (auto* registered: *ancestor->m_registered_observer_list) {
-            auto* transient_registered_observer = new internal::transient_registered_observer{};
+    for (const auto* const ancestor: trees::ancestors(parent))
+    {
+        for (auto* const registered: *ancestor->m_registered_observer_list)
+        {
+            auto* const transient_registered_observer = std::unique_ptr<internal::transient_registered_observer>{}.get();
 
             transient_registered_observer->observer = registered->observer;
             transient_registered_observer->options = registered->options;
@@ -427,11 +427,11 @@ auto dom::helpers::mutation_algorithms::remove(
 
 auto dom::helpers::mutation_algorithms::replace_all(
         nodes::node* node,
-        nodes::node* parent)
+        nodes::node* const parent)
         -> void {
 
-    auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node}.remove(nullptr);
-    auto removed_nodes = ext::vector<nodes::node*>{*parent->child_nodes};
+    const auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node}.remove(nullptr);
+    const auto removed_nodes = ext::vector<nodes::node*>{*parent->child_nodes};
     parent->child_nodes->for_each([](auto* child) {remove(child);});
 
     if (node)

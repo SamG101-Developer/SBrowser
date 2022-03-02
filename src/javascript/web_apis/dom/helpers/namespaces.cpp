@@ -5,7 +5,11 @@
 
 auto dom::helpers::namespaces::validate(ext::cstring& qualified_name) -> void
 {
-    /* TODO */
+    // TODO : https://stackoverflow.com/a/51451972/10862918 for BNF impl
+    exceptions::throw_v8_exception(
+            "qualified name doesn't match QName production",
+            INVALID_CHARACTER_ERR,
+            [qualified_name] {return xml_names::qualfied_names::match_qname();});
 }
 
 

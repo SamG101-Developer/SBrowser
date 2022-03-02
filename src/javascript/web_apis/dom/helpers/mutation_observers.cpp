@@ -27,17 +27,17 @@ auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
     javascript::realms::surrounding_agent().set("mutation_observer_microtask_queue", false);
 
     // get the notification and signal-slots set from the javascript context
-    auto& notify_set = javascript::realms::surrounding_agent().get<ext::set<mutations::mutation_observer*>&>("mutation_observers");
-    auto& signal_slots_set = javascript::realms::surrounding_agent().get<ext::set<html::elements::html_slot_element*>&>("signal_slots");
+    const auto& notify_set = javascript::realms::surrounding_agent().get<ext::set<mutations::mutation_observer*>&>("mutation_observers");
+    const auto& signal_slots_set = javascript::realms::surrounding_agent().get<ext::set<html::elements::html_slot_element*>&>("signal_slots");
 
     // clear the signal-slots set in javascript
     javascript::realms::surrounding_agent().get<decltype(signal_slots_set)>("signal_slots").clear();
 
     //
-    for (auto* mutation_observer: notify_set)
+    for (auto* const mutation_observer: notify_set)
     {
         // create a new records list and fill it from the mutation observers record queue, clearing it in the process
-        auto* records = new ext::vector<mutations::mutation_record*>{};
+        auto* const records = new ext::vector<mutations::mutation_record*>{};
         for (size_t index = 0; index < mutation_observer->m_record_queue->size(); ++index)
         {
             records->append(mutation_observer->m_record_queue->front());
@@ -46,20 +46,20 @@ auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
 
         // for each node in the mutation observer's node list, remove the node's registered observers if they are the
         // same observer as this
-        for (auto* node: *mutation_observer->m_node_list)
+        for (auto* const node: *mutation_observer->m_node_list)
             node->m_registered_observer_list->remove_if([mutation_observer](auto* observer) {return observer->observer == mutation_observer;});
 
         // if the records list isn't empty, TODO
         if (not records->empty())
         {
-            v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
+            const v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
             mutation_observer->m_callback(records, mutation_observer);
 
-            if (exception_handler.HasCaught()) ; // TODO : console::reporting::report_warning_to_console(exception_handler.Message()->Get());
+            if (exception_handler.HasCaught()); // TODO : console::reporting::report_warning_to_console(exception_handler.Message()->Get());
         }
     }
 
-    for (auto* slot: signal_slots_set)
+    for (auto* const slot: signal_slots_set)
         event_dispatching::fire_event<>("slotChange", slot, ext::cstring_any_map{{"bubbles", true}});
 }
 
@@ -72,31 +72,31 @@ auto dom::helpers::mutation_observers::queue_microtask(steps_t&& steps) -> void
 
 auto dom::helpers::mutation_observers::queue_mutation_record(
         ext::cstring& type,
-        const nodes::event_target* target,
+        const nodes::event_target* const target,
         ext::cstring& name,
         ext::cstring& namespace_,
         ext::cstring& old_value,
         ext::cvector<nodes::node*>& added_nodes,
         ext::cvector<nodes::node*>& removed_nodes,
-        nodes::node* previous_sibling,
-        nodes::node* next_sibling)
+        nodes::node* const previous_sibling,
+        nodes::node* const next_sibling)
         -> void
 {
-    ext::map<mutations::mutation_observer*, ext::string> interested_observers;
-    ext::vector<nodes::node*> nodes = trees::ancestors((nodes::node*)target);
+    ext::cmap<mutations::mutation_observer*, ext::string> interested_observers;
+    ext::cvector<nodes::node*> nodes = trees::ancestors(target);
 
-    for (auto* node: nodes) {
-        for (auto* registered: *node->m_registered_observer_list) {
-            auto options = registered->options;
-            auto attribute_filter = options.at("attributeFilter").to<ext::vector<ext::string>>();
+    for (auto* const node: nodes) {
+        for (auto* const registered: *node->m_registered_observer_list) {
+            const auto& options = registered->options;
+            const auto attribute_filter = options.at("attributeFilter").to<ext::vector<ext::string>>();
 
             if (not ((node != target and not options.at("subtree").to<bool>()))
                     or (type == "attributes" and not options.at("attributes").to<bool>())
-                    or (type == "attributes" and attribute_filter and (not attribute_filter.contains(name) or namespace_))
+                    or (type == "attributes" and not attribute_filter.empty() and (not attribute_filter.contains(name) or not namespace_.empty()))
                     or (type == "characterData" and not options.at("characterData").to<bool>())
                     or (type == "childList" and not options.at("childList").to<bool>())) {
 
-                mutations::mutation_observer* mutation_observer = registered->observer;
+                mutations::mutation_observer* const mutation_observer = registered->observer;
 
                 if (not interested_observers.has_key(mutation_observer))
                     interested_observers.at(mutation_observer) = "";
@@ -108,7 +108,7 @@ auto dom::helpers::mutation_observers::queue_mutation_record(
     }
 
     for (const auto& [observer, mapped_old_value]: interested_observers) {
-        auto mutation_record = new mutations::mutation_record{};
+        auto mutation_record = std::unique_ptr<mutations::mutation_record>{}.get();
         mutation_record->type = type;
         mutation_record->attribute_name = name;
         mutation_record->attribute_namespace = namespace_;
@@ -127,11 +127,11 @@ auto dom::helpers::mutation_observers::queue_mutation_record(
 
 
 auto dom::helpers::mutation_observers::queue_tree_mutation_record(
-        nodes::event_target* target,
+        nodes::event_target* const target,
         ext::cvector<nodes::node*>& added_nodes,
         ext::cvector<nodes::node*>& removed_nodes,
-        nodes::node* previous_sibling,
-        nodes::node* next_sibling)
+        nodes::node* const previous_sibling,
+        nodes::node* const next_sibling)
         -> void
 {
     queue_mutation_record("childList", target, "", "", "", added_nodes, removed_nodes, previous_sibling, next_sibling);
