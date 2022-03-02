@@ -14,26 +14,26 @@
 
 
 auto dom::helpers::event_dispatching::append_to_event_path(
-        events::event* event,
-        nodes::event_target* invocation_target,
-        nodes::event_target* shadow_adjusted_target,
-        nodes::event_target* related_target,
+        const events::event* const event,
+        nodes::event_target* const invocation_target,
+        nodes::event_target* const shadow_adjusted_target,
+        nodes::event_target* const related_target,
         ext::cvector<const nodes::event_target*>& touch_targets,
         const bool slot_in_closed_tree)
         -> void
 {
     // get the invocation target (cast as a shadow root), and if the invocation target is in the shadow tree or the root
     // of a closed tree
-    auto* invocation_target_as_shadow_root = dynamic_cast<const nodes::shadow_root*>(invocation_target);
-    bool invocation_target_in_shadow_tree = shadows::is_root_shadow_root(dynamic_cast<const nodes::node*>(invocation_target));
-    bool root_of_closed_tree =
+    auto* const invocation_target_as_shadow_root = dynamic_cast<const nodes::shadow_root*>(invocation_target);
+    const bool invocation_target_in_shadow_tree = shadows::is_root_shadow_root(dynamic_cast<const nodes::node*>(invocation_target));
+    const bool root_of_closed_tree =
             shadows::is_shadow_root(dynamic_cast<const nodes::node*>(invocation_target))
             and invocation_target_as_shadow_root
             and invocation_target_as_shadow_root->mode == ext::string{"closed"};
 
     // add a new struct into the event path traversal list
-    event->path->append(std::make_unique<internal::event_path_struct>
-    (
+    event->path->append(new internal::event_path_struct
+    {
         .invocation_target = invocation_target,
         .shadow_adjusted_target = shadow_adjusted_target,
         .related_target = related_target,
@@ -41,18 +41,18 @@ auto dom::helpers::event_dispatching::append_to_event_path(
         .invocation_target_in_shadow_tree = invocation_target_in_shadow_tree,
         .root_of_closed_tree = root_of_closed_tree,
         .slot_in_closed_tree = slot_in_closed_tree
-    ));
+    });
 }
 
 
 auto dom::helpers::event_dispatching::invoke(
-        internal::event_path_struct* event_path_struct,
-        events::event* event,
-        unsigned char phase)
+        internal::event_path_struct* const event_path_struct,
+        events::event* const event,
+        const unsigned char phase)
         -> void
 {
     // create a copy of the event path, upto the event path struct being invoked
-    ext::vector<internal::event_path_struct*> temp_vector {
+    ext::cvector<internal::event_path_struct*> temp_vector {
         event->path->begin(),
         event->path->begin() + event->path->find(event_path_struct)
     };
@@ -62,7 +62,7 @@ auto dom::helpers::event_dispatching::invoke(
     event->related_target = event_path_struct->related_target;
     event->touch_targets = &event_path_struct->touch_targets;
     event->target = temp_vector
-            .transform<nodes::event_target*>([](internal::event_path_struct* struct_) {return struct_->shadow_adjusted_target;})
+            .transform<nodes::event_target*>([](const internal::event_path_struct* const struct_) {return struct_->shadow_adjusted_target;})
             .front();
 
     // return if the stop propagation flag has been set (then stop propagating through the event path list)
@@ -79,9 +79,9 @@ auto dom::helpers::event_dispatching::invoke(
 
 
 auto dom::helpers::event_dispatching::inner_invoke(
-        events::event* event,
-        ext::vector<ext::string_any_map>& event_listeners,
-        unsigned char phase)
+        events::event* const event,
+        ext::cvector<ext::string_any_map>& event_listeners,
+        const unsigned char phase)
         -> void
 {
     // create a callback_t for casting
@@ -127,15 +127,15 @@ auto dom::helpers::event_dispatching::fire_event(
         -> bool
 {
     // create a new event of type T and dispatch it through the event paths
-    T* event = new T{e, init};
+    auto* event = std::unique_ptr<T>{e, init}.get();
     event_listening::dispatch(event, target);
 }
 
 
 auto dom::helpers::event_dispatching::fire_synthetic_pointer_event(
         ext::cstring& e,
-        nodes::event_target* target,
-        bool not_trusted_flag)
+        const nodes::event_target* const target,
+        const bool not_trusted_flag)
         -> bool
 {
 

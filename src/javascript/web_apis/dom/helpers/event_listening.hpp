@@ -14,17 +14,26 @@ namespace dom
 }
 
 
+/*
+ * Group of helper methods designed to help with listening for events, for things such as adding and removing event
+ * listeners to and from a target, and formatting the options used to tailer the listeners. It should be noted that
+ * the 'dispatch' function is in this namespaces because of its tight association to event listeners TODO : <-- ?
+ */
 struct dom::helpers::event_listening
 {
     static auto flatten_more(std::variant<bool, ext::string_any_map> options) -> ext::string_any_map;
     static auto flatten (std::variant<bool, ext::string_any_map> options) -> bool;
-    static auto add_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener) -> void;
-    static auto remove_event_listener(nodes::event_target* event_target, ext::string_any_map& event_listener) -> void;
+    static auto add_event_listener(nodes::event_target* event_target, ext::cstring_any_map& event_listener) -> void;
+    static auto remove_event_listener(nodes::event_target* event_target, ext::cstring_any_map& event_listener) -> void;
     static auto remove_all_event_listeners(nodes::event_target* event_target) -> void;
     static auto dispatch(events::event* node, nodes::event_target* event_target) -> bool;
 };
 
 
+/*
+ * The event path struct holds information about a target in the event path, including shadow related information like
+ * the root, slot etc, as well as related and touch target information.
+ */
 struct dom::internal::event_path_struct
 {
     nodes::event_target* invocation_target = nullptr;
@@ -36,7 +45,7 @@ struct dom::internal::event_path_struct
     bool root_of_closed_tree;
     bool slot_in_closed_tree;
 
-    inline bool operator==(const event_path_struct& other) {return this == &other;}
+    inline bool operator==(const event_path_struct& other) const {return this == &other;}
 };
 
 

@@ -34,12 +34,12 @@ auto dom::helpers::event_listening::flatten(std::variant<bool, ext::string_any_m
 
 
 auto dom::helpers::event_listening::add_event_listener(
-        nodes::event_target* event_target,
-        ext::string_any_map& event_listener)
+        nodes::event_target* const event_target,
+        ext::cstring_any_map& event_listener)
         -> void
 {
     // get the abort signal from the event listener
-    auto* signal = event_listener.at("signal").to<aborting::abort_signal*>();
+    auto* const signal = event_listener.at("signal").to<aborting::abort_signal*>();
 
     // return if there is no callback as invoking the event listener would have no effect, and would waste cycles
     if (event_listener.at("callback").empty())
@@ -63,8 +63,8 @@ auto dom::helpers::event_listening::add_event_listener(
 
 
 auto dom::helpers::event_listening::remove_event_listener(
-        nodes::event_target* event_target,
-        ext::string_any_map& event_listener)
+        nodes::event_target* const event_target,
+        ext::cstring_any_map& event_listener)
         -> void
 {
     // create a callback_t for casting
@@ -83,22 +83,22 @@ auto dom::helpers::event_listening::remove_event_listener(
 }
 
 
-auto dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* event_target) -> void
+auto dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* const event_target) -> void
 {
     // iterate over event listeners and remove them all
-    for (ext::string_any_map& event_listener: event_target->m_event_listeners)
+    for (ext::cstring_any_map& event_listener: event_target->m_event_listeners)
         remove_event_listener(event_target, event_listener);
 }
 
 
 auto dom::helpers::event_listening::dispatch(
-        events::event* event,
+        events::event* const event,
         nodes::event_target* event_target)
         -> bool
 {
     // set the dispatch_flag to true
     event->m_dispatch_flag = true;
-    std::shared_ptr<internal::event_path_struct> clear_targets_struct = nullptr;
+    internal::event_path_struct* clear_targets_struct = nullptr;
     bool clear_targets = false;
 
     // set the related target to the event's related target retargeted against the event_target
@@ -108,19 +108,19 @@ auto dom::helpers::event_listening::dispatch(
     if (event_target != related_target or event_target == event->related_target) {
 
         // define the is_activation_event and slot_in_closed_tree
-        bool is_activation_event = event->type == ext::string{"click"};
+        const bool is_activation_event = event->type == ext::string{"click"};
         bool slot_in_closed_tree = false;
 
         // set the touch target list to a retargeted transform of the event's touch target list, the node to a node
         // cast of the event target, the activation_target to the event_target if the event is an activation event, the
         // slottable to the event_target if it is an assigned slottable, the parent to event traversal parent algorithm
         // output, and the parent_node to a node cast of the parent
-        auto touch_targets = event->touch_targets->transform<>([event_target](nodes::event_target* touch) {return shadows::retarget(touch, event_target);});
-        auto* node = dynamic_cast<nodes::node*>(event_target);
+        auto touch_targets = event->touch_targets->transform<>([event_target](const nodes::event_target* const touch) {return shadows::retarget(touch, event_target);});
+        auto* const node = dynamic_cast<const nodes::node* const>(event_target);
         auto* activation_target = is_activation_event ? event_target : nullptr;
         auto* slottable = shadows::is_slottable(node) and shadows::is_assigned(node) ? event_target : nullptr;
         auto* parent = event_target->get_the_parent(event);
-        auto* parent_node = dynamic_cast<nodes::node*>(parent);
+        auto* const parent_node = dynamic_cast<const nodes::node* const>(parent);
 
         // append the current info into the event path
         event_dispatching::append_to_event_path(event, event_target, event_target, related_target, touch_targets, false);
@@ -140,7 +140,7 @@ auto dom::helpers::event_listening::dispatch(
 
             // set the touch target list, related target and slottable to what they were before, but using the parent
             // instead of the event target for retargeting / input to shadow helper algorithms
-            touch_targets = event->touch_targets->transform<>([parent](nodes::event_target* touch) {return shadows::retarget(touch, parent);});
+            touch_targets = event->touch_targets->transform<>([parent](const nodes::event_target* const touch) {return shadows::retarget(touch, parent);});
             related_target = shadows::retarget(event->related_target, parent);
             slottable = shadows::is_slottable(node) and shadows::is_assigned(node) ? parent : slottable;
 
@@ -183,23 +183,23 @@ auto dom::helpers::event_listening::dispatch(
         }
 
         // set the clear_targets_struct to the last struct in tht event's path that has a shadow_adjusted_target
-        clear_targets_struct = event->path->last_match([](std::shared_ptr<internal::event_path_struct> event_path_struct) -> bool {return event_path_struct->shadow_adjusted_target;});
+        clear_targets_struct = event->path->last_match([](internal::event_path_struct* const event_path_struct) {return event_path_struct->shadow_adjusted_target;});
 
         // clear the targets if the shadow_adjusted_target, related_target or any touch_target has a shadow root
         clear_targets = not ext::vector<nodes::event_target*>{clear_targets_struct->shadow_adjusted_target, clear_targets_struct->related_target}
                 .extend(clear_targets_struct->touch_targets)
                 .cast_all<nodes::node*>()
-                .filter([](nodes::node* node) {return shadows::is_shadow_root(node);})
+                .filter([](const nodes::node* const node) {return shadows::is_shadow_root(node);})
                 .empty();
 
         // capturing phase event invocation
-        for (auto event_path_struct: event->path) {
+        for (auto* const event_path_struct: *event->path) {
             event->event_phase = event_path_struct->shadow_adjusted_target ? events::event::AT_TARGET : events::event::CAPTURING_PHASE;
             event_dispatching::invoke(event_path_struct, event, events::event::CAPTURING_PHASE);
         }
 
         // bubbling phase event invocation
-        for (auto event_path_struct: event->path) {
+        for (auto* const event_path_struct: *event->path) {
             event->event_phase = event_path_struct->shadow_adjusted_target ? events::event::AT_TARGET : events::event::BUBBLING_PHASE;
             event_dispatching::invoke(event_path_struct, event, events::event::BUBBLING_PHASE);
         }

@@ -5,8 +5,8 @@
 
 auto dom::helpers::exceptions::throw_v8_exception(
         ext::cstring& exception_message,
-        v8_custom_error_t exception_type,
-        exception_condiditional_t conditional)
+        const v8_custom_error_t& exception_type,
+        const exception_condiditional_t& conditional)
         -> void
 {
     // if the condition is met, then throw the error in javascript
@@ -17,8 +17,8 @@ auto dom::helpers::exceptions::throw_v8_exception(
 
 auto dom::helpers::exceptions::throw_v8_exception(
         ext::cstring& exception_message,
-        v8_primitive_error_t exception_type,
-        exception_condiditional_t conditional)
+        const v8_primitive_error_t& exception_type,
+        const exception_condiditional_t& conditional)
         -> void
 {
     // if the condition is met, then throw the error in javascript
