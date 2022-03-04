@@ -20,6 +20,10 @@ namespace dom
 }
 
 
+/*
+ * Group of helper methods designed to help with the internal behaviour of ranges, such as (partially) containing nodes,
+ * setting the start or end of the range, and interacting fragments with ranges.
+ */
 struct dom::helpers::range_internals
 {
     static auto contains(const nodes::node* node, const ranges::range* range) -> bool;
@@ -35,6 +39,10 @@ struct dom::helpers::range_internals
     static auto create_new_node_and_offset(const nodes::node* start_container, const nodes::node* end_container, const unsigned long start_offset) -> std::tuple<nodes::node*, unsigned long>;
 };
 
+
+/*
+ * Enumeration for comparing the boundary points of two ranges
+ */
 enum class dom::internal::boundary_point_comparison_position
 {
     EQUALS = -1,

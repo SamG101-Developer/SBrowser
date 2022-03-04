@@ -18,6 +18,12 @@ namespace dom
 }
 
 
+/*
+ * ...
+ * ...
+ *
+ * Non-spec class that has duplicate code for the TreeWalker and NodeIterator classes
+ */
 class dom::iterators::abstract_iterator : virtual public dom_object
 {
 public: friends

@@ -18,6 +18,11 @@ namespace dom
 namespace html::elements {class html_slot_element;}
 
 
+/*
+ * Group of helper methods designed to help with shadows, such as checking their status, finding the slots and
+ * slottables, and assigning slots and slottables. Tree algorithms modified for shadows are also defines, such as the
+ * shadow_root(...) method and the is_shadow_including_ancestor(..., ...) methods.
+ */
 struct dom::helpers::shadows
 {
     static auto is_connected(const nodes::node* node) -> bool;

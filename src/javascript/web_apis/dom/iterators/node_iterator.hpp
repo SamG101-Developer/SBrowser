@@ -11,6 +11,13 @@ namespace dom
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-nodeiterator
+ * https://developer.mozilla.org/en-US/docs/Web/API/NodeIterator
+ *
+ * The NodeIterator interface represents an iterator over the members of a list of the nodes in a subtree of the DOM.
+ * The nodes will be returned in document order.
+ */
 class dom::iterators::node_iterator : public abstract_iterator
 {
 public: friends

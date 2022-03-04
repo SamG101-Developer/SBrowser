@@ -12,6 +12,14 @@ namespace dom
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-nodefilter
+ * https://developer.mozilla.org/en-US/docs/Web/API/NodeFilter
+ *
+ * A NodeFilter interface represents an object used to filter the nodes in a NodeIterator or TreeWalker. A NodeFilter
+ * knows nothing about the document or traversing nodes; it only knows how to evaluate a single node against the
+ * provided filter.
+ */
 struct dom::iterators::node_filter : virtual public dom_object
 {
 public: static_constants

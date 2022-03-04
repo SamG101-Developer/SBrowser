@@ -193,24 +193,30 @@ auto dom::helpers::trees::child_text_content(const nodes::node* const node_a) ->
 }
 
 
-auto dom::helpers::trees::descendant_text_nodes(const nodes::node* const node_a) -> ext::vector<dom::nodes::text*>
+auto dom::helpers::trees::descendant_text_nodes(
+        const nodes::node* const node_a)
+        -> ext::vector<dom::nodes::text*>
 {
     return descendants(node_a).template cast_all<nodes::text*>();
 }
 
 
-auto dom::helpers::trees::contiguous_text_nodes(const nodes::node* const node_a) -> ext::vector<dom::nodes::text*>
+auto dom::helpers::trees::contiguous_text_nodes(
+        const nodes::node* const node_a)
+        -> ext::vector<dom::nodes::text*>
 {
 
     ext::vector<nodes::node*> siblings = node_a->parent->child_nodes;
 
     return ext::vector<nodes::text*>{}
-            .extend(siblings.slice(siblings.find(const_cast<nodes::node*>(node_a)), siblings.length()).cast_all<nodes::text*>())
-            .extend(siblings.slice(0, siblings.find(const_cast<nodes::node*>(node_a))).cast_all<nodes::text*>().reversed(), 0);
+            .extend(siblings.cast_all<nodes::text*>().slice(siblings.find(node_a), siblings.length()))
+            .extend(siblings.cast_all<nodes::text*>().slice(0, siblings.find(node_a)).reversed(), 0);
 }
 
 
-auto dom::helpers::trees::is_exclusive_text_node(const nodes::node* const node_a) -> bool
+auto dom::helpers::trees::is_exclusive_text_node(
+        const nodes::node* const node_a)
+        -> bool
 {
     // return if the node is a text node and not a cdatasection node (ie not inherited from)
     return not dynamic_cast<const nodes::cdata_section*>(node_a) and dynamic_cast<const nodes::text*>(node_a);

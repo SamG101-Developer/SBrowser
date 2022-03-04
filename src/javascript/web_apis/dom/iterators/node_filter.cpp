@@ -1,8 +1,17 @@
 #include "node_filter.hpp"
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-nodefilter-acceptnode
+ * https://developer.mozilla.org/en-US/docs/Web/API/NodeFilter/acceptNode
+ *
+ * Returns an unsigned short that will be used to tell if a given Node must be accepted or not by the NodeIterator or
+ * TreeWalker iteration algorithm. This method is expected to be written by the user of a NodeFilter. Possible return
+ * values are:
+ */
 auto dom::iterators::node_filter::accept_node(nodes::node* node) const -> unsigned short {
-    return 0x0; /* TODO : Find the impl or remove for legacy? */
+    // This function is implemented in JavaScript
+    return node_filter::FILTER_ACCEPT;
 }
 
 

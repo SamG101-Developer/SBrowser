@@ -7,10 +7,17 @@
 namespace dom::iterators {class tree_walker;}
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-treewalker
+ * https://developer.mozilla.org/en-US/docs/Web/API/TreeWalker
+ *
+ * The TreeWalker object represents the nodes of a document subtree and a position within them. A TreeWalker can be
+ * created using the Document.createTreeWalker() method.
+ */
 class dom::iterators::tree_walker : public abstract_iterator
 {
 public: constructors
-    tree_walker();
+    tree_walker() = default;
 
 public: methods
     auto parent_node() -> nodes::node*;

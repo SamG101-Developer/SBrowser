@@ -23,6 +23,12 @@ public: internal_methods
 };
 
 
+auto dom_object::v8(v8::Isolate* isolate) const -> ext::any
+{
+    return v8pp::class_<dom_object>{isolate}.auto_wrap_objects();
+}
+
+
 template <typename ...Args, typename U>
 auto multi_cast(U* cls) -> bool
 {

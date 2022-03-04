@@ -2,6 +2,7 @@
 #ifndef SBROWSER_VECTOR_HPP
 #define SBROWSER_VECTOR_HPP
 
+#include <initializer_list>
 #include <queue>
 #include <stack>
 #include <string>
@@ -108,7 +109,7 @@ template <typename T>
 template <typename ...args> ext::vector<T>::vector(args&&... items)
 {
     // set the iterable to a veque defined by a variable number of arguments
-    this->m_iterable = veque::veque<T>{items...};
+    this->m_iterable = veque::veque<T>{std::initializer_list<T>{items...}};
 }
 
 
