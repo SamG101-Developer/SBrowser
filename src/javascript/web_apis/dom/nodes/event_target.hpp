@@ -31,8 +31,8 @@ public: constructors
     ~event_target() override;
 
 public: methods
-    auto add_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options) -> void;
-    auto remove_event_listener(ext::string type, event_listener_callback&& callback, ext::cstring_any_map& options) -> void;
+    auto add_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map& options) -> void;
+    auto remove_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map& options) -> void;
     auto dispatch_event(events::event* event) -> bool;
 
 public: internal_methods

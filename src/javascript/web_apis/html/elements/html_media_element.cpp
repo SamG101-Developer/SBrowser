@@ -43,7 +43,7 @@ auto html::elements::html_media_element::play() -> webidl::types::promise<void>
 {}
 
 
-auto html::elements::html_media_element::can_play_time(ext::cstring& type) -> ext::string
+auto html::elements::html_media_element::can_play_time(const ext::string& type) -> ext::string
 {
     return ""; // TODO
 }
@@ -62,9 +62,9 @@ auto html::elements::html_media_element::get_start_date() -> webidl::types::date
 
 
 auto html::elements::html_media_element::add_text_track(
-        ext::cstring& kind,
-        ext::cstring& label,
-        ext::cstring& language)
+        const ext::string& kind,
+        const ext::string& label,
+        const ext::string& language)
         -> ext::vector<html::media::text_track*>
 {
     // create the text track

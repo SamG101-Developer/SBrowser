@@ -19,7 +19,7 @@ dom::nodes::window::window()
 }
 
 
-auto dom::nodes::window::alert(ext::cstring& message) -> void
+auto dom::nodes::window::alert(const ext::string& message) -> void
 {
     // if the application can show dialogs, get the message
     if (html::helpers::dialogs::cannot_show_dialogs())
@@ -39,7 +39,7 @@ auto dom::nodes::window::alert(ext::cstring& message) -> void
 }
 
 
-auto dom::nodes::window::confirm(ext::cstring& message) -> void
+auto dom::nodes::window::confirm(const ext::string& message) -> void
 {
     // if the application can show dialogs, get the message
     if (html::helpers::dialogs::cannot_show_dialogs())
@@ -60,8 +60,8 @@ auto dom::nodes::window::confirm(ext::cstring& message) -> void
 
 
 auto dom::nodes::window::prompt(
-        ext::cstring& message,
-        ext::cstring& default_)
+        const ext::string& message,
+        const ext::string& default_)
         -> ext::string
 {
     // if the application can show dialogs, get the message
@@ -85,7 +85,7 @@ auto dom::nodes::window::prompt(
 
 auto dom::nodes::window::get_computed_style(
         element* elem,
-        ext::cstring& pseudo_element)
+        const ext::string& pseudo_element)
         -> css::cssom::other::css_style_declaration*
 {
 

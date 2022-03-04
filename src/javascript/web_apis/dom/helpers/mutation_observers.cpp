@@ -31,7 +31,7 @@ auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
     const auto& signal_slots_set = javascript::realms::surrounding_agent().get<ext::set<html::elements::html_slot_element*>&>("signal_slots");
 
     // clear the signal-slots set in javascript
-    javascript::realms::surrounding_agent().get<decltype(signal_slots_set)>("signal_slots").clear();
+    javascript::realms::surrounding_agent().set<decltype(signal_slots_set)>("signal_slots", {});
 
     //
     for (auto* const mutation_observer: notify_set)
@@ -71,19 +71,19 @@ auto dom::helpers::mutation_observers::queue_microtask(steps_t&& steps) -> void
 
 
 auto dom::helpers::mutation_observers::queue_mutation_record(
-        ext::cstring& type,
+        const ext::string& type,
         const nodes::event_target* const target,
-        ext::cstring& name,
-        ext::cstring& namespace_,
-        ext::cstring& old_value,
-        ext::cvector<nodes::node*>& added_nodes,
-        ext::cvector<nodes::node*>& removed_nodes,
+        const ext::string& name,
+        const ext::string& namespace_,
+        const ext::string& old_value,
+        const ext::vector<nodes::node*>& added_nodes,
+        const ext::vector<nodes::node*>& removed_nodes,
         nodes::node* const previous_sibling,
         nodes::node* const next_sibling)
         -> void
 {
     ext::cmap<mutations::mutation_observer*, ext::string> interested_observers;
-    ext::cvector<nodes::node*> nodes = trees::ancestors(target);
+    const ext::vector<nodes::node*> nodes = trees::ancestors((const nodes::node* const)(target));
 
     for (auto* const node: nodes) {
         for (auto* const registered: *node->m_registered_observer_list) {
@@ -113,7 +113,7 @@ auto dom::helpers::mutation_observers::queue_mutation_record(
         mutation_record->attribute_name = name;
         mutation_record->attribute_namespace = namespace_;
         mutation_record->old_value = mapped_old_value;
-        mutation_record->target = dynamic_cast<const nodes::node*>(target);
+        mutation_record->target = (nodes::node* const)target;
         mutation_record->previous_sibling = previous_sibling;
         mutation_record->next_sibling = next_sibling;
         mutation_record->added_nodes = added_nodes;
@@ -128,8 +128,8 @@ auto dom::helpers::mutation_observers::queue_mutation_record(
 
 auto dom::helpers::mutation_observers::queue_tree_mutation_record(
         nodes::event_target* const target,
-        ext::cvector<nodes::node*>& added_nodes,
-        ext::cvector<nodes::node*>& removed_nodes,
+        const ext::vector<nodes::node*>& added_nodes,
+        const ext::vector<nodes::node*>& removed_nodes,
         nodes::node* const previous_sibling,
         nodes::node* const next_sibling)
         -> void

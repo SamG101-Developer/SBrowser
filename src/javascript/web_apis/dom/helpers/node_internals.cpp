@@ -59,7 +59,7 @@ auto dom::helpers::node_internals::clone(
 
 auto dom::helpers::node_internals::locate_a_namespace_prefix(
         const nodes::element* const element,
-        ext::cstring& namespace_)
+        const ext::string& namespace_)
         -> ext::string
 {
     // return the element prefix if the element namespace matches namespace_ and the element has a prefix
@@ -81,7 +81,7 @@ auto dom::helpers::node_internals::locate_a_namespace_prefix(
 
 auto dom::helpers::node_internals::locate_a_namespace(
         const nodes::node* const node,
-        ext::cstring& prefix)
+        const ext::string& prefix)
         -> ext::string
 {
     // if the node is nullptr then return an empty namespace
@@ -128,7 +128,7 @@ auto dom::helpers::node_internals::locate_a_namespace(
 
 auto dom::helpers::node_internals::list_of_elements_with_qualified_name(
         const nodes::node* const node,
-        ext::cstring& qualified_name)
+        const ext::string& qualified_name)
         -> ext::vector<dom::nodes::element*>
 {
     // return all the elements, as the namespace and local name have no restrictions when the wild card option is used
@@ -151,8 +151,8 @@ auto dom::helpers::node_internals::list_of_elements_with_qualified_name(
 
 auto dom::helpers::node_internals::list_of_elements_with_namespace_and_local_name(
         const nodes::node* const node,
-        ext::cstring& namespace_,
-        ext::cstring& local_name)
+        const ext::string& namespace_,
+        const ext::string& local_name)
         -> ext::vector<dom::nodes::element*>
 {
     // return all the elements, as the namespace and local name have no restrictions when the wild card option is used
@@ -187,7 +187,7 @@ auto dom::helpers::node_internals::list_of_elements_with_namespace_and_local_nam
 
 auto dom::helpers::node_internals::list_of_elements_with_class_names(
         const nodes::node* const node,
-        ext::cstring& class_names)
+        const ext::string& class_names)
         -> ext::vector<dom::nodes::element*>
 {
     // parse the classes into a set, and return an empty list if the set is empty
@@ -203,7 +203,7 @@ auto dom::helpers::node_internals::list_of_elements_with_class_names(
                 if (node->owner_document->m_mode == "quirks")
                     class_list.for_each([](ext::string& string) {string.to_lowercase();});
 
-                return descendant_element->class_list->any_of([descendant_element](ext::cstring& class_) {
+                return descendant_element->class_list->any_of([descendant_element](const ext::string& class_) {
                     return descendant_element->class_list->contains(class_);
                 });
             });
@@ -229,7 +229,7 @@ auto dom::helpers::node_internals::adopt(
 
 
 auto dom::helpers::node_internals::string_replace_all(
-        ext::cstring& string,
+        const ext::string& string,
         nodes::node* const parent)
         -> void
 {

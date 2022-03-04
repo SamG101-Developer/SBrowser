@@ -256,7 +256,7 @@ public:
 
 	/// Set class member function, or static function, or lambda
 	template<typename Function>
-	class_& function(std::string_view name, Function&& func, v8::PropertyAttribute attr = v8::None)
+	class_& function(const std::string& name, Function&& func, v8::PropertyAttribute attr = v8::None)
 	{
 		constexpr bool is_mem_fun = std::is_member_function_pointer_v<Function>;
 
@@ -285,7 +285,7 @@ public:
 
 	/// Set class member variable
 	template<typename Attribute>
-	class_& var(std::string_view name, Attribute attribute, bool readonly = false)
+	class_& var(const std::string& name, Attribute attribute, bool readonly = false)
 	{
 		static_assert(std::is_member_object_pointer<Attribute>::value,
 			"Attribute must be pointer to member data");
@@ -307,7 +307,7 @@ public:
 
 	/// Set read/write class property with getter and setter
 	template<typename GetFunction, typename SetFunction = detail::none>
-	class_& property(std::string_view name, GetFunction&& get, SetFunction&& set = {})
+	class_& property(const std::string& name, GetFunction&& get, SetFunction&& set = {})
 	{
 		using Getter = typename std::conditional<
 			std::is_member_function_pointer<GetFunction>::value,
@@ -343,7 +343,7 @@ public:
 
 	/// Set value as a read-only constant
 	template<typename Value>
-	class_& const_(std::string_view name, Value const& value)
+	class_& const_(const std::string& name, Value const& value)
 	{
 		v8::HandleScope scope(isolate());
 
@@ -355,7 +355,7 @@ public:
 
 	/// Set value as a class static property
 	template<typename Value>
-	class_& static_(std::string_view const& name, Value const& value, bool readonly = false)
+	class_& static_(const std::string& const& name, Value const& value, bool readonly = false)
 	{
 		v8::HandleScope scope(isolate());
 

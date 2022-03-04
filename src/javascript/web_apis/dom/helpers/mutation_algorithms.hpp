@@ -19,9 +19,9 @@ struct dom::helpers::mutation_algorithms
     static auto ensure_pre_insertion_validity(nodes::node* node, nodes::node* parent, nodes::node* child) -> void;
 
     static auto pre_insert(nodes::node* node, nodes::node* parent, nodes::node* child) -> nodes::node*;
-    static auto pre_remove(nodes::node* node, nodes::node* parent) -> nodes::node*;
+    static auto pre_remove(nodes::node* node, const nodes::node* parent) -> nodes::node*;
 
-    static auto insert(nodes::node* node, nodes::node* parent, nodes::node* child, bool suppress_observers_flag = false) -> nodes::node*;
+    static auto insert(nodes::node* node, const nodes::node* parent, const nodes::node* child, bool suppress_observers_flag = false) -> nodes::node*;
     static auto append(nodes::node* node, nodes::node* parent) -> nodes::node*;
     static auto replace(nodes::node* node, nodes::node* parent, nodes::node* child) -> nodes::node*;
     static auto remove(nodes::node* node, bool suppress_observers_flag = false) -> nodes::node*;

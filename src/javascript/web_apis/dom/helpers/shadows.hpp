@@ -29,8 +29,8 @@ struct dom::helpers::shadows
     static auto find_slottables(const html::elements::html_slot_element* slot) -> ext::vector<nodes::node*>;
     static auto find_flattened_slottables(const html::elements::html_slot_element* slot) -> ext::vector<nodes::node*>;
 
-    static auto assign_slot(nodes::node* slottable) -> void;
-    static auto assign_slottables(html::elements::html_slot_element* slot) -> void;
+    static auto assign_slot(const nodes::node* slottable) -> void;
+    static auto assign_slottables(const html::elements::html_slot_element* slot) -> void;
     static auto assign_slottables_for_tree(const nodes::node* descendant) -> void;
 
     static auto signal_slot_change(const nodes::node* slot) -> void;

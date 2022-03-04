@@ -20,7 +20,7 @@ auto html::elements::html_anchor_element::get_text() const -> ext::string
 }
 
 
-auto html::elements::html_anchor_element::set_text(ext::cstring& val) -> void
+auto html::elements::html_anchor_element::set_text(const ext::string& val) -> void
 {
     // set the text by replacing all text node data in the children
     dom::helpers::node_internals::string_replace_all(val, this);

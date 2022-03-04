@@ -6,7 +6,7 @@
 namespace v8pp {
 
 template struct convert<std::string>;
-template struct convert<std::string_view>;
+template struct convert<const std::string&>;
 
 template struct convert<std::u16string>;
 template struct convert<std::u16string_view>;

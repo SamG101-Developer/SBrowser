@@ -21,15 +21,15 @@ namespace dom
 
 class dom::xpath::xpath_evaluator : public dom_object
 {
-    struct xpath_ns_resolver {ext::string lookup_namespace_uri(ext::cstring& prefix = "");};
+    struct xpath_ns_resolver {ext::string lookup_namespace_uri(const ext::string& prefix = "");};
 
 public: constructors
     xpath_evaluator();
 
 public: methods
-    auto create_expression(ext::cstring& expression, xpath_ns_resolver* resolver = nullptr) -> xpath_expression*;
+    auto create_expression(const ext::string& expression, xpath_ns_resolver* resolver = nullptr) -> xpath_expression*;
     auto create_ns_resolver(nodes::node* node_resolver) -> xpath_ns_resolver*;
-    auto evaluate(ext::cstring& expression, nodes::node* context_node, xpath_ns_resolver* resolver = nullptr, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result;
+    auto evaluate(const ext::string& expression, nodes::node* context_node, xpath_ns_resolver* resolver = nullptr, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result;
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;

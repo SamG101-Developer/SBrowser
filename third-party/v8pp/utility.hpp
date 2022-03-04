@@ -336,7 +336,7 @@ using is_callable = std::integral_constant<bool,
 class type_info
 {
 public:
-	std::string_view name() const { return name_; }
+	const std::string& name() const { return name_; }
 
 	bool operator==(type_info const& other) const { return name_ == other.name_; }
 	bool operator!=(type_info const& other) const { return name_ != other.name_; }
@@ -350,7 +350,7 @@ private:
 	{
 	}
 
-	std::string_view name_;
+	const std::string& name_;
 };
 
 /// Get type information for type T

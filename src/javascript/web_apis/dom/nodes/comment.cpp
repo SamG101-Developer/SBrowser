@@ -3,7 +3,7 @@
 #include <javascript/environment/realms.hpp>
 
 
-dom::nodes::comment::comment(ext::cstring& new_data) : character_data()
+dom::nodes::comment::comment(const ext::string& new_data) : character_data()
 {
     // set custom properties
     node_type << COMMENT_NODE;
@@ -16,7 +16,7 @@ auto dom::nodes::comment::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<comment>{isolate}
             .ctor<>()
-            .ctor<ext::cstring&>()
+            .ctor<const ext::string&>()
             .inherit<character_data>()
             .auto_wrap_objects();
 }

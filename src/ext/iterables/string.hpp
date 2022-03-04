@@ -29,7 +29,7 @@ namespace ext
 }
 
 
-class ext::string : public ext::iterable<char, std::string>
+class ext::string : public iterable<char, std::string>
 {
     friend std::ostream& operator<<(std::ostream& stream, ext::cstring& string)
     {
@@ -49,7 +49,7 @@ public: constructors
     auto operator=(const char* other) -> string&;
     auto operator=(std::string_view other) -> string&;
     auto operator=(const QString& other) -> string&;
-    auto operator=(const v8::Local<v8::String> other) -> string&;
+    auto operator=(v8::Local<v8::String> other) -> string&;
 
     auto operator=(string&&) noexcept -> string& = default;
     auto operator=(char&& other) -> string&;
@@ -67,7 +67,7 @@ public: methods
     auto to_uppercase() -> string&;
     auto new_lowercase() const -> string;
     auto new_uppercase() const -> string;
-    auto substring(const size_t offset, const size_t count = std::string::npos) const -> string;
+    auto substring(size_t offset, size_t count = std::string::npos) const -> string;
     auto replace(size_t offset, size_t count, cstring& replacement) -> string;
     auto split(char delimiter, size_t max_delimiters = 1) const -> ext::vector<string>;
     auto contains(const char* item) const -> bool;
@@ -91,14 +91,14 @@ public: operators
 auto ext::string::operator=(const char* const other) -> ext::string&
 {
     // set the iterable from a const char* type, and return the reference to the string
-    m_iterable = std::string{other};
+    m_iterable = ext::string{other};
     return *this;
 }
 
 
 auto ext::string::operator=(const std::string_view other) -> ext::string&
 {
-    // set the iterable from a std::string l-value reference type, and return the reference to the string
+    // set the iterable from a ext::string l-value reference type, and return the reference to the string
     m_iterable = other;
     return *this;
 }
@@ -130,7 +130,7 @@ auto ext::string::operator=(char&& other) -> ext::string&
 
 auto ext::string::operator=(std::string&& other) -> ext::string&
 {
-    // set the iterable from a std::string r-value reference type, and return the reference to the string
+    // set the iterable from a ext::string r-value reference type, and return the reference to the string
     m_iterable = std::move(other);
     return *this;
 }
@@ -259,7 +259,7 @@ auto ext::string::contains(const char* item) const -> bool
 
 
 /**
- * use the .c_str() to keep compatibility with std::string::c_str() -> also helps with messy (const char*) conversions
+ * use the .c_str() to keep compatibility with ext::string::c_str() -> also helps with messy (const char*) conversions
  * @return const char* string
  */
 constexpr auto ext::string::c_str() const -> const char*
@@ -270,13 +270,13 @@ constexpr auto ext::string::c_str() const -> const char*
 
 
 /**
- * use the operator std::string() to use APIs that require an std::string input - the conversion is implicit to maintain
+ * use the operator ext::string() to use APIs that require an ext::string input - the conversion is implicit to maintain
  * tidy code
- * @return std::string string
+ * @return ext::string string
  */
 auto ext::string::to_std_string() const -> std::string
 {
-    // return the std::string representation of the string
+    // return the ext::string representation of the string
     return m_iterable;
 }
 

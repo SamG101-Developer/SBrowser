@@ -35,9 +35,9 @@ private accessors:
     auto get_text_content() const -> ext::string override;
     auto get_m_qualified_name() const -> ext::string;
 
-    auto set_node_value(ext::cstring& val) -> void override;
-    auto set_text_content(ext::cstring& val) -> void override;
-    auto set_value(ext::cstring& val) -> void;
+    auto set_node_value(const ext::string& val) -> void override;
+    auto set_text_content(const ext::string& val) -> void override;
+    auto set_value(const ext::string& val) -> void;
 };
 
 

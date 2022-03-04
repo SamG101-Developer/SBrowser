@@ -6,7 +6,7 @@
 #include <QtWidgets/QVBoxLayout>
 
 
-dom::nodes::text::text(ext::cstring& new_data)
+dom::nodes::text::text(const ext::string& new_data)
         : character_data()
         , mixins::slottable<text>()
 {
@@ -50,7 +50,7 @@ auto dom::nodes::text::get_whole_text() const -> ext::string
 }
 
 
-auto dom::nodes::text::set_data(ext::cstring& val) -> void
+auto dom::nodes::text::set_data(const ext::string& val) -> void
 {
     // set the data and update the label to show the new text
     data << val;
@@ -62,7 +62,7 @@ auto dom::nodes::text::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<text>{isolate}
             .ctor<>()
-            .ctor<ext::cstring&>()
+            .ctor<const ext::string&>()
             .inherit<character_data>()
             .inherit<mixins::slottable<text>>()
             .function("splitText", &text::split_text)

@@ -77,7 +77,7 @@ dom::nodes::document::document()
     // set the attributes
     m_type   = "xml";
     m_mode   = "no-quirks";
-    m_origin = javascript::realms::surrounding_agent().get<ext::cstring&>("origin");
+    m_origin = javascript::realms::surrounding_agent().get<const ext::string&>("origin");
 
     // create the widget representation
     m_rendered_widget = new QScrollArea{nullptr};
@@ -89,8 +89,8 @@ dom::nodes::document::document()
 
 
 auto dom::nodes::document::create_element(
-        ext::cstring& local_name,
-        ext::cstring_any_map& options) const
+        const ext::string& local_name,
+        const ext::string_any_map& options) const
         -> dom::nodes::element*
 {
     // get the <is> option as a string TODO : type is string or bool -> custom elements helpers have it as string?
@@ -112,9 +112,9 @@ auto dom::nodes::document::create_element(
 
 
 auto dom::nodes::document::create_element_ns(
-        ext::cstring& namespace_,
-        ext::cstring& qualified_name,
-        ext::cstring_any_map& options) const
+        const ext::string& namespace_,
+        const ext::string& qualified_name,
+        const ext::string_any_map& options) const
         -> dom::nodes::element*
 {
     // get the <is> option as a string
@@ -139,7 +139,7 @@ auto dom::nodes::document::create_document_fragment() const -> dom::nodes::docum
 }
 
 
-auto dom::nodes::document::create_text_node(ext::cstring& data) const -> dom::nodes::text*
+auto dom::nodes::document::create_text_node(const ext::string& data) const -> dom::nodes::text*
 {
     // create a new text node, set the text to data, and set the owner document to this document
     auto* text_node = new text{};
@@ -151,7 +151,7 @@ auto dom::nodes::document::create_text_node(ext::cstring& data) const -> dom::no
 }
 
 
-auto dom::nodes::document::create_cdata_section_node(ext::cstring& data) const -> dom::nodes::cdata_section* {
+auto dom::nodes::document::create_cdata_section_node(const ext::string& data) const -> dom::nodes::cdata_section* {
 
     // if the document type is html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -175,7 +175,7 @@ auto dom::nodes::document::create_cdata_section_node(ext::cstring& data) const -
 }
 
 
-auto dom::nodes::document::create_comment(ext::cstring& data) const -> dom::nodes::comment*
+auto dom::nodes::document::create_comment(const ext::string& data) const -> dom::nodes::comment*
 {
     // create a new comment node, and set the owner document to this document
     auto* comment_node = new dom::nodes::comment{};
@@ -188,8 +188,8 @@ auto dom::nodes::document::create_comment(ext::cstring& data) const -> dom::node
 
 
 auto dom::nodes::document::create_processing_instruction(
-        ext::cstring& target,
-        ext::cstring& data) const
+        const ext::string& target,
+        const ext::string& data) const
         -> dom::nodes::processing_instruction*
 {
     // if '?>' is in the data, then throw an invalid character error
@@ -209,7 +209,7 @@ auto dom::nodes::document::create_processing_instruction(
 }
 
 
-auto dom::nodes::document::create_attribute(ext::cstring& local_name) const -> dom::nodes::attr*
+auto dom::nodes::document::create_attribute(const ext::string& local_name) const -> dom::nodes::attr*
 {
     // if the document type is html then set the local name to lowercase
     ext::string html_qualified_namespace = m_type == "html"
@@ -227,8 +227,8 @@ auto dom::nodes::document::create_attribute(ext::cstring& local_name) const -> d
 
 
 auto dom::nodes::document::create_attribute_ns(
-        ext::cstring& namespace_,
-        ext::cstring& qualified_name) const
+        const ext::string& namespace_,
+        const ext::string& qualified_name) const
         -> dom::nodes::attr*
 {
     // extract the namespace, prefix and local name from the namespace and qualified name
@@ -343,7 +343,7 @@ auto dom::nodes::document::adopt_node(node* node) -> dom::nodes::node*
 }
 
 
-auto dom::nodes::document::get_elements_by_name(ext::cstring& element_name) const -> ext::vector<dom::nodes::node*>
+auto dom::nodes::document::get_elements_by_name(const ext::string& element_name) const -> ext::vector<dom::nodes::node*>
 {
     // filter the element descendants, by matching the elements with the same qualified name as element name, and
     // convert them back into nodes before returning the list
@@ -362,9 +362,9 @@ auto dom::nodes::document::open() const -> dom::nodes::document*
 
 
 auto dom::nodes::document::open(
-        ext::cstring& url,
-        ext::cstring& name,
-        ext::cstring& features) const
+        const ext::string& url,
+        const ext::string& name,
+        const ext::string& features) const
         -> dom::nodes::window_proxy*
 {
     // TODO
@@ -593,7 +593,7 @@ auto dom::nodes::document::get_scripts() -> ext::vector<html::elements::html_scr
 }
 
 
-auto dom::nodes::document::set_title(ext::cstring& val) -> void
+auto dom::nodes::document::set_title(const ext::string& val) -> void
 {
     // case for when the document element is a svg element
     if (dynamic_cast<svg::nodes::svg_element*>(document_element))
@@ -658,7 +658,7 @@ auto dom::nodes::document::set_body(html::elements::html_body_element* val) -> v
 }
 
 
-auto dom::nodes::document::set_cookie(ext::cstring& val) -> void
+auto dom::nodes::document::set_cookie(const ext::string& val) -> void
 {
     // if the document is cookie averse, then return
     if (html::helpers::cookies::is_cookie_averse_document(this))
@@ -675,7 +675,7 @@ auto dom::nodes::document::set_cookie(ext::cstring& val) -> void
 }
 
 
-auto dom::nodes::document::set_ready_state(ext::cstring& val) -> void
+auto dom::nodes::document::set_ready_state(const ext::string& val) -> void
 {
     if (ready_state == val) return;
     // TODO : parser stuff

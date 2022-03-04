@@ -46,10 +46,10 @@ public: methods
     auto load() -> void;
     auto pause() -> void;
     auto play() -> webidl::types::promise<void>;
-    auto can_play_time(ext::cstring& type) -> ext::string;
+    auto can_play_time(const ext::string& type) -> ext::string;
     auto fast_seek(double time) -> void;
     auto get_start_date() -> webidl::types::date;
-    auto add_text_track(ext::cstring& kind, ext::cstring& label = "", ext::cstring& language = "") -> ext::vector<html::media::text_track*>;
+    auto add_text_track(const ext::string& kind, const ext::string& label = "", const ext::string& language = "") -> ext::vector<html::media::text_track*>;
 
 public: properties
     // Errors

@@ -6,8 +6,8 @@
 
 namespace dom
 {
-    namespace helpers {struct signal_aborting;}
     namespace aborting {class abort_signal;}
+    namespace helpers {struct signal_aborting;}
 }
 
 

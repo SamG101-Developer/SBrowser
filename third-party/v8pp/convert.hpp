@@ -808,19 +808,19 @@ auto from_v8(v8::Isolate* isolate, v8::Local<v8::Value> value, U const& default_
 
 inline v8::Local<v8::String> to_v8(v8::Isolate* isolate, char const* str)
 {
-	return convert<std::string_view>::to_v8(isolate, std::string_view(str));
+	return convert<const std::string&>::to_v8(isolate, const std::string&(str));
 }
 
 inline v8::Local<v8::String> to_v8(v8::Isolate* isolate, char const* str, size_t len)
 {
-	return convert<std::string_view>::to_v8(isolate, std::string_view(str, len));
+	return convert<const std::string&>::to_v8(isolate, const std::string&(str, len));
 }
 
 template<size_t N>
 v8::Local<v8::String> to_v8(v8::Isolate* isolate,
 	char const (&str)[N], size_t len = N - 1)
 {
-	return convert<std::string_view>::to_v8(isolate, std::string_view(str, len));
+	return convert<const std::string&>::to_v8(isolate, const std::string&(str, len));
 }
 
 inline v8::Local<v8::String> to_v8(v8::Isolate* isolate, char16_t const* str)

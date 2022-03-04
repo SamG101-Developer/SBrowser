@@ -10,7 +10,7 @@ namespace javascript::parsers::html {class html_parser;}
 
 class javascript::parsers::html::html_parser {
 public:
-    html_parser(ext::cstring& raw_html);
+    html_parser(const ext::string& raw_html);
     auto parse() const -> dom::nodes::document* ;
 
 protected:

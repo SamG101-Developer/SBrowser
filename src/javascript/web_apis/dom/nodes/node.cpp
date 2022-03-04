@@ -152,14 +152,14 @@ auto dom::nodes::node::is_equal_node(node* other) const -> bool
     return true;
 }
 
-auto dom::nodes::node::is_default_namespace(ext::cstring& namespace_) const -> bool
+auto dom::nodes::node::is_default_namespace(const ext::string& namespace_) const -> bool
 {
     // return if the namespace of this node equals namespace generated from locating the empty namespace in this node
     return namespace_ == helpers::node_internals::locate_a_namespace(this, "");
 }
 
 
-auto dom::nodes::node::lookup_prefix(ext::cstring& namespace_) const -> ext::string
+auto dom::nodes::node::lookup_prefix(const ext::string& namespace_) const -> ext::string
 {
     // element node: return the lookup for the element
     if (auto* element_node = dynamic_cast<const element*>(this))
@@ -188,7 +188,7 @@ auto dom::nodes::node::lookup_prefix(ext::cstring& namespace_) const -> ext::str
 }
 
 
-auto dom::nodes::node::lookup_namespace_uri(ext::cstring& prefix) const -> ext::string
+auto dom::nodes::node::lookup_namespace_uri(const ext::string& prefix) const -> ext::string
 {
     // lookup the namespace with the prefix
     return helpers::node_internals::locate_a_namespace(this, prefix);
@@ -262,7 +262,7 @@ auto dom::nodes::node::compare_document_position(node* other) const -> unsigned 
 }
 
 
-auto dom::nodes::node::get_root_node(ext::cstring_any_map& options) const -> node*
+auto dom::nodes::node::get_root_node(const ext::string_any_map& options) const -> node*
 {
     // return the shadow root if the <composed> option is true, otherwise the exposed tree root
     return options.at("composed").to<bool>()

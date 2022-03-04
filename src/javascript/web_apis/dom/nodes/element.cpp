@@ -69,7 +69,7 @@ auto dom::nodes::element::get_attribute_names() const -> ext::vector<ext::string
 }
 
 
-auto dom::nodes::element::has_attribute(ext::cstring& name) const -> bool
+auto dom::nodes::element::has_attribute(const ext::string& name) const -> bool
 {
     // if this element is a html element then set the html qualified name to lowercase
     ext::string html_qualified_name = helpers::node_internals::is_html(this)
@@ -82,8 +82,8 @@ auto dom::nodes::element::has_attribute(ext::cstring& name) const -> bool
 
 
 auto dom::nodes::element::has_attribute_ns(
-        ext::cstring& namespace_,
-        ext::cstring& local_name) const
+        const ext::string& namespace_,
+        const ext::string& local_name) const
         -> bool
 {
     // return if the list of attributes filtered to have a matching namespace and local_name contains any elements or not
@@ -105,21 +105,21 @@ auto dom::nodes::element::has_attribute_node_ns(attr* attribute) -> bool
 }
 
 
-auto dom::nodes::element::get_attribute(ext::cstring& qualified_name) const -> ext::string
+auto dom::nodes::element::get_attribute(const ext::string& qualified_name) const -> ext::string
 {
     // return the value of an attribute that whose name matches qualified_name
     return get_attribute_node(qualified_name)->value;
 }
 
 
-auto dom::nodes::element::get_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> ext::string
+auto dom::nodes::element::get_attribute_ns(const ext::string& namespace_, const ext::string& local_name) const -> ext::string
 {
     // return the value of an attribute that whose namespace and local_name matches namespace and local_name
     return get_attribute_node_ns(namespace_, local_name)->value;
 }
 
 
-auto dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const -> dom::nodes::attr*
+auto dom::nodes::element::get_attribute_node(const ext::string& qualified_name) const -> dom::nodes::attr*
 {
     // return an attribute whose name matches qualified_name
     return helpers::attributes::get_attribute_by_name(this, qualified_name);
@@ -127,8 +127,8 @@ auto dom::nodes::element::get_attribute_node(ext::cstring& qualified_name) const
 
 
 auto dom::nodes::element::get_attribute_node_ns(
-        ext::cstring& namespace_,
-        ext::cstring& local_name) const
+        const ext::string& namespace_,
+        const ext::string& local_name) const
         -> dom::nodes::attr*
 {
     // return an attribute whose namespace and local_name matches namespace_ and local_name
@@ -137,8 +137,8 @@ auto dom::nodes::element::get_attribute_node_ns(
 
 
 auto dom::nodes::element::set_attribute(
-        ext::cstring& qualified_name,
-        ext::cstring& value)
+        const ext::string& qualified_name,
+        const ext::string& value)
         -> void
 {
     // set the value to an attribute whose name matches the qualified name
@@ -147,9 +147,9 @@ auto dom::nodes::element::set_attribute(
 
 
 auto dom::nodes::element::set_attribute_ns(
-        ext::cstring& namespace_,
-        ext::cstring& qualified_name,
-        ext::cstring& value)
+        const ext::string& namespace_,
+        const ext::string& qualified_name,
+        const ext::string& value)
         -> void
 {
     // set the value to an attribute whose namespace, name matches the namespace_ and qualified_name
@@ -171,7 +171,7 @@ auto dom::nodes::element::set_attribute_node_ns(attr* attribute) -> dom::nodes::
 }
 
 
-auto dom::nodes::element::remove_attribute(ext::cstring& qualified_name) -> void
+auto dom::nodes::element::remove_attribute(const ext::string& qualified_name) -> void
 {
     // remove an attribute whose name matches qualified_name
     helpers::attributes::remove_attribute_by_name(this, qualified_name);
@@ -179,8 +179,8 @@ auto dom::nodes::element::remove_attribute(ext::cstring& qualified_name) -> void
 
 
 auto dom::nodes::element::remove_attribute_ns(
-        ext::cstring& namespace_,
-        ext::cstring& local_name)
+        const ext::string& namespace_,
+        const ext::string& local_name)
         -> void
 {
     // remove an attribute whose namespace and local_name matches namespace_ and local_name 
@@ -204,7 +204,7 @@ auto dom::nodes::element::remove_attribute_node_ns(attr* attribute) -> dom::node
 
 
 auto dom::nodes::element::toggle_attribute(
-        ext::cstring& qualified_name,
+        const ext::string& qualified_name,
         bool force)
         -> bool
 {
@@ -214,8 +214,8 @@ auto dom::nodes::element::toggle_attribute(
 
 
 auto dom::nodes::element::toggle_attribute_ns(
-        ext::cstring& namespace_,
-        ext::cstring& local_name,
+        const ext::string& namespace_,
+        const ext::string& local_name,
         bool force)
         -> bool
 {
@@ -244,7 +244,7 @@ auto dom::nodes::element::toggle_attribute_node_ns(
 }
 
 
-auto dom::nodes::element::attach_shadow(ext::cstring_any_map& options) -> dom::nodes::shadow_root*
+auto dom::nodes::element::attach_shadow(const ext::string_any_map& options) -> dom::nodes::shadow_root*
 {
     // if the namespace is not html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -345,7 +345,7 @@ auto dom::nodes::element::get_shadow_root() const -> dom::nodes::shadow_root*
 }
 
 
-auto dom::nodes::element::set_text_content(ext::cstring& val) -> void
+auto dom::nodes::element::set_text_content(const ext::string& val) -> void
 {
     // set the text_content by replacing the data with the val
     helpers::node_internals::string_replace_all(val, this);

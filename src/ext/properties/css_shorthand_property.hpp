@@ -4,7 +4,7 @@
 #include <ext/properties/css_property.hpp>
 
 namespace ext {struct css_shorthand_property;}
-namespace {auto contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand) -> ext::vector<ext::css_property*>;}
+namespace {auto contained_items(ext::css_shorthand_property& property, const ext::string& shorthand) -> ext::vector<ext::css_property*>;}
 
 
 struct ext::css_shorthand_property : property<ext::string>
@@ -69,7 +69,7 @@ ext::css_shorthand_property::operator string() const
 }
 
 
-auto contained_items(ext::css_shorthand_property& property, ext::cstring& shorthand) -> ext::vector<ext::css_property*>
+auto contained_items(ext::css_shorthand_property& property, const ext::string& shorthand) -> ext::vector<ext::css_property*>
 {
     // split the items out of the string, and determine how many there should be for the given property
     auto sub_items = shorthand.split(' ');

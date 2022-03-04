@@ -9,8 +9,8 @@
 
 
 auto html::helpers::custom_html_elements::element_interface(
-        ext::cstring& local_name,
-        ext::cstring& namespace_)
+        const ext::string& local_name,
+        const ext::string& namespace_)
         -> elements::html_element*
 {
     if (ext::string_vector{"acronym", "basefont", "big", "center", "nobr", "noembed", "noframes", "plaintext", "rb", "rtc", "strike", "tt"}.contains(local_name))

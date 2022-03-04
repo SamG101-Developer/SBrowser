@@ -50,21 +50,21 @@ public methods:
     auto stop() -> void;
     auto focus() -> void;
 
-    auto open(ext::cstring& url = "", ext::cstring& target = "", ext::cstring& features="") -> window_proxy*;
+    auto open(const ext::string& url = "", const ext::string& target = "", const ext::string& features="") -> window_proxy*;
 
     // user prompts
     auto print() -> void;
-    auto alert(ext::cstring& message = "") -> void;
-    auto confirm(ext::cstring& message = "") -> void;
-    auto prompt(ext::cstring& message="", ext::cstring& default_ = "") -> ext::string;
-    auto post_message(ext::string message, ext::cstring_any_map& options = {}) -> void;
+    auto alert(const ext::string& message = "") -> void;
+    auto confirm(const ext::string& message = "") -> void;
+    auto prompt(const ext::string& message="", const ext::string& default_ = "") -> ext::string;
+    auto post_message(ext::string message, const ext::string_any_map& options = {}) -> void;
 
 public: methods
-    new_obj auto get_computed_style(element* elem, ext::cstring& pseudo_element) -> css::cssom::other::css_style_declaration*;
+    new_obj auto get_computed_style(element* elem, const ext::string& pseudo_element) -> css::cssom::other::css_style_declaration*;
 
 public: methods
     // spatial navigation
-    auto navigate(ext::cstring& direction) -> void;
+    auto navigate(const ext::string& direction) -> void;
 
 public: methods
     // cssom-view browsing context

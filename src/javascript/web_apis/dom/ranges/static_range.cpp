@@ -6,7 +6,7 @@
 #include <dom/nodes/document_type.hpp>
 
 
-dom::ranges::static_range::static_range(ext::cstring_any_map& init) {
+dom::ranges::static_range::static_range(const ext::string_any_map& init) {
 
     helpers::exceptions::throw_v8_exception(
             "range containers must be non-attr nodes",
@@ -28,7 +28,7 @@ dom::ranges::static_range::static_range(ext::cstring_any_map& init) {
 auto dom::ranges::static_range::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<static_range>{isolate}
-            .ctor<ext::cstring_any_map&>()
+            .ctor<const ext::string_any_map&>()
             .inherit<abstract_range>()
             .auto_wrap_objects();
 }

@@ -56,8 +56,8 @@ private: accessors
     auto get_inner_text() const -> ext::string;
     auto get_outer_text() const -> ext::string;
 
-    auto set_inner_text(ext::cstring& val) -> void;
-    auto set_outer_text(ext::cstring& val) -> void;
+    auto set_inner_text(const ext::string& val) -> void;
+    auto set_outer_text(const ext::string& val) -> void;
 
     // cssom-view
     auto get_offset_top() const -> long;

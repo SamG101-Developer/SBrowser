@@ -20,10 +20,10 @@ public constructors:
 
 public methods:
     auto substring_data(unsigned long offset, unsigned long count) const -> ext::string;
-    auto append_data(ext::cstring& new_data) -> void;
-    auto insert_data(unsigned long offset, ext::cstring& new_data) -> void;
+    auto append_data(const ext::string& new_data) -> void;
+    auto insert_data(unsigned long offset, const ext::string& new_data) -> void;
     auto delete_data(unsigned long offset, unsigned long count) -> void;
-    auto replace_data(unsigned long offset, unsigned long count, ext::cstring& new_data) -> void;
+    auto replace_data(unsigned long offset, unsigned long count, const ext::string& new_data) -> void;
 
 public properties:
     ext::dom_property<ext::string, _F> data;
@@ -37,8 +37,8 @@ private accessors:
     auto get_text_content() const -> ext::string override;
     auto get_length() const -> unsigned long;
 
-    auto set_node_value(ext::cstring& val) -> void override;
-    auto set_text_content(ext::cstring& val) -> void override;
+    auto set_node_value(const ext::string& val) -> void override;
+    auto set_text_content(const ext::string& val) -> void override;
 };
 
 

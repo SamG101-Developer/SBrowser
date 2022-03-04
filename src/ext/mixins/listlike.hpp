@@ -18,7 +18,7 @@ public: constructors
 
 public: operators
     virtual auto operator[] (size_t index) -> T&;
-    virtual auto operator[] (ext::cstring& index) -> T&;
+    virtual auto operator[] (const ext::string& index) -> T&;
 
 public: properties
     ext::property<size_t> length;
@@ -48,7 +48,7 @@ auto ext::listlike<T>::operator[](size_t index) -> T&
 
 
 template <typename T>
-auto ext::listlike<T>::operator[](ext::cstring& index) -> T&
+auto ext::listlike<T>::operator[](const ext::string& index) -> T&
 {
     // default behaviour of [ext::string] is to return a nullptr
     return nullptr;

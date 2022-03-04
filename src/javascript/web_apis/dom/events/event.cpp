@@ -16,8 +16,8 @@ dom::events::event::event() : dom_object()
 
 
 dom::events::event::event(
-        ext::cstring& event_type,
-        ext::cstring_any_map& event_init)
+        const ext::string& event_type,
+        const ext::string_any_map& event_init)
 
         : type(event_type)
         , bubbles(event_init.at("bubbles").to<bool>())
@@ -166,7 +166,7 @@ auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_
 auto dom::events::event::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<event>{isolate}
-            .ctor<ext::cstring&, ext::cstring_any_map&>()
+            .ctor<const ext::string&, const std::map<ext::string, std::any>&>()
             .inherit<dom_object>()
             .static_("NONE", event::NONE)
             .static_("CAPTURING_PHASE", event::CAPTURING_PHASE)

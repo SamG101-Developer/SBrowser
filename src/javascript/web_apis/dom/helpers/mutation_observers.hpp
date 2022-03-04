@@ -35,8 +35,8 @@ private:
 public:
     static auto notify_mutation_observers() -> void;
     static auto queue_microtask(steps_t&& steps) -> void;
-    static auto queue_mutation_record(ext::cstring& type, const nodes::event_target* target, ext::cstring& name, ext::cstring& namespace_, ext::cstring& old_value, ext::cvector<nodes::node*>& added_nodes, ext::cvector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling) -> void;
-    static auto queue_tree_mutation_record(nodes::event_target* target, ext::cvector<nodes::node*>& added_nodes, ext::cvector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling) -> void;
+    static auto queue_mutation_record(const ext::string& type, const nodes::event_target* target, const ext::string& name, const ext::string& namespace_, const ext::string& old_value, const ext::vector<nodes::node*>& added_nodes, const ext::vector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling) -> void;
+    static auto queue_tree_mutation_record(nodes::event_target* target, const ext::vector<nodes::node*>& added_nodes, const ext::vector<nodes::node*>& removed_nodes, nodes::node* previous_sibling, nodes::node* next_sibling) -> void;
     static auto queue_mutation_observers_microtask() -> void;
     static auto queue_task(/* TODO */) -> void {/* TODO */};
     static auto queue_global_task(/* TODO */) -> void {/* TODO */};

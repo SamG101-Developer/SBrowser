@@ -23,7 +23,7 @@ auto dom::nodes::document_fragment::get_text_content() const -> ext::string
 }
 
 
-auto dom::nodes::document_fragment::set_text_content(ext::cstring& val) -> void
+auto dom::nodes::document_fragment::set_text_content(const ext::string& val) -> void
 {
     // replace all the text in this node with the new val
     helpers::node_internals::string_replace_all(val, this);

@@ -2,7 +2,7 @@
 
 
 dom::other::dom_exception::dom_exception(
-        ext::cstring& message,
+        const ext::string& message,
         v8_custom_error_t type)
 
         : dom_object()
@@ -16,7 +16,7 @@ dom::other::dom_exception::dom_exception(
 auto dom::other::dom_exception::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom_exception>{isolate}
-            .ctor<ext::cstring&, v8_custom_error_t>()
+            .ctor<const ext::string&, v8_custom_error_t>()
             .var("message", &dom::other::dom_exception::message)
             .var("type", &dom::other::dom_exception::type)
             .static_("INDEX_SIZE_ERR", v8_custom_error_t::INDEX_SIZE_ERR)

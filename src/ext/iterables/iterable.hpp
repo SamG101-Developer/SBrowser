@@ -1,4 +1,4 @@
-    #pragma once
+#pragma once
 #ifndef SBROWSER_ITERABLE_HPP
 #define SBROWSER_ITERABLE_HPP
 
@@ -318,7 +318,7 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::print() const -> void
 {
     // serialize the iterable by output the list as a string - TODO: MOVE TO OPERATOR <<
-    std::cout << std::copy(begin(), end(), std::ostream_iterator<std::string>(std::cout, ", ")) << std::endl;
+    std::cout << std::copy(begin(), end(), std::ostream_iterator<ext::string>(std::cout, ", ")) << std::endl;
 }
 
 

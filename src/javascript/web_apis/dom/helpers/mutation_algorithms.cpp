@@ -187,7 +187,7 @@ auto dom::helpers::mutation_algorithms::pre_insert(
 
 auto dom::helpers::mutation_algorithms::pre_remove(
         nodes::node* const node,
-        nodes::node* const parent)
+        const nodes::node* const parent)
         -> dom::nodes::node*
 {
     // if node's parent doesn't equal the parent, then throw a not found error
@@ -203,8 +203,8 @@ auto dom::helpers::mutation_algorithms::pre_remove(
 
 auto dom::helpers::mutation_algorithms::insert(
         nodes::node* node,
-        nodes::node* const parent,
-        nodes::node* const child,
+        const nodes::node* const parent,
+        const nodes::node* const child,
         const bool suppress_observers_flag)
         -> dom::nodes::node* {
 
@@ -234,7 +234,7 @@ auto dom::helpers::mutation_algorithms::insert(
     }
 
     // determine the previous sibling (mutation records) and insert the node
-    nodes::node* const previous_sibling = child ? child->previous_sibling : parent->last_child;
+    const nodes::node* const previous_sibling = child ? child->previous_sibling : parent->last_child;
     for (nodes::node* const node_to_add: added_nodes) {
 
         // adopt the node into the document, and append / insert it into the child_nodes list
@@ -257,7 +257,7 @@ auto dom::helpers::mutation_algorithms::insert(
         // a slot change for the parent
         if (shadows::is_root_shadow_root(parent)
                 and shadows::is_slot(parent)
-                and dynamic_cast<html::elements::html_slot_element*>(parent)->m_assigned_nodes->length() <= 0)
+                and dynamic_cast<const html::elements::html_slot_element*>(parent)->m_assigned_nodes->length() <= 0)
             shadows::signal_slot_change(parent);
 
         // assign the slottables for the tree of the node's root
@@ -286,9 +286,9 @@ auto dom::helpers::mutation_algorithms::append(
 
 
 auto dom::helpers::mutation_algorithms::replace(
-        nodes::node* node,
+        nodes::node* const node,
         nodes::node* const parent,
-        nodes::node* child)
+        nodes::node* const child)
         -> dom::nodes::node*
 {
     // run the common checks
@@ -338,7 +338,7 @@ auto dom::helpers::mutation_algorithms::replace(
     }
 
     nodes::node* const next_sibling = child->next_sibling == node ? node->next_sibling : child->next_sibling;
-    nodes::node* const previous_sibling = child->previous_sibling;
+    const nodes::node* const previous_sibling = child->previous_sibling;
 
     const ext::vector<nodes::node*> added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
     ext::vector<nodes::node*> removed_nodes {};
@@ -361,10 +361,10 @@ auto dom::helpers::mutation_algorithms::remove(
 
     if (not node->parent) return node;
 
-    nodes::node* const parent = node->parent;
+    const nodes::node* const parent = node->parent;
     const auto node_index = trees::index(node);
 
-    const auto live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>&>("live_ranges");
+    const auto& live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>&>("live_ranges");
     live_ranges
             .filter([node](auto* range) {return trees::is_descendant(range->start_container, node);})
             .for_each([node_index, parent](auto* range) {range->start_container = parent; range->start_offset = node_index;});
@@ -381,14 +381,14 @@ auto dom::helpers::mutation_algorithms::remove(
             .filter([parent, node_index](auto* range) {return range->end_container == parent and range->end_offset > node_index;})
             .for_each([](auto* range) {range->end_offset -= 1;});
 
-    nodes::node* const old_previous_sibling = node->previous_sibling;
-    nodes::node* const old_next_sibling = node->next_sibling;
+    const nodes::node* const old_previous_sibling = node->previous_sibling;
+    const nodes::node* const old_next_sibling = node->next_sibling;
     parent->child_nodes->remove(node);
 
     if (shadows::is_assigned(node))
         shadows::assign_slottables(reinterpret_cast<mixins::slottable<nodes::node>*>(node)->assigned_slot);
 
-    if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and dynamic_cast<html::elements::html_slot_element*>(parent)->m_assigned_nodes->empty())
+    if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and dynamic_cast<const html::elements::html_slot_element*>(parent)->m_assigned_nodes->empty())
         shadows::signal_slot_change(parent);
 
     if (not trees::descendants(node).filter([](const nodes::node* const child) {return shadows::is_slot(child);}).empty()) {
@@ -426,7 +426,7 @@ auto dom::helpers::mutation_algorithms::remove(
 
 
 auto dom::helpers::mutation_algorithms::replace_all(
-        nodes::node* node,
+        nodes::node* const node,
         nodes::node* const parent)
         -> void {
 

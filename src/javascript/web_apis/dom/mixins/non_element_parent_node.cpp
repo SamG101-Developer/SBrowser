@@ -8,7 +8,7 @@
 
 
 template<typename T>
-auto dom::mixins::non_element_parent_node<T>::get_element_by_id(ext::cstring& element_id) -> std::shared_ptr<nodes::element>
+auto dom::mixins::non_element_parent_node<T>::get_element_by_id(const ext::string& element_id) -> std::shared_ptr<nodes::element>
 {
     // return the first descendant element whose id matches requested id
     return helpers::trees::descendants(reinterpret_cast<nodes::node*>(this))

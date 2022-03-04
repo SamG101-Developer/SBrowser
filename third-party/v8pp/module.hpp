@@ -43,21 +43,21 @@ public:
 
 	/// Set a V8 value in the module with specified name
 	template<typename Data>
-	module& value(std::string_view name, v8::Local<Data> value)
+	module& value(const std::string& name, v8::Local<Data> value)
 	{
 		obj_->Set(v8pp::to_v8(isolate_, name), value);
 		return *this;
 	}
 
 	/// Set submodule in the module with specified name
-	module& submodule(std::string_view name, v8pp::module& m)
+	module& submodule(const std::string& name, v8pp::module& m)
 	{
 		return value(name, m.obj_);
 	}
 
 	/// Set wrapped C++ class in the module with specified name
 	template<typename T, typename Traits>
-	module& class_(std::string_view name, v8pp::class_<T, Traits>& cl)
+	module& class_(const std::string& name, v8pp::class_<T, Traits>& cl)
 	{
 		v8::HandleScope scope(isolate_);
 
@@ -67,7 +67,7 @@ public:
 
 	/// Set a C++ function in the module with specified name
 	template<typename Function, typename Traits = raw_ptr_traits>
-	module& function(std::string_view name, Function&& func)
+	module& function(const std::string& name, Function&& func)
 	{
 		using Fun = typename std::decay<Function>::type;
 		static_assert(detail::is_callable<Fun>::value, "Function must be callable");
@@ -112,7 +112,7 @@ public:
 	}
 
 	/// Set another module as a read-only property
-	module& const_(std::string_view name, module& m)
+	module& const_(const std::string& name, module& m)
 	{
 		v8::HandleScope scope(isolate_);
 
@@ -123,7 +123,7 @@ public:
 
 	/// Set a value convertible to JavaScript as a read-only property
 	template<typename Value>
-	module& const_(std::string_view name, Value const& value)
+	module& const_(const std::string& name, Value const& value)
 	{
 		v8::HandleScope scope(isolate_);
 

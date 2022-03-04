@@ -33,7 +33,7 @@ struct v8pp::convert<ext::string> {
 
         // create the handle_scope and return the c++ string object
         v8::HandleScope handle_scope{isolate};
-        auto cpp_value = v8pp::convert<std::string>::from_v8(isolate, v8_value.As<v8::String>());
+        auto cpp_value = v8pp::convert<ext::string>::from_v8(isolate, v8_value.As<v8::String>());
         return from_type{cpp_value};
     }
 

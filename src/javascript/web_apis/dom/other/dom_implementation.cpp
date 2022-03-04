@@ -27,9 +27,9 @@ dom::other::dom_implementation::~dom_implementation()
 
 
 auto dom::other::dom_implementation::create_document_type(
-        ext::cstring& qualified_name,
-        ext::cstring& public_id,
-        ext::cstring& system_id)
+        const ext::string& qualified_name,
+        const ext::string& public_id,
+        const ext::string& system_id)
         -> dom::nodes::document_type*
 {
     // check that the qualified name is valid
@@ -46,8 +46,8 @@ auto dom::other::dom_implementation::create_document_type(
 
 
 auto dom::other::dom_implementation::create_document(
-        ext::cstring& namespace_,
-        ext::cstring& qualified_name,
+        const ext::string& namespace_,
+        const ext::string& qualified_name,
         nodes::document_type* document_type)
         -> dom::nodes::xml_document*
 {
@@ -86,7 +86,7 @@ auto dom::other::dom_implementation::create_document(
 }
 
 
-auto dom::other::dom_implementation::create_html_document(ext::cstring& title) -> dom::nodes::document*
+auto dom::other::dom_implementation::create_html_document(const ext::string& title) -> dom::nodes::document*
 {
     // create a new document, and set its type and content type to html
     auto* document = new nodes::document{};

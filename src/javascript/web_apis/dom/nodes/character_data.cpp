@@ -24,7 +24,7 @@ auto dom::nodes::character_data::substring_data(
 }
 
 
-auto dom::nodes::character_data::append_data(ext::cstring& new_data) -> void
+auto dom::nodes::character_data::append_data(const ext::string& new_data) -> void
 {
     // return the replace_data helper method output by replacing 0 characters after length with the new_data
     return helpers::texts::replace_data(this, helpers::trees::length(this), 0, new_data);
@@ -33,7 +33,7 @@ auto dom::nodes::character_data::append_data(ext::cstring& new_data) -> void
 
 auto dom::nodes::character_data::insert_data(
         unsigned long offset,
-        ext::cstring& new_data)
+        const ext::string& new_data)
         -> void
 {
     // return the replace_data helper method output by replacing 0 characters after offset with new_data
@@ -54,7 +54,7 @@ auto dom::nodes::character_data::delete_data(
 auto dom::nodes::character_data::replace_data(
         unsigned long offset,
         unsigned long count,
-        ext::cstring& new_data)
+        const ext::string& new_data)
         -> void
 {
     // return the replace_data helper method output by replacing count character after offset with new_data
@@ -83,14 +83,14 @@ auto dom::nodes::character_data::get_length() const -> unsigned long
 }
 
 
-auto dom::nodes::character_data::set_node_value(ext::cstring& val) -> void
+auto dom::nodes::character_data::set_node_value(const ext::string& val) -> void
 {
     // set the node_value by replacing the data with the val
     replace_data(0, length, val);
 }
 
 
-auto dom::nodes::character_data::set_text_content(ext::cstring& val) -> void
+auto dom::nodes::character_data::set_text_content(const ext::string& val) -> void
 {
     // set the text_content by replacing the data with the val
     replace_data(0, length, val);

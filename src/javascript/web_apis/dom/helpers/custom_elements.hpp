@@ -29,17 +29,17 @@ namespace dom
  */
 struct dom::helpers::custom_elements
 {
-    static auto create_an_element(nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& prefix = "", ext::cstring& is = "", const bool synchronous_custom_elements_flag = false) -> dom::nodes::element*;
+    static auto create_an_element(nodes::document* document, const ext::string& local_name, const ext::string& namespace_, const ext::string& prefix = "", const ext::string& is = "", bool synchronous_custom_elements_flag = false) -> dom::nodes::element*;
     static auto upgrade_element(internal::custom_element_definition* definition, nodes::element* element) -> void;
     static auto try_to_upgrade_element(const nodes::element* element) -> void;
-    static auto lookup_custom_element_definition(const nodes::document* document, ext::cstring& local_name, ext::cstring& namespace_, ext::cstring& is) -> internal::custom_element_definition*;
+    static auto lookup_custom_element_definition(const nodes::document* document, const ext::string& local_name, const ext::string& namespace_, const ext::string& is) -> internal::custom_element_definition*;
 
     static auto enqueue_element_on_appropriate_element_queue(const nodes::element* element) -> void;
-    static auto enqueue_custom_element_callback_reaction(const nodes::element* element, ext::cstring& callback_name, ext::vector<ext::string>&& args) -> void;
+    static auto enqueue_custom_element_callback_reaction(const nodes::element* element, const ext::string& callback_name, ext::vector<ext::string>&& args) -> void;
     static auto enqueue_custom_element_upgrade_reaction(const nodes::element* element, const internal::custom_element_definition* definition) -> void;
     static auto enqueue_custom_element_reaction(const std::queue<nodes::element*>& element_queue) -> void;
 
-    static auto is_valid_custom_element_name(ext::cstring& element_name) -> bool;
+    static auto is_valid_custom_element_name(const ext::string& element_name) -> bool;
     static auto is_custom_node(const nodes::element* element) -> bool;
 };
 

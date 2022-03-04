@@ -2,7 +2,6 @@
 #ifndef SBROWSER_DOM_EXCEPTION_HPP
 #define SBROWSER_DOM_EXCEPTION_HPP
 
-#include <ext/iterables/string.hpp>
 #include <ext/macros/decorators.hpp>
 #include <ext/properties/dom_property.hpp>
 #include <dom_object.hpp>
@@ -24,7 +23,7 @@ class dom::other::dom_exception : public virtual dom_object
 {
 public: constructors
     dom_exception() = default;
-    dom_exception(ext::cstring& message, v8_custom_error_t type);
+    dom_exception(const ext::string& message, v8_custom_error_t type);
 
 public: properties
     ext::dom_property<ext::string, _F> message;

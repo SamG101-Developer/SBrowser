@@ -3,10 +3,8 @@
 #include <functional>
 
 #include <dom/events/event.hpp>
-
 #include <dom/helpers/event_listening.hpp>
 #include <dom/helpers/shadows.hpp>
-
 #include <dom/nodes/node.hpp>
 #include <dom/nodes/shadow_root.hpp>
 
@@ -18,7 +16,7 @@ auto dom::helpers::event_dispatching::append_to_event_path(
         nodes::event_target* const invocation_target,
         nodes::event_target* const shadow_adjusted_target,
         nodes::event_target* const related_target,
-        ext::cvector<const nodes::event_target*>& touch_targets,
+        const ext::vector<const nodes::event_target*>& touch_targets,
         const bool slot_in_closed_tree)
         -> void
 {
@@ -52,18 +50,16 @@ auto dom::helpers::event_dispatching::invoke(
         -> void
 {
     // create a copy of the event path, upto the event path struct being invoked
-    ext::cvector<internal::event_path_struct*> temp_vector {
+    ext::vector<internal::event_path_struct*> temp_vector {
         event->path->begin(),
-        event->path->begin() + event->path->find(event_path_struct)
+        std::find(event->path->begin(), event->path->end(), event_path_struct)
     };
 
     // set the related target, touch targets and the target to the corresponding values from the event path struct - the
     // target is first target in the event path list that has a shadow adjusted target
     event->related_target = event_path_struct->related_target;
     event->touch_targets = &event_path_struct->touch_targets;
-    event->target = temp_vector
-            .transform<nodes::event_target*>([](const internal::event_path_struct* const struct_) {return struct_->shadow_adjusted_target;})
-            .front();
+    event->target = temp_vector.front()->shadow_adjusted_target;
 
     // return if the stop propagation flag has been set (then stop propagating through the event path list)
     if (event->m_stop_propagation_flag)
@@ -73,14 +69,14 @@ auto dom::helpers::event_dispatching::invoke(
     event->current_target = event_path_struct->invocation_target;
 
     // invoke a copy of the event listeners
-    ext::vector<ext::string_any_map> listeners {event->current_target->m_event_listeners};
+    const auto& listeners {event->current_target->m_event_listeners};
     inner_invoke(event, listeners, phase);
 }
 
 
 auto dom::helpers::event_dispatching::inner_invoke(
         events::event* const event,
-        ext::cvector<ext::string_any_map>& event_listeners,
+        const ext::vector<ext::string_any_map>& event_listeners,
         const unsigned char phase)
         -> void
 {
@@ -121,9 +117,9 @@ auto dom::helpers::event_dispatching::inner_invoke(
 
 template <typename T>
 auto dom::helpers::event_dispatching::fire_event(
-        ext::cstring& e,
+        const ext::string& e,
         nodes::event_target* target,
-        ext::cstring_any_map& init)
+        const ext::string_any_map& init)
         -> bool
 {
     // create a new event of type T and dispatch it through the event paths
@@ -133,7 +129,7 @@ auto dom::helpers::event_dispatching::fire_event(
 
 
 auto dom::helpers::event_dispatching::fire_synthetic_pointer_event(
-        ext::cstring& e,
+        const ext::string& e,
         const nodes::event_target* const target,
         const bool not_trusted_flag)
         -> bool

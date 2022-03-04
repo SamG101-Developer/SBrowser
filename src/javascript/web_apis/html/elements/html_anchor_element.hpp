@@ -27,7 +27,7 @@ public: properties
 
 private: accessors
     auto get_text() const -> ext::string;
-    auto set_text(ext::cstring& val) -> void;
+    auto set_text(const ext::string& val) -> void;
 };
 
 

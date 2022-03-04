@@ -15,7 +15,8 @@ namespace dom
 }
 
 
-struct dom::helpers::trees {
+struct dom::helpers::trees
+{
     static auto root(const nodes::node* node) -> nodes::node*;
     static auto descendants(const nodes::node* node) -> ext::vector<nodes::node*>;
     static auto ancestors(const nodes::node* node) -> ext::vector<nodes::node*>;

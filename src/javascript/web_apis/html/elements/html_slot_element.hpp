@@ -22,8 +22,8 @@ public: constructors
     html_slot_element();
 
 public: methods
-    ext::vector<dom::nodes::node*> assigned_nodes(ext::cstring_any_map& options = {});
-    ext::vector<dom::nodes::element*> assigned_elements(ext::cstring_any_map& options = {});
+    ext::vector<dom::nodes::node*> assigned_nodes(const ext::string_any_map& options = {});
+    ext::vector<dom::nodes::element*> assigned_elements(const ext::string_any_map& options = {});
     template <typename ...nodes_t> void assign(nodes_t... nodes);
 
 public: properties

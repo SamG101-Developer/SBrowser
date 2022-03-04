@@ -25,7 +25,7 @@ namespace html {
 
 
 struct html::helpers::custom_html_elements {
-    static auto element_interface(ext::cstring& local_name, ext::cstring& namespace_) -> elements::html_element*;
+    static auto element_interface(const ext::string& local_name, const ext::string& namespace_) -> elements::html_element*;
 
     static auto a() -> int {
         v8::Isolate::GetCurrent()->ThrowException(v8::Exception::TypeError(v8::String::NewFromUtf8Literal(v8::Isolate::GetCurrent(), "Error")))

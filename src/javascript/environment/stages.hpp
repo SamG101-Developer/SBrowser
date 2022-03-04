@@ -91,7 +91,7 @@ auto javascript::environment::stages::execute(
         const v8::Local<v8::Value>  result = script->Run(local_context).ToLocalChecked();
 
         // get the output and write it to console
-        const std::string output = *v8::String::Utf8Value(isolate, result);
+        const ext::string output = *v8::String::Utf8Value(isolate, result);
 
         #if DEBUG
         std::cout << output << std::endl;

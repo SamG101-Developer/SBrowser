@@ -2,9 +2,11 @@
 #ifndef SBROWSER_ABORT_SIGNAL_HPP
 #define SBROWSER_ABORT_SIGNAL_HPP
 
-#include <ext/iterables/set.hpp>
 #include <ext/properties/dom_property.hpp>
 #include <dom/nodes/event_target.hpp>
+
+#include <v8.h>
+#include <veque.hpp>
 
 namespace dom
 {

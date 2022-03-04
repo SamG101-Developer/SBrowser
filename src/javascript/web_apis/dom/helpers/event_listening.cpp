@@ -14,12 +14,16 @@
 #include <dom/nodes/window.hpp>
 #include <dom/nodes/shadow_root.hpp>
 
+#include <ranges>
+
+#include <vector>
+
 
 auto dom::helpers::event_listening::flatten_more(std::variant<bool, ext::string_any_map> options) -> ext::string_any_map
 {
     // return {capture: true} if the options is a bool value, otherwise the map already being held in the variant
     return std::holds_alternative<bool>(options)
-           ? ext::string_any_map{{std::make_pair("capture", std::get<bool>(options))}}
+           ? ext::string_any_map{std::make_pair("capture", std::get<bool>(options))}
            : std::get<ext::string_any_map>(options);
 }
 
@@ -35,7 +39,7 @@ auto dom::helpers::event_listening::flatten(std::variant<bool, ext::string_any_m
 
 auto dom::helpers::event_listening::add_event_listener(
         nodes::event_target* const event_target,
-        ext::cstring_any_map& event_listener)
+        ext::string_any_map& event_listener)
         -> void
 {
     // get the abort signal from the event listener
@@ -64,7 +68,7 @@ auto dom::helpers::event_listening::add_event_listener(
 
 auto dom::helpers::event_listening::remove_event_listener(
         nodes::event_target* const event_target,
-        ext::cstring_any_map& event_listener)
+        ext::string_any_map& event_listener)
         -> void
 {
     // create a callback_t for casting
@@ -74,7 +78,7 @@ auto dom::helpers::event_listening::remove_event_listener(
     event_listener.at("removed") = true;
 
     // remove all event listeners that have a matching callback, type and capture attribute to event_listener
-    event_target->m_event_listeners.remove_if([event_listener](ext::cstring_any_map& existing_listener)
+    event_target->m_event_listeners.remove_if([event_listener](const ext::string_any_map& existing_listener)
     {
         return existing_listener.at("callback").to<callback_t>() == event_listener.at("callback").to<callback_t>()
                 and existing_listener.at("type").to<ext::string>() == event_listener.at("type").to<ext::string>()
@@ -86,7 +90,7 @@ auto dom::helpers::event_listening::remove_event_listener(
 auto dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* const event_target) -> void
 {
     // iterate over event listeners and remove them all
-    for (ext::cstring_any_map& event_listener: event_target->m_event_listeners)
+    for (ext::string_any_map& event_listener: event_target->m_event_listeners)
         remove_event_listener(event_target, event_listener);
 }
 
@@ -115,7 +119,8 @@ auto dom::helpers::event_listening::dispatch(
         // cast of the event target, the activation_target to the event_target if the event is an activation event, the
         // slottable to the event_target if it is an assigned slottable, the parent to event traversal parent algorithm
         // output, and the parent_node to a node cast of the parent
-        auto touch_targets = event->touch_targets->transform<>([event_target](const nodes::event_target* const touch) {return shadows::retarget(touch, event_target);});
+        ext::vector<nodes::event_target*> touch_targets = event->touch_targets->transform([event_target](const nodes::event_target* const touch) {return shadows::retarget(touch, event_target);});
+
         auto* const node = dynamic_cast<const nodes::node* const>(event_target);
         auto* activation_target = is_activation_event ? event_target : nullptr;
         auto* slottable = shadows::is_slottable(node) and shadows::is_assigned(node) ? event_target : nullptr;
@@ -140,7 +145,7 @@ auto dom::helpers::event_listening::dispatch(
 
             // set the touch target list, related target and slottable to what they were before, but using the parent
             // instead of the event target for retargeting / input to shadow helper algorithms
-            touch_targets = event->touch_targets->transform<>([parent](const nodes::event_target* const touch) {return shadows::retarget(touch, parent);});
+            touch_targets = event->touch_targets->transform([parent](const nodes::event_target* const touch) {return shadows::retarget(touch, parent);});
             related_target = shadows::retarget(event->related_target, parent);
             slottable = shadows::is_slottable(node) and shadows::is_assigned(node) ? parent : slottable;
 
@@ -182,7 +187,7 @@ auto dom::helpers::event_listening::dispatch(
                 parent->get_the_parent(event);
         }
 
-        // set the clear_targets_struct to the last struct in tht event's path that has a shadow_adjusted_target
+        // set the clear_targets_struct to the last (r-iterators) struct in tht event's path that has a shadow_adjusted_target
         clear_targets_struct = event->path->last_match([](internal::event_path_struct* const event_path_struct) {return event_path_struct->shadow_adjusted_target;});
 
         // clear the targets if the shadow_adjusted_target, related_target or any touch_target has a shadow root

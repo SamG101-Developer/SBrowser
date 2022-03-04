@@ -14,7 +14,7 @@ ui::window_handling::window_handler::window_handler(
     std::ofstream context_file_contents;
     context_file_contents.open("../resources/", std::ofstream::out);
 
-    std::stringstream context_file_stream;
+    ext::stringstream context_file_stream;
     context_file_contents << context_file_contents.rdbuf();
 
     ext::string context_file_string;

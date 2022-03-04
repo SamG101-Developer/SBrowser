@@ -2,13 +2,13 @@
 #ifndef SBROWSER_EVENT_HPP
 #define SBROWSER_EVENT_HPP
 
+#include <dom_object.hpp>
 #include <ext/iterables/map.hpp>
-#include <ext/iterables/string.hpp>
 #include <ext/macros/decorators.hpp>
 #include <ext/properties/dom_property.hpp>
-
-#include <dom_object.hpp>
 #include <performance/time/dom_high_res_timestamp.hpp>
+
+#include <veque.hpp>
 
 namespace dom
 {
@@ -61,7 +61,7 @@ public friends:
 
 public constructors:
     event();
-    event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
+    event(const ext::string& event_type, const ext::string_any_map& event_init = {});
 
     ~event() override;
 
@@ -91,7 +91,7 @@ public properties:
     ext::dom_property<double, _F> time_stamp = performance::time::dom_high_res_timestamp();
     ext::dom_property<bool, _F> is_trusted;
 
-    ext::dom_property<ext::vector<nodes::event_target*>*, _F> touch_targets;
+    ext::dom_property<ext::vector<nodes::event_target        *>*, _F> touch_targets;
     ext::dom_property<ext::vector<internal::event_path_struct*>*, _F> path;
 
 public internal_methods:

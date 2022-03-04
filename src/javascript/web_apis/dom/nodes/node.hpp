@@ -2,12 +2,12 @@
 #ifndef SBROWSER_NODE_HPP
 #define SBROWSER_NODE_HPP
 
-#include <ext/iterables/map.hpp>
-#include <ext/iterables/string.hpp>
+#include <ext/helpers/maps.hpp>
 #include <ext/properties/dom_property.hpp>
 
 #include <dom/nodes/event_target.hpp>
 
+#include <veque.hpp>
 #include <QtWidgets/QWidget>
 
 namespace dom
@@ -64,11 +64,11 @@ public: methods
     auto has_child_nodes() const -> bool;
     auto contains(node* other) const -> bool;
     auto is_equal_node(node* other) const -> bool;
-    auto is_default_namespace(ext::cstring& namespace_) const -> bool;
-    auto lookup_prefix(ext::cstring& namespace_) const -> ext::string;
-    auto lookup_namespace_uri(ext::cstring& prefix) const -> ext::string;
+    auto is_default_namespace(const ext::string& namespace_) const -> bool;
+    auto lookup_prefix(const ext::string& namespace_) const -> ext::string;
+    auto lookup_namespace_uri(const ext::string& prefix) const -> ext::string;
     auto compare_document_position(node* other) const -> unsigned short;
-    auto get_root_node(ext::cstring_any_map& options) const -> node*;
+    auto get_root_node(const ext::string_any_map& options) const -> node*;
     auto clone_node(bool deep = false) const -> node*;
     auto insert_before(node* new_node, node* child) -> node*;
     auto append_child(node* new_node) -> node*;
@@ -98,8 +98,8 @@ protected: accessors
     virtual auto get_node_value() const -> ext::string;
     virtual auto get_text_content() const -> ext::string;
 
-    virtual auto set_node_value(ext::cstring& val) -> void;
-    virtual auto set_text_content(ext::cstring& val) -> void;
+    virtual auto set_node_value(const ext::string& val) -> void;
+    virtual auto set_text_content(const ext::string& val) -> void;
 
 protected: internal_methods
     virtual auto render() const -> QWidget*;

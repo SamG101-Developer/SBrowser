@@ -1,7 +1,7 @@
 #include "html_parser.hpp"
 
 
-javascript::parsers::html::html_parser::html_parser(ext::cstring& raw_html)
+javascript::parsers::html::html_parser::html_parser(const ext::string& raw_html)
         : m_raw_html(raw_html)
 {}
 

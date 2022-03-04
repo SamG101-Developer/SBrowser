@@ -39,8 +39,8 @@ public: methods
     auto empty() const -> bool;
     auto contains_pointer() const -> bool;
     auto is_numeric() const -> bool;
-    template <typename T> auto emplace() -> void;
-    template <typename T> auto emplace(T&& element) -> void;
+    template <typename T> auto emplace() -> any&;
+    template <typename T> auto emplace(T&& element) -> any&;
     template <typename T> auto to() const -> T;
 
 public: operators
@@ -88,18 +88,20 @@ auto ext::any::is_numeric() const -> bool
 
 
 template <typename T>
-auto ext::any::emplace(T&& element) -> void
+auto ext::any::emplace(T&& element) -> any&
 {
     // emplace an object of type T as the internal object being wrapped by ext::any
     m_value.template emplace<T>(element);
+    return *this;
 }
 
 
 template <typename T>
-auto ext::any::emplace() -> void
+auto ext::any::emplace() -> any&
 {
     // emplace an empty object of type T (ie assign the type as T but .empty() will return true)
     m_value.template emplace<T>();
+    return *this;
 }
 
 

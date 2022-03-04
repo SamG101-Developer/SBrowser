@@ -25,7 +25,7 @@ public: internal_methods
 
 private: accessors
     auto get_text_content() const -> ext::string override;
-    auto set_text_content(ext::cstring& val) -> void override;
+    auto set_text_content(const ext::string& val) -> void override;
 };
 
 

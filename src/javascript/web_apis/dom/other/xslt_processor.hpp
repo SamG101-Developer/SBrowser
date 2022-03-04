@@ -28,9 +28,9 @@ public: methods
     auto transform_to_fragment(nodes::node* source, nodes::document* output) -> nodes::document_fragment*;
     auto transform_to_document(nodes::node* source) -> nodes::document*;
 
-    auto set_parameter(ext::cstring& namespace_uri, ext::cstring& local_name, ext::any value) -> void;
-    auto get_parameter(ext::cstring& namespace_uri, ext::cstring& local_name) -> ext::any;
-    auto remove_parameter(ext::cstring& namespace_uri, ext::cstring& local_name) -> void;
+    auto set_parameter(const ext::string& namespace_uri, const ext::string& local_name, ext::any value) -> void;
+    auto get_parameter(const ext::string& namespace_uri, const ext::string& local_name) -> ext::any;
+    auto remove_parameter(const ext::string& namespace_uri, const ext::string& local_name) -> void;
     auto clear_parameters() -> void;
     auto reset() -> void;
 

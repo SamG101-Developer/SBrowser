@@ -40,21 +40,21 @@ auto dom::nodes::attr::get_m_qualified_name() const -> ext::string
 }
 
 
-void dom::nodes::attr::set_node_value(ext::cstring& val)
+void dom::nodes::attr::set_node_value(const ext::string& val)
 {
     // the node_value is the attribute's value
     set_value(val);
 }
 
 
-void dom::nodes::attr::set_text_content(ext::cstring& val)
+void dom::nodes::attr::set_text_content(const ext::string& val)
 {
     // the text_content is the attribute's value
     set_value(val);
 }
 
 
-void dom::nodes::attr::set_value(ext::cstring& val)
+void dom::nodes::attr::set_value(const ext::string& val)
 {
     // setting the value calls a helper set method
     helpers::attributes::set_existing_attribute_value(this, val);

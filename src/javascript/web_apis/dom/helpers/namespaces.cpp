@@ -3,7 +3,7 @@
 #include <dom/helpers/exceptions.hpp>
 
 
-auto dom::helpers::namespaces::validate(ext::cstring& qualified_name) -> void
+auto dom::helpers::namespaces::validate(const ext::string& qualified_name) -> void
 {
     // TODO : https://stackoverflow.com/a/51451972/10862918 for BNF impl
     exceptions::throw_v8_exception(
@@ -14,8 +14,8 @@ auto dom::helpers::namespaces::validate(ext::cstring& qualified_name) -> void
 
 
 auto dom::helpers::namespaces::validate_and_extract(
-        ext::cstring& namespace_,
-        ext::cstring& qualified_name)
+        const ext::string& namespace_,
+        const ext::string& qualified_name)
         -> std::tuple<ext::string, ext::string, ext::string>
 {
     // validate the qualified name, and create the prefix and local name

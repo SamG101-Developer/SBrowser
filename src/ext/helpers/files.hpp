@@ -8,14 +8,14 @@
 #include <ext/iterables/string.hpp>
 
 
-auto file_read(ext::cstring& file_path) -> ext::string
+auto file_read(const ext::string& file_path) -> ext::string
 {
     // create the input and output strings
     std::ifstream input(file_path.c_str());
-    std::string output;
+    ext::string output;
 
     // append each line of the file to the output
-    for (std::string file_line; std::getline(input, file_line);)
+    for (ext::string file_line; std::getline(input, file_line);)
         output += file_line;
 
     // return the output as an ext object

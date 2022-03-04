@@ -15,14 +15,14 @@
 
 
 auto dom::helpers::texts::replace_data(
-        nodes::character_data* text_node,
-        unsigned long offset,
+        nodes::character_data* const text_node,
+        const unsigned long offset,
         unsigned long count,
-        ext::cstring& data)
+        const ext::string& data)
         -> void
 {
     // get the text node's text and the length of the text node
-    auto current_data = text_node->data;
+    const auto& current_data = text_node->data;
     const auto length = trees::length(text_node);
 
     // if teh offset > count, then throw an index size error
@@ -72,8 +72,8 @@ auto dom::helpers::texts::replace_data(
 
 
 auto dom::helpers::texts::split(
-        nodes::text* text_node,
-        unsigned long offset)
+        nodes::text* const text_node,
+        const unsigned long offset)
         -> dom::nodes::text*
 {
     const auto length = trees::length(text_node);
@@ -85,12 +85,11 @@ auto dom::helpers::texts::split(
             INDEX_SIZE_ERR,
             [offset, length] {return offset > length;});
 
-    nodes::node* parent_node = text_node->parent;
-    nodes::text* new_text_node = new nodes::text{new_data};
+    auto* const new_text_node = new nodes::text{new_data};
     new_text_node->owner_document = text_node->owner_document;
 
-    if (parent_node) {
-        mutation_algorithms::insert(new_text_node, parent_node, new_text_node->next_sibling);
+    if (text_node->parent) {
+        mutation_algorithms::insert(new_text_node, text_node->parent, new_text_node->next_sibling);
         auto& live_ranges = javascript::realms::surrounding_agent().get<ext::vector<ranges::range*>&>("live_ranges");
 
         live_ranges
@@ -104,13 +103,13 @@ auto dom::helpers::texts::split(
                 .for_each([new_text_node, offset](auto* range) {range->end_container = new_text_node; range->start_offset = offset;});
 
         live_ranges
-                .filter([parent_node](auto* range) {return range->start_container == parent_node;})
+                .filter([text_node](auto* range) {return range->start_container == text_node->parent;})
                 .filter([text_node](auto* range) {return range->start_offset == trees::index(text_node) + 1;})
                 .for_each([new_text_node, offset](auto* range) {range->start_container = new_text_node; range->start_offset = offset;});
 
         live_ranges
-                .filter([parent_node](auto* range) {return range->end_container == parent_node;})
-                .filter([text_node](auto* range) {return range->end_offset == trees::index(text_node) + 1;;})
+                .filter([text_node](auto* range) {return range->end_container == text_node->parent;})
+                .filter([text_node](auto* range) {return range->end_offset == trees::index(text_node) + 1;})
                 .for_each([new_text_node, offset](auto* range) {range->end_container = new_text_node; range->start_offset = offset;});
     }
 
@@ -120,8 +119,8 @@ auto dom::helpers::texts::split(
 
 
 auto dom::helpers::texts::substring_data(
-        const nodes::character_data* text_node,
-        unsigned long offset,
+        const nodes::character_data* const text_node,
+        const unsigned long offset,
         unsigned long count) -> ext::string
 {
     const auto length = trees::length(text_node);

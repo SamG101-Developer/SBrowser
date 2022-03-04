@@ -110,15 +110,15 @@ private aliases:
 
 public methods:
     // dom
-    new_obj auto create_element(ext::cstring& local_name, ext::cstring_any_map& options = {}) const -> element*;
-    new_obj auto create_element_ns(ext::cstring& namespace_, ext::cstring& qualified_name, ext::cstring_any_map& options = {}) const -> element*;
+    new_obj auto create_element(const ext::string& local_name, const ext::string_any_map& options = {}) const -> element*;
+    new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map& options = {}) const -> element*;
     new_obj auto create_document_fragment() const -> document_fragment*;
-    new_obj auto create_text_node(ext::cstring& data) const -> text*;
-    new_obj auto create_cdata_section_node(ext::cstring& data) const -> cdata_section*;
-    new_obj auto create_comment(ext::cstring& data) const -> comment*;
-    new_obj auto create_processing_instruction(ext::cstring& target, ext::cstring& data) const -> processing_instruction*;
-    new_obj auto create_attribute(ext::cstring& local_name) const -> attr*;
-    new_obj auto create_attribute_ns(ext::cstring& namespace_, ext::cstring& qualified_name) const -> attr*;
+    new_obj auto create_text_node(const ext::string& data) const -> text*;
+    new_obj auto create_cdata_section_node(const ext::string& data) const -> cdata_section*;
+    new_obj auto create_comment(const ext::string& data) const -> comment*;
+    new_obj auto create_processing_instruction(const ext::string& target, const ext::string& data) const -> processing_instruction*;
+    new_obj auto create_attribute(const ext::string& local_name) const -> attr*;
+    new_obj auto create_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name) const -> attr*;
 
     new_obj auto create_range() -> ranges::range*;
     new_obj auto create_node_iterator(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator*;
@@ -128,19 +128,19 @@ public methods:
     same_obj auto adopt_node(node* new_node) -> node*;
 
     // html
-    auto get_elements_by_name(ext::cstring& element_name) const -> ext::vector<node*>;
+    auto get_elements_by_name(const ext::string& element_name) const -> ext::vector<node*>;
     auto open() const -> document*;
-    auto open(ext::cstring& url, ext::cstring& name, ext::cstring& features) const -> window_proxy*;
+    auto open(const ext::string& url, const ext::string& name, const ext::string& features) const -> window_proxy*;
     auto close() const -> void;
     template <typename ...strings> auto write(strings... text) const -> void;
     template <typename ...strings> auto writeln(strings... text) const -> void;
     auto has_focus() const -> bool;
-    auto exec_command(ext::cstring& command_id, bool show_ui = false, ext::cstring& value = "") const -> bool;
-    auto query_command_enabled(ext::cstring& command_id) const -> bool;
-    auto query_command_indeterm(ext::cstring& command_id) const -> bool;
-    auto query_command_state(ext::cstring& command_id) const -> bool;
-    auto query_command_supported(ext::cstring& command_id) const -> bool;
-    auto query_command_value(ext::cstring& command_id) const -> ext::string;
+    auto exec_command(const ext::string& command_id, bool show_ui = false, const ext::string& value = "") const -> bool;
+    auto query_command_enabled(const ext::string& command_id) const -> bool;
+    auto query_command_indeterm(const ext::string& command_id) const -> bool;
+    auto query_command_state(const ext::string& command_id) const -> bool;
+    auto query_command_supported(const ext::string& command_id) const -> bool;
+    auto query_command_value(const ext::string& command_id) const -> ext::string;
 
     // cssom-view
     auto element_from_point(double x, double y) const -> element*;
@@ -247,10 +247,10 @@ private accessors:
     new_obj auto get_forms() -> ext::vector<html::elements::html_form_element*>;
     new_obj auto get_scripts() -> ext::vector<html::elements::html_script_element*>;
 
-    auto set_title(ext::cstring& val) -> void;
+    auto set_title(const ext::string& val) -> void;
     auto set_body(html::elements::html_body_element* val) -> void;
-    auto set_cookie(ext::cstring& val) -> void;
-    auto set_ready_state(ext::cstring& val) -> void;
+    auto set_cookie(const ext::string& val) -> void;
+    auto set_ready_state(const ext::string& val) -> void;
 
     // cssom-view
     auto get_scrolling_element() const -> element*;

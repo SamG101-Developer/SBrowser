@@ -10,7 +10,7 @@ namespace dom::nodes {class comment;}
 class dom::nodes::comment : public character_data
 {
 public: constructors
-    comment(ext::cstring& new_data = "");
+    comment(const ext::string& new_data = "");
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;

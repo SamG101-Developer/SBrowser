@@ -15,7 +15,7 @@ class dom::nodes::text
         , public mixins::slottable<text>
 {
 public constructors:
-    text(ext::cstring& new_data = "");
+    text(const ext::string& new_data = "");
 
 public methods:
     auto split_text(unsigned long offset) -> text*;
@@ -29,7 +29,7 @@ public internal_methods:
 
 private accessors:
     auto get_whole_text() const -> ext::string;
-    auto set_data(ext::cstring& val) -> void;
+    auto set_data(const ext::string& val) -> void;
 };
 
 

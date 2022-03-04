@@ -262,14 +262,14 @@ void context::destroy()
 	isolate_ = nullptr;
 }
 
-context& context::value(std::string_view name, v8::Local<v8::Value> value)
+context& context::value(const std::string& name, v8::Local<v8::Value> value)
 {
 	v8::HandleScope scope(isolate_);
 	global()->Set(isolate_->GetCurrentContext(), to_v8(isolate_, name), value).FromJust();
 	return *this;
 }
 
-context& context::module(std::string_view name, v8pp::module& m)
+context& context::module(const std::string& name, v8pp::module& m)
 {
 	return value(name, m.new_instance());
 }
@@ -286,7 +286,7 @@ v8::Local<v8::Value> context::run_file(std::string const& filename)
 	return run_script(std::string(begin, end), filename);
 }
 
-v8::Local<v8::Value> context::run_script(std::string_view source, std::string_view filename)
+v8::Local<v8::Value> context::run_script(const std::string& source, const std::string& filename)
 {
 	v8::EscapableHandleScope scope(isolate_);
 	v8::Local<v8::Context> context = isolate_->GetCurrentContext();

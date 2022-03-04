@@ -16,10 +16,10 @@
 
 auto dom::helpers::custom_elements::create_an_element(
         nodes::document* const document,
-        ext::cstring& local_name,
-        ext::cstring& namespace_,
-        ext::cstring& prefix,
-        ext::cstring& is,
+        const ext::string& local_name,
+        const ext::string& namespace_,
+        const ext::string& prefix,
+        const ext::string& is,
         const bool synchronous_custom_elements_flag)
         -> dom::nodes::element* {
 
@@ -239,9 +239,9 @@ auto dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element*
 
 auto dom::helpers::custom_elements::lookup_custom_element_definition(
         const nodes::document* const document,
-        ext::cstring& local_name,
-        ext::cstring& namespace_,
-        ext::cstring& is)
+        const ext::string& local_name,
+        const ext::string& namespace_,
+        const ext::string& is)
         -> dom::internal::custom_element_definition*
 {
     // return if the namespace isn't html
@@ -274,7 +274,7 @@ auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue
 
 auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
         const nodes::element* const element,
-        ext::cstring& callback_name,
+        const ext::string& callback_name,
         ext::vector<ext::string>&& args)
         -> void
 {
@@ -312,7 +312,7 @@ auto dom::helpers::custom_elements::enqueue_custom_element_reaction(const std::q
 }
 
 
-auto dom::helpers::custom_elements::is_valid_custom_element_name(ext::cstring& element_name) -> bool
+auto dom::helpers::custom_elements::is_valid_custom_element_name(const ext::string& element_name) -> bool
 {
     // TODO
     return true;

@@ -5,7 +5,7 @@
 
 
 auto dom::helpers::signal_aborting::signal_abort(
-        aborting::abort_signal* signal,
+        aborting::abort_signal* const signal,
         ext::cany& reason)
         -> void
 {
@@ -26,8 +26,8 @@ auto dom::helpers::signal_aborting::signal_abort(
 
 
 auto dom::helpers::signal_aborting::follow_signal(
-        aborting::abort_signal* following_signal,
-        aborting::abort_signal* parent_signal)
+        aborting::abort_signal* const following_signal,
+        aborting::abort_signal* const parent_signal)
         -> void
 {
     // return if the following signal has aborted

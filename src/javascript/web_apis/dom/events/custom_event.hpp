@@ -2,7 +2,6 @@
 #ifndef SBROWSER_CUSTOM_EVENT_HPP
 #define SBROWSER_CUSTOM_EVENT_HPP
 
-#include <ext/iterables/map.hpp>
 #include <ext/macros/decorators.hpp>
 #include <ext/properties/dom_property.hpp>
 #include <dom/events/event.hpp>
@@ -20,7 +19,7 @@ class dom::events::custom_event : public event
 {
 public constructors:
     using event::event;
-    custom_event(ext::cstring& event_type, ext::cstring_any_map& event_init = {});
+    custom_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
 
 public properties:
     ext::dom_property<ext::any, _F> detail;

@@ -368,7 +368,7 @@ template <typename T>
 auto ext::vector<T>::join(char&& delimiter) const -> const char*
 {
     // create a string and join each item in the veque to it
-    std::string joined;
+    ext::string joined;
     for_each([&joined, delimiter](const T item) {joined += delimiter + item;});
 
     // return teh const char( representation of the string

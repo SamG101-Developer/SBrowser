@@ -26,9 +26,9 @@ public: constructors
     ~dom_implementation() override;
 
 public: methods
-    auto create_document_type(ext::cstring& qualified_name, ext::cstring& public_id, ext::cstring& system_id) -> nodes::document_type*;
-    auto create_document(ext::cstring& namespace_, ext::cstring& qualified_name, nodes::document_type* document_type = nullptr) -> nodes::xml_document*;
-    auto create_html_document(ext::cstring& title = "") -> nodes::document*;
+    auto create_document_type(const ext::string& qualified_name, const ext::string& public_id, const ext::string& system_id) -> nodes::document_type*;
+    auto create_document(const ext::string& namespace_, const ext::string& qualified_name, nodes::document_type* document_type = nullptr) -> nodes::xml_document*;
+    auto create_html_document(const ext::string& title = "") -> nodes::document*;
 
 public: internal_methods
     auto v8(v8::Isolate *isolate) const -> ext::any override;

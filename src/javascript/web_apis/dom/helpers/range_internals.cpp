@@ -15,19 +15,19 @@
 
 
 auto dom::helpers::range_internals::contains(
-        nodes::node* node,
-        ranges::range* range)
+        const nodes::node* const node,
+        const ranges::range* const range)
         -> bool
 {
     return range->m_root == trees::root(node)
-            and position_relative(node, 0, range->start_container, range->start_offset) == internal::AFTER
-            and position_relative(node, trees::length(node), range->end_container, range->end_offset) == internal::BEFORE;
+            and position_relative(node, 0, range->start_container, range->start_offset) == internal::boundary_point_comparison_position::AFTER
+            and position_relative(node, trees::length(node), range->end_container, range->end_offset) == internal::boundary_point_comparison_position::BEFORE;
 }
 
 
 auto dom::helpers::range_internals::partially_contains(
-        nodes::node* node,
-        ranges::range* range)
+        const nodes::node* node,
+        const ranges::range* const range)
         -> bool
 {
     return trees::is_ancestor(node, range->start_container) and not trees::is_ancestor(node, range->end_container)
@@ -36,10 +36,10 @@ auto dom::helpers::range_internals::partially_contains(
 
 
 auto dom::helpers::range_internals::set_start_or_end(
-        ranges::range* range,
-        nodes::node* container,
-        unsigned long offset,
-        bool start)
+        ranges::range* const range,
+        nodes::node* const container,
+        const unsigned long offset,
+        const bool start)
         -> void
 {
     exceptions::throw_v8_exception(
@@ -56,7 +56,7 @@ auto dom::helpers::range_internals::set_start_or_end(
     if (start)
     {
         // if the node is in a different tree or indexed after the end of range then set it to the end of the range
-        if (range->m_root != trees::root(container) or position_relative(container, offset, range->end_container, range->end_offset) == internal::AFTER)
+        if (range->m_root != trees::root(container) or position_relative(container, offset, range->end_container, range->end_offset) == internal::boundary_point_comparison_position::AFTER)
         {
             range->end_container = container;
             range->end_offset = offset;
@@ -74,7 +74,7 @@ auto dom::helpers::range_internals::set_start_or_end(
     else
     {
         // of the node is in a different tree or indexed before the start of the range then set it to the start of the range
-        if (range->m_root != trees::root(container) or position_relative(container, offset, range->start_container, range->start_offset) == internal::BEFORE)
+        if (range->m_root != trees::root(container) or position_relative(container, offset, range->start_container, range->start_offset) == internal::boundary_point_comparison_position::BEFORE)
         {
             range->start_container = container;
             range->start_offset = offset;
@@ -91,10 +91,10 @@ auto dom::helpers::range_internals::set_start_or_end(
 
 
 auto dom::helpers::range_internals::position_relative(
-        nodes::node* start_container,
-        unsigned long start_offset,
-        nodes::node* end_container,
-        unsigned long end_offset)
+        nodes::node* const start_container,
+        const unsigned long start_offset,
+        nodes::node* const end_container,
+        const unsigned long end_offset)
         -> dom::internal::boundary_point_comparison_position
 {
     // the start and end container hava to be from the same tree, as a range only covers part of one tree
@@ -102,48 +102,51 @@ auto dom::helpers::range_internals::position_relative(
 
     // return a comparison on the offsets to compare the position, if the two containers are the same
     if (start_container == end_container)
-        return start_offset == end_offset ? internal::EQUALS : start_offset < end_offset ? internal::BEFORE : internal::AFTER;
+        return start_offset == end_offset
+                ? internal::boundary_point_comparison_position::EQUALS : start_offset < end_offset
+                ? internal::boundary_point_comparison_position::BEFORE
+                : internal::boundary_point_comparison_position::AFTER;
 
     // return the opposite of calling the same method with the start and end variables switched, if the start container
     // is following (ie after) the end container opposite
     if (trees::is_following(start_container, end_container))
-        return static_cast<internal::boundary_point_comparison_position>(~position_relative(end_container, end_offset, start_container, start_offset));
+        return static_cast<internal::boundary_point_comparison_position>(~(int)position_relative(end_container, end_offset, start_container, start_offset));
 
     // return AFTER if the start container is an ancestor of the end container, and the index of the node that is a
     // child of the start container and an ancestor of the end container is less than the start offset
     if (trees::is_ancestor(start_container, end_container) and trees::index(trees::ancestors(end_container).item_after(start_container)) < start_offset)
-        return internal::AFTER;
+        return internal::boundary_point_comparison_position::AFTER;
 
     // return BEFORE otherwise
-    return internal::BEFORE;
+    return internal::boundary_point_comparison_position::BEFORE;
 }
 
 
 auto dom::helpers::range_internals::get_range_helpers_variables(
-        ranges::range* range,
-        nodes::node* start_container,
-        nodes::node* end_container)
+        ranges::range* const range,
+        const nodes::node* const start_container,
+        const nodes::node* const end_container)
         -> std::tuple<dom::nodes::node*, dom::nodes::node*, ext::vector<dom::nodes::node*>>
 {
     // get the common ancestor between the start and end container
-    auto* common_ancestor = trees::common_ancestor(start_container, end_container);
+    const auto* const common_ancestor = trees::common_ancestor(start_container, end_container);
 
     // set the first partially contained node to the first child of the common ancestor's children that the range
     // partially contains, if the start container isn't an ancestor of the end container, otherwise set it to nullptr
-    nodes::node* first_partially_contained_child = not trees::is_ancestor(start_container, end_container)
-            ? common_ancestor->child_nodes->first_match([range](nodes::node* node) {return partially_contains(node, range);})
+    const nodes::node* const first_partially_contained_child = not trees::is_ancestor(start_container, end_container)
+            ? common_ancestor->child_nodes->first_match([range](const nodes::node* const node) {return partially_contains(node, range);})
             : nullptr;
 
     // set the last partially contained node to the last child of the common ancestor's children that the range#
     // partially container, if the end container isn't an ancestor of the start container, otherwise set it to nullptr
-    nodes::node* last_partially_contained_child = not trees::is_ancestor(end_container, start_container)
-            ? common_ancestor->child_nodes->last_match([range](nodes::node* node) {return partially_contains(node, range);})
+    const nodes::node* const last_partially_contained_child = not trees::is_ancestor(end_container, start_container)
+            ? common_ancestor->child_nodes->last_match([range](const nodes::node* const node) {return partially_contains(node, range);})
             : nullptr;
 
     // the contained children are all the children of the common ancestor that are contained by the range
-    auto contained_children = common_ancestor->child_nodes->filter([range](nodes::node* node) {return contains(node, range);});
+    auto contained_children = common_ancestor->child_nodes->filter([range](const nodes::node* const node) {return contains(node, range);});
 
-    // if any of the contained_children is a document type, then throw a hierarchy request error TODO : why?
+    // if any of the contained_children is a document type, then throw a hierarchy request error
     exceptions::throw_v8_exception(
             "children of the common ancestor of the start and end container of a range must be non-document_type nodes",
             HIERARCHY_REQUEST_ERR,
@@ -154,7 +157,7 @@ auto dom::helpers::range_internals::get_range_helpers_variables(
 }
 
 
-auto dom::helpers::range_internals::check_parent_exists(nodes::node* node) -> dom::nodes::node*
+auto dom::helpers::range_internals::check_parent_exists(const nodes::node* const node) -> dom::nodes::node*
 {
     // if the node doesn't have a parent, then throw an invalid node error
     exceptions::throw_v8_exception(
@@ -167,7 +170,7 @@ auto dom::helpers::range_internals::check_parent_exists(nodes::node* node) -> do
 }
 
 
-auto dom::helpers::range_internals::is_textual_based_range_container(nodes::node* node) -> bool
+auto dom::helpers::range_internals::is_textual_based_range_container(const nodes::node* const node) -> bool
 {
     // return true if the node cast be cast to a text node, processing instruction or comment
     return multi_cast<nodes::text*, nodes::processing_instruction*, nodes::comment*>(node);
@@ -175,15 +178,15 @@ auto dom::helpers::range_internals::is_textual_based_range_container(nodes::node
 
 
 auto dom::helpers::range_internals::clone_character_data_and_append(
-        nodes::node* node,
-        nodes::document_fragment* fragment,
-        unsigned long start_offset,
-        unsigned long end_offset,
-        bool replace)
+        nodes::node* const node,
+        nodes::document_fragment* const fragment,
+        const unsigned long start_offset,
+        const unsigned long end_offset,
+        const bool replace)
         -> dom::nodes::document_fragment*
 {
     // cast the node into a character data node, and save a clone of the character data node
-    auto* character_data = dynamic_cast<nodes::character_data*>(node);
+    auto* const character_data = dynamic_cast<nodes::character_data*>(node);
     auto* clone = dynamic_cast<nodes::character_data*>(character_data->clone_node());
 
     // set the cloned data to an offset based substring
@@ -200,27 +203,27 @@ auto dom::helpers::range_internals::clone_character_data_and_append(
 
 
 auto dom::helpers::range_internals::append_to_sub_fragment(
-        nodes::node* node,
-        nodes::document_fragment* fragment,
-        nodes::node* start_container,
-        nodes::node* end_container,
-        unsigned long start_offset,
-        unsigned long end_offset)
+        nodes::node* const node,
+        nodes::document_fragment* const fragment,
+        nodes::node* const start_container,
+        nodes::node* const end_container,
+        const unsigned long start_offset,
+        const unsigned long end_offset)
         -> dom::nodes::document_fragment*
 {
     // save a clone of the node, and append it to the fragment
-    auto* clone = node->clone_node();
+    auto* const clone = node->clone_node();
     mutation_algorithms::append(clone, fragment);
 
     // create the sub range, ranging from the start to end nodes / offsets
-    auto* sub_range = new dom::ranges::range{};
+    auto* const sub_range = new dom::ranges::range{};
     sub_range->start_container = start_container;
     sub_range->start_offset = start_offset;
     sub_range->end_container = node;
     sub_range->end_offset = end_offset;
 
     // create the sub_fragment as the sub range's contents that are extracted, and append the clone to the sub_fragment
-    auto* sub_fragment = sub_range->extract_contents();
+    auto* const sub_fragment = sub_range->extract_contents();
     mutation_algorithms::append(sub_fragment, clone);
 
     // return the sub_fragment
@@ -229,9 +232,9 @@ auto dom::helpers::range_internals::append_to_sub_fragment(
 
 
 auto dom::helpers::range_internals::create_new_node_and_offset(
-        nodes::node* start_container,
-        nodes::node* end_container,
-        unsigned long start_offset)
+        const nodes::node* const start_container,
+        const nodes::node* const end_container,
+        const unsigned long start_offset)
         -> std::tuple<dom::nodes::node*, unsigned long>
 {
     // get the common ancestor between the start and end nodes

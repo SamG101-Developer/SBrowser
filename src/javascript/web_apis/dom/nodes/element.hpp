@@ -3,13 +3,15 @@
 #define SBROWSER_ELEMENT_HPP
 
 #include <queue>
-#include <dom/nodes/node.hpp>
 
 #include <dom/mixins/child_node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
 #include <dom/mixins/non_document_type_child_node.hpp>
 #include <dom/mixins/parent_node.hpp>
 #include <dom/mixins/slottable.hpp>
+#include <dom/nodes/node.hpp>
+
+#include <veque.hpp>
 
 namespace dom
 {
@@ -57,47 +59,47 @@ public: methods
     auto has_attributes() const -> bool;
     auto get_attribute_names() const -> ext::vector<ext::string>;
 
-    auto has_attribute(ext::cstring& name) const -> bool;
-    auto has_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> bool;
+    auto has_attribute(const ext::string& name) const -> bool;
+    auto has_attribute_ns(const ext::string& namespace_, const ext::string& local_name) const -> bool;
     auto has_attribute_node(attr* attribute) -> bool;
     auto has_attribute_node_ns(attr* attribute) -> bool;
 
-    auto get_attribute(ext::cstring& qualified_name) const -> ext::string;
-    auto get_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> ext::string;
-    auto get_attribute_node(ext::cstring& qualified_name) const -> attr*;
-    auto get_attribute_node_ns(ext::cstring& namespace_, ext::cstring& local_name) const -> attr*;
+    auto get_attribute(const ext::string& qualified_name) const -> ext::string;
+    auto get_attribute_ns(const ext::string& namespace_, const ext::string& local_name) const -> ext::string;
+    auto get_attribute_node(const ext::string& qualified_name) const -> attr*;
+    auto get_attribute_node_ns(const ext::string& namespace_, const ext::string& local_name) const -> attr*;
 
-    auto set_attribute(ext::cstring& qualified_name, ext::cstring& value) -> void;
-    auto set_attribute_ns(ext::cstring& namespace_, ext::cstring& qualified_name, ext::cstring& value) -> void;
+    auto set_attribute(const ext::string& qualified_name, const ext::string& value) -> void;
+    auto set_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string& value) -> void;
     auto set_attribute_node(attr* attribute) -> attr*;
     auto set_attribute_node_ns(attr* attribute) -> attr*;
 
-    auto remove_attribute(ext::cstring& qualified_name) -> void;
-    auto remove_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name) -> void;
+    auto remove_attribute(const ext::string& qualified_name) -> void;
+    auto remove_attribute_ns(const ext::string& namespace_, const ext::string& local_name) -> void;
     auto remove_attribute_node(attr* attribute) -> attr*;
     auto remove_attribute_node_ns(attr* attribute) -> attr*;
 
-    auto toggle_attribute(ext::cstring& qualified_name, bool force = false) -> bool;
-    auto toggle_attribute_ns(ext::cstring& namespace_, ext::cstring& local_name, bool force = false) -> bool;
+    auto toggle_attribute(const ext::string& qualified_name, bool force = false) -> bool;
+    auto toggle_attribute_ns(const ext::string& namespace_, const ext::string& local_name, bool force = false) -> bool;
     auto toggle_attribute_node(attr* attribute, bool force = false) -> attr*;
     auto toggle_attribute_node_ns(attr* attribute, bool force = false) -> attr*;
 
-    auto attach_shadow(ext::cstring_any_map& options) -> shadow_root*;
-    auto closest(ext::cstring& selectors) -> element*;
-    auto matches(ext::cstring& selectors) -> bool;
+    auto attach_shadow(const ext::string_any_map& options) -> shadow_root*;
+    auto closest(const ext::string& selectors) -> element*;
+    auto matches(const ext::string& selectors) -> bool;
 
     // css-spatial-navigation
     auto get_spatial_navigation_container() -> node*;
-    auto spatial_navigation_search(ext::cstring& direction, ext::cstring_any_map& options = {}) -> node*;
-    auto focusable_areas(ext::cstring_any_map& options = {}) -> ext::vector<node*>;
+    auto spatial_navigation_search(const ext::string& direction, const ext::string_any_map& options = {}) -> node*;
+    auto focusable_areas(const ext::string_any_map& options = {}) -> ext::vector<node*>;
 
     // css-pseudo
-    // css::css_pseudo::elements::pseudo_element* pseudo(ext::cstring& type); TODO
+    // css::css_pseudo::elements::pseudo_element* pseudo(const ext::string& type); TODO
 
     // cssom-view
     auto get_client_rects() const -> ext::vector<geometry::shapes::dom_rect>;
     auto get_bounding_client_rect() const -> geometry::shapes::dom_rect;
-    auto scroll_into_view(ext::cstring_any_map& options = {}) -> void;
+    auto scroll_into_view(const ext::string_any_map& options = {}) -> void;
 
 public: properties
     // dom
@@ -144,7 +146,7 @@ private: accessors
     auto get_tag_name() const -> ext::string;
     auto get_shadow_root() const -> shadow_root*;
 
-    auto set_text_content(ext::cstring& val) -> void override;
+    auto set_text_content(const ext::string& val) -> void override;
 
     // cssom-view
     auto get_scroll_top() const -> double;

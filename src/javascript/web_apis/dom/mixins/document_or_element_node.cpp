@@ -8,7 +8,7 @@
 
 template <typename T>
 ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(ext::cstring& qualified_name)
+dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(const ext::string& qualified_name)
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching qualified name
     T* base = static_cast<T*>(this);
@@ -19,8 +19,8 @@ dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(ext::cstring&
 template <typename T>
 ext::vector<dom::nodes::element*>
 dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
-        ext::cstring& namespace_,
-        ext::cstring& local_name)
+        const ext::string& namespace_,
+        const ext::string& local_name)
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching local name
     auto* base = static_cast<T*>(this);
@@ -30,7 +30,7 @@ dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
 
 template <typename T>
 ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_class_name(ext::cstring& class_names)
+dom::mixins::document_or_element_node<T>::get_elements_by_class_name(const ext::string& class_names)
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching class names
     T* base = static_cast<T*>(this);
