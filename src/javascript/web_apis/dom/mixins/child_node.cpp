@@ -11,18 +11,27 @@
 #include <dom/helpers/trees.hpp>
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-childnode-before
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/before
+ * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/before
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/before
+ *
+ * The ChildNode<T>.before() method inserts a set of Node or DOMString objects in the children list of the
+ * ChildNode<T>'s parent, just before the ChildNode<T>. DOMString objects are inserted as equivalent Text nodes.
+ */
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes) -> void
 {
     // get the class that this mixin is being mixed into
-    T* base = reinterpret_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
 
     // check that the node has a parent (otherwise has no siblings)
-    if (nodes::node* parent = base->parent)
+    if (nodes::node* const parent = base->parent)
     {
         // get the first viable previous sibling (previous sibling closest to the node, that isn't contained by nodes)
-        nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
+        nodes::node* const node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
         nodes::node* viable_previous_sibling =
                 helpers::trees::all_preceding_siblings(this)
                 .template last_match([nodes = ext::vector{nodes...}](nodes::node* node) {return not nodes.contains(node);});
@@ -41,19 +50,28 @@ auto dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes) -> void
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-childnode-after
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/after
+ * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/after
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/after
+ *
+ * The ChildNode<T>.after() method inserts a set of Node or DOMString objects in the children list of the ChildNode<T>'s
+ * parent, just after the ChildNode<T>. DOMString objects are inserted as equivalent Text nodes.
+ */
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes) -> void
 {
     // get the class that this mixin is being mixed into
-    T* base = reinterpret_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
 
     // check that the node has a parent (otherwise has no siblings)
-    if (nodes::node* parent = base->parent)
+    if (nodes::node* const parent = base->parent)
     {
         // get the first viable next sibling (next sibling closest to the node, that isn't contained by nodes)
-        nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
-        nodes::node* viable_next_sibling =
+        nodes::node* const node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
+        nodes::node* const viable_next_sibling =
                 helpers::trees::all_following_siblings(this)
                 .template first_match([nodes = ext::vector{nodes...}](nodes::node* node) {return not nodes.contains(node);});
 
@@ -66,23 +84,31 @@ auto dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes) -> void
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-childnode-replacewith
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/replaceWith
+ * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/replaceWith
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceWith
+ *
+ * The ChildNode<T>.replaceWith() method replaces this ChildNode<T> in the children list of its parent with a set of
+ * Node or DOMString objects. DOMString objects are inserted as equivalent Text nodes.
+ */
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into
-    T* base = static_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
 
     // check that the node has a parent (otherwise has no siblings)
     if (nodes::node* parent = base->parent)
     {
         // get the first viable next sibling (next sibling closest to the node, that isn't contained by nodes)
         nodes::node* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
-        nodes::node* viable_next_sibling =
+        nodes::node* const viable_next_sibling =
                 helpers::trees::all_following_siblings(this)
                 .template first_match([nodes = ext::vector{nodes...}](nodes::node* node) {return not nodes.contains(node);});
 
-        // TODO ?
         base->parent == parent
                 ? helpers::mutation_algorithms::replace(this, node, parent)
                 : helpers::mutation_algorithms::pre_insert(node, parent, viable_next_sibling);
@@ -93,11 +119,19 @@ auto dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes) -> vo
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-childnode-remove
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/remove
+ * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/remove
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/remove
+ *
+ * The ChildNode<T>.remove() method removes the element from the tree it belongs to.
+ */
 template <typename T>
 auto dom::mixins::child_node<T>::remove() -> void
 {
     // get the class that this mixin is being mixed into
-    T* base = static_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
 
     // remove this node if it has a parent
     if (base->parent)

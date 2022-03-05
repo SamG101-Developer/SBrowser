@@ -15,10 +15,17 @@ namespace dom
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-mutationrecord
+ * https://developer.mozilla.org/en-US/docs/Web/API/MutationRecord
+ *
+ * A MutationRecord represents an individual DOM mutation. It is the object that is inside the array passed to
+ * MutationObserver's callback.
+ */
 class dom::mutations::mutation_record : public virtual dom_object
 {
 public: constructors
-    mutation_record();
+    mutation_record() = default;
 
 public: properties
     ext::dom_property<ext::string, _F> type;

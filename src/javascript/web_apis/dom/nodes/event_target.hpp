@@ -36,7 +36,7 @@ public: methods
     auto dispatch_event(events::event* event) -> bool;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected: internal_methods
     virtual auto get_the_parent(events::event* event) -> event_target*;

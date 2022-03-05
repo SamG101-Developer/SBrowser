@@ -14,6 +14,13 @@ dom::nodes::character_data::character_data()
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-characterdata-substringdata
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/substringData
+ *
+ * The substringData() method of the CharacterData interface returns a portion of the existing data, starting at the
+ * specified index and extending for a given number of characters afterwards.
+ */
 auto dom::nodes::character_data::substring_data(
         unsigned long offset,
         unsigned long count) const
@@ -24,13 +31,29 @@ auto dom::nodes::character_data::substring_data(
 }
 
 
-auto dom::nodes::character_data::append_data(const ext::string& new_data) -> void
+/*
+ * https://dom.spec.whatwg.org/#dom-characterdata-appenddata
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/appendData
+ *
+ * The appendData() method of the CharacterData interface adds the provided data to the end of the node's current data.
+ */
+auto dom::nodes::character_data::append_data(
+        const ext::string& new_data)
+        -> void
 {
     // return the replace_data helper method output by replacing 0 characters after length with the new_data
     return helpers::texts::replace_data(this, helpers::trees::length(this), 0, new_data);
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-characterdata-insertdata
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/insertData
+ *
+ * The insertData() method of the CharacterData interface inserts the provided data into this CharacterData node's
+ * current data, at the provided offset from the start of the existing data. The provided data is spliced into the
+ * existing data.
+ */
 auto dom::nodes::character_data::insert_data(
         unsigned long offset,
         const ext::string& new_data)
@@ -41,6 +64,12 @@ auto dom::nodes::character_data::insert_data(
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-characterdata-deletedata
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/deleteData
+ *
+ * The deleteData() method of the CharacterData interface removes all or part of the data from this CharacterData node.
+ */
 auto dom::nodes::character_data::delete_data(
         unsigned long offset,
         unsigned long count)
@@ -51,6 +80,14 @@ auto dom::nodes::character_data::delete_data(
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-characterdata-replacedata
+ * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/replaceData
+ *
+ * The replaceData() method of the CharacterData interface removes a certain number of characters of the existing text
+ * in a given CharacterData node and replaces those characters with the text provided.
+ * in a given CharacterData node and replaces those characters with the text provided.
+ */
 auto dom::nodes::character_data::replace_data(
         unsigned long offset,
         unsigned long count,

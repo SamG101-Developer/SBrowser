@@ -16,23 +16,23 @@ dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
 
 
 template <typename T>
-auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const -> std::shared_ptr<nodes::element>
+auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const -> nodes::element*
 {
     // get the class that this mixin is being mixed into
-    const nodes::node* base = static_cast<const T*>(this);
+    auto* base = static_cast<const T*>(this);
 
     // return the last node whose index precedes this node's
-    return (std::shared_ptr<nodes::element>)base->child_nodes
+    return base->child_nodes
             ->template cast_all<nodes::element*>()
             .template last_match([base](auto child) {return helpers::trees::index(child) < helpers::trees::index(base);});
 }
 
 
 template <typename T>
-auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const -> std::shared_ptr<nodes::element>
+auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const -> nodes::element*
 {
     // get the class that this mixin is being mixed into
-    const nodes::node* base = static_cast<const T*>(this);
+    auto* base = static_cast<const T*>(this);
 
     // return the first node whose index succeeds this node's
     return base->child_nodes

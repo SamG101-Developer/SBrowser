@@ -1,11 +1,6 @@
 #include "mutation_record.hpp"
 
 
-dom::mutations::mutation_record::mutation_record() : dom_object()
-{
-}
-
-
 auto dom::mutations::mutation_record::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<mutation_record>{isolate}

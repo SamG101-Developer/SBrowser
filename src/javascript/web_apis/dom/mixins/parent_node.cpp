@@ -24,7 +24,7 @@ template <typename ...nodes_or_strings_t>
 auto dom::mixins::parent_node<T>::prepend(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into, and the node
-    auto* base = reinterpret_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
     auto* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
 
     // pre-insert this node into this node's children before first child
@@ -40,7 +40,7 @@ template <typename ...nodes_or_strings_t>
 auto dom::mixins::parent_node<T>::append(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into, and the node
-    auto* base = reinterpret_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
     auto* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
 
     // append this node into this node's child nodes via mutation algorithms
@@ -56,7 +56,7 @@ template <typename ...nodes_or_strings_t>
 auto dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes) -> void
 {
     // get the class that this mixin is being mixed into, and the node
-    auto* base = reinterpret_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
     auto* node = helpers::node_internals::convert_nodes_into_node(base->owner_document, nodes...);
 
     // ensure that pre-insertions are valid, and replace all with the node

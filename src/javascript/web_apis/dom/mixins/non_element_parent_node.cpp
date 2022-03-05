@@ -8,20 +8,20 @@
 
 
 template<typename T>
-auto dom::mixins::non_element_parent_node<T>::get_element_by_id(const ext::string& element_id) -> std::shared_ptr<nodes::element>
+auto dom::mixins::non_element_parent_node<T>::get_element_by_id(const ext::string& element_id) -> nodes::element*
 {
     // return the first descendant element whose id matches requested id
-    return helpers::trees::descendants(reinterpret_cast<nodes::node*>(this))
-            .template cast_all<std::shared_ptr<nodes::element>>()
-            .template first_match([element_id](std::shared_ptr<nodes::element> child_element) {return child_element->id == element_id;});
+    return helpers::trees::descendants(static_cast<T*>(this))
+            .template cast_all<nodes::element*>()
+            .template first_match([element_id](const nodes::element* const child_element) {return child_element->id == element_id;});
 }
 
 
 template <typename T>
 auto dom::mixins::non_element_parent_node<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
-    return v8pp::class_<non_element_parent_node<dom::nodes::node>>{isolate}
-            .function("getElementById", &non_element_parent_node<dom::nodes::node>::get_element_by_id)
+    return v8pp::class_<non_element_parent_node<T>>{isolate}
+            .function("getElementById", &non_element_parent_node<T>::get_element_by_id)
             .auto_wrap_objects();
 }
 

@@ -9,6 +9,9 @@
 namespace dom::mixins {template <typename T> class child_node;}
 
 
+/*
+ * https://dom.spec.whatwg.org/#childnode
+ */
 template <typename T>
 class dom::mixins::child_node : public virtual dom_object
 {

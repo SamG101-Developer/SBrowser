@@ -16,7 +16,7 @@ public: constructors
     explicit set(const std::set<T>& o);
 
 public: methods
-    auto push(const T& item) -> ext::set<T>&;
+    auto add(const T& item) -> ext::set<T>&;
 };
 
 
@@ -29,7 +29,7 @@ ext::set<T>::set(const std::set<T>& o)
 
 
 template <typename T>
-auto ext::set<T>::push(const T& item) -> ext::set<T>&
+auto ext::set<T>::add(const T& item) -> ext::set<T>&
 {
     // insert the item in the middle of the iterable, and return the reference to the iterable
     this->m_iterable.emplace(item);

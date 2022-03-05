@@ -6,7 +6,7 @@ auto dom::helpers::ordered_sets::ordered_set_parser(const ext::string& input_str
     // create an empty set, and emplace each element from the space-split string
     ext::set<ext::string> output_set;
     for (auto string: input_string.split(' '))
-        output_set.push(string);
+        output_set.add(string);
 
     // return the set of strings
     return output_set;

@@ -11,7 +11,7 @@ ext::vector<dom::nodes::element*>
 dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(const ext::string& qualified_name)
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching qualified name
-    T* base = static_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
     return helpers::node_internals::list_of_elements_with_qualified_name(base, qualified_name);
 }
 
@@ -33,7 +33,7 @@ ext::vector<dom::nodes::element*>
 dom::mixins::document_or_element_node<T>::get_elements_by_class_name(const ext::string& class_names)
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching class names
-    T* base = static_cast<T*>(this);
+    auto* base = static_cast<T*>(this);
     return helpers::node_internals::list_of_elements_with_class_names(base, class_names);
 }
 

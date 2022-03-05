@@ -16,7 +16,7 @@ template <typename T>
 class dom::mixins::non_element_parent_node : public dom_object
 {
 public: methods
-    auto get_element_by_id(const ext::string& element_id) -> std::shared_ptr<nodes::element>;
+    auto get_element_by_id(const ext::string& element_id) -> nodes::element*;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
