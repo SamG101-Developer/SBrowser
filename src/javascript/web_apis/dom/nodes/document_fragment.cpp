@@ -4,15 +4,21 @@
 #include <dom/helpers/trees.hpp>
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-documentfragment-documentfragment
+ * https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment/DocumentFragment
+ *
+ * The DocumentFragment() constructor returns a new, empty DocumentFragment object.
+ */
 dom::nodes::document_fragment::document_fragment()
         : node()
         , mixins::non_element_parent_node<document_fragment>()
         , mixins::parent_node<document_fragment>() {
 
     // set the properties
+    host      << nullptr;
     node_type << DOCUMENT_FRAGMENT_NODE;
     node_name << "#document-fragment";
-    host      << nullptr;
 }
 
 

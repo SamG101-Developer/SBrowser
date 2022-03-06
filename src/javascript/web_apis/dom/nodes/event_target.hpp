@@ -26,8 +26,7 @@ public: friends
     using event_listener_callback = std::function<void()>;
 
 public: constructors
-    event_target();
-
+    event_target() = default;
     ~event_target() override;
 
 public: methods

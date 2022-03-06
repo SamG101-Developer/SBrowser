@@ -6,11 +6,6 @@
 #include <dom/helpers/exceptions.hpp>
 
 
-dom::nodes::event_target::event_target() : dom_object()
-{
-}
-
-
 dom::nodes::event_target::~event_target()
 {
     // clear the event listeners

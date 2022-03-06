@@ -86,6 +86,21 @@ namespace html
 namespace svg::elements {class svg_script_element;}
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-document
+ * https://developer.mozilla.org/en-US/docs/Web/API/Document
+ *
+ * The Document interface represents any web page loaded in the browser and serves as an entry point into the web page's]
+ * content, which is the DOM tree.
+ *
+ * The DOM tree includes elements such as <body> and <table>, among many others. It provides functionality globally to
+ * the document, like how to obtain the page's URL and create new elements in the document.
+ *
+ * The Document interface describes the common properties and methods for any kind of document. Depending on the
+ * document's type (e.g. HTML, XML, SVG, …), a larger API is available: HTML documents, served with the "text/html"
+ * content type, also implement the HTMLDocument interface, whereas XML and SVG documents implement the XMLDocument
+ * interface.
+ */
 class dom::nodes::document
         : public node
         , public mixins::non_element_parent_node<document>
@@ -95,7 +110,7 @@ class dom::nodes::document
         , public xpath::xpath_evaluator
         , public ext::listlike<node*> {
 
-friends
+public friends:
     friend struct dom::helpers::custom_elements;
     friend struct dom::helpers::node_internals;
     friend class dom::other::dom_implementation;
@@ -110,19 +125,19 @@ private aliases:
 
 public methods:
     // dom
-    new_obj auto create_element(const ext::string& local_name, const ext::string_any_map& options = {}) const -> element*;
-    new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map& options = {}) const -> element*;
-    new_obj auto create_document_fragment() const -> document_fragment*;
-    new_obj auto create_text_node(const ext::string& data) const -> text*;
-    new_obj auto create_cdata_section_node(const ext::string& data) const -> cdata_section*;
-    new_obj auto create_comment(const ext::string& data) const -> comment*;
-    new_obj auto create_processing_instruction(const ext::string& target, const ext::string& data) const -> processing_instruction*;
-    new_obj auto create_attribute(const ext::string& local_name) const -> attr*;
-    new_obj auto create_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name) const -> attr*;
+    new_obj auto create_element(const ext::string& local_name, const ext::string_any_map& options = {}) const -> element;
+    new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map& options = {}) const -> element;
+    new_obj auto create_document_fragment() const -> document_fragment;
+    new_obj auto create_text_node(const ext::string& data) const -> text;
+    new_obj auto create_cdata_section_node(const ext::string& data) const -> cdata_section;
+    new_obj auto create_comment(const ext::string& data) const -> comment;
+    new_obj auto create_processing_instruction(const ext::string& target, const ext::string& data) const -> processing_instruction;
+    new_obj auto create_attribute(const ext::string& local_name) const -> attr;
+    new_obj auto create_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name) const -> attr;
 
-    new_obj auto create_range() -> ranges::range*;
-    new_obj auto create_node_iterator(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator*;
-    new_obj auto create_tree_walker(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::tree_walker*;
+    new_obj auto create_range() -> ranges::range;
+    new_obj auto create_node_iterator(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator;
+    new_obj auto create_tree_walker(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::tree_walker;
 
     same_obj auto import_node(node* new_node, bool deep = false) -> node*;
     same_obj auto adopt_node(node* new_node) -> node*;
@@ -187,34 +202,6 @@ public properties:
     // css-regions
     ext::dom_property<ext::map<ext::string, css::css_regions::elements::named_flow*>*, _F> named_flows;
 
-protected internal_properties:
-    // dom
-    encoding::encoding* m_encoding;
-    ext::string m_type;
-    ext::string m_mode;
-    ext::string m_origin;
-
-    // html
-    html::internal::policy_container* m_policy_container;
-    html::internal::permissions_policy* m_permissions_policy;
-    html::internal::module_map* m_module_map;
-    html::internal::cross_origin_opener_policy* m_cross_origin_opener_policy;
-    html::internal::document_load_timing_information* m_load_timing_info;
-    html::internal::document_unload_timing_information* m_unload_timing_info;
-
-    bool m_is_initial = false;
-    bool m_will_declaratively_refresh = false;
-    ext::string m_navigation_id;
-    unsigned short m_sandboxing_flag = 0;
-
-    html::internal::browsing_context* m_browsing_context;
-    ext::string m_fallback_base_url;
-    ext::string m_document_base_url;
-    int m_script_blocking_stylesheet_counter;
-
-    int m_throw_on_dynamic_markup_insertion_counter;
-    int m_ignore_destructive_writes_counter;
-    
 public internal_methods:
     auto render() const -> QScrollArea* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
@@ -227,7 +214,35 @@ private internal_methods:
     html::elements::html_head_element* get_m_head_element() const;
     html::elements::html_title_element* get_m_title_element() const;
     html::elements::html_body_element* get_m_body_element() const;
-    
+
+private internal_properties:
+    // dom
+    encoding::encoding* m_encoding = nullptr;
+    ext::string m_type = "xml";
+    ext::string m_mode = "no-quirks";
+    ext::string m_origin;
+
+    // html
+    html::internal::policy_container* m_policy_container = nullptr;
+    html::internal::permissions_policy* m_permissions_policy = nullptr;
+    html::internal::module_map* m_module_map = nullptr;
+    html::internal::cross_origin_opener_policy* m_cross_origin_opener_policy = nullptr;
+    html::internal::document_load_timing_information* m_load_timing_info = nullptr;
+    html::internal::document_unload_timing_information* m_unload_timing_info = nullptr;
+
+    bool m_is_initial = false;
+    bool m_will_declaratively_refresh = false;
+    ext::string m_navigation_id;
+    unsigned short m_sandboxing_flag = 0;
+
+    html::internal::browsing_context* m_browsing_context = nullptr;
+    ext::string m_fallback_base_url;
+    ext::string m_document_base_url;
+    int m_script_blocking_stylesheet_counter = 0;
+
+    int m_throw_on_dynamic_markup_insertion_counter = 0;
+    int m_ignore_destructive_writes_counter = 0;
+
 private accessors:
     // dom
     auto get_compat_mode() const -> ext::string;

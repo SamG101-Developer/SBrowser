@@ -22,8 +22,8 @@ dom::nodes::character_data::character_data()
  * specified index and extending for a given number of characters afterwards.
  */
 auto dom::nodes::character_data::substring_data(
-        unsigned long offset,
-        unsigned long count) const
+        const unsigned long offset,
+        const unsigned long count) const
         -> ext::string
 {
     // return the substring_data helper method output
@@ -55,7 +55,7 @@ auto dom::nodes::character_data::append_data(
  * existing data.
  */
 auto dom::nodes::character_data::insert_data(
-        unsigned long offset,
+        const unsigned long offset,
         const ext::string& new_data)
         -> void
 {
@@ -71,8 +71,8 @@ auto dom::nodes::character_data::insert_data(
  * The deleteData() method of the CharacterData interface removes all or part of the data from this CharacterData node.
  */
 auto dom::nodes::character_data::delete_data(
-        unsigned long offset,
-        unsigned long count)
+        const unsigned long offset,
+        const unsigned long count)
         -> void
 {
     // return the delete_data helper method output by replacing count characters after offset with nothing
@@ -89,8 +89,8 @@ auto dom::nodes::character_data::delete_data(
  * in a given CharacterData node and replaces those characters with the text provided.
  */
 auto dom::nodes::character_data::replace_data(
-        unsigned long offset,
-        unsigned long count,
+        const unsigned long offset,
+        const unsigned long count,
         const ext::string& new_data)
         -> void
 {

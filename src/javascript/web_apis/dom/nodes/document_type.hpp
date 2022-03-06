@@ -9,6 +9,12 @@ namespace dom::nodes {class document_type;}
 namespace dom::other {class dom_implementation;}
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-documenttype
+ * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType
+ *
+ * The DocumentType interface represents a Node containing a doctype.
+ */
 class dom::nodes::document_type
         : public node
         , public mixins::child_node<document_type>

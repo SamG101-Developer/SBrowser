@@ -5,6 +5,7 @@ dom::nodes::document_type::document_type()
         : node()
         , mixins::child_node<document_type>() {
 
+    // set the properties
     node_type << DOCUMENT_TYPE_NODE;
     public_id << "";
     system_id << "";

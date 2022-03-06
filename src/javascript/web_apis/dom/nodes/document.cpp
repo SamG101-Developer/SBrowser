@@ -29,13 +29,20 @@
 #include <dom/nodes/text.hpp>
 
 #include <dom/other/dom_implementation.hpp>
-
 #include <dom/ranges/range.hpp>
 
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QVBoxLayout>
+#include <QtCore/QPointer>
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-document-document
+ * https://developer.mozilla.org/en-US/docs/Web/API/Document/Document
+ *
+ * The Document constructor creates a new Document object that is a web page loaded in the browser and serving as an
+ * entry point into the page's content.
+ */
 dom::nodes::document::document()
         : node()
         , mixins::non_element_parent_node<document>()
@@ -75,39 +82,38 @@ dom::nodes::document::document()
     ready_state    << "complete";
 
     // set the attributes
-    m_type   = "xml";
-    m_mode   = "no-quirks";
     m_origin = javascript::realms::surrounding_agent().get<const ext::string&>("origin");
 
     // create the widget representation
-    m_rendered_widget = new QScrollArea{nullptr};
-    render()->setWidget(new QWidget{render()});
-    render()->setLayout(new QVBoxLayout{render()->widget()});
-    render()->setWidgetResizable(true);
-    render()->show();
+    auto rendered_widget = QPointer<QScrollArea>{};
+    rendered_widget->setWidget(QPointer<QWidget>{});
+    rendered_widget->widget()->setLayout(QPointer<QVBoxLayout>{});
+    rendered_widget->setWidgetResizable(true);
+    rendered_widget->show();
+    m_rendered_widget = rendered_widget;
 }
 
 
 auto dom::nodes::document::create_element(
         const ext::string& local_name,
         const ext::string_any_map& options) const
-        -> dom::nodes::element*
+        -> dom::nodes::element
 {
-    // get the <is> option as a string TODO : type is string or bool -> custom elements helpers have it as string?
+    // get the <is> option as a string
     auto is = options.at("is").to<ext::string>();
 
     // if the document type is html then set the html qualified name to lowercase
-    ext::string html_qualified_name = m_type == "html"
+    const ext::string html_qualified_name = m_type == "html"
             ? local_name.new_lowercase()
             : local_name;
 
     // if the document type or content type is html then set the namespace to HTML, otherwise NONE
-    ext::string namespace_ = m_type == "html" or content_type == ext::string{"application/xhtml+xml"}
+    const ext::string namespace_ = m_type == "html" or content_type == ext::string{"application/xhtml+xml"}
             ? helpers::namespaces::HTML
             : helpers::namespaces::NONE;
 
     // return the created element given the set of options
-    return helpers::custom_elements::create_an_element(this, local_name, namespace_, "", is, true);
+    return *helpers::custom_elements::create_an_element(const_cast<document*>(this), local_name, namespace_, "", is, true);
 }
 
 
@@ -115,7 +121,7 @@ auto dom::nodes::document::create_element_ns(
         const ext::string& namespace_,
         const ext::string& qualified_name,
         const ext::string_any_map& options) const
-        -> dom::nodes::element*
+        -> dom::nodes::element
 {
     // get the <is> option as a string
     auto is = options.at("is").to<ext::string>();
@@ -124,35 +130,35 @@ auto dom::nodes::document::create_element_ns(
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
 
     // return the created element given the set of options
-    return helpers::custom_elements::create_an_element(this, local_name, html_qualified_namespace, prefix, is, true);
+    return *helpers::custom_elements::create_an_element(const_cast<document*>(this), local_name, html_qualified_namespace, prefix, is, true);
 }
 
 
-auto dom::nodes::document::create_document_fragment() const -> dom::nodes::document_fragment*
+auto dom::nodes::document::create_document_fragment() const -> dom::nodes::document_fragment
 {
     // create a new document fragment, and set the owner document to this document
-    auto* document_fragment_node = new document_fragment{};
-    document_fragment_node->owner_document = const_cast<document*>(this);
+    document_fragment document_fragment_node{};
+    document_fragment_node.owner_document = const_cast<document*>(this);
 
     // return the document fragment
     return document_fragment_node;
 }
 
 
-auto dom::nodes::document::create_text_node(const ext::string& data) const -> dom::nodes::text*
+auto dom::nodes::document::create_text_node(const ext::string& data) const -> dom::nodes::text
 {
     // create a new text node, set the text to data, and set the owner document to this document
-    auto* text_node = new text{};
-    text_node->data = data;
-    text_node->owner_document = const_cast<document*>(this);
+    text text_node{};
+    text_node.data = data;
+    text_node.owner_document = const_cast<document*>(this);
 
     // return the text node
     return text_node;
 }
 
 
-auto dom::nodes::document::create_cdata_section_node(const ext::string& data) const -> dom::nodes::cdata_section* {
-
+auto dom::nodes::document::create_cdata_section_node(const ext::string& data) const -> dom::nodes::cdata_section
+{
     // if the document type is html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
             "html documents cannot create cdata_section nodes",
@@ -166,21 +172,21 @@ auto dom::nodes::document::create_cdata_section_node(const ext::string& data) co
             [data] {return data.contains("]]>");});
 
     // create a new cdata_section node, and set the owner document to this document
-    auto* cdata_section_node = new cdata_section{};
-    cdata_section_node->data = data;
-    cdata_section_node->owner_document = this;
+    cdata_section cdata_section_node{};
+    cdata_section_node.data = data;
+    cdata_section_node.owner_document = const_cast<document*>(this);
 
     // return the cdata_section node
     return cdata_section_node;
 }
 
 
-auto dom::nodes::document::create_comment(const ext::string& data) const -> dom::nodes::comment*
+auto dom::nodes::document::create_comment(const ext::string& data) const -> dom::nodes::comment
 {
     // create a new comment node, and set the owner document to this document
-    auto* comment_node = new dom::nodes::comment{};
-    comment_node->data = data;
-    comment_node->owner_document = this;
+    comment comment_node{};
+    comment_node.data = data;
+    comment_node.owner_document = const_cast<document*>(this);
 
     // return the comment node
     return comment_node;
@@ -190,7 +196,7 @@ auto dom::nodes::document::create_comment(const ext::string& data) const -> dom:
 auto dom::nodes::document::create_processing_instruction(
         const ext::string& target,
         const ext::string& data) const
-        -> dom::nodes::processing_instruction*
+        -> dom::nodes::processing_instruction
 {
     // if '?>' is in the data, then throw an invalid character error
     helpers::exceptions::throw_v8_exception(
@@ -199,27 +205,27 @@ auto dom::nodes::document::create_processing_instruction(
             [data] {return data.contains("?>");});
 
     // create a new comment node, and set the owner document to this document
-    auto* processing_instruction_node = new processing_instruction{};
-    processing_instruction_node->target = target;
-    processing_instruction_node->data = data;
-    processing_instruction_node->owner_document = this;
+    processing_instruction processing_instruction_node{};
+    processing_instruction_node.target = target;
+    processing_instruction_node.data = data;
+    processing_instruction_node.owner_document = const_cast<document*>(this);
 
     // return the processing instruction
     return processing_instruction_node;
 }
 
 
-auto dom::nodes::document::create_attribute(const ext::string& local_name) const -> dom::nodes::attr*
+auto dom::nodes::document::create_attribute(const ext::string& local_name) const -> dom::nodes::attr
 {
     // if the document type is html then set the local name to lowercase
-    ext::string html_qualified_namespace = m_type == "html"
+    const ext::string html_qualified_namespace = m_type == "html"
             ? local_name.new_lowercase()
             : local_name;
 
     // create a new attribute node, and set the owner document to this document
-    dom::nodes::attr* attribute;
-    attribute->local_name = local_name;
-    attribute->owner_document = this;
+    attr attribute{};
+    attribute.local_name = local_name;
+    attribute.owner_document = const_cast<document*>(this);
 
     // return the attribute node
     return attribute;
@@ -229,31 +235,32 @@ auto dom::nodes::document::create_attribute(const ext::string& local_name) const
 auto dom::nodes::document::create_attribute_ns(
         const ext::string& namespace_,
         const ext::string& qualified_name) const
-        -> dom::nodes::attr*
+        -> dom::nodes::attr
 {
     // extract the namespace, prefix and local name from the namespace and qualified name
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
 
     // create a new attribute node, and set the owner document to this document
-    auto* attribute = new attr{};
-    attribute->namespace_uri = html_qualified_namespace;
-    attribute->prefix = prefix;
-    attribute->local_name = local_name;
-    attribute->owner_document = this;
+    attr attribute{};
+    attribute.namespace_uri = html_qualified_namespace;
+    attribute.prefix = prefix;
+    attribute.local_name = local_name;
+    attribute.owner_document = const_cast<document*>(this);
 
     // return teh attribute node
     return attribute;
 }
 
 
-auto dom::nodes::document::create_range() -> dom::ranges::range*
+auto dom::nodes::document::create_range()
+        -> dom::ranges::range
 {
     // create a new range, and set the starting and ending nodes to this node, with the offsets at 0
-    auto* range = new ranges::range{};
-    range->start_container = this;
-    range->end_container = this;
-    range->start_offset = 0;
-    range->end_offset = 0;
+    ranges::range range{};
+    range.start_container = this;
+    range.end_container = this;
+    range.start_offset = 0;
+    range.end_offset = 0;
 
     // return the range
     return range;
@@ -261,18 +268,18 @@ auto dom::nodes::document::create_range() -> dom::ranges::range*
 
 
 auto dom::nodes::document::create_node_iterator(
-        node* root,
-        unsigned long what_to_show,
-        iterators::node_filter* filter)
-        -> dom::iterators::node_iterator*
+        node* const root,
+        const unsigned long what_to_show,
+        iterators::node_filter* const filter)
+        -> dom::iterators::node_iterator
 {
     // create a new node iterator
-    auto* iterator = new iterators::node_iterator{};
-    iterator->root = root;
-    iterator->reference_node = root;
-    iterator->pointer_before_reference_node = root;
-    iterator->what_to_show = what_to_show;
-    iterator->filter = filter;
+    iterators::node_iterator iterator{};
+    iterator.root = root;
+    iterator.reference_node = root;
+    iterator.pointer_before_reference_node = root;
+    iterator.what_to_show = what_to_show;
+    iterator.filter = filter;
 
     // return the node iterator
     return iterator;
@@ -280,17 +287,17 @@ auto dom::nodes::document::create_node_iterator(
 
 
 auto dom::nodes::document::create_tree_walker(
-        node* root,
-        unsigned long what_to_show,
-        iterators::node_filter* filter)
-        -> dom::iterators::tree_walker*
+        node* const root,
+        const unsigned long what_to_show,
+        iterators::node_filter* const filter)
+        -> dom::iterators::tree_walker
 {
     // create a new tree walker
-    auto* walker = new iterators::tree_walker{};
-    walker->root = root;
-    walker->current_node = this;
-    walker->what_to_show = what_to_show;
-    walker->filter = filter;
+    iterators::tree_walker walker{};
+    walker.root = root;
+    walker.current_node = this;
+    walker.what_to_show = what_to_show;
+    walker.filter = filter;
 
     // return the tree walker
     return walker;
@@ -298,8 +305,8 @@ auto dom::nodes::document::create_tree_walker(
 
 
 auto dom::nodes::document::import_node(
-        node* node,
-        bool deep)
+        node* const node,
+        const bool deep)
         -> dom::nodes::node*
 {
     // if the node being imported is a document, then throw a not supported error
@@ -319,7 +326,7 @@ auto dom::nodes::document::import_node(
 }
 
 
-auto dom::nodes::document::adopt_node(node* node) -> dom::nodes::node*
+auto dom::nodes::document::adopt_node(node* const node) -> dom::nodes::node*
 {
     // if the node being adopted is a document, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -349,7 +356,7 @@ auto dom::nodes::document::get_elements_by_name(const ext::string& element_name)
     // convert them back into nodes before returning the list
     return helpers::trees::descendants(this)
             .cast_all<element*>()
-            .filter([element_name](element* node) {return node->get_m_qualified_name() == element_name;})
+            .filter([element_name](const element* const node) {return node->get_m_qualified_name() == element_name;})
             .cast_all<node*>();
 }
 
@@ -371,7 +378,7 @@ auto dom::nodes::document::open(
     helpers::exceptions::throw_v8_exception(
             "cannot open a non-active document",
             INVALID_ACCESS_ERR,
-            [this] {return not helpers::node_internals::is_document_fully_active(this);});
+            [this] {return not helpers::node_internals::is_document_fully_active(const_cast<document*>(this));});
 
     return html::helpers::elements::window_open_steps(this);
 }
@@ -421,8 +428,8 @@ auto dom::nodes::document::has_focus() const -> bool
 
 
 auto dom::nodes::document::element_from_point(
-        double x,
-        double y) const
+        const double x,
+        const double y) const
         -> dom::nodes::element*
 {
     // TODO
@@ -431,8 +438,8 @@ auto dom::nodes::document::element_from_point(
 
 
 auto dom::nodes::document::elements_from_point(
-        double x,
-        double y) const
+        const double x,
+        const double y) const
         -> ext::vector<dom::nodes::element*>
 {
     if (x < 0 or y < 0)
@@ -445,8 +452,8 @@ auto dom::nodes::document::elements_from_point(
 
 
 auto dom::nodes::document::caret_position_from_point(
-        double x,
-        double y) const
+        const double x,
+        const double y) const
         -> css::cssom_view::other::caret_position*
 {
 
