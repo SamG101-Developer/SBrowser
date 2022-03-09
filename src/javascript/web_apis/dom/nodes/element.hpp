@@ -33,6 +33,19 @@ namespace dom
 namespace geometry::shapes{class dom_rect;}
 
 
+/*
+ * https://dom.spec.whatwg.org/#interface-element
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element
+ *
+ * Element is the most general base class from which all element objects (i.e. objects that represent elements) in a
+ * Document inherit. It only has methods and properties common to all kinds of elements. More specific classes inherit
+ * from Element.
+ *
+ * For example, the HTMLElement interface is the base interface for HTML elements, while the SVGElement interface is the
+ * basis for all SVG elements. Most functionality is specified further down the class hierarchy.
+ *
+ * Languages outside the realm of the Web platform, like XUL through the XULElement interface, also implement Element.
+ */
 class dom::nodes::element
         : public node
         , public mixins::parent_node<element>
@@ -51,7 +64,6 @@ public: friends
 
 public: constructors
     element();
-
     ~element() override;
 
 public: methods
@@ -61,8 +73,8 @@ public: methods
 
     auto has_attribute(const ext::string& name) const -> bool;
     auto has_attribute_ns(const ext::string& namespace_, const ext::string& local_name) const -> bool;
-    auto has_attribute_node(attr* attribute) -> bool;
-    auto has_attribute_node_ns(attr* attribute) -> bool;
+    auto has_attribute_node(attr* attribute) const -> bool;
+    auto has_attribute_node_ns(attr* attribute) const -> bool;
 
     auto get_attribute(const ext::string& qualified_name) const -> ext::string;
     auto get_attribute_ns(const ext::string& namespace_, const ext::string& local_name) const -> ext::string;
@@ -84,9 +96,9 @@ public: methods
     auto toggle_attribute_node(attr* attribute, bool force = false) -> attr*;
     auto toggle_attribute_node_ns(attr* attribute, bool force = false) -> attr*;
 
-    auto attach_shadow(const ext::string_any_map& options) -> shadow_root*;
-    auto closest(const ext::string& selectors) -> element*;
-    auto matches(const ext::string& selectors) -> bool;
+    new_obj auto attach_shadow(const ext::string_any_map& options) -> shadow_root;
+    same_obj auto closest(const ext::string& selectors) -> element*;
+    same_obj auto matches(const ext::string& selectors) -> bool;
 
     // css-spatial-navigation
     auto get_spatial_navigation_container() -> node*;
@@ -131,13 +143,13 @@ public: internal_methods
     auto render() const -> QWidget* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-protected: internal_properties
+private: internal_properties
     ext::property<ext::string> m_qualified_name;
     ext::property<ext::string> m_html_uppercase_qualified_name;
 
     ext::string m_is;
     ext::string m_custom_element_state;
-    internal::custom_element_definition* m_custom_element_definition;
+    internal::custom_element_definition* m_custom_element_definition = nullptr;
     std::queue<std::function<void(element*)>> m_custom_element_reaction_queue;
 
 private: accessors

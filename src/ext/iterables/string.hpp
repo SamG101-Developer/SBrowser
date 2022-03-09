@@ -85,6 +85,8 @@ public: operators
     auto operator!() const -> bool override;
     auto operator<=>(const string& other) const -> signed char;
     auto operator==(const char* const other) const -> bool;
+
+    operator bool() const;
 };
 
 
@@ -347,6 +349,12 @@ auto ext::string::operator==(const char* const other) const -> bool
 {
     // inequality check by comparing the two strings
     return m_iterable.c_str() == other;
+}
+
+
+ext::string::operator bool() const
+{
+    return not empty();
 }
 
 

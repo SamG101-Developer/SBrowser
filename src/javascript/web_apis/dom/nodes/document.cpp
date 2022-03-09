@@ -727,7 +727,7 @@ auto dom::nodes::document::v8(v8::Isolate* isolate) const -> ext::any
             // .function("open", &document::open)
             .function("close", &document::close)
             // .function("write", &document::write)
-            //.function("writeln", &document::writeln)
+            // .function("writeln", &document::writeln)
             .function("hasFocus", &document::has_focus)
             .function("execCommand", &document::exec_command)
             .function("queryCommandEnabled", &document::query_command_enabled)

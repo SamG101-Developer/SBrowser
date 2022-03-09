@@ -16,6 +16,7 @@
 #include <geometry/shapes/dom_rect.hpp>
 
 #include <QtWidgets/QWidget>
+#include <QtCore/QPointer>
 
 
 dom::nodes::element::element()
@@ -39,11 +40,10 @@ dom::nodes::element::element()
     class_list       << new ext::vector<ext::string>{};
 
     // set the attributes
-    m_custom_element_definition     = nullptr;
     m_custom_element_reaction_queue = {};
 
     // create the widget representation
-    m_rendered_widget = new QWidget{};
+    m_rendered_widget = QPointer<QWidget>{};
 }
 
 
@@ -55,6 +55,13 @@ dom::nodes::element::~element()
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-element-hasattributes
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttributes
+ *
+ * The hasAttributes() method of the Element interface returns a boolean value indicating whether the current element
+ * has any attributes or not.
+ */
 auto dom::nodes::element::has_attributes() const -> bool
 {
     // return if the attributes list is not empty
@@ -62,6 +69,21 @@ auto dom::nodes::element::has_attributes() const -> bool
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-element-getattributenames
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/getAttributeNames
+ *
+ * The getAttributeNames() method of the Element interface returns the attribute names of the element as an Array of
+ * strings. If the element has no attributes it returns an empty array.
+ *
+ * Using getAttributeNames() along with getAttribute(), is a memory-efficient and performant alternative to accessing
+ * Element.attributes.
+ *
+ * The names returned by getAttributeNames() are qualified attribute names, meaning that attributes with a namespace
+ * prefix have their names returned with that namespace prefix (not the actual namespace), followed by a colon, followed
+ * by the attribute name (for example, xlink:href), while any attributes which have no namespace prefix have their names
+ * returned as-is (for example, href).
+ */
 auto dom::nodes::element::get_attribute_names() const -> ext::vector<ext::string>
 {
     // return a list of attributes transformed into their names
@@ -69,10 +91,17 @@ auto dom::nodes::element::get_attribute_names() const -> ext::vector<ext::string
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-element-hasattribute
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttribute
+ *
+ * The Element.hasAttribute() method returns a Boolean value indicating whether the specified element has the specified
+ * attribute or not.
+ */
 auto dom::nodes::element::has_attribute(const ext::string& name) const -> bool
 {
     // if this element is a html element then set the html qualified name to lowercase
-    ext::string html_qualified_name = helpers::node_internals::is_html(this)
+    const ext::string html_qualified_name = helpers::node_internals::is_html(this)
             ? name.new_lowercase()
             : name;
 
@@ -81,6 +110,12 @@ auto dom::nodes::element::has_attribute(const ext::string& name) const -> bool
 }
 
 
+/*
+ * https://dom.spec.whatwg.org/#dom-element-hasattributens
+ * https://developer.mozilla.org/en-US/docs/Web/API/Element/hasAttributeNS
+ *
+ * hasAttributeNS returns a boolean value indicating whether the current element has the specified attribute.
+ */
 auto dom::nodes::element::has_attribute_ns(
         const ext::string& namespace_,
         const ext::string& local_name) const
@@ -91,14 +126,14 @@ auto dom::nodes::element::has_attribute_ns(
 }
 
 
-auto dom::nodes::element::has_attribute_node(attr* attribute) -> bool
+auto dom::nodes::element::has_attribute_node(attr* const attribute) const -> bool
 {
     // return if the attribute is in the attributes list
     return attributes->contains(attribute);
 }
 
 
-auto dom::nodes::element::has_attribute_node_ns(attr* attribute) -> bool
+auto dom::nodes::element::has_attribute_node_ns(attr* const attribute) const -> bool
 {
     // return if the attribute is in the attributes list
     return attributes->contains(attribute);
@@ -119,7 +154,7 @@ auto dom::nodes::element::get_attribute_ns(const ext::string& namespace_, const 
 }
 
 
-auto dom::nodes::element::get_attribute_node(const ext::string& qualified_name) const -> dom::nodes::attr*
+auto dom::nodes::element::get_attribute_node(const ext::string& qualified_name) const -> attr*
 {
     // return an attribute whose name matches qualified_name
     return helpers::attributes::get_attribute_by_name(this, qualified_name);
@@ -157,14 +192,14 @@ auto dom::nodes::element::set_attribute_ns(
 }
 
 
-auto dom::nodes::element::set_attribute_node(attr* attribute) -> dom::nodes::attr*
+auto dom::nodes::element::set_attribute_node(attr* const attribute) -> attr*
 {
     // set an attribute by a node
     return helpers::attributes::set_attribute(this, attribute);
 }
 
 
-auto dom::nodes::element::set_attribute_node_ns(attr* attribute) -> dom::nodes::attr*
+auto dom::nodes::element::set_attribute_node_ns(attr* const attribute) -> attr*
 {
     // set an attribute by a node (same as set_attribute_node, included for uniform function set)
     return set_attribute_node(attribute);
@@ -188,14 +223,14 @@ auto dom::nodes::element::remove_attribute_ns(
 }
 
 
-auto dom::nodes::element::remove_attribute_node(attr* attribute) -> dom::nodes::attr*
+auto dom::nodes::element::remove_attribute_node(attr* const attribute) -> dom::nodes::attr*
 {
     // remove an attribute by a node
     return helpers::attributes::remove_attribute(this, attribute);
 }
 
 
-auto dom::nodes::element::remove_attribute_node_ns(attr* attribute) -> dom::nodes::attr*
+auto dom::nodes::element::remove_attribute_node_ns(attr* const attribute) -> dom::nodes::attr*
 {
     // remove an attribute by a node (same as remove_attribute_node, included for uniform function set)
     return remove_attribute_node(attribute);
@@ -205,7 +240,7 @@ auto dom::nodes::element::remove_attribute_node_ns(attr* attribute) -> dom::node
 
 auto dom::nodes::element::toggle_attribute(
         const ext::string& qualified_name,
-        bool force)
+        const bool force)
         -> bool
 {
     // toggle an attribute whose name matches qualified_name
@@ -216,7 +251,7 @@ auto dom::nodes::element::toggle_attribute(
 auto dom::nodes::element::toggle_attribute_ns(
         const ext::string& namespace_,
         const ext::string& local_name,
-        bool force)
+        const bool force)
         -> bool
 {
     // toggle an attribute whose namespace and local_name matches namespace_ and local_name
@@ -225,8 +260,8 @@ auto dom::nodes::element::toggle_attribute_ns(
 
 
 auto dom::nodes::element::toggle_attribute_node(
-        attr* attribute,
-        bool force)
+        attr* const attribute,
+        const bool force)
         -> dom::nodes::attr*
 {
     // toggle an attribute by a node
@@ -235,8 +270,8 @@ auto dom::nodes::element::toggle_attribute_node(
 
 
 auto dom::nodes::element::toggle_attribute_node_ns(
-        attr* attribute,
-        bool force)
+        attr* const attribute,
+        const bool force)
         -> dom::nodes::attr*
 {
     // toggle the attribute by a node (same as toggle_attribute_node, included for uniform function set)
@@ -244,7 +279,7 @@ auto dom::nodes::element::toggle_attribute_node_ns(
 }
 
 
-auto dom::nodes::element::attach_shadow(const ext::string_any_map& options) -> dom::nodes::shadow_root*
+auto dom::nodes::element::attach_shadow(const ext::string_any_map& options) -> dom::nodes::shadow_root
 {
     // if the namespace is not html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -271,15 +306,15 @@ auto dom::nodes::element::attach_shadow(const ext::string_any_map& options) -> d
             [this] {return helpers::custom_elements::is_valid_custom_element_name(local_name) and helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, m_is)->disable_shadow or m_is;});
 
     // create a new shadow root, and set the owner document to this document
-    auto* shadow = new shadow_root{};
-    shadow->host = this;
-    shadow->delegates_focus = options.at("delegatesFocus").to<bool>();
-    shadow->slot_assignment = options.at("slotAssignment").to<ext::string>();
-    shadow->owner_document = owner_document;
-    shadow->m_available_to_internals = m_custom_element_state == "custom" or m_custom_element_state == "precustomized";
+    shadow_root shadow{};
+    shadow.host = this;
+    shadow.delegates_focus = options.at("delegatesFocus").to<bool>();
+    shadow.slot_assignment = options.at("slotAssignment").to<ext::string>();
+    shadow.owner_document = owner_document;
+    shadow.m_available_to_internals = m_custom_element_state == "custom" or m_custom_element_state == "precustomized";
 
     // set this element's shadow root to the shadow, and return the shadow
-    shadow_root_node = shadow;
+    shadow_root_node = &shadow;
     return shadow;
 }
 
@@ -338,7 +373,7 @@ auto dom::nodes::element::get_tag_name() const -> ext::string
 }
 
 
-auto dom::nodes::element::get_shadow_root() const -> dom::nodes::shadow_root*
+auto dom::nodes::element::get_shadow_root() const -> shadow_root*
 {
     // the shadow root is the shadow root if the mode option is closed, otherwise null (access from javascript)
     return shadow_root_node->mode == ext::string{"closed"} ? nullptr : shadow_root_node;
@@ -417,7 +452,7 @@ ext::any dom::nodes::element::v8(v8::Isolate* isolate) const
             .function("spatialNavigationSearch", &element::spatial_navigation_search)
             .function("focusableAreas", &element::focusable_areas)
 
-            .function("pseudo", &element::attach_shadow)
+            // .function("pseudo", &element::pseudo)
 
             .function("getClientRects", &element::get_client_rects)
             .function("getBoundingClientRect", &element::get_bounding_client_rect)

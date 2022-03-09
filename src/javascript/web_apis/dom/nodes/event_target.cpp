@@ -21,7 +21,7 @@ auto dom::nodes::event_target::add_event_listener(
 {
     // create an event listener that is the flattened options, and insert the callback and type
     auto event_listener = helpers::event_listening::flatten_more(options);
-    event_listener.insert("callback", callback);
+    event_listener.insert("callback", std::move(callback));
     event_listener.insert("type", type);
 
     // add the event listener to the event target by calling the add_event_listener helper method
@@ -35,9 +35,9 @@ auto dom::nodes::event_target::remove_event_listener(
         const ext::string_any_map& options)
         -> void
 {
-    // create an event listener that is the flattened options, and insert the callback and type
+    // create a dummy event listener that is the flattened options, and insert the callback and type
     auto event_listener = helpers::event_listening::flatten_more(options);
-    event_listener.insert("callback", callback);
+    event_listener.insert("callback", std::move(callback));
     event_listener.insert("type", type);
 
     // remove the event listener from the event target by  calling the remove_event_listener helper method
@@ -45,7 +45,7 @@ auto dom::nodes::event_target::remove_event_listener(
 }
 
 
-auto dom::nodes::event_target::dispatch_event(events::event* event) -> bool
+auto dom::nodes::event_target::dispatch_event(events::event* const event) -> bool
 {
     // if the dispatch is already set or the initialized flag isn't set, then throw an invalid state error
     helpers::exceptions::throw_v8_exception(
@@ -59,7 +59,7 @@ auto dom::nodes::event_target::dispatch_event(events::event* event) -> bool
 }
 
 
-auto dom::nodes::event_target::get_the_parent(events::event* event) -> dom::nodes::event_target*
+auto dom::nodes::event_target::get_the_parent(events::event* const event) -> dom::nodes::event_target*
 {
     // default behaviour for getting the parent in event traversal is that there is no parent
     return nullptr;

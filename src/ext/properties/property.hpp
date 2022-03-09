@@ -20,25 +20,18 @@ namespace ext
     template <typename U, typename T> auto property_bit_cast(const ext::property<T>& o) -> U;
 }
 
-//namespace
-//{
-//    template <typename T, class = void> struct is_unique_ptr : std::false_type{};
-//    template <typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
-//    template <typename T> constexpr bool is_unique_ptr_v = is_unique_ptr<T>::value;
-//}
-
 
 template <typename T>
 struct ext::property
 {
 public: friends
     // override get
-    friend T operator>>(const property<T>& p, T& o);
-    friend T operator>>(const property<T>& p, T&& o);
+    friend T operator>>(const property<T>& p, T& o) {o = p.m_internal;};
+    friend T operator>>(const property<T>& p, T&& o) {o = p.m_internal;};
 
     // override set
-    friend property<T>& operator<<(property<T>& p, const T& o);
-    friend property<T>& operator<<(property<T>& p, T&& o);
+    friend property<T>& operator<<(property<T>& p, const T& o) {p.m_internal = o;};
+    friend property<T>& operator<<(property<T>& p, T&& o) {p.m_internal = std::move(o);};
 
     // casting
     template <typename U, typename T> friend auto property_dynamic_cast(const ext::property<T>& o) -> U;
@@ -83,8 +76,8 @@ public: operators
     template <typename U> auto operator^=(const U& o) -> property<T>&;
     template <typename U> auto operator&=(const U& o) -> property<T>&;
     template <typename U> auto operator|=(const U& o) -> property<T>&;
-    auto operator<<=(const size_t n) -> property<T>& requires (not std::is_arithmetic_v<T>);
-    auto operator>>=(const size_t n) -> property<T>& requires (not std::is_arithmetic_v<T>);
+    auto operator<<=(size_t n) -> property<T>& requires (not std::is_arithmetic_v<T>);
+    auto operator>>=(size_t n) -> property<T>& requires (not std::is_arithmetic_v<T>);
     auto operator++() -> property<T>&;
     auto operator--() -> property<T>&;
 
@@ -96,10 +89,10 @@ public: operators
     template <typename U> auto operator^(const U& o) const -> property<T>;
     template <typename U> auto operator&(const U& o) const -> property<T>;
     template <typename U> auto operator|(const U& o) const -> property<T>;
-    auto operator<<(const size_t n) const -> property<T> requires (not std::is_arithmetic_v<T>);
-    auto operator>>(const size_t n) const -> property<T> requires (not std::is_arithmetic_v<T>);
-    auto operator++(const int n) const -> const property<T>;
-    auto operator--(const int n) const -> const property<T>;
+    auto operator<<(size_t n) const -> property<T> requires (not std::is_arithmetic_v<T>);
+    auto operator>>(size_t n) const -> property<T> requires (not std::is_arithmetic_v<T>);
+    auto operator++(int n) const -> const property<T>;
+    auto operator--(int n) const -> const property<T>;
 
     template <typename U> auto operator&&(const U& o) const -> bool;
     template <typename U> auto operator||(const U& o) const -> bool;
@@ -109,8 +102,9 @@ public: operators
     auto operator~() const -> bool;
     auto operator!() const -> bool;
     auto operator*() const -> std::remove_pointer_t<T> requires (std::is_pointer_v<T>);
+    auto operator*() const -> T requires (not std::is_pointer_v<T>);
 
-    template <typename U> auto operator[] (const size_t i) const -> U&;
+    template <typename U> auto operator[] (size_t i) const -> U&;
     template <typename U, typename ...Args> auto operator() (Args&&... args) const -> U&;
     operator bool() const requires (!std::is_same_v<T, bool>);
 
@@ -128,7 +122,7 @@ template <typename T>
 ext::property<T>::property()
 {
     // set the deleter, getter and setter functions to the defaults
-    deleter = [this]()      {/* Default : do nothing on deletion TODO : [delete m_internal; m_internal = nullptr] for pointers */};
+    deleter = [this]()      {if (std::is_pointer_v<T>) {delete m_internal; m_internal = nullptr;}};
     getter  = [this]()      {return m_internal;};
     setter  = [this](T val) {m_internal = val;};
 }
@@ -563,6 +557,13 @@ template <typename T>
 FAST INLINE auto ext::property<T>::operator*() const -> std::remove_pointer_t<T> requires (std::is_pointer_v<T>)
 {
     return *m_internal;
+}
+
+
+template <typename T>
+FAST INLINE auto ext::property<T>::operator*() const -> T requires (not std::is_pointer_v<T>)
+{
+    return m_internal;
 }
 
 

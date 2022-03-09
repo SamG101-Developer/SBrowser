@@ -8,12 +8,16 @@
 #include <ext/iterables/string.hpp>
 #include <ext/iterables/vector.hpp>
 #include <ext/macros/decorators.hpp>
-
 #include <dom_object.hpp>
 
-namespace dom {
+namespace dom
+{
     namespace events {class event;}
-    namespace helpers {struct event_dispatching; struct event_listening;}
+    namespace helpers
+    {
+        struct event_dispatching;
+        struct event_listening;
+    }
     namespace nodes {class event_target;}
 }
 
