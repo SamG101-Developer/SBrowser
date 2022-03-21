@@ -5,9 +5,9 @@
 #include <functional>
 #include <queue>
 
-#include <ext/macros/decorators.hpp>
-#include <ext/iterables/map.hpp>
-#include <ext/iterables/vector.hpp>
+#include <ext/decorators.hpp>
+#include <ext/map.hpp>
+#include <ext/vector.hpp>
 
 #include <dom_object.hpp>
 

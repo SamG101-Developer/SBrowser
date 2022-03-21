@@ -9,15 +9,15 @@ namespace ext {template <arithmetic T> class infinity;}
 
 
 template <arithmetic T>
-struct ext::infinity
+struct ext::infinity final
 {
-public: operators
+public operators:
     operator T() const;
 
     auto operator -() const -> ext::infinity<T> requires (std::is_signed_v<T>);
     auto operator +() const -> ext::infinity<T> requires (std::is_signed_v<T>);
 
-private: internal_properties
+private internal_properties:
     bool m_positive = true;
 };
 

@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NON_DOCUMENT_TYPE_CHILD_NODE_HPP
 #define SBROWSER_NON_DOCUMENT_TYPE_CHILD_NODE_HPP
 
-#include <ext/properties/dom_property.hpp>
+#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
 namespace dom

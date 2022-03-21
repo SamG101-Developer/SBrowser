@@ -2,7 +2,7 @@
 #ifndef SBROWSER_XSLT_PROCESSOR_HPP
 #define SBROWSER_XSLT_PROCESSOR_HPP
 
-#include <ext/macros/decorators.hpp>
+#include <ext/decorators.hpp>
 #include <dom_object.hpp>
 
 namespace dom

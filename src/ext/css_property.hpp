@@ -1,34 +1,54 @@
 #ifndef SBROWSER_CSS_PROPERTY_HPP
 #define SBROWSER_CSS_PROPERTY_HPP
 
-#include <ext/iterables/string.hpp>
-#include <ext/properties/property.hpp>
+#include <ext/string.hpp>
+#include <ext/property.hpp>
 
-namespace ext
-{
-    struct css_property;
-    struct css_shorthand_property;
-}
+namespace ext{struct css_property;}
+namespace ext{struct css_shorthand_property;}
 
 
-struct ext::css_property : public property<ext::string>
+struct ext::css_property final : public property<ext::string>
 {
 public: friends
     friend struct css_shorthand_property;
 
 public: enums
-    enum animation_t {NOT_ANIMATABLE, BY_COMPUTED_VALUE, DISCRETE, REPEATABLE_LIST, NUMBER, LIST};
-    enum percentage_t {NA, CORRESPONDING_DIMENSION_CONTENT_AREA, LOGICAL_WIDTH};
-    enum canonical_order_t {PER_GRAMMAR};
-    enum media_t {VISUAL, HIDDEN};
+    enum animation_t
+    {
+        NOT_ANIMATABLE,
+        BY_COMPUTED_VALUE,
+        DISCRETE,
+        REPEATABLE_LIST,
+        NUMBER,
+        LIST
+    };
 
-public: constructors
+    enum percentage_t
+    {
+        NA,
+        CORRESPONDING_DIMENSION_CONTENT_AREA,
+        LOGICAL_WIDTH
+    };
+
+    enum canonical_order_t
+    {
+        PER_GRAMMAR
+    };
+
+    enum media_t
+    {
+        VISUAL,
+        HIDDEN
+    };
+
+public constructors:
     explicit css_property(
             string&& name, string&& initial, bool&& inherited = false, animation_t&& animation_type = NOT_ANIMATABLE,
             percentage_t&& percentage_type = NA, canonical_order_t&& canonical_order_type = PER_GRAMMAR,
             media_t&& media_type = HIDDEN);
 
-private: internal_properties
+private internal_properties:
     string m_name;
     string m_initial;
     bool m_inherited;

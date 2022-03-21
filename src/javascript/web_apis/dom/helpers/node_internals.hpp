@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NODE_INTERNALS_HPP
 #define SBROWSER_NODE_INTERNALS_HPP
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 namespace dom
 {

@@ -1,11 +1,11 @@
 #ifndef SBROWSER_MANUAL_CONVERSIONS_HPP
 #define SBROWSER_MANUAL_CONVERSIONS_HPP
 
-#include <ext/iterables/string.hpp>
-#include <ext/iterables/set.hpp>
-#include <ext/properties/property.hpp>
-#include <ext/types/any.hpp>
-#include <ext/types/infinity.hpp>
+#include <ext/string.hpp>
+#include <ext/set.hpp>
+#include <ext/property.hpp>
+#include <ext/any.hpp>
+#include <ext/infinity.hpp>
 
 #include <v8pp/convert.hpp>
 

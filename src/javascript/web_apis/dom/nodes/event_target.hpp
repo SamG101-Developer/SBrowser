@@ -4,10 +4,10 @@
 
 #include <functional>
 
-#include <ext/iterables/map.hpp>
-#include <ext/iterables/string.hpp>
-#include <ext/iterables/vector.hpp>
-#include <ext/macros/decorators.hpp>
+#include <ext/map.hpp>
+#include <ext/string.hpp>
+#include <ext/vector.hpp>
+#include <ext/decorators.hpp>
 #include <dom_object.hpp>
 
 namespace dom

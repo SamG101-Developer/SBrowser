@@ -1,8 +1,8 @@
 #ifndef SBROWSER_CPP_KEYWORDS_HPP
 #define SBROWSER_CPP_KEYWORDS_HPP
 
-#define FAST __fastcall
-#define INLINE __forceinline
+#define _FAST __fastcall
+#define _INLINE __forceinline
 #define _T true
 #define _F false
 

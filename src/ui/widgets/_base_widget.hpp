@@ -1,8 +1,8 @@
 #ifndef SBROWSER__BASE_WIDGET_HPP
 #define SBROWSER__BASE_WIDGET_HPP
 
-#include <ext/iterables/map.hpp>
-#include <ext/iterables/string.hpp>
+#include <ext/map.hpp>
+#include <ext/string.hpp>
 
 #include <QtGui/QColor>
 

@@ -2,20 +2,19 @@
 #define SBROWSER_SET_HPP
 
 #include <set>
-
-#include <ext/iterables/iterable.hpp>
+#include <ext/iterable.hpp>
 
 namespace ext {template <typename T> class set;}
 
 
 template <typename T>
-class ext::set : public ext::iterable<T, std::set<T>>
+class ext::set final : public ext::iterable<T, std::set<T>>
 {
-public: constructors
+public constructors:
     set() = default;
     explicit set(const std::set<T>& o);
 
-public: methods
+public methods:
     auto add(const T& item) -> ext::set<T>&;
 };
 

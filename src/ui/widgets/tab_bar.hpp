@@ -2,8 +2,8 @@
 #ifndef SBROWSER_TAB_BAR_HPP
 #define SBROWSER_TAB_BAR_HPP
 
-#include <ext/types/any.hpp>
-#include <ext/iterables/vector.hpp>
+#include <ext/any.hpp>
+#include <ext/vector.hpp>
 
 #include <QtCore/QVariantAnimation>
 

@@ -3,7 +3,7 @@
 #define SBROWSER_WINDOW_HPP
 
 #include <ext/mixins/listlike.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/dom_property.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 
 #include <dom/nodes/event_target.hpp>

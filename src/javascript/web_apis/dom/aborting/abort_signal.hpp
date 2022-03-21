@@ -2,30 +2,17 @@
 #ifndef SBROWSER_ABORT_SIGNAL_HPP
 #define SBROWSER_ABORT_SIGNAL_HPP
 
-#include <ext/properties/dom_property.hpp>
+#include <ext/dom_property.hpp>
 #include <dom/nodes/event_target.hpp>
 
 #include <v8.h>
 #include <veque.hpp>
 
-namespace dom
-{
-    namespace aborting {class abort_signal;}
-    namespace helpers
-    {
-        class event_listening;
-        class signal_aborting;
-    }
-}
+namespace dom::aborting {class abort_signal;}
+namespace dom::helpers {struct event_listening;}
+namespace dom::helpers {struct signal_aborting;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-AbortSignal
- * https://developer.mozilla.org/en-US/docs/Web/API/AbortSignal
- *
- * The AbortSignal interface represents a signal object that allows you to communicate with a DOM request (such as a
- * fetch request) and abort it if required via an AbortController object.
- */
 class dom::aborting::abort_signal final: public nodes::event_target
 {
 public friends:

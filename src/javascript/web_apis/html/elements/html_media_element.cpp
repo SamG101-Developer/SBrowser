@@ -3,8 +3,8 @@
 #include <dom/helpers/event_dispatching.hpp>
 #include <dom/helpers/mutation_observers.hpp>
 #include <html/helpers/custom_html_elements.hpp>
-#include <web_idl/types/date.hpp>
-#include <web_idl/types/promise.hpp>
+#include <web_idl/date.hpp>
+#include <web_idl/promise.hpp>
 
 
 html::elements::html_media_element::html_media_element()

@@ -1,6 +1,6 @@
 #include "event_listening.hpp"
 
-#include <ext/types/typedefs.hpp>
+#include <ext/equalities.hpp>
 
 #include <dom/aborting/abort_signal.hpp>
 

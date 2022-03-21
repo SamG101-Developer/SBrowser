@@ -1,25 +1,25 @@
 #ifndef SBROWSER_CSS_SHORTHAND_PROPERTY_HPP
 #define SBROWSER_CSS_SHORTHAND_PROPERTY_HPP
 
-#include <ext/properties/css_property.hpp>
+#include <ext/css_property.hpp>
 
 namespace ext {struct css_shorthand_property;}
 namespace {auto contained_items(ext::css_shorthand_property& property, const ext::string& shorthand) -> ext::vector<ext::css_property*>;}
 
 
-struct ext::css_shorthand_property : property<ext::string>
+struct ext::css_shorthand_property final : public property<ext::string>
 {
-public: constructors
+public constructors:
     explicit css_shorthand_property(string&& name);
 
-public: methods
+public methods:
     auto add_css_property(css_property& css_longhand_property) -> css_shorthand_property&;
 
-public: operators
-    auto operator=(cstring& o) -> css_shorthand_property& override;
+public operators:
+    auto operator=(const string& o) -> css_shorthand_property& override;
     operator string() const override;
 
-public: internal_properties
+public internal_properties:
     vector<css_property> css_properties;
 
 private internal_properties:
@@ -45,7 +45,7 @@ auto ext::css_shorthand_property::add_css_property(css_property& css_longhand_pr
 }
 
 
-auto ext::css_shorthand_property::operator=(cstring& o) -> ext::css_shorthand_property&
+auto ext::css_shorthand_property::operator=(const string& o) -> ext::css_shorthand_property&
 {
     // extract the contained values from the string, and set them sequentially to each property in the list
     auto sub_items = ::contained_items(*this, o);

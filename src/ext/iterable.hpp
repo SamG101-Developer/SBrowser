@@ -10,8 +10,8 @@
 #include <numeric>
 #include <stdexcept>
 
-#include <ext/macros/cpp_keywords.hpp>
-#include <ext/macros/decorators.hpp>
+#include <ext/cpp_keywords.hpp>
+#include <ext/decorators.hpp>
 
 namespace ext {template <typename T, typename C> class iterable;}
 
@@ -19,11 +19,11 @@ namespace ext {template <typename T, typename C> class iterable;}
 template <typename T, typename C>
 class ext::iterable
 {
-public: aliases
+public aliases:
     using iterator = typename C::iterator;
     using const_iterator = typename C::const_iterator;
 
-public: constructors
+public constructors:
     iterable() = default;
     iterable(const iterable<T, C>&) = default;
     iterable(iterable<T, C>&&) noexcept = default;
@@ -34,7 +34,8 @@ public: constructors
 
     auto front() noexcept(false) -> T&;
     auto back() noexcept(false) -> T&;
-    auto at(const size_t i) noexcept(false) -> T&;
+    auto at(size_t i) const noexcept(false) -> const T&;
+    auto at(size_t i) noexcept(false) -> T&;
     auto at(const_iterator i) noexcept(false) -> T&;
 
     auto begin() -> iterator;
@@ -46,10 +47,10 @@ public: constructors
     auto length() const noexcept -> size_t;
 
     virtual auto clear() -> iterable<T, C>&;
-    template <class F> auto remove_if(const F& function, const bool all = false) -> iterable<T, C>&;
-    template <class F> auto replace_if(const F& function, const T& new_item, const bool all = false) -> iterable<T, C>&;
-    auto remove(const T& item, const bool all = false) -> iterable<T, C>&;
-    auto replace(const T& old_item, const T& new_item, const bool all = false) -> iterable<T, C>&;
+    template <class F> auto remove_if(const F& function, bool all = false) -> iterable<T, C>&;
+    template <class F> auto replace_if(const F& function, const T& new_item, bool all = false) -> iterable<T, C>&;
+    auto remove(const T& item, bool all = false) -> iterable<T, C>&;
+    auto replace(const T& old_item, const T& new_item, bool all = false) -> iterable<T, C>&;
     auto reverse() -> iterable<T, C>&;
     auto sort() -> iterable<T, C>&;
     auto clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
@@ -57,15 +58,15 @@ public: constructors
     auto reversed() const -> iterable<T, C>;
     auto sorted() const -> iterable<T, C>;
 
-    auto find(const T& object, const size_t offset = 0) const -> size_t;
+    auto find(const T& object, size_t offset = 0) const -> size_t;
     auto contains(const T& item) const -> bool;
     auto print() const -> void;
 
-public: operators
+public operators:
     virtual auto operator!() const -> bool;
     auto operator==(const iterable<T, C>& o) const -> bool;
 
-protected: internal_properties
+protected internal_properties:
     C m_iterable;
 };
 
@@ -94,6 +95,18 @@ auto ext::iterable<T, C>::back() noexcept(false) -> T&
 }
 
 
+template<typename T, typename C>
+auto ext::iterable<T, C>::at(size_t i) const noexcept(false) -> const T&
+{
+    // throws error if accessing the middle of an empty iterable
+    if (empty())
+        throw std::out_of_range("Cannot access nth item of an empty iterable");
+
+    // return the item in the middle of the iterable
+    return m_iterable.at(i);
+}
+
+
 template <typename T, typename C>
 auto ext::iterable<T, C>::at(const size_t i) noexcept(false) -> T&
 {
@@ -101,7 +114,7 @@ auto ext::iterable<T, C>::at(const size_t i) noexcept(false) -> T&
     if (empty())
         throw std::out_of_range{"Cannot access nth item of an empty iterable"};
 
-    // return the item int the middle of the iterable
+    // return the item in the middle of the iterable
     return m_iterable.at(i);
 }
 
@@ -277,7 +290,9 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_pointer_v<T>
 {
     // remove all the nullptr from the iterable, and return the reference to it
-    remove(nullptr, true);
+    if constexpr(std::is_pointer_v<T>)
+        remove(nullptr, true);
+
     return *this;
 }
 
@@ -318,7 +333,7 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::print() const -> void
 {
     // serialize the iterable by output the list as a string - TODO: MOVE TO OPERATOR <<
-    std::cout << std::copy(begin(), end(), std::ostream_iterator<ext::string>(std::cout, ", ")) << std::endl;
+    std::cout << std::copy(begin(), end(), std::ostream_iterator<const char*>(std::cout, ", ")) << std::endl;
 }
 
 
@@ -338,7 +353,8 @@ auto ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
         return false;
 
     // create a range of indexes the length of the iterable
-    std::array<size_t, length()> range;
+    std::vector<size_t> range;
+    range.reserve(length());
     std::iota(range.begin(), range.end(), 0);
 
     // equality check by comparing the items in the two iterables

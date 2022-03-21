@@ -2,8 +2,8 @@
 #ifndef SBROWSER_ABSTRACT_ITERATOR_HPP
 #define SBROWSER_ABSTRACT_ITERATOR_HPP
 
-#include <ext/macros/decorators.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/decorators.hpp>
+#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
 namespace dom

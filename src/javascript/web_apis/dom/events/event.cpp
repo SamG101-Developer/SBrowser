@@ -3,13 +3,6 @@
 #include <dom/helpers/event_listening.hpp>
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-event-event
- * https://developer.mozilla.org/en-US/docs/Web/API/Event/Event
- *
- * The Event() constructor creates a new Event object. An event created in this way is called a synthetic event, as
- * opposed to an event fired by the browser, and can be dispatched by a script.
- */
 dom::events::event::event() : dom_object()
 {
 }
@@ -26,8 +19,8 @@ dom::events::event::event(
 {
     // set the properties
     event_phase = NONE;
-    touch_targets = std::make_unique<ext::vector<nodes::event_target*>>().get();
-    path = std::make_unique<ext::vector<internal::event_path_struct*>>().get();
+    touch_targets = new ext::vector<nodes::event_target*>{};
+    path = new ext::vector<internal::event_path_struct*>{};
 }
 
 
@@ -39,16 +32,6 @@ dom::events::event::~event()
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-event-stoppropagation
- * https://developer.mozilla.org/en-US/docs/Web/API/Event/stopPropagation
- *
- * The stopPropagation() method of the Event interface prevents further propagation of the current event in the
- * capturing and bubbling phases. It does not, however, prevent any default behaviors from occurring; for instance,
- * clicks on links are still processed. If you want to stop those behaviors, see the preventDefault() method. It also
- * does not prevent immediate propagation to other event-handlers. If you want to stop those, see
- * stopImmediatePropagation().
- */
 auto dom::events::event::stop_propagation() -> void
 {
     // set the stop propagation flag, to stop the event propagating to the next target
@@ -56,15 +39,6 @@ auto dom::events::event::stop_propagation() -> void
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-event-stopimmediatepropagation
- * https://developer.mozilla.org/en-US/docs/Web/API/Event/stopImmediatePropagation
- *
- * The stopImmediatePropagation() method of the Event interface prevents other listeners of the same event from being
- * called. If several listeners are attached to the same element for the same event type, they are called in the order
- * in which they were added. If stopImmediatePropagation() is invoked during one such call, no remaining listeners will
- * be called.
- */
 auto dom::events::event::stop_immediate_propagation() -> void
 {
     // set the stop immediate propagation flag, to stop the event propagating to the next listener
@@ -72,16 +46,6 @@ auto dom::events::event::stop_immediate_propagation() -> void
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-event-preventdefault
- * https://developer.mozilla.org/en-US/docs/Web/API/Event/preventDefault
- *
- * The preventDefault() method of the Event interface tells the user agent that if the event does not get explicitly
- * handled, its default action should not be taken as it normally would be. The event continues to propagate as usual,
- * unless one of its event listeners calls stopPropagation() or stopImmediatePropagation(), either of which terminates
- * propagation at once. As noted below, calling preventDefault() for a non-cancelable event, such as one dispatched via
- * EventTarget.dispatchEvent(), without specifying cancelable: true has no effect.
- */
 auto dom::events::event::prevent_default() -> void
 {
     // set the cancelled flag if the event is cancelled and isn't in a passive listener
@@ -89,14 +53,6 @@ auto dom::events::event::prevent_default() -> void
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-event-composedpath
- * https://developer.mozilla.org/en-US/docs/Web/API/Event/composedPath
- *
- * The composedPath() method of the Event interface returns the event's path which is an array of the objects on which
- * listeners will be invoked. This does not include nodes in shadow trees if the shadow root was created with its
- * ShadowRoot.mode closed.
- */
 auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_target*>
 {
     // create the default vectors, and return if the current event traversal path is empty
@@ -166,27 +122,27 @@ auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_
 auto dom::events::event::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<event>{isolate}
-            .ctor<const ext::string&, const std::map<ext::string, std::any>&>()
+            .ctor<const ext::string&, const ext::string_any_map&>()
             .inherit<dom_object>()
-            .static_("NONE", event::NONE)
-            .static_("CAPTURING_PHASE", event::CAPTURING_PHASE)
-            .static_("AT_TARGET", event::AT_TARGET)
-            .static_("BUBBLING_PHASE", event::BUBBLING_PHASE)
+            .static_("NONE", event::NONE, true)
+            .static_("CAPTURING_PHASE", event::CAPTURING_PHASE, true)
+            .static_("AT_TARGET", event::AT_TARGET, true)
+            .static_("BUBBLING_PHASE", event::BUBBLING_PHASE, true)
             .function("stopImmediatePropagation", &event::stop_immediate_propagation)
             .function("stopPropagation", &event::stop_propagation)
             .function("preventDefault", &event::prevent_default)
             .function("composedPath", &event::composed_path)
-            .var("type", &event::type)
-            .var("bubbles", &event::bubbles)
-            .var("cancelable", &event::cancelable)
-            .var("composed", &event::composed)
-            .var("target", &event::target)
-            .var("currentTarget", &event::current_target)
-            .var("relatedTarget", &event::related_target)
-            .var("eventPhase", &event::event_phase)
-            .var("timeStamp", &event::time_stamp)
-            .var("isTrusted", &event::is_trusted)
-            .var("touchTargets", &event::touch_targets)
-            .var("path", &event::path)
+            .var("type", &event::type, true)
+            .var("bubbles", &event::bubbles, true)
+            .var("cancelable", &event::cancelable, true)
+            .var("composed", &event::composed, true)
+            .var("target", &event::target, true)
+            .var("currentTarget", &event::current_target, true)
+            .var("relatedTarget", &event::related_target, true)
+            .var("eventPhase", &event::event_phase, true)
+            .var("timeStamp", &event::time_stamp, true)
+            .var("isTrusted", &event::is_trusted, true)
+            .var("touchTargets", &event::touch_targets, true)
+            .var("path", &event::path, true)
             .auto_wrap_objects();
 }

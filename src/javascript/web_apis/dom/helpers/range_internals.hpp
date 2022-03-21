@@ -4,7 +4,7 @@
 
 #include <tuple>
 
-#include <ext/iterables/vector.hpp>
+#include <ext/vector.hpp>
 
 namespace dom
 {

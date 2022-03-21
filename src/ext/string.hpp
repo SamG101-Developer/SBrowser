@@ -9,29 +9,24 @@
 #include <string>
 #include <utility>
 
-#include <ext/macros/decorators.hpp>
-#include <ext/iterables/vector.hpp>
+#include <ext/decorators.hpp>
+#include <ext/vector.hpp>
 
 #include <QtCore/QString>
 #include <v8.h>
 #include <v8pp/convert.hpp>
 
-namespace ext
-{
-    class string;
-    using cstring = const string;
 
-    template <class ...args> using are_strings = std::conjunction<std::is_same<ext::string, args>...>;
-    template <class ...args> using are_strings_v = typename are_strings<args...>::value;
-    template <class ...args> string concatenate_strings(args&&... strings);
-
-    using string_vector = ext::vector<ext::string>;
-}
+namespace ext {class string;}
+namespace ext {template <class ...args> using are_strings = std::conjunction<std::is_same<ext::string, args>...>;}
+namespace ext {template <class ...args> using are_strings_v = typename are_strings<args...>::value;}
+namespace ext {template <class ...args> string concatenate_strings(args&&... strings);}
+namespace ext {using string_vector = ext::vector<ext::string>;}
 
 
 class ext::string : public iterable<char, std::string>
 {
-    friend std::ostream& operator<<(std::ostream& stream, ext::cstring& string)
+    friend std::ostream& operator<<(std::ostream& stream, const ext::string& string)
     {
         stream << string.m_iterable;
         return stream;
@@ -39,13 +34,13 @@ class ext::string : public iterable<char, std::string>
 
 public: constructors
     string() = default;
-    string(cstring&) = default;
+    string(const string&) = default;
     string(const char* const other) {m_iterable = other;}
     string(const std::string_view other) {m_iterable = other;}
     string(const QString& other) {m_iterable = other.toStdString();}
     string(const v8::Local<v8::String> other) {m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});}
 
-    auto operator=(cstring&) -> string& = default;
+    auto operator=(const string&) -> string& = default;
     auto operator=(const char* other) -> string&;
     auto operator=(std::string_view other) -> string&;
     auto operator=(const QString& other) -> string&;
@@ -68,7 +63,7 @@ public: methods
     auto new_lowercase() const -> string;
     auto new_uppercase() const -> string;
     auto substring(size_t offset, size_t count = std::string::npos) const -> string;
-    auto replace(size_t offset, size_t count, cstring& replacement) -> string;
+    auto replace(size_t offset, size_t count, const string& replacement) -> string;
     auto split(char delimiter, size_t max_delimiters = 1) const -> ext::vector<string>;
     auto contains(const char* item) const -> bool;
     constexpr auto c_str() const -> const char*;
@@ -78,13 +73,14 @@ public: operators
     auto to_qt_string() const -> QString;
     auto to_v8_string() const -> v8::Local<v8::String>;
 
-    auto operator+(cstring& other) const -> string;
+    auto operator+(const string& other) const -> string;
     auto operator+(const char* const other) const -> string;
-    auto operator+=(cstring& other) -> string&;
+    auto operator+=(const string& other) -> string&;
 
     auto operator!() const -> bool override;
     auto operator<=>(const string& other) const -> signed char;
     auto operator==(const char* const other) const -> bool;
+    auto operator==(const string& other) const -> bool;
 
     operator bool() const;
 };
@@ -209,7 +205,7 @@ auto ext::string::substring(const size_t offset, const size_t count) const -> ex
 }
 
 
-auto ext::string::replace(const size_t offset, const size_t count, cstring& replacement) -> ext::string
+auto ext::string::replace(const size_t offset, const size_t count, const string& replacement) -> ext::string
 {
     // replace count characters starting at offset with replacement
     m_iterable.replace(offset, count, replacement);
@@ -305,7 +301,7 @@ auto ext::string::to_v8_string() const -> v8::Local<v8::String>
 }
 
 
-auto ext::string::operator+(cstring& other) const -> ext::string
+auto ext::string::operator+(const string& other) const -> ext::string
 {
     // create a new string composed of adding the two strings, and return it
     ext::string new_string;
@@ -321,7 +317,7 @@ auto ext::string::operator+(const char* const other) const -> ext::string
 }
 
 
-auto ext::string::operator+=(cstring& other) -> ext::string&
+auto ext::string::operator+=(const string& other) -> ext::string&
 {
     // acd the other string to this string and return a reference to it
     m_iterable += other.m_iterable;

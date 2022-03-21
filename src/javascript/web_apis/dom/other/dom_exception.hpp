@@ -2,8 +2,8 @@
 #ifndef SBROWSER_DOM_EXCEPTION_HPP
 #define SBROWSER_DOM_EXCEPTION_HPP
 
-#include <ext/macros/decorators.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/decorators.hpp>
+#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
 namespace dom::other {class dom_exception;}

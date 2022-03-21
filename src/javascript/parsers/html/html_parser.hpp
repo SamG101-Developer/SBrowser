@@ -2,7 +2,7 @@
 #ifndef SBROWSER_HTML_PARSER_HPP
 #define SBROWSER_HTML_PARSER_HPP
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 namespace dom::nodes {class document;}
 namespace javascript::parsers::html {class html_parser;}

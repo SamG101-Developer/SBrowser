@@ -4,7 +4,7 @@
 #include <sstream>
 #include <string>
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 
 ui::window_handling::window_handler::window_handler(

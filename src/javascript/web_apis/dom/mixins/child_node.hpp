@@ -2,7 +2,7 @@
 #ifndef SBROWSER_CHILD_NODE_HPP
 #define SBROWSER_CHILD_NODE_HPP
 
-#include <ext/macros/decorators.hpp>
+#include <ext/decorators.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 #include <dom_object.hpp>
 

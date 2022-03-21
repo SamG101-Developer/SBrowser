@@ -2,8 +2,8 @@
 #ifndef SBROWSER_PARENT_NODE_HPP
 #define SBROWSER_PARENT_NODE_HPP
 
-#include <ext/iterables/vector.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/vector.hpp>
+#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
 namespace dom

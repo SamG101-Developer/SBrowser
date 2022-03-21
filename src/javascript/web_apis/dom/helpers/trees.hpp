@@ -2,7 +2,7 @@
 #ifndef SBROWSER_TREES_HPP
 #define SBROWSER_TREES_HPP
 
-#include <ext/iterables/vector.hpp>
+#include <ext/vector.hpp>
 
 namespace dom
 {

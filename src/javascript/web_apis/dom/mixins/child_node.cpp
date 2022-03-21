@@ -1,6 +1,6 @@
 #include "child_node.hpp"
 
-#include <ext/properties/dom_property.hpp>
+#include <ext/dom_property.hpp>
 
 #include <dom/nodes/character_data.hpp>
 #include <dom/nodes/document_type.hpp>

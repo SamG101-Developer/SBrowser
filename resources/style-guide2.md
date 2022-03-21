@@ -112,6 +112,26 @@ class underscore_case_js {
 };
 ```
 
+##Helper structs:
+```cpp
+struct helper_struct
+{
+    auto helper_method_1(
+            type_1 param_1,
+            type_2 param_2,
+            type_3 param_3,
+            ...) -> return_type;
+    
+    auto helper_method_2(
+            type_1 param_1,
+            type_2 param_2,
+            type_3 param_3,
+            ...) -> return_type;
+    
+    ...
+};
+```
+
 ##Class methods:
 
 [//]: # (```cpp)

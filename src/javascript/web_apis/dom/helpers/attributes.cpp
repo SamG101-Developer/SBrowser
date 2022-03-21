@@ -127,37 +127,6 @@ auto dom::helpers::attributes::get_attribute_by_ns(
 }
 
 
-auto dom::helpers::attributes::set_attribute_value(
-        nodes::element* const owner_element,
-        const ext::string& local_name,
-        const ext::string& value,
-        const ext::string& prefix,
-        const ext::string& namespace_)
-        -> dom::nodes::attr*
-{
-    // get the attribute by matching the namespace, local name and owner_element
-    auto* attribute = get_attribute_by_ns(owner_element, local_name, namespace_);
-
-    // if the attribute doesn't exist, create it and set its attributes from the parameters
-    if (not attribute)
-    {
-        attribute = std::unique_ptr<nodes::attr>{}.get();
-        attribute->namespace_uri = namespace_;
-        attribute->prefix = prefix;
-        attribute->local_name = local_name;
-        attribute->value = value;
-        attribute->owner_document = owner_element->owner_document;
-    }
-
-    // append the attribute, and change the value to value, so that the mutations are updated
-    append(attribute, owner_element);
-    change(attribute, value);
-
-    // return the attribute
-    return attribute;
-}
-
-
 auto dom::helpers::attributes::set_attribute_by_name(
         nodes::element* const owner_element,
         const ext::string& qualified_name,
@@ -361,6 +330,36 @@ auto dom::helpers::attributes::toggle_attribute(
         return nullptr;
     }
 
+    return attribute;
+}
+
+
+auto dom::helpers::attributes::set_attribute_value(
+        nodes::element* const owner_element,
+        const ext::string& local_name,
+        const ext::string& value,
+        const ext::string& prefix,
+        const ext::string& namespace_) -> dom::nodes::attr*
+{
+    // get the attribute by matching the namespace, local name and owner_element
+    auto* attribute = get_attribute_by_ns(owner_element, local_name, namespace_);
+
+    // if the attribute doesn't exist, create it and set its attributes from the parameters
+    if (not attribute)
+    {
+        attribute = std::unique_ptr<nodes::attr>{}.get();
+        attribute->namespace_uri = namespace_;
+        attribute->prefix = prefix;
+        attribute->local_name = local_name;
+        attribute->value = value;
+        attribute->owner_document = owner_element->owner_document;
+    }
+
+    // append the attribute, and change the value to value, so that the mutations are updated
+    append(attribute, owner_element);
+    change(attribute, value);
+
+    // return the attribute
     return attribute;
 }
 

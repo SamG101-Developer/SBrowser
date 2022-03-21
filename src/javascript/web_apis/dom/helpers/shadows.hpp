@@ -2,7 +2,7 @@
 #ifndef SBROWSER_SHADOWS_HPP
 #define SBROWSER_SHADOWS_HPP
 
-#include <ext/iterables/vector.hpp>
+#include <ext/vector.hpp>
 
 namespace dom
 {

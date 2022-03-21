@@ -2,8 +2,8 @@
 
 #include <queue>
 
-#include <ext/iterables/map.hpp>
-#include <ext/iterables/set.hpp>
+#include <ext/map.hpp>
+#include <ext/set.hpp>
 
 #include <javascript/environment/realms.hpp>
 
@@ -55,12 +55,13 @@ auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
             const v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
             mutation_observer->m_callback(records, mutation_observer);
 
-            if (exception_handler.HasCaught()); // TODO : console::reporting::report_warning_to_console(exception_handler.Message()->Get());
+            if (exception_handler.HasCaught())
+                ; // TODO : console::reporting::report_warning_to_console(exception_handler.Message()->Get());
         }
     }
 
     for (auto* const slot: signal_slots_set)
-        event_dispatching::fire_event<>("slotChange", slot, ext::cstring_any_map{{"bubbles", true}});
+        event_dispatching::fire_event<>("slotChange", slot, ext::string_any_map{{"bubbles", true}});
 }
 
 
@@ -108,7 +109,7 @@ auto dom::helpers::mutation_observers::queue_mutation_record(
     }
 
     for (const auto& [observer, mapped_old_value]: interested_observers) {
-        auto mutation_record = std::unique_ptr<mutations::mutation_record>{}.get();
+        auto mutation_record = new mutations::mutation_record{};
         mutation_record->type = type;
         mutation_record->attribute_name = name;
         mutation_record->attribute_namespace = namespace_;

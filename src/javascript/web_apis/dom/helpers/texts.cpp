@@ -1,6 +1,6 @@
 #include "texts.hpp"
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 #include <javascript/environment/realms.hpp>
 

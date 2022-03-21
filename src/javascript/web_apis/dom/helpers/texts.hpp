@@ -2,7 +2,7 @@
 #ifndef SBROWSER_TEXTS_HPP
 #define SBROWSER_TEXTS_HPP
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 namespace dom
 {

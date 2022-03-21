@@ -7,37 +7,32 @@
 #include <stack>
 #include <string>
 
-#include <ext/iterables/iterable.hpp>
+#include <ext/iterable.hpp>
 
 #include <veque/include/veque.hpp>
 
-namespace ext
-{
-    template <typename T> class vector;
-    template <typename T> using cvector = const vector<T>;
-    class string;
-}
+namespace ext {template <typename T> class vector;}
+namespace ext {template <typename T> using cvector = const vector<T>;}
+namespace ext {class string;}
 
-namespace
-{
-    template <typename T, class = void> struct is_iterator : std::false_type {};
-    template <typename T> struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::pointer, typename std::iterator_traits<T>::reference>> : std::true_type {};
-    template <typename T> constexpr bool is_iterator_v = is_iterator<T>::value;
 
-    template <typename T, class = void> struct is_iterable : std::false_type {};
-    template <typename T> struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T>())), decltype(std::end  (std::declval<T>()))>> : std::true_type {};
-    template <typename T> constexpr bool is_iterable_v = is_iterable<T>::value;
+namespace {template <typename T, class = void> struct is_iterator : std::false_type {};}
+namespace {template <typename T> struct is_iterator<T, std::void_t<typename std::iterator_traits<T>::pointer, typename std::iterator_traits<T>::reference>> : std::true_type {};}
+namespace {template <typename T> constexpr bool is_iterator_v = is_iterator<T>::value;}
 
-//    template <typename T, class = void> struct is_unique_ptr : std::false_type {};
-//    template <typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};
-//    template <typename T> constexpr bool is_shared_ptr_v = is_unique_ptr<T>::value;
-}
+namespace {template <typename T, class = void> struct is_iterable : std::false_type {};}
+namespace {template <typename T> struct is_iterable<T, std::void_t<decltype(std::begin(std::declval<T>())), decltype(std::end  (std::declval<T>()))>> : std::true_type {};}
+namespace {template <typename T> constexpr bool is_iterable_v = is_iterable<T>::value;}
+
+//    namespace {template <typename T, class = void> struct is_unique_ptr : std::false_type {};}
+//    namespace {template <typename T> struct is_unique_ptr<std::unique_ptr<T>> : std::true_type {};}
+//    namespace {template <typename T> constexpr bool is_shared_ptr_v = is_unique_ptr<T>::value;}
 
 
 template <typename T>
 class ext::vector : public ext::iterable<T, veque::veque<T>>
 {
-public: constructors
+public constructors:
     vector() = default;
     vector(const vector&) = default;
     vector(vector&&) noexcept = default;
@@ -52,7 +47,7 @@ public: constructors
 
     ~vector() override;
 
-public: methods
+public methods:
     auto slice(size_t front_index, size_t back_index) const -> vector<T>&;
     auto item_before(const T& item) const -> T&;
     auto item_after(const T& item) const -> T&;
@@ -82,7 +77,7 @@ public: methods
     auto flatten() -> vector<T>&;
     auto call_all() const -> void requires std::is_invocable_v<T>;
 
-public: operators
+public operators:
     auto operator*(size_t n) const -> ext::vector<T>;
 };
 
@@ -369,7 +364,7 @@ template <typename T>
 auto ext::vector<T>::join(char&& delimiter) const -> const char*
 {
     // create a string and join each item in the veque to it
-    ext::string joined;
+    std::string joined;
     for_each([&joined, delimiter](const T item) {joined += delimiter + item;});
 
     // return teh const char( representation of the string

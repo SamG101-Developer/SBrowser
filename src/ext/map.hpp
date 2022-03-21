@@ -4,23 +4,19 @@
 
 #include <map>
 
-#include <ext/types/any.hpp>
-#include <ext/iterables/iterable.hpp>
+#include <ext/any.hpp>
+#include <ext/iterable.hpp>
 
-namespace ext
-{
-    template <typename K, typename V> class map;
-    template <typename K, typename V> using cmap = const map<K, V>;
 
-    using string_any_map = map<string, any>;
-    using cstring_any_map = const map<string, any>;
-}
+namespace ext {template <typename K, typename V> class map;}
+namespace ext {template <typename K, typename V> using cmap = const map<K, V>;}
+namespace ext {using string_any_map = map<string, any>;}
 
 
 template <typename K, typename V>
-class ext::map : public ext::iterable<V, std::map<K, V>>
+class ext::map final: public ext::iterable<V, std::map<K, V>>
 {
-public: constructors
+public constructors:
     map() = default;
     map(const map<K, V>&) = default;
     map(map<K, V>&&) noexcept = default;
@@ -28,7 +24,7 @@ public: constructors
     map<K, V>& operator=(const map<K, V>&) = default;
     map<K, V>& operator=(map<K, V>&&) noexcept = default;
 
-public: methods
+public methods:
     auto insert(const K& key, const V& value) -> ext::map<K, V>&;
     auto at(const K& key) const -> V&;
     auto has_key(const K& key) const -> bool;
@@ -37,7 +33,7 @@ public: methods
     template <typename F> auto filter_keys(const F& function) -> ext::vector<K>;
     template <typename F> auto filter_values(const F& function) -> ext::vector<V>;
 
-public: operators
+public operators:
     auto operator==(ext::cmap<K, V>& o) -> bool;
 };
 

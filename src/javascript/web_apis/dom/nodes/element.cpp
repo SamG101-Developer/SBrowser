@@ -1,6 +1,6 @@
 #include "element.hpp"
 
-#include <ext/types/infinity.hpp>
+#include <ext/infinity.hpp>
 
 #include <dom/helpers/attributes.hpp>
 #include <dom/helpers/custom_elements.hpp>

@@ -4,18 +4,18 @@
 
 #include <fstream>
 
-#include <ext/macros/cpp_keywords.hpp>
-#include <ext/iterables/string.hpp>
+#include <ext/cpp_keywords.hpp>
+#include <ext/string.hpp>
 
 
 auto file_read(const ext::string& file_path) -> ext::string
 {
     // create the input and output strings
     std::ifstream input(file_path.c_str());
-    ext::string output;
+    std::string output;
 
     // append each line of the file to the output
-    for (ext::string file_line; std::getline(input, file_line);)
+    for (std::string file_line; std::getline(input, file_line);)
         output += file_line;
 
     // return the output as an ext object

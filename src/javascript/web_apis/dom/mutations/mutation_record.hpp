@@ -2,9 +2,9 @@
 #ifndef SBROWSER_MUTATION_RECORD_HPP
 #define SBROWSER_MUTATION_RECORD_HPP
 
-#include <ext/iterables/string.hpp>
-#include <ext/macros/decorators.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/string.hpp>
+#include <ext/decorators.hpp>
+#include <ext/dom_property.hpp>
 
 #include <dom_object.hpp>
 

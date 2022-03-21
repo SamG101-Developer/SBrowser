@@ -1,7 +1,7 @@
 #ifndef SBROWSER_WINDOW_HANDLER_HPP
 #define SBROWSER_WINDOW_HANDLER_HPP
 
-#include <ext/iterables/vector.hpp>
+#include <ext/vector.hpp>
 
 #include <QtCore/QObject>
 #include <QtCore/QCoreApplication>

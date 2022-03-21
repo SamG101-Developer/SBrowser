@@ -3,7 +3,7 @@
 #define SBROWSER_NODE_HPP
 
 #include <ext/helpers/maps.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/dom_property.hpp>
 
 #include <dom/nodes/event_target.hpp>
 

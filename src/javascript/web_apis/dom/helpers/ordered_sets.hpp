@@ -2,8 +2,8 @@
 #ifndef SBROWSER_ORDERED_SETS_HPP
 #define SBROWSER_ORDERED_SETS_HPP
 
-#include <ext/iterables/set.hpp>
-#include <ext/iterables/string.hpp>
+#include <ext/set.hpp>
+#include <ext/string.hpp>
 
 namespace dom::helpers {struct ordered_sets;}
 

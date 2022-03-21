@@ -1,13 +1,11 @@
-#ifndef SBROWSER_TYPEDEFS_HPP
-#define SBROWSER_TYPEDEFS_HPP
+#ifndef SBROWSER_EQUALITIES_HPP
+#define SBROWSER_EQUALITIES_HPP
 
-#include <ext/iterables/string.hpp>
-#include <ext/types/any.hpp>
-
-#define struct_string inline static ext::cstring
+#include <ext/string.hpp>
+#include <ext/any.hpp>
 
 
-auto operator==(ext::cany& first, ext::cany& second) -> bool
+auto operator==(const ext::any& first, const ext::any& second) -> bool
 {
     // equality check by comparing the addresses of the two objects
     return &first == &second;
@@ -20,4 +18,4 @@ auto operator==(const std::function<void()>& function_a, const std::function<voi
     return &function_a == &function_b;
 }
 
-#endif //SBROWSER_TYPEDEFS_HPP
+#endif //SBROWSER_EQUALITIES_HPP

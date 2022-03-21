@@ -2,6 +2,8 @@
 
 #include <cassert>
 
+#include <ext/string.hpp>
+
 #include <dom/helpers/exceptions.hpp>
 #include <dom/helpers/namespaces.hpp>
 #include <dom/helpers/shadows.hpp>
@@ -207,7 +209,7 @@ auto dom::helpers::custom_elements::upgrade_element(
     element->m_custom_element_state = "precustomized";
 
     // create a new instance of the upgraded element
-    auto* const construction_result = std::unique_ptr<c>{}.get();
+    auto* const construction_result = new c{};
 
     // TODO : javascript::helpers::same_value(...)
     definition->construction_stack.pop();
@@ -290,7 +292,7 @@ auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
     {
         // get the attribute name and return if there is no observed attributes on the definition containing the
         // attribute name
-        ext::cstring attribute_name = args.front();
+        const ext::string attribute_name = args.front();
         if (not definition->observed_attributes.contains(attribute_name))
             return;
     }

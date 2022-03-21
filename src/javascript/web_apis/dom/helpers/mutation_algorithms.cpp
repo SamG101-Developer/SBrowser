@@ -408,7 +408,7 @@ auto dom::helpers::mutation_algorithms::remove(
     {
         for (auto* const registered: *ancestor->m_registered_observer_list)
         {
-            auto* const transient_registered_observer = std::unique_ptr<internal::transient_registered_observer>{}.get();
+            auto* const transient_registered_observer = new internal::transient_registered_observer{};
 
             transient_registered_observer->observer = registered->observer;
             transient_registered_observer->options = registered->options;

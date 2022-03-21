@@ -1,7 +1,7 @@
 #include "custom_html_elements.hpp"
 
-#include <ext/macros/string_switch.hpp>
-#include <ext/iterables/vector.hpp>
+#include <ext/string_switch.hpp>
+#include <ext/vector.hpp>
 
 #include <dom/helpers/custom_elements.hpp>
 #include <html/elements/html_unknown_element.hpp>

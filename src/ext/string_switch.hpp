@@ -2,7 +2,7 @@
 #ifndef SBROWSER_STRING_SWITCH_HPP
 #define SBROWSER_STRING_SWITCH_HPP
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 
 namespace

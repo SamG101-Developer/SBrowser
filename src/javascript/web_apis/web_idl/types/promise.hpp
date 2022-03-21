@@ -1,7 +1,7 @@
 #ifndef SBROWSER_PROMISE_HPP
 #define SBROWSER_PROMISE_HPP
 
-#include <ext/macros/decorators.hpp>
+#include <ext/decorators.hpp>
 
 #include <v8.h>
 #include <v8pp/convert.hpp>

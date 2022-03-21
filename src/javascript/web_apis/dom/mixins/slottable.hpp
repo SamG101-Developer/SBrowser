@@ -2,8 +2,8 @@
 #ifndef SBROWSER_SLOTTABLE_HPP
 #define SBROWSER_SLOTTABLE_HPP
 
-#include <ext/iterables/string.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/string.hpp>
+#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
 namespace dom

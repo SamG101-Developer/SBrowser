@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NON_ELEMENT_PARENT_NODE_HPP
 #define SBROWSER_NON_ELEMENT_PARENT_NODE_HPP
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 #include <dom_object.hpp>
 
 namespace dom

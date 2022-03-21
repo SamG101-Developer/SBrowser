@@ -2,8 +2,8 @@
 #ifndef SBROWSER_DOCUMENT_OR_SHADOW_ROOT_HPP
 #define SBROWSER_DOCUMENT_OR_SHADOW_ROOT_HPP
 
-#include <ext/iterables/vector.hpp>
-#include <ext/properties/dom_property.hpp>
+#include <ext/vector.hpp>
+#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
 namespace css::cssom::style_sheets {class css_style_sheet;}

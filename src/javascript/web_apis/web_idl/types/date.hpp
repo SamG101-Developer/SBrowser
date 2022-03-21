@@ -2,7 +2,7 @@
 #ifndef SBROWSER_DATE_HPP
 #define SBROWSER_DATE_HPP
 
-#include <ext/macros/decorators.hpp>
+#include <ext/decorators.hpp>
 
 namespace webidl::types {class date;}
 

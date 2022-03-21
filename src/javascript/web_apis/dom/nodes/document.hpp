@@ -4,7 +4,7 @@
 
 #include <variant>
 
-#include <ext/iterables/map.hpp>
+#include <ext/map.hpp>
 #include <ext/mixins/listlike.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 

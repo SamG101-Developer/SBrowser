@@ -2,7 +2,7 @@
 #ifndef SBROWSER_NODE_FILTER_HPP
 #define SBROWSER_NODE_FILTER_HPP
 
-#include <ext/macros/decorators.hpp>
+#include <ext/decorators.hpp>
 #include <dom_object.hpp>
 
 namespace dom

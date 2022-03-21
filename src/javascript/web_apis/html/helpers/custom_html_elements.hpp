@@ -15,7 +15,7 @@
 //    ext::string is_value; \
 //    TODO
 
-#include <ext/iterables/string.hpp>
+#include <ext/string.hpp>
 
 namespace dom::nodes {class element;}
 namespace html {

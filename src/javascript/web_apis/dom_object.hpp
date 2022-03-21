@@ -1,9 +1,9 @@
 #ifndef SBROWSER_DOM_OBJECT_HPP
 #define SBROWSER_DOM_OBJECT_HPP
 
-#include <ext/macros/decorators.hpp>
-#include <ext/properties/dom_property.hpp>
-#include <ext/types/any.hpp>
+#include <ext/decorators.hpp>
+#include <ext/dom_property.hpp>
+#include <ext/any.hpp>
 
 #include <v8pp/class.hpp>
 

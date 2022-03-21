@@ -1,6 +1,6 @@
 #include "mutation_observer.hpp"
 
-#include <ext/iterables/set.hpp>
+#include <ext/set.hpp>
 #include <javascript/environment/realms.hpp>
 
 #include <dom/helpers/exceptions.hpp>

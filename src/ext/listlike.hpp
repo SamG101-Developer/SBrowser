@@ -2,31 +2,30 @@
 #ifndef SBROWSER_LISTLIKE_HPP
 #define SBROWSER_LISTLIKE_HPP
 
-#include <ext/properties/property.hpp>
+#include <ext/property.hpp>
 
-namespace ext
-{
-    template <typename T> class vector;
-    template <typename T> class listlike;
-}
+
+namespace ext {template <typename T> class vector;}
+namespace ext {template <typename T> class listlike;}
+
 
 template <typename T>
-class ext::listlike
+class ext::listlike final
 {
-public: constructors
+public constructors:
     explicit listlike(ext::vector<T>* linked_list = {});
 
-public: operators
+public operators:
     virtual auto operator[] (size_t index) -> T&;
     virtual auto operator[] (const ext::string& index) -> T&;
 
-public: properties
+public properties:
     ext::property<size_t> length;
 
-private: internal_methods
+private internal_methods:
     ext::vector<T>* m_linked_list;
 
-private: accessors
+private accessors:
     auto get_length() -> size_t;
 };
 
