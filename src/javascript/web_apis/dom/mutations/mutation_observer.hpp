@@ -48,7 +48,7 @@ public: methods
     auto take_records() -> ext::vector<mutation_record*>;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: internal_properties
     mutation_callback m_callback;

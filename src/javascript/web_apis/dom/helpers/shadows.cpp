@@ -42,13 +42,82 @@ auto dom::helpers::shadows::is_assigned(const nodes::node* const node) -> bool
 }
 
 
+auto dom::helpers::shadows::is_root_shadow_root(const nodes::node* const node_a) -> bool
+{
+    // return if the root of the tree is a shadow root
+    return is_shadow_root(trees::root(node_a));
+}
+
+
+auto dom::helpers::shadows::is_shadow_root(const nodes::node* const node_a) -> bool
+{
+    // return if the node cast to a shadow root is nullptr or not
+    return dynamic_cast<const nodes::shadow_root*>(node_a);
+}
+
+
+auto dom::helpers::shadows::is_shadow_host(const nodes::node* const node_a) -> bool
+{
+    // return if the node cast to an element has a shadow root node (ie is hosted)
+    return dynamic_cast<const nodes::element*>(node_a)->shadow_root_node;
+}
+
+
+auto dom::helpers::shadows::is_shadow_including_descendant(
+        const nodes::node* const node_a,
+        const nodes::node* node_b)
+-> bool
+{
+    // return if node_b is a descendant of node_a (normal text), or node_a is a shadow root and node_a's host is a
+    // shadow root that is a shadow including descendant of node_b
+    return trees::is_descendant(node_a, node_b) or is_shadow_root(node_a) and is_shadow_including_descendant(dynamic_cast<const nodes::shadow_root*>(node_a)->host, node_b);
+}
+
+
+auto dom::helpers::shadows::is_shadow_including_ancestor(
+        const nodes::node* const node_a,
+        const nodes::node* const node_b)
+-> bool
+{
+    // return if node_b is a shadow including descendant of node_a -> this means that node_a is a shadow including
+    // ancestor of node_b
+    return is_shadow_including_descendant(node_b, node_a);
+}
+
+
+auto dom::helpers::shadows::is_host_including_ancestor(
+        const nodes::node* node_a,
+        const nodes::node* const node_b)
+-> bool
+{
+    // TODO
+    return trees::is_descendant(node_a, node_b) or shadow_root(node_b) and shadow_root(node_b)->host and is_host_including_ancestor(node_a, shadow_root(node_b)->host);
+}
+
+
+auto dom::helpers::shadows::is_closed_shadow_hidden(
+        const nodes::node* const node_a,
+        const nodes::node* node_b)
+-> bool
+{
+    // get the shadow root of node_a
+    auto* const shadow_root_a = dynamic_cast<const nodes::shadow_root*>(node_a);
+
+    // return if the root is a shadow root that isn't a shadow including ancestor of node_b, and [the shadow root's mode
+    // is closed or the shadow root's host is a closed shadow hidden of node_b]
+    return is_root_shadow_root(node_a)
+           and not is_shadow_including_ancestor(shadow_root_a, node_b)
+           and (shadow_root_a->mode == "closed" or is_closed_shadow_hidden(shadow_root_a->host, node_b));
+}
+
+
 auto dom::helpers::shadows::find_slot(
         const nodes::node* const slottable,
         const bool open_flag)
         -> html::elements::html_slot_element*
 {
     // create a pointer for the shadow root
-    const nodes::shadow_root*const shadow;
+    const nodes::shadow_root* shadow = nullptr;
 
     // return nullptr if the slottable doesn't have a parent
     if (not slottable->parent)
@@ -182,73 +251,4 @@ auto dom::helpers::shadows::shadow_root(const nodes::node* const node_a) -> dom:
 {
     // return the shadow_root cast root of the node
     return dynamic_cast<nodes::shadow_root*>(trees::root(node_a));
-}
-
-
-auto dom::helpers::shadows::is_root_shadow_root(const nodes::node* const node_a) -> bool
-{
-    // return if the root of the tree is a shadow root
-    return is_shadow_root(trees::root(node_a));
-}
-
-
-auto dom::helpers::shadows::is_shadow_root(const nodes::node* const node_a) -> bool
-{
-    // return if the node cast to a shadow root is nullptr or not
-    return dynamic_cast<const nodes::shadow_root*>(node_a);
-}
-
-
-auto dom::helpers::shadows::is_shadow_host(const nodes::node* const node_a) -> bool
-{
-    // return if the node cast to an element has a shadow root node (ie is hosted)
-    return dynamic_cast<const nodes::element*>(node_a)->shadow_root_node;
-}
-
-
-auto dom::helpers::shadows::is_shadow_including_descendant(
-        const nodes::node* const node_a,
-        const nodes::node* node_b)
-        -> bool
-{
-    // return if node_b is a descendant of node_a (normal text), or node_a is a shadow root and node_a's host is a
-    // shadow root that is a shadow including descendant of node_b
-    return trees::is_descendant(node_a, node_b) or is_shadow_root(node_a) and is_shadow_including_descendant(dynamic_cast<const nodes::shadow_root*>(node_a)->host, node_b);
-}
-
-
-auto dom::helpers::shadows::is_shadow_including_ancestor(
-        const nodes::node* const node_a,
-        const nodes::node* const node_b)
-        -> bool
-{
-    // return if node_b is a shadow including descendant of node_a -> this means that node_a is a shadow including
-    // ancestor of node_b
-    return is_shadow_including_descendant(node_b, node_a);
-}
-
-
-auto dom::helpers::shadows::is_host_including_ancestor(
-        const nodes::node* node_a,
-        const nodes::node* const node_b)
-        -> bool
-{
-    // TODO
-    return trees::is_descendant(node_a, node_b) or shadow_root(node_b) and shadow_root(node_b)->host and is_host_including_ancestor(node_a, shadow_root(node_b)->host);
-}
-
-
-auto dom::helpers::shadows::is_closed_shadow_hidden(
-        const nodes::node* const node_a,
-        const nodes::node* node_b)
-        -> bool
-{
-    // get the shadow root of node_a
-    auto* const shadow_root_a = dynamic_cast<const nodes::shadow_root*>(node_a);
-
-    // return if the root is a shadow root that isn't a shadow including ancestor of node_b, and [the shadow root's mode
-    // is closed or the shadow root's host is a closed shadow hidden of node_b]
-    return is_root_shadow_root(node_a)
-            and not is_shadow_including_ancestor(shadow_root_a, node_b)
-            and (shadow_root_a->mode == "closed" or is_closed_shadow_hidden(shadow_root_a->host, node_b));
 }

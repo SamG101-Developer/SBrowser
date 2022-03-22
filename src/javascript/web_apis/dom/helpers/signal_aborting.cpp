@@ -6,7 +6,7 @@
 
 auto dom::helpers::signal_aborting::signal_abort(
         aborting::abort_signal* const signal,
-        ext::cany& reason)
+        const ext::any& reason)
         -> void
 {
     // return if the signal ahs already been aborted

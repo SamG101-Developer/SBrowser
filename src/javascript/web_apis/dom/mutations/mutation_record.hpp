@@ -41,7 +41,7 @@ public: properties
     ext::dom_property<ext::vector<nodes::node*>, _F> removed_nodes;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

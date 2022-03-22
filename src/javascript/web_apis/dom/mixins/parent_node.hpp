@@ -38,7 +38,7 @@ public: properties
     ext::dom_property<size_t, _F> child_element_count;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: accessors
     auto get_children() const -> ext::vector<nodes::element*>;

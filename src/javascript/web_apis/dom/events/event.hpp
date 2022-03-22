@@ -60,7 +60,7 @@ public properties:
     ext::dom_property<ext::vector<internal::event_path_struct*>*, _F> path;
 
 public internal_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private internal_properties:
     bool m_stop_propagation_flag = false;

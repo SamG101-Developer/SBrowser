@@ -30,7 +30,7 @@ public: properties
     ext::dom_property<html::elements::html_slot_element*, _F> assigned_slot;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: internal_properties
     ext::string m_name;

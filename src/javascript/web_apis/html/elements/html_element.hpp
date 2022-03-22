@@ -49,7 +49,7 @@ public:
     ext::dom_property<long, _F> offsetHeight;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: accessors
     // html

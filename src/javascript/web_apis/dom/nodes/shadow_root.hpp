@@ -24,7 +24,7 @@ public: properties
     ext::dom_property<bool, _F> delegates_focus;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected: internal_properties
     bool m_available_to_internals = false;

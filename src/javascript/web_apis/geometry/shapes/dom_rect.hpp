@@ -12,7 +12,7 @@ public: constructors
     dom_rect(double x = 0, double y = 0, double width = 0, double height = 0);
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate* isolate) const override;
 
 private: accessors
     void set_x(double val);

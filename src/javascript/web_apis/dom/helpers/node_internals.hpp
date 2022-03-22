@@ -4,36 +4,52 @@
 
 #include <ext/string.hpp>
 
-namespace dom
-{
-    namespace helpers {struct node_internals;}
-    namespace nodes
-    {
-        class document;
-        class element;
-        class node;
-        class window;
-        class window_proxy;
-    }
-}
-
+namespace dom::helpers {struct node_internals;}
+namespace dom::nodes {class document;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class node;}
+namespace dom::nodes {class window;}
+namespace dom::nodes {class window_proxy;}
 namespace html::elements {class html_element;}
 
 
-/*
- * Group of helper methods designed to help with the internal behaviour of nodes, such as namespace location, cloning,
- * adopting, string replacing etc
- */
-struct dom::helpers::node_internals
+struct dom::helpers::node_internals final
 {
-    template <typename T> static auto clone(T* node, nodes::document* document = nullptr, bool deep = false) -> dom::nodes::node* requires std::is_base_of_v<T, nodes::node>;
-    static auto locate_a_namespace_prefix(const nodes::element* element, const ext::string& namespace_) -> ext::string;
-    static auto locate_a_namespace(const nodes::node* node, const ext::string& prefix) -> ext::string;
-    static auto list_of_elements_with_qualified_name(const nodes::node* descendant_element, const ext::string& qualified_name) -> ext::vector<nodes::element*>;
-    static auto list_of_elements_with_namespace_and_local_name(const nodes::node* node, const ext::string& namespace_, const ext::string& local_name) -> ext::vector<nodes::element*>;
-    static auto list_of_elements_with_class_names(const nodes::node* node, const ext::string& class_names) -> ext::vector<nodes::element*>;
-    static auto adopt(nodes::node* node, const nodes::document* document) -> void;
+    // node manipulation
+    template <typename T>
+    static auto clone(
+            T* node,
+            nodes::document* document = nullptr,
+            bool deep = false) -> dom::nodes::node* requires std::is_base_of_v<T, nodes::node>;
 
+    static auto adopt(
+            nodes::node* node,
+            const nodes::document* document) -> void;
+
+    // locating information on a node
+    static auto locate_a_namespace_prefix(
+            const nodes::element* element,
+            const ext::string& namespace_) -> ext::string;
+
+    static auto locate_a_namespace(
+            const nodes::node* node,
+            const ext::string& prefix) -> ext::string;
+
+    // list elements with certain features
+    static auto list_of_elements_with_qualified_name(
+            const nodes::node* descendant_element,
+            const ext::string& qualified_name) -> ext::vector<nodes::element*>;
+
+    static auto list_of_elements_with_namespace_and_local_name(
+            const nodes::node* node,
+            const ext::string& namespace_,
+            const ext::string& local_name) -> ext::vector<nodes::element*>;
+
+    static auto list_of_elements_with_class_names(
+            const nodes::node* node,
+            const ext::string& class_names) -> ext::vector<nodes::element*>;
+
+    // TODO : arrange
     static auto string_replace_all(const ext::string& string, nodes::node* parent) -> void;
     static auto is_document_available_to_user(nodes::document* document, const ext::string&) -> bool;  // TODO name [-1]
     static auto is_document_fully_active(nodes::document* document) -> bool;

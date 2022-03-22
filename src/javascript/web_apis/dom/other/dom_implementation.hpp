@@ -31,7 +31,7 @@ public: methods
     auto create_html_document(const ext::string& title = "") -> nodes::document*;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: internal_properties
     nodes::document* m_associated_document;

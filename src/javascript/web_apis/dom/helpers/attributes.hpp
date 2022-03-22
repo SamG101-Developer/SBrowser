@@ -9,7 +9,7 @@ namespace dom::nodes {class attr;}
 namespace dom::nodes {class element;}
 
 
-struct dom::helpers::attributes
+struct dom::helpers::attributes final
 {
     // handle changes
     static auto handle_attributes_changes(

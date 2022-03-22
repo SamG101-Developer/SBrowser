@@ -1,17 +1,10 @@
 #include "node_filter.hpp"
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-nodefilter-acceptnode
- * https://developer.mozilla.org/en-US/docs/Web/API/NodeFilter/acceptNode
- *
- * Returns an unsigned short that will be used to tell if a given Node must be accepted or not by the NodeIterator or
- * TreeWalker iteration algorithm. This method is expected to be written by the user of a NodeFilter. Possible return
- * values are:
- */
-auto dom::iterators::node_filter::accept_node(nodes::node* node) const -> unsigned short {
-    // This function is implemented in JavaScript
-    return node_filter::FILTER_ACCEPT;
+dom::iterators::node_filter::node_filter()
+{
+    // set the properties
+    accept_node = [](const nodes::node* node) {return FILTER_ACCEPT;};
 }
 
 
@@ -21,7 +14,6 @@ auto dom::iterators::node_filter::v8(v8::Isolate* isolate) const -> ext::any
             .static_("FILTER_ACCEPT", node_filter::FILTER_ACCEPT)
             .static_("FILTER_SKIP", node_filter::FILTER_SKIP)
             .static_("FILTER_REJECT", node_filter::FILTER_REJECT)
-
             .static_("SHOW_ALL", node_filter::SHOW_ALL)
             .static_("SHOW_ELEMENT", node_filter::SHOW_ELEMENT)
             .static_("SHOW_ATTRIBUTE", node_filter::SHOW_ATTRIBUTE)
@@ -32,7 +24,6 @@ auto dom::iterators::node_filter::v8(v8::Isolate* isolate) const -> ext::any
             .static_("SHOW_DOCUMENT", node_filter::SHOW_DOCUMENT)
             .static_("SHOW_DOCUMENT_TYPE", node_filter::SHOW_DOCUMENT_TYPE)
             .static_("SHOW_DOCUMENT_FRAGMENT", node_filter::SHOW_DOCUMENT_FRAGMENT)
-
-            .function("acceptNode", &node_filter::accept_node)
+            .var("acceptNode", &node_filter::accept_node, false)
             .auto_wrap_objects();
 }

@@ -141,7 +141,7 @@ public: properties
 
 public: internal_methods
     auto render() const -> QWidget* override;
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: internal_properties
     ext::property<ext::string> m_qualified_name;

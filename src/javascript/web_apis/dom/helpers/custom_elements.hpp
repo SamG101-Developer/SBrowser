@@ -12,8 +12,7 @@ namespace dom::nodes {class document;}
 namespace dom::nodes {class element;}
 
 
-
-struct dom::helpers::custom_elements
+struct dom::helpers::custom_elements final
 {
     // custom element creation and upgrading
     static auto create_an_element(

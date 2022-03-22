@@ -65,7 +65,7 @@ public properties:
     ext::dom_property<nodes::node*, _F> common_ancestor_container;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: internal_properties
     nodes::node* m_root;

@@ -130,7 +130,7 @@ public: properties
     ext::dom_property<css::cssom_view::other::screen*, _F> screen;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: accessors
     auto get_inner_width() -> long;

@@ -13,7 +13,7 @@ namespace dom::internal {struct event_path_struct;}
 namespace dom::nodes {class event_target;}
 
 
-struct dom::helpers::event_dispatching
+struct dom::helpers::event_dispatching final
 {
     // event appending
     static auto append_to_event_path(

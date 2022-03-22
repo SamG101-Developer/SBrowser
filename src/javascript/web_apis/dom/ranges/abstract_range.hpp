@@ -27,7 +27,7 @@ public properties:
     ext::dom_property<unsigned long, _F> end_offset;
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

@@ -35,7 +35,7 @@ auto dom::helpers::node_internals::clone(
     const auto* const element = dynamic_cast<nodes::element*>(node);
     cloned_node = element
             ? cloned_node = custom_elements::create_an_element(document, element->local_name, element->namespace_uri, element->prefix, element->m_is, false)
-            : cloned_node = std::unique_ptr<T>{*node}.get();
+            : cloned_node = new T{*node};
 
     // if the node is or is derived an element, then clone the attributes over too
     if (element)
@@ -54,6 +54,24 @@ auto dom::helpers::node_internals::clone(
 
     // return the cloned node
     return cloned_node;
+}
+
+
+auto dom::helpers::node_internals::adopt(
+        nodes::node* const node,
+        const nodes::document* const document)
+-> void
+{
+    // get the old document
+    const nodes::document* const old_document = node->owner_document;
+
+    // if the node has a parent, then remove the node from its document, as it is being adopted into the new document
+    if (node->parent)
+        mutation_algorithms::remove(node);
+
+    // if the two documents are different, the handle shadow options
+    if (document != old_document)
+        return; /* TODO show inclusive descendants */
 }
 
 
@@ -207,24 +225,6 @@ auto dom::helpers::node_internals::list_of_elements_with_class_names(
                     return descendant_element->class_list->contains(class_);
                 });
             });
-}
-
-
-auto dom::helpers::node_internals::adopt(
-        nodes::node* const node,
-        const nodes::document* const document)
-        -> void
-{
-    // get the old document
-    const nodes::document* const old_document = node->owner_document;
-
-    // if the node has a parent, then remove the node from its document, as it is being adopted into the new document
-    if (node->parent)
-        mutation_algorithms::remove(node);
-
-    // if the two documents are different, the handle shadow options
-    if (document != old_document)
-        return; /* TODO show inclusive descendants */
 }
 
 

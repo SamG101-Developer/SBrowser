@@ -22,7 +22,7 @@ public: methods
     ext::vector<nodes::element*> get_elements_by_class_name(const ext::string& class_names);
 
 public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

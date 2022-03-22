@@ -44,30 +44,30 @@ auto dom::helpers::texts::replace_data(
     // live ranges whose start container is the text node and start offset is contained in the start and end text
     // offsets, change the start offset to the start offset of text replacement
     live_ranges
-            .filter([text_node](auto* range) {return range->start_container == text_node;})
-            .filter([count, offset](auto* range) {return range->start_offset > offset and range->start_offset <= offset + count;})
-            .for_each([offset](auto* range) {range->start_offset = offset;});
+            .filter([text_node](ranges::range* range) {return range->start_container == text_node;})
+            .filter([count, offset](ranges::range* range) {return range->start_offset > offset and range->start_offset <= offset + count;})
+            .for_each([offset](ranges::range* range) {range->start_offset = offset;});
 
     // live ranges whose end container is the text node and end offset is contained in the start and end text offsets,
     // change the end offset to the start offset of text replacement
     live_ranges
-            .filter([text_node](auto* range) {return range->end_container == text_node;})
-            .filter([count, offset](auto* range) {return range->end_offset > offset and range->end_offset <= offset + count;})
-            .for_each([offset](auto* range) {range->end_offset = offset;});
+            .filter([text_node](ranges::range* range) {return range->end_container == text_node;})
+            .filter([count, offset](ranges::range* range) {return range->end_offset > offset and range->end_offset <= offset + count;})
+            .for_each([offset](ranges::range* range) {range->end_offset = offset;});
 
     // live ranges whose start container is the text node and start offset is after end text offset, increment the start
     // offset by the [length of the data - the count]
     live_ranges
-            .filter([text_node](auto* range) {return range->start_container == text_node;})
-            .filter([count, offset](auto* range) {return range->start_offset > offset + count;})
-            .for_each([count, data](auto* range) {range->start_offset += data.length() - count;});
+            .filter([text_node](ranges::range* range) {return range->start_container == text_node;})
+            .filter([count, offset](ranges::range* range) {return range->start_offset > offset + count;})
+            .for_each([count, data](ranges::range* range) {range->start_offset += data.length() - count;});
 
     // live ranges whose end container is the text node and end offset is after end text offset, increment the end
     // offset by the [length of the data - the count]
     live_ranges
-            .filter([text_node](auto* range) {return range->end_container == text_node;})
-            .filter([count, offset](auto* range) {return range->end_offset > offset + count;})
-            .for_each([count, data](auto* range) {range->end_offset += data.length() - count;});
+            .filter([text_node](ranges::range* range) {return range->end_container == text_node;})
+            .filter([count, offset](ranges::range* range) {return range->end_offset > offset + count;})
+            .for_each([count, data](ranges::range* range) {range->end_offset += data.length() - count;});
 }
 
 

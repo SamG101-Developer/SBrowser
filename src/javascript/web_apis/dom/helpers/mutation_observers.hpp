@@ -17,7 +17,7 @@ namespace dom::nodes {class node;}
 namespace html::elements {class html_media_element;}
 
 
-struct dom::helpers::mutation_observers
+struct dom::helpers::mutation_observers final
 {
 private:
     using steps_t = std::function<void()>;

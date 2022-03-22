@@ -7,7 +7,7 @@
 namespace dom::helpers {struct namespaces;}
 
 
-struct dom::helpers::namespaces
+struct dom::helpers::namespaces final
 {
     inline static const ext::string HTML = "http://www.w3.org/1999/xhtml";
     inline static const ext::string MATHML = "http://www.w3.org/1998/Math/MathML";

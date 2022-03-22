@@ -6,7 +6,7 @@ namespace dom::helpers {struct mutation_algorithms;}
 namespace dom::nodes {class node;}
 
 
-struct dom::helpers::mutation_algorithms
+struct dom::helpers::mutation_algorithms final
 {
     // common checks across multiple methods / validity checks
     static auto common_checks(

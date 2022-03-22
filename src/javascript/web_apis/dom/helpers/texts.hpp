@@ -4,23 +4,33 @@
 
 #include <ext/string.hpp>
 
-namespace dom
-{
-    namespace helpers {struct texts;}
-    namespace nodes
-    {
-        class character_data;
-        class element;
-        class text;
-    }
-}
+namespace dom::helpers {struct texts;}
+namespace dom::nodes {class character_data;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class text;}
 
-struct dom::helpers::texts
+
+struct dom::helpers::texts final
 {
-    static auto replace_data(nodes::character_data* text_node, unsigned long offset, unsigned long count, const ext::string& data) -> void;
-    static auto split(nodes::text* text_node, unsigned long offset) -> nodes::text*;
-    static auto substring_data(const nodes::character_data* text_node, unsigned long offset, unsigned long count) -> ext::string;
-    static auto advisory_information(nodes::element* element) -> ext::string;
+    // manipulate text
+    static auto replace_data(
+            nodes::character_data* text_node,
+            unsigned long offset,
+            unsigned long count,
+            const ext::string& data) -> void;
+
+    static auto split(
+            nodes::text* text_node,
+            unsigned long offset) -> nodes::text*;
+
+    static auto substring_data(
+            const nodes::character_data* text_node,
+            unsigned long offset,
+            unsigned long count) -> ext::string;
+
+    // other general helper methods for text
+    static auto advisory_information(
+            nodes::element* element) -> ext::string;
 };
 
 

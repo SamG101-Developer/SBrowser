@@ -37,7 +37,7 @@ public: javascript_slots
     window* s_window;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate* isolate) const override;
 };
 
 

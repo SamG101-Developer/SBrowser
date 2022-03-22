@@ -22,7 +22,7 @@ public: constructors
     ext::dom_property<double> left;
 
 public: internal_methods
-    ext::any v8(v8::Isolate *isolate) const override;
+    ext::any v8(v8::Isolate* isolate) const override;
 
 private: accessors
     double get_left() const;

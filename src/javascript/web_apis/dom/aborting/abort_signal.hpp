@@ -36,7 +36,7 @@ public properties:
     ext::dom_property<ext::any, _F> reason;
 
 public internal_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private internal_properties:
     abort_signal_callbacks m_abort_algorithms;

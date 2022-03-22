@@ -6,42 +6,30 @@
 #include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
-namespace dom
-{
-    namespace helpers {struct traversal;}
-    namespace iterators
-    {
-        class abstract_iterator;
-        struct node_filter;
-    }
-    namespace nodes {class node;}
-}
+namespace dom::helpers {struct traversal;}
+namespace dom::iterators {class abstract_iterator;}
+namespace dom::iterators {struct node_filter;}
+namespace dom::nodes {class node;}
 
 
-/*
- * ...
- * ...
- *
- * Non-spec class that has duplicate code for the TreeWalker and NodeIterator classes
- */
 class dom::iterators::abstract_iterator : virtual public dom_object
 {
-public: friends
+public friends:
     friend struct dom::helpers::traversal;
 
-public: constructors
+public constructors:
     abstract_iterator();
 
-public: properties
+public properties:
     ext::dom_property<nodes::node*, _F> root;
     ext::dom_property<node_filter*, _F> filter;
     ext::dom_property<unsigned long, _F> what_to_show;
 
-public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+public internal_methods:
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private:
-    bool m_active_flag;
+    bool m_active_flag = false;
 };
 
 

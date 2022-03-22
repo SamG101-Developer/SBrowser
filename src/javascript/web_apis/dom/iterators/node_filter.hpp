@@ -5,24 +5,16 @@
 #include <ext/decorators.hpp>
 #include <dom_object.hpp>
 
-namespace dom
-{
-    namespace iterators {struct node_filter;}
-    namespace nodes {class node;}
-}
+namespace dom::iterators {struct node_filter;}
+namespace dom::nodes {class node;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-nodefilter
- * https://developer.mozilla.org/en-US/docs/Web/API/NodeFilter
- *
- * A NodeFilter interface represents an object used to filter the nodes in a NodeIterator or TreeWalker. A NodeFilter
- * knows nothing about the document or traversing nodes; it only knows how to evaluate a single node against the
- * provided filter.
- */
 struct dom::iterators::node_filter : virtual public dom_object
 {
-public: static_constants
+public constructors:
+    node_filter();
+
+public static_constants:
     static const unsigned short FILTER_ACCEPT = 1;
     static const unsigned short FILTER_REJECT = 2;
     static const unsigned short FILTER_SKIP = 3;
@@ -38,11 +30,11 @@ public: static_constants
     static const unsigned long SHOW_DOCUMENT_TYPE = 0x200;
     static const unsigned long SHOW_DOCUMENT_FRAGMENT = 0x400;
 
-public: methods
-    auto accept_node(nodes::node* node) const -> unsigned short;
+public properties:
+    ext::dom_property<std::function<unsigned short(const nodes::node*)>, _F> accept_node;
 
-public: internal_methods
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+public internal_methods:
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

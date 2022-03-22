@@ -16,7 +16,7 @@ namespace dom::internal {struct event_path_struct;}
 namespace dom::nodes {class event_target;}
 
 
-struct dom::helpers::event_listening
+struct dom::helpers::event_listening final
 {
     // flatten options
     static auto flatten_more(
