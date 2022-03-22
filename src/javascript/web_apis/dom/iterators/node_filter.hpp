@@ -9,7 +9,7 @@ namespace dom::iterators {struct node_filter;}
 namespace dom::nodes {class node;}
 
 
-struct dom::iterators::node_filter : virtual public dom_object
+struct dom::iterators::node_filter final : virtual public dom_object
 {
 public constructors:
     node_filter();

@@ -14,7 +14,7 @@ dom::nodes::processing_instruction::processing_instruction()
 auto dom::nodes::processing_instruction::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<processing_instruction>{isolate}
-            .inherit<character_data>()
-            .var("target", &processing_instruction::target)
+            .template inherit<character_data>()
+            .template var("target", &processing_instruction::target)
             .auto_wrap_objects();
 }

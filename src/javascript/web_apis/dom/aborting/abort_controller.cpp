@@ -12,19 +12,23 @@ dom::aborting::abort_controller::abort_controller() : dom_object()
 }
 
 
-auto dom::aborting::abort_controller::abort(ext::cany& reason) const -> void
+auto dom::aborting::abort_controller::abort(
+        const ext::any& reason) const
+        -> void
 {
     // The abort(reason) method steps are to signal abort on this’s signal with reason if it is given.
     helpers::signal_aborting::signal_abort(signal, reason);
 }
 
 
-auto dom::aborting::abort_controller::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::aborting::abort_controller::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<abort_controller>{isolate}
-            .ctor<>()
-            .inherit<dom_object>()
-            .function("abort", &abort_controller::abort)
-            .var("signal", &abort_controller::signal, true)
+            .template ctor<>()
+            .template inherit<dom_object>()
+            .template function("abort", &abort_controller::abort)
+            .template var("signal", &abort_controller::signal, true)
             .auto_wrap_objects();
 }

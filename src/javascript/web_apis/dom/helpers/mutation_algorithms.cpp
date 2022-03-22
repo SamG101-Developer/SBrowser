@@ -357,8 +357,8 @@ auto dom::helpers::mutation_algorithms::replace(
 auto dom::helpers::mutation_algorithms::remove(
         nodes::node* node,
         const bool suppress_observers_flag)
-        -> dom::nodes::node* {
-
+        -> dom::nodes::node*
+{
     if (not node->parent) return node;
 
     const nodes::node* const parent = node->parent;
@@ -428,8 +428,8 @@ auto dom::helpers::mutation_algorithms::remove(
 auto dom::helpers::mutation_algorithms::replace_all(
         nodes::node* const node,
         nodes::node* const parent)
-        -> void {
-
+        -> void
+{
     const auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node}.remove(nullptr);
     const auto removed_nodes = ext::vector<nodes::node*>{*parent->child_nodes};
     parent->child_nodes->for_each([](auto* child) {remove(child);});

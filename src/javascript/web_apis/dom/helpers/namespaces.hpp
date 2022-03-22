@@ -19,11 +19,13 @@ struct dom::helpers::namespaces final
 
     // validation checks
     static auto validate(
-            const ext::string& qualified_name) -> void;
+            const ext::string& qualified_name)
+            -> void;
 
     static auto validate_and_extract(
             const ext::string& namespace_,
-            const ext::string& qualified_name) -> std::tuple<ext::string, ext::string, ext::string>;
+            const ext::string& qualified_name)
+            -> std::tuple<ext::string, ext::string, ext::string>;
 };
 
 

@@ -12,10 +12,12 @@ struct dom::helpers::ordered_sets final
 {
     // parsing and serializing
     static auto ordered_set_parser(
-            const ext::string& input_string) -> ext::set<ext::string>;
+            const ext::string& input_string)
+            -> ext::set<ext::string>;
 
     static auto ordered_set_serializer(
-            const ext::set<ext::string>& input_set) -> ext::string;
+            const ext::set<ext::string>& input_set)
+            -> ext::string;
 };
 
 

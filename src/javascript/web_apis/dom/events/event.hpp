@@ -40,7 +40,8 @@ public methods:
     auto stop_propagation() -> void;
     auto stop_immediate_propagation() -> void;
     auto prevent_default() -> void;
-    auto composed_path() const -> ext::vector<nodes::event_target*>;
+
+    new_obj auto composed_path() const -> ext::vector<nodes::event_target*>;
 
 public properties:
     ext::dom_property<ext::string, _F> type;

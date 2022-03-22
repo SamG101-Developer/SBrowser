@@ -5,20 +5,17 @@
 #include <ext/string.hpp>
 #include <dom_object.hpp>
 
-namespace dom
-{
-    namespace mixins {template <typename T> class non_element_parent_node;}
-    namespace nodes {class element;}
-}
+namespace dom::mixins {template <typename T> class non_element_parent_node;}
+namespace dom::nodes {class element;}
 
 
 template <typename T>
 class dom::mixins::non_element_parent_node : public dom_object
 {
-public: methods
+public methods:
     auto get_element_by_id(const ext::string& element_id) -> nodes::element*;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

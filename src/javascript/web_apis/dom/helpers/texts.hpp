@@ -17,20 +17,24 @@ struct dom::helpers::texts final
             nodes::character_data* text_node,
             unsigned long offset,
             unsigned long count,
-            const ext::string& data) -> void;
+            const ext::string& data)
+            -> void;
 
     static auto split(
             nodes::text* text_node,
-            unsigned long offset) -> nodes::text*;
+            unsigned long offset)
+            -> nodes::text*;
 
     static auto substring_data(
             const nodes::character_data* text_node,
             unsigned long offset,
-            unsigned long count) -> ext::string;
+            unsigned long count)
+            -> ext::string;
 
     // other general helper methods for text
     static auto advisory_information(
-            nodes::element* element) -> ext::string;
+            nodes::element* element)
+            -> ext::string;
 };
 
 

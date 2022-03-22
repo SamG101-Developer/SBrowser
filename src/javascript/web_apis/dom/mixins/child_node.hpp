@@ -9,19 +9,16 @@
 namespace dom::mixins {template <typename T> class child_node;}
 
 
-/*
- * https://dom.spec.whatwg.org/#childnode
- */
 template <typename T>
 class dom::mixins::child_node : public virtual dom_object
 {
-public: methods
+public methods:
     unscopable template<typename ...nodes_or_strings_t> auto before(nodes_or_strings_t... nodes) -> void;
     unscopable template<typename ...nodes_or_strings_t> auto after(nodes_or_strings_t... nodes) -> void;
     unscopable template<typename ...nodes_or_strings_t> auto replace_with(nodes_or_strings_t... nodes) -> void;
     unscopable auto remove() -> void;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

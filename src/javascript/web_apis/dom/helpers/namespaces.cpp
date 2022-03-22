@@ -3,7 +3,9 @@
 #include <dom/helpers/exceptions.hpp>
 
 
-auto dom::helpers::namespaces::validate(const ext::string& qualified_name) -> void
+auto dom::helpers::namespaces::validate(
+        const ext::string& qualified_name)
+        -> void
 {
     // TODO : https://stackoverflow.com/a/51451972/10862918 for BNF impl
     exceptions::throw_v8_exception(

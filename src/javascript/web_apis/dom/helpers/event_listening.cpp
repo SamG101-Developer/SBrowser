@@ -14,12 +14,10 @@
 #include <dom/nodes/window.hpp>
 #include <dom/nodes/shadow_root.hpp>
 
-#include <ranges>
 
-#include <vector>
-
-
-auto dom::helpers::event_listening::flatten_more(std::variant<bool, ext::string_any_map> options) -> ext::string_any_map
+auto dom::helpers::event_listening::flatten_more(
+        std::variant<bool, ext::string_any_map> options)
+        -> ext::string_any_map
 {
     // return {capture: true} if the options is a bool value, otherwise the map already being held in the variant
     return std::holds_alternative<bool>(options)
@@ -28,7 +26,9 @@ auto dom::helpers::event_listening::flatten_more(std::variant<bool, ext::string_
 }
 
 
-auto dom::helpers::event_listening::flatten(std::variant<bool, ext::string_any_map> options) -> bool
+auto dom::helpers::event_listening::flatten(
+        std::variant<bool, ext::string_any_map> options)
+        -> bool
 {
     // return the boolean if a boolean value is being stored in the variant, otherwise the capture option of the map
     return std::holds_alternative<bool>(options)
@@ -87,7 +87,9 @@ auto dom::helpers::event_listening::remove_event_listener(
 }
 
 
-auto dom::helpers::event_listening::remove_all_event_listeners(nodes::event_target* const event_target) -> void
+auto dom::helpers::event_listening::remove_all_event_listeners(
+        nodes::event_target* const event_target)
+        -> void
 {
     // iterate over event listeners and remove them all
     for (ext::string_any_map& event_listener: event_target->m_event_listeners)

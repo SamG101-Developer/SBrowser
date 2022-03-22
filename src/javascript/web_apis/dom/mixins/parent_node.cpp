@@ -21,7 +21,9 @@ dom::mixins::parent_node<T>::parent_node()
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-auto dom::mixins::parent_node<T>::prepend(nodes_or_strings_t ...nodes) -> void
+auto dom::mixins::parent_node<T>::prepend(
+        nodes_or_strings_t ...nodes)
+        -> void
 {
     // get the class that this mixin is being mixed into, and the node
     auto* base = static_cast<T*>(this);
@@ -37,7 +39,9 @@ auto dom::mixins::parent_node<T>::prepend(nodes_or_strings_t ...nodes) -> void
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-auto dom::mixins::parent_node<T>::append(nodes_or_strings_t ...nodes) -> void
+auto dom::mixins::parent_node<T>::append(
+        nodes_or_strings_t ...nodes)
+        -> void
 {
     // get the class that this mixin is being mixed into, and the node
     auto* base = static_cast<T*>(this);
@@ -53,7 +57,9 @@ auto dom::mixins::parent_node<T>::append(nodes_or_strings_t ...nodes) -> void
 
 template <typename T>
 template <typename ...nodes_or_strings_t>
-auto dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes) -> void
+auto dom::mixins::parent_node<T>::replace_children(
+        nodes_or_strings_t ...nodes)
+        -> void
 {
     // get the class that this mixin is being mixed into, and the node
     auto* base = static_cast<T*>(this);
@@ -69,7 +75,8 @@ auto dom::mixins::parent_node<T>::replace_children(nodes_or_strings_t ...nodes) 
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_children() const -> ext::vector<dom::nodes::element*>
+auto dom::mixins::parent_node<T>::get_children() const
+        -> ext::vector<dom::nodes::element*>
 {
     // return all the children that are element type nodes
     return static_cast<const T*>(this)->child_nodes->template cast_all<nodes::element*>();
@@ -77,7 +84,8 @@ auto dom::mixins::parent_node<T>::get_children() const -> ext::vector<dom::nodes
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_first_element_child() const -> dom::nodes::element*
+auto dom::mixins::parent_node<T>::get_first_element_child() const
+        -> dom::nodes::element*
 {
     // return the first item from the element child list
     return children->front();
@@ -85,7 +93,8 @@ auto dom::mixins::parent_node<T>::get_first_element_child() const -> dom::nodes:
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_last_element_child() const -> dom::nodes::element*
+auto dom::mixins::parent_node<T>::get_last_element_child() const
+        -> dom::nodes::element*
 {
     // return the last item from the element child list
     return children->back();
@@ -93,7 +102,8 @@ auto dom::mixins::parent_node<T>::get_last_element_child() const -> dom::nodes::
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_child_element_count() const -> size_t
+auto dom::mixins::parent_node<T>::get_child_element_count() const
+        -> size_t
 {
     // return the length of the element child list
     return children->length();
@@ -101,19 +111,19 @@ auto dom::mixins::parent_node<T>::get_child_element_count() const -> size_t
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::mixins::parent_node<T>::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<parent_node<dom::nodes::node>>{isolate}
-            .function("prepend", &parent_node<T>::prepend)
-            .function("append", &parent_node<T>::append)
-            .function("replaceChildren", &parent_node<dom::nodes::node>::replace_children)
-            .function("querySelector", &parent_node<dom::nodes::node>::query_selector)
-            .function("querySelectorAll", &parent_node<dom::nodes::node>::query_selector_all)
+            .template inherit<dom_object>()
+            .template function("querySelector", &parent_node<dom::nodes::node>::query_selector)
+            .template function("querySelectorAll", &parent_node<dom::nodes::node>::query_selector_all)
 
-            .var("children", &parent_node<dom::nodes::node>::children)
-            .var("firstElementChild", &parent_node<dom::nodes::node>::first_element_child)
-            .var("lastElementChild", &parent_node<dom::nodes::node>::last_element_child)
-            .var("childElementCount", &parent_node<dom::nodes::node>::child_element_count)
+            .template var("children", &parent_node<dom::nodes::node>::children)
+            .template var("firstElementChild", &parent_node<dom::nodes::node>::first_element_child)
+            .template var("lastElementChild", &parent_node<dom::nodes::node>::last_element_child)
+            .template var("childElementCount", &parent_node<dom::nodes::node>::child_element_count)
             .auto_wrap_objects();
 }
 

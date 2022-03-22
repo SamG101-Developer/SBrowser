@@ -1,7 +1,9 @@
 #include "ordered_sets.hpp"
 
 
-auto dom::helpers::ordered_sets::ordered_set_parser(const ext::string& input_string) -> ext::set<ext::string>
+auto dom::helpers::ordered_sets::ordered_set_parser(
+        const ext::string& input_string)
+        -> ext::set<ext::string>
 {
     // create an empty set, and emplace each element from the space-split string
     ext::set<ext::string> output_set;
@@ -13,7 +15,9 @@ auto dom::helpers::ordered_sets::ordered_set_parser(const ext::string& input_str
 }
 
 
-auto dom::helpers::ordered_sets::ordered_set_serializer(const ext::set<ext::string>& input_set) -> ext::string
+auto dom::helpers::ordered_sets::ordered_set_serializer(
+        const ext::set<ext::string>& input_set)
+        -> ext::string
 {
     // create an empty string, and append each element from the set
     ext::string output_string;

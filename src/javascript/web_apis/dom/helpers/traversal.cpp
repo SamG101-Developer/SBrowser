@@ -20,7 +20,7 @@ auto dom::helpers::traversal::filter(
             INVALID_STATE_ERR,
             [iterator] {return iterator->m_active_flag;});
 
-    auto n = node->node_type - (unsigned short)1;
+    unsigned short n = node->node_type - (unsigned short)1;
     if (iterator->what_to_show &~ (unsigned long)(2 << n))
         return iterators::node_filter::FILTER_SKIP;
 
@@ -156,7 +156,8 @@ auto dom::helpers::traversal::traverse_children(
 
 auto dom::helpers::traversal::traverse_siblings(
         iterators::tree_walker* const iterator,
-        const traversal_sibling type) -> dom::nodes::node*
+        const traversal_sibling type)
+        -> dom::nodes::node*
 {
     // get the iterator's current node, and return nullptr if the iterator's current node is the root (no siblings)
     nodes::node* node = iterator->current_node;
@@ -202,7 +203,9 @@ auto dom::helpers::traversal::traverse_siblings(
 }
 
 
-auto dom::helpers::traversal::traverse_node_previous(iterators::tree_walker* const iterator) -> dom::nodes::node*
+auto dom::helpers::traversal::traverse_node_previous(
+        iterators::tree_walker* const iterator)
+        -> dom::nodes::node*
 {
     // get the iterator's current node, and default the result to accept
     nodes::node* node = iterator->current_node;
@@ -249,7 +252,9 @@ auto dom::helpers::traversal::traverse_node_previous(iterators::tree_walker* con
 }
 
 
-auto dom::helpers::traversal::traverse_node_next(iterators::tree_walker* const iterator) -> dom::nodes::node*
+auto dom::helpers::traversal::traverse_node_next(
+        iterators::tree_walker* const iterator)
+        -> dom::nodes::node*
 {
     // get the iterator's current node, and default the result to accept
     nodes::node* node = iterator->current_node;

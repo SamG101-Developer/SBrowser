@@ -32,28 +32,32 @@ dom::events::event::~event()
 }
 
 
-auto dom::events::event::stop_propagation() -> void
+auto dom::events::event::stop_propagation(
+        ) -> void
 {
     // set the stop propagation flag, to stop the event propagating to the next target
     m_stop_propagation_flag = true;
 }
 
 
-auto dom::events::event::stop_immediate_propagation() -> void
+auto dom::events::event::stop_immediate_propagation(
+        ) -> void
 {
     // set the stop immediate propagation flag, to stop the event propagating to the next listener
     m_stop_immediate_propagation_flag = true;
 }
 
 
-auto dom::events::event::prevent_default() -> void
+auto dom::events::event::prevent_default(
+        ) -> void
 {
     // set the cancelled flag if the event is cancelled and isn't in a passive listener
     m_canceled_flag = cancelable and not m_in_passive_listener_flag;
 }
 
 
-auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_target*>
+auto dom::events::event::composed_path(
+        ) const -> ext::vector<dom::nodes::event_target*>
 {
     // create the default vectors, and return if the current event traversal path is empty
     ext::vector<nodes::event_target*> composed_path_vector{};
@@ -119,30 +123,32 @@ auto dom::events::event::composed_path() const -> ext::vector<dom::nodes::event_
 }
 
 
-auto dom::events::event::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::events::event::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<event>{isolate}
-            .ctor<const ext::string&, const ext::string_any_map&>()
-            .inherit<dom_object>()
+            .template ctor<const ext::string&, const ext::string_any_map&>()
+            .template inherit<dom_object>()
             .static_("NONE", event::NONE, true)
             .static_("CAPTURING_PHASE", event::CAPTURING_PHASE, true)
             .static_("AT_TARGET", event::AT_TARGET, true)
             .static_("BUBBLING_PHASE", event::BUBBLING_PHASE, true)
-            .function("stopImmediatePropagation", &event::stop_immediate_propagation)
-            .function("stopPropagation", &event::stop_propagation)
-            .function("preventDefault", &event::prevent_default)
-            .function("composedPath", &event::composed_path)
-            .var("type", &event::type, true)
-            .var("bubbles", &event::bubbles, true)
-            .var("cancelable", &event::cancelable, true)
-            .var("composed", &event::composed, true)
-            .var("target", &event::target, true)
-            .var("currentTarget", &event::current_target, true)
-            .var("relatedTarget", &event::related_target, true)
-            .var("eventPhase", &event::event_phase, true)
-            .var("timeStamp", &event::time_stamp, true)
-            .var("isTrusted", &event::is_trusted, true)
-            .var("touchTargets", &event::touch_targets, true)
-            .var("path", &event::path, true)
+            .template function("stopImmediatePropagation", &event::stop_immediate_propagation)
+            .template function("stopPropagation", &event::stop_propagation)
+            .template function("preventDefault", &event::prevent_default)
+            .template function("composedPath", &event::composed_path)
+            .template var("type", &event::type, true)
+            .template var("bubbles", &event::bubbles, true)
+            .template var("cancelable", &event::cancelable, true)
+            .template var("composed", &event::composed, true)
+            .template var("target", &event::target, true)
+            .template var("currentTarget", &event::current_target, true)
+            .template var("relatedTarget", &event::related_target, true)
+            .template var("eventPhase", &event::event_phase, true)
+            .template var("timeStamp", &event::time_stamp, true)
+            .template var("isTrusted", &event::is_trusted, true)
+            .template var("touchTargets", &event::touch_targets, true)
+            .template var("path", &event::path, true)
             .auto_wrap_objects();
 }

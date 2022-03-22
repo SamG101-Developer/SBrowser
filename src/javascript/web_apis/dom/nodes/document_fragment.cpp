@@ -39,8 +39,8 @@ auto dom::nodes::document_fragment::set_text_content(const ext::string& val) -> 
 auto dom::nodes::document_fragment::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<document_fragment>{isolate}
-            .ctor<>()
-            .inherit<node>()
-            .inherit<mixins::non_element_parent_node<document_fragment>>()
+            .template ctor<>()
+            .template inherit<node>()
+            .template inherit<mixins::non_element_parent_node<document_fragment>>()
             .auto_wrap_objects();
 }

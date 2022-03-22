@@ -11,11 +11,13 @@ dom::events::custom_event::custom_event(
 }
 
 
-auto dom::events::custom_event::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::events::custom_event::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<custom_event>{isolate}
-            .ctor<const ext::string&, const ext::string_any_map&>()
-            .inherit<event>()
-            .var("detail", &custom_event::detail)
+            .template ctor<const ext::string&, const ext::string_any_map&>()
+            .template inherit<event>()
+            .template var("detail", &custom_event::detail)
             .auto_wrap_objects();
 }

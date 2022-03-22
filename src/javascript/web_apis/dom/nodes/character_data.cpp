@@ -137,17 +137,17 @@ auto dom::nodes::character_data::set_text_content(const ext::string& val) -> voi
 auto dom::nodes::character_data::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<character_data>{isolate}
-            .inherit<node>()
-            .inherit<dom::mixins::child_node<character_data>>()
-            .inherit<dom::mixins::non_document_type_child_node<character_data>>()
+            .template inherit<node>()
+            .template inherit<dom::mixins::child_node<character_data>>()
+            .template inherit<dom::mixins::non_document_type_child_node<character_data>>()
 
-            .function("substringData", &character_data::substring_data)
-            .function("appendData", &character_data::append_data)
-            .function("insertData", &character_data::insert_data)
-            .function("replaceData", &character_data::replace_data)
-            .function("deleteData", &character_data::delete_data)
-            .var("data", &character_data::data)
-            .var("length", &character_data::length, true)
+            .template function("substringData", &character_data::substring_data)
+            .template function("appendData", &character_data::append_data)
+            .template function("insertData", &character_data::insert_data)
+            .template function("replaceData", &character_data::replace_data)
+            .template function("deleteData", &character_data::delete_data)
+            .template var("data", &character_data::data)
+            .template var("length", &character_data::length, true)
             .auto_wrap_objects();
 }
 

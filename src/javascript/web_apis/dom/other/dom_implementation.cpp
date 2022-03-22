@@ -125,8 +125,8 @@ auto dom::other::dom_implementation::create_html_document(const ext::string& tit
 auto dom::other::dom_implementation::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom_implementation>{isolate}
-            .function("createDocumentType", &dom_implementation::create_document_type)
-            .function("createDocument", &dom_implementation::create_document)
-            .function("createHTMLDocument", &dom_implementation::create_html_document)
+            .template function("createDocumentType", &dom_implementation::create_document_type)
+            .template function("createDocument", &dom_implementation::create_document)
+            .template function("createHTMLDocument", &dom_implementation::create_html_document)
             .auto_wrap_objects();
 }

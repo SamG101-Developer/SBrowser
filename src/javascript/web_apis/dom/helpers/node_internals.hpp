@@ -20,34 +20,42 @@ struct dom::helpers::node_internals final
     static auto clone(
             T* node,
             nodes::document* document = nullptr,
-            bool deep = false) -> dom::nodes::node* requires std::is_base_of_v<T, nodes::node>;
+            bool deep = false)
+            -> dom::nodes::node*
+            requires std::is_base_of_v<T, nodes::node>;
 
     static auto adopt(
             nodes::node* node,
-            const nodes::document* document) -> void;
+            const nodes::document* document)
+            -> void;
 
     // locating information on a node
     static auto locate_a_namespace_prefix(
             const nodes::element* element,
-            const ext::string& namespace_) -> ext::string;
+            const ext::string& namespace_)
+            -> ext::string;
 
     static auto locate_a_namespace(
             const nodes::node* node,
-            const ext::string& prefix) -> ext::string;
+            const ext::string& prefix)
+            -> ext::string;
 
     // list elements with certain features
     static auto list_of_elements_with_qualified_name(
             const nodes::node* descendant_element,
-            const ext::string& qualified_name) -> ext::vector<nodes::element*>;
+            const ext::string& qualified_name)
+            -> ext::vector<nodes::element*>;
 
     static auto list_of_elements_with_namespace_and_local_name(
             const nodes::node* node,
             const ext::string& namespace_,
-            const ext::string& local_name) -> ext::vector<nodes::element*>;
+            const ext::string& local_name)
+            -> ext::vector<nodes::element*>;
 
     static auto list_of_elements_with_class_names(
             const nodes::node* node,
-            const ext::string& class_names) -> ext::vector<nodes::element*>;
+            const ext::string& class_names)
+            -> ext::vector<nodes::element*>;
 
     // TODO : arrange
     static auto string_replace_all(const ext::string& string, nodes::node* parent) -> void;

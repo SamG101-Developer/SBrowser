@@ -8,7 +8,7 @@ namespace dom::iterators {class node_iterator;}
 namespace dom::nodes {class node;}
 
 
-class dom::iterators::node_iterator : public abstract_iterator
+class dom::iterators::node_iterator final : public abstract_iterator
 {
 public friends:
     friend struct helpers::traversal;

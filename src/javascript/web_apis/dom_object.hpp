@@ -1,9 +1,11 @@
 #ifndef SBROWSER_DOM_OBJECT_HPP
 #define SBROWSER_DOM_OBJECT_HPP
 
+#include <ext/any.hpp>
 #include <ext/decorators.hpp>
 #include <ext/dom_property.hpp>
-#include <ext/any.hpp>
+
+#include <javascript/interop/attribute_descriptors.hpp>
 
 #include <v8pp/class.hpp>
 

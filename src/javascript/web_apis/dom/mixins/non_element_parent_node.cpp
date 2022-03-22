@@ -8,7 +8,9 @@
 
 
 template<typename T>
-auto dom::mixins::non_element_parent_node<T>::get_element_by_id(const ext::string& element_id) -> nodes::element*
+auto dom::mixins::non_element_parent_node<T>::get_element_by_id(
+        const ext::string& element_id)
+        -> nodes::element*
 {
     // return the first descendant element whose id matches requested id
     return helpers::trees::descendants(static_cast<T*>(this))
@@ -18,10 +20,13 @@ auto dom::mixins::non_element_parent_node<T>::get_element_by_id(const ext::strin
 
 
 template <typename T>
-auto dom::mixins::non_element_parent_node<T>::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::mixins::non_element_parent_node<T>::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<non_element_parent_node<T>>{isolate}
-            .function("getElementById", &non_element_parent_node<T>::get_element_by_id)
+            .template inherit<dom_object>()
+            .template function("getElementById", &non_element_parent_node<T>::get_element_by_id)
             .auto_wrap_objects();
 }
 

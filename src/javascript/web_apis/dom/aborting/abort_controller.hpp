@@ -16,7 +16,7 @@ public constructors:
     abort_controller();
 
 public methods:
-    auto abort(ext::cany& reason) const -> void;
+    auto abort(const ext::any& reason) const -> void;
 
 public properties:
     ext::dom_property<abort_signal*, _F> signal;

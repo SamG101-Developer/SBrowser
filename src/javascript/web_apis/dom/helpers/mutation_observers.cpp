@@ -21,7 +21,8 @@
 #include <v8.h>
 
 
-auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
+auto dom::helpers::mutation_observers::notify_mutation_observers()
+        -> void
 {
     // set the mutation_observer_microtask_queue object in javascript to false
     javascript::realms::surrounding_agent().set("mutation_observer_microtask_queue", false);
@@ -65,7 +66,9 @@ auto dom::helpers::mutation_observers::notify_mutation_observers() -> void
 }
 
 
-auto dom::helpers::mutation_observers::queue_microtask(steps_t&& steps) -> void
+auto dom::helpers::mutation_observers::queue_microtask(
+        steps_t&& steps)
+        -> void
 {
     /* TODO */
 }
@@ -139,7 +142,8 @@ auto dom::helpers::mutation_observers::queue_tree_mutation_record(
 }
 
 
-auto dom::helpers::mutation_observers::queue_mutation_observers_microtask() -> void
+auto dom::helpers::mutation_observers::queue_mutation_observers_microtask()
+        -> void
 {
     queue_microtask(&notify_mutation_observers);
 }

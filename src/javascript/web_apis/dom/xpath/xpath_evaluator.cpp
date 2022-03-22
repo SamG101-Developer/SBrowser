@@ -10,12 +10,12 @@ ext::any
 dom::xpath::xpath_evaluator::v8(v8::Isolate* isolate) const
 {
     return v8pp::class_<xpath_evaluator>{isolate}
-            .ctor<>()
-            .inherit<dom_object>()
+            .template ctor<>()
+            .template inherit<dom_object>()
 
-            .function("createExpression", &xpath_evaluator::create_expression)
-            .function("createNodeResolver", &xpath_evaluator::create_expression)
-            .function("evaluate", &xpath_evaluator::evaluate)
+            .template function("createExpression", &xpath_evaluator::create_expression)
+            .template function("createNodeResolver", &xpath_evaluator::create_expression)
+            .template function("evaluate", &xpath_evaluator::evaluate)
 
             .auto_wrap_objects();
 }

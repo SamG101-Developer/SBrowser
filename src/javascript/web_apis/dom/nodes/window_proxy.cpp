@@ -159,17 +159,17 @@ ext::any
 dom::nodes::window_proxy::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<window_proxy>{isolate}
-            .function("[[GetPrototypeOf]]", &window_proxy::get_prototype_of)
-            .function("[[SetPrototypeOf]]", &window_proxy::set_prototype_of)
-            .function("[[IsExtensiblePrototypeOf]]", &window_proxy::is_extensible_prototype_of)
-            .function("[[PreventExtensions]]", &window_proxy::prevent_extensions)
-            .function("[[GetOwnProperty]]", &window_proxy::get_own_property)
-            .function("[[DefineProperty]]", &window_proxy::define_property)
-            .function("[[Get]]", &window_proxy::get)
-            .function("[[Set]]", &window_proxy::set)
-            .function("[[Delete]]", &window_proxy::delete_)
-            .function("[[OwnPropertyKeys]]", &window_proxy::own_property_keys)
+            .template function("[[GetPrototypeOf]]", &window_proxy::get_prototype_of)
+            .template function("[[SetPrototypeOf]]", &window_proxy::set_prototype_of)
+            .template function("[[IsExtensiblePrototypeOf]]", &window_proxy::is_extensible_prototype_of)
+            .template function("[[PreventExtensions]]", &window_proxy::prevent_extensions)
+            .template function("[[GetOwnProperty]]", &window_proxy::get_own_property)
+            .template function("[[DefineProperty]]", &window_proxy::define_property)
+            .template function("[[Get]]", &window_proxy::get)
+            .template function("[[Set]]", &window_proxy::set)
+            .template function("[[Delete]]", &window_proxy::delete_)
+            .template function("[[OwnPropertyKeys]]", &window_proxy::own_property_keys)
 
-            .var("[[Window]]", &window_proxy::s_window)
+            .template var("[[Window]]", &window_proxy::s_window)
             .auto_wrap_objects();
 }

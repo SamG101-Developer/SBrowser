@@ -64,11 +64,11 @@ void dom::nodes::attr::set_value(const ext::string& val)
 auto dom::nodes::attr::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<attr>{isolate}
-            .inherit<node>()
-            .var("namespaceURI", &attr::namespace_uri, true)
-            .var("prefix", &attr::prefix, true)
-            .var("localName", &attr::local_name, true)
-            .var("name", &attr::name, true)
-            .var("value", &attr::value)
-            .var("ownerElement", &attr::owner_element, true);
+            .template inherit<node>()
+            .template var("namespaceURI", &attr::namespace_uri, true)
+            .template var("prefix", &attr::prefix, true)
+            .template var("localName", &attr::local_name, true)
+            .template var("name", &attr::name, true)
+            .template var("value", &attr::value)
+            .template var("ownerElement", &attr::owner_element, true);
 }

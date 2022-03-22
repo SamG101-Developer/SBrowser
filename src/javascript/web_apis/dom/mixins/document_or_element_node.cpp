@@ -7,8 +7,9 @@
 
 
 template <typename T>
-ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(const ext::string& qualified_name)
+auto dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(
+        const ext::string& qualified_name)
+        -> ext::vector<dom::nodes::element*>
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching qualified name
     auto* base = static_cast<T*>(this);
@@ -17,10 +18,10 @@ dom::mixins::document_or_element_node<T>::get_elements_by_tag_name(const ext::st
 
 
 template <typename T>
-ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
+auto dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
         const ext::string& namespace_,
         const ext::string& local_name)
+        -> ext::vector<dom::nodes::element*>
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching local name
     auto* base = static_cast<T*>(this);
@@ -29,8 +30,9 @@ dom::mixins::document_or_element_node<T>::get_elements_by_tag_name_ns(
 
 
 template <typename T>
-ext::vector<dom::nodes::element*>
-dom::mixins::document_or_element_node<T>::get_elements_by_class_name(const ext::string& class_names)
+auto dom::mixins::document_or_element_node<T>::get_elements_by_class_name(
+        const ext::string& class_names)
+        -> ext::vector<dom::nodes::element*>
 {
     // get the class that this mixin is being mixed into, and return descendant elements with a matching class names
     auto* base = static_cast<T*>(this);
@@ -39,14 +41,16 @@ dom::mixins::document_or_element_node<T>::get_elements_by_class_name(const ext::
 
 
 template <typename T>
-auto dom::mixins::document_or_element_node<T>::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::mixins::document_or_element_node<T>::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<document_or_element_node<dom::nodes::node>>{isolate}
-            .function("getElementsByTagName", &document_or_element_node<T>::get_elements_by_tag_name)
-            .function("getElementsByTagNameNS", &document_or_element_node<T>::get_elements_by_tag_name_ns)
-            .function("getElementsByClassName", &document_or_element_node<T>::get_elements_by_class_name)
+            .template inherit<dom_object>()
+            .template function("getElementsByTagName", &document_or_element_node<T>::get_elements_by_tag_name)
+            .template function("getElementsByTagNameNS", &document_or_element_node<T>::get_elements_by_tag_name_ns)
+            .template function("getElementsByClassName", &document_or_element_node<T>::get_elements_by_class_name)
             .auto_wrap_objects();
-
 }
 
 

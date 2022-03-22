@@ -11,15 +11,6 @@
 #include <dom/helpers/trees.hpp>
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-childnode-before
- * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/before
- * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/before
- * https://developer.mozilla.org/en-US/docs/Web/API/Element/before
- *
- * The ChildNode<T>.before() method inserts a set of Node or DOMString objects in the children list of the
- * ChildNode<T>'s parent, just before the ChildNode<T>. DOMString objects are inserted as equivalent Text nodes.
- */
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes) -> void
@@ -50,15 +41,6 @@ auto dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes) -> void
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-childnode-after
- * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/after
- * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/after
- * https://developer.mozilla.org/en-US/docs/Web/API/Element/after
- *
- * The ChildNode<T>.after() method inserts a set of Node or DOMString objects in the children list of the ChildNode<T>'s
- * parent, just after the ChildNode<T>. DOMString objects are inserted as equivalent Text nodes.
- */
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes) -> void
@@ -84,15 +66,6 @@ auto dom::mixins::child_node<T>::after(nodes_or_strings_t... nodes) -> void
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-childnode-replacewith
- * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/replaceWith
- * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/replaceWith
- * https://developer.mozilla.org/en-US/docs/Web/API/Element/replaceWith
- *
- * The ChildNode<T>.replaceWith() method replaces this ChildNode<T> in the children list of its parent with a set of
- * Node or DOMString objects. DOMString objects are inserted as equivalent Text nodes.
- */
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes) -> void
@@ -119,14 +92,6 @@ auto dom::mixins::child_node<T>::replace_with(nodes_or_strings_t ...nodes) -> vo
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-childnode-remove
- * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData/remove
- * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType/remove
- * https://developer.mozilla.org/en-US/docs/Web/API/Element/remove
- *
- * The ChildNode<T>.remove() method removes the element from the tree it belongs to.
- */
 template <typename T>
 auto dom::mixins::child_node<T>::remove() -> void
 {
@@ -146,6 +111,7 @@ template <typename T>
 auto dom::mixins::child_node<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom::mixins::child_node<dom::nodes::node>>{isolate}
+            .template inherit<dom_object>()
             .auto_wrap_objects();
 }
 

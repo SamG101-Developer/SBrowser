@@ -34,21 +34,21 @@ ext::any
 geometry::shapes::dom_rect_readonly::v8(v8::Isolate* isolate) const {
 
     return v8pp::class_<dom_rect_readonly>{isolate}
-            .ctor<>()
-            .ctor<double>()
-            .ctor<double, double>()
-            .ctor<double, double, double>()
-            .ctor<double, double, double, double>()
-            .inherit<dom_object>()
+            .template ctor<>()
+            .template ctor<double>()
+            .template ctor<double, double>()
+            .template ctor<double, double, double>()
+            .template ctor<double, double, double, double>()
+            .template inherit<dom_object>()
 
-            .var("x", &dom_rect_readonly::x)
-            .var("y", &dom_rect_readonly::y)
-            .var("width", &dom_rect_readonly::width)
-            .var("height", &dom_rect_readonly::height)
-            .var("left", &dom_rect_readonly::left)
-            .var("top", &dom_rect_readonly::top)
-            .var("right", &dom_rect_readonly::right)
-            .var("bottom", &dom_rect_readonly::bottom)
+            .template var("x", &dom_rect_readonly::x)
+            .template var("y", &dom_rect_readonly::y)
+            .template var("width", &dom_rect_readonly::width)
+            .template var("height", &dom_rect_readonly::height)
+            .template var("left", &dom_rect_readonly::left)
+            .template var("top", &dom_rect_readonly::top)
+            .template var("right", &dom_rect_readonly::right)
+            .template var("bottom", &dom_rect_readonly::bottom)
 
             .auto_wrap_objects();
 }

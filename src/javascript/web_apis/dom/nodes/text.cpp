@@ -61,11 +61,11 @@ auto dom::nodes::text::set_data(const ext::string& val) -> void
 auto dom::nodes::text::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<text>{isolate}
-            .ctor<>()
-            .ctor<const ext::string&>()
-            .inherit<character_data>()
-            .inherit<mixins::slottable<text>>()
-            .function("splitText", &text::split_text)
-            .var("wholeText", &text::whole_text, true)
+            .template ctor<>()
+            .template ctor<const ext::string&>()
+            .template inherit<character_data>()
+            .template inherit<mixins::slottable<text>>()
+            .template function("splitText", &text::split_text)
+            .template var("wholeText", &text::whole_text, true)
             .auto_wrap_objects();
 }

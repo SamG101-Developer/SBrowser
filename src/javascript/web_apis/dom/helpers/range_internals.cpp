@@ -157,7 +157,9 @@ auto dom::helpers::range_internals::get_range_helpers_variables(
 }
 
 
-auto dom::helpers::range_internals::check_parent_exists(const nodes::node* const node) -> dom::nodes::node*
+auto dom::helpers::range_internals::check_parent_exists(
+        const nodes::node* const node)
+        -> dom::nodes::node*
 {
     // if the node doesn't have a parent, then throw an invalid node error
     exceptions::throw_v8_exception(
@@ -170,7 +172,9 @@ auto dom::helpers::range_internals::check_parent_exists(const nodes::node* const
 }
 
 
-auto dom::helpers::range_internals::is_textual_based_range_container(const nodes::node* const node) -> bool
+auto dom::helpers::range_internals::is_textual_based_range_container(
+        const nodes::node* const node)
+        -> bool
 {
     // return true if the node cast be cast to a text node, processing instruction or comment
     return multi_cast<nodes::text*, nodes::processing_instruction*, nodes::comment*>(node);

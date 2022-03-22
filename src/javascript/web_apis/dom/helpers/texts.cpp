@@ -130,6 +130,6 @@ auto dom::helpers::texts::substring_data(
             [offset, length] {return offset > length;});
 
     count = std::min(count, length - offset);
-    ext::cstring current_data = text_node->data;
+    const ext::string current_data = text_node->data;
     return current_data.substring(offset, count);
 }

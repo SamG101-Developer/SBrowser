@@ -39,26 +39,33 @@ public:
             const ext::vector<nodes::node*>& added_nodes,
             const ext::vector<nodes::node*>& removed_nodes,
             nodes::node* previous_sibling,
-            nodes::node* next_sibling) -> void;
+            nodes::node* next_sibling)
+            -> void;
 
     static auto queue_tree_mutation_record(
             nodes::event_target* target,
             const ext::vector<nodes::node*>& added_nodes,
             const ext::vector<nodes::node*>& removed_nodes,
             nodes::node* previous_sibling,
-            nodes::node* next_sibling) -> void;
+            nodes::node* next_sibling)
+            -> void;
 
-    static auto queue_mutation_observers_microtask() -> void;
+    static auto queue_mutation_observers_microtask()
+            -> void;
 
-    static auto queue_task(/* TODO */) -> void {/* TODO */};
+    static auto queue_task(/* TODO */)
+            -> void;
 
-    static auto queue_global_task(/* TODO */) -> void {/* TODO */};
+    static auto queue_global_task(/* TODO */)
+            -> void;
 
-    static auto queue_element_task(/* TODO */) -> void {/* TODO */};
+    static auto queue_element_task(/* TODO */)
+            -> void;
 
     static auto queue_media_element_task(
             html::elements::html_media_element* element,
-            steps_t&& steps) -> void;
+            steps_t&& steps)
+            -> void;
 };
 
 

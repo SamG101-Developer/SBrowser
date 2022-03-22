@@ -231,7 +231,9 @@ auto dom::helpers::custom_elements::upgrade_element(
 }
 
 
-auto dom::helpers::custom_elements::try_to_upgrade_element(const nodes::element* const element) -> void
+auto dom::helpers::custom_elements::try_to_upgrade_element(
+        const nodes::element* const element)
+        -> void
 {
     // only queue a custom upgrade reaction if a definition is found
     if (auto* const definition = lookup_custom_element_definition(element->owner_document, element->namespace_uri, element->local_name, element->m_is))
@@ -268,7 +270,9 @@ auto dom::helpers::custom_elements::lookup_custom_element_definition(
 }
 
 
-auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(const nodes::element* const element) -> void
+auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(
+        const nodes::element* const element)
+        -> void
 {
     // TODO
 }
@@ -308,20 +312,26 @@ auto dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
 }
 
 
-auto dom::helpers::custom_elements::enqueue_custom_element_reaction(const std::queue<nodes::element*>& element_queue) -> void
+auto dom::helpers::custom_elements::enqueue_custom_element_reaction(
+        const std::queue<nodes::element*>& element_queue)
+        -> void
 {
     // TODO
 }
 
 
-auto dom::helpers::custom_elements::is_valid_custom_element_name(const ext::string& element_name) -> bool
+auto dom::helpers::custom_elements::is_valid_custom_element_name(
+        const ext::string& element_name)
+        -> bool
 {
     // TODO
     return true;
 }
 
 
-auto dom::helpers::custom_elements::is_custom_node(const nodes::element* const element) -> bool
+auto dom::helpers::custom_elements::is_custom_node(
+        const nodes::element* const element)
+        -> bool
 {
     return element->m_custom_element_state == "custom";
 }

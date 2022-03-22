@@ -8,7 +8,9 @@ dom::aborting::abort_signal::abort_signal() : nodes::event_target()
 }
 
 
-auto dom::aborting::abort_signal::abort(ext::any reason) -> dom::aborting::abort_signal
+auto dom::aborting::abort_signal::abort(
+        ext::any reason)
+        -> dom::aborting::abort_signal
 {
     // let signal be a new AbortSignal object.
     abort_signal signal{};
@@ -24,7 +26,9 @@ auto dom::aborting::abort_signal::abort(ext::any reason) -> dom::aborting::abort
 }
 
 
-auto dom::aborting::abort_signal::throw_if_aborted() const -> void
+auto dom::aborting::abort_signal::throw_if_aborted(
+        ) const
+        -> void
 {
     // if a reason has been given, then throw an abort error
     helpers::exceptions::throw_v8_exception(
@@ -34,7 +38,9 @@ auto dom::aborting::abort_signal::throw_if_aborted() const -> void
 }
 
 
-auto dom::aborting::abort_signal::timeout(const unsigned long long milliseconds) -> dom::aborting::abort_signal
+auto dom::aborting::abort_signal::timeout(
+        const unsigned long long milliseconds)
+        -> dom::aborting::abort_signal
 {
     abort_signal signal{};
     // TODO
@@ -42,14 +48,16 @@ auto dom::aborting::abort_signal::timeout(const unsigned long long milliseconds)
 }
 
 
-auto dom::aborting::abort_signal::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::aborting::abort_signal::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<abort_signal>{isolate}
-            .inherit<event_target>()
+            .template inherit<event_target>()
             .static_("timeout", &abort_signal::timeout)
-            .function("abort", &abort_signal::abort)
-            .function("throwIfAborted", &abort_signal::throw_if_aborted)
-            .var("aborted", &abort_signal::aborted, true)
-            .var("reason", &abort_signal::reason)
+            .template function("abort", &abort_signal::abort)
+            .template function("throwIfAborted", &abort_signal::throw_if_aborted)
+            .template var("aborted", &abort_signal::aborted, true)
+            .template var("reason", &abort_signal::reason)
             .auto_wrap_objects();
 }

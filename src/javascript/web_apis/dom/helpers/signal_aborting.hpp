@@ -13,11 +13,13 @@ struct dom::helpers::signal_aborting final
     // other general helper methods for aborting
     static auto signal_abort(
             aborting::abort_signal* signal,
-            const ext::any& reason) -> void;
+            const ext::any& reason)
+            -> void;
 
     static auto follow_signal(
             aborting::abort_signal* following_signal,
-            aborting::abort_signal* parent_signal) -> void;
+            aborting::abort_signal* parent_signal)
+            -> void;
 };
 
 

@@ -166,9 +166,9 @@ auto dom::mutations::mutation_observer::take_records() -> ext::vector<dom::mutat
 auto dom::mutations::mutation_observer::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<mutation_record>{isolate}
-            .ctor<mutation_observer::mutation_callback&&>()
-            .function("observe", &mutation_observer::observe)
-            .function("disconnect", &mutation_observer::disconnect)
-            .function("takeRecords", &mutation_observer::take_records)
+            .template ctor<mutation_observer::mutation_callback&&>()
+            .template function("observe", &mutation_observer::observe)
+            .template function("disconnect", &mutation_observer::disconnect)
+            .template function("takeRecords", &mutation_observer::take_records)
             .auto_wrap_objects();
 }

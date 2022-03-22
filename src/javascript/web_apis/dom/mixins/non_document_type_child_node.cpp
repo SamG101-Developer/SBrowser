@@ -16,7 +16,8 @@ dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
 
 
 template <typename T>
-auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const -> nodes::element*
+auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const
+        -> nodes::element*
 {
     // get the class that this mixin is being mixed into
     auto* base = static_cast<const T*>(this);
@@ -29,7 +30,8 @@ auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling(
 
 
 template <typename T>
-auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const -> nodes::element*
+auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const
+        -> nodes::element*
 {
     // get the class that this mixin is being mixed into
     auto* base = static_cast<const T*>(this);
@@ -42,10 +44,14 @@ auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() co
 
 
 template <typename T>
-auto dom::mixins::non_document_type_child_node<T>::v8(v8::Isolate* isolate) const -> ext::any {
+auto dom::mixins::non_document_type_child_node<T>::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
+{
     return v8pp::class_<non_document_type_child_node<T>>{isolate}
-            .var("previousElementSibling", &non_document_type_child_node<T>::previous_element_sibling)
-            .var("nextElementSibling", &non_document_type_child_node<T>::next_element_sibling)
+            .template inherit<dom_object>()
+            .template var("previousElementSibling", &non_document_type_child_node<T>::previous_element_sibling)
+            .template var("nextElementSibling", &non_document_type_child_node<T>::next_element_sibling)
             .auto_wrap_objects();
 }
 

@@ -60,7 +60,7 @@ auto dom::helpers::node_internals::clone(
 auto dom::helpers::node_internals::adopt(
         nodes::node* const node,
         const nodes::document* const document)
--> void
+        -> void
 {
     // get the old document
     const nodes::document* const old_document = node->owner_document;
@@ -247,7 +247,9 @@ auto dom::helpers::node_internals::string_replace_all(
 }
 
 
-auto dom::helpers::node_internals::is_document_fully_active(nodes::document* const document) -> bool
+auto dom::helpers::node_internals::is_document_fully_active(
+        nodes::document* const document)
+        -> bool
 {
     // return true if the documents browsing context exists, the document is the active document, and [the container
     // document is active or there is no parent browsing context - auto enables document]
@@ -257,14 +259,18 @@ auto dom::helpers::node_internals::is_document_fully_active(nodes::document* con
 }
 
 
-auto dom::helpers::node_internals::is_html(const nodes::element* const element) -> bool
+auto dom::helpers::node_internals::is_html(
+        const nodes::element* const element)
+        -> bool
 {
     // return if the element is in the html namespace, and the document's type is html
     return element->namespace_uri == namespaces::HTML and element->owner_document->m_type == "html";
 }
 
 
-auto dom::helpers::node_internals::advisory_information(html::elements::html_element* const element) -> ext::string
+auto dom::helpers::node_internals::advisory_information(
+        html::elements::html_element* const element)
+        -> ext::string
 {
     // return the element title if it exists, the parent's advisory information if there is a parent, otherwise an empty
     // string - in other words, move directly up the tree until the title attribute is set, otherwise an empty string

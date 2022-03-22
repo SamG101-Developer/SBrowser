@@ -56,7 +56,9 @@ auto dom::helpers::attributes::append(
 }
 
 
-auto dom::helpers::attributes::remove(nodes::attr* attribute) -> void
+auto dom::helpers::attributes::remove(
+        nodes::attr* attribute)
+        -> void
 {
     // handle the attribute changes
     handle_attributes_changes(attribute, attribute->owner_element, attribute->value, "");
@@ -339,7 +341,8 @@ auto dom::helpers::attributes::set_attribute_value(
         const ext::string& local_name,
         const ext::string& value,
         const ext::string& prefix,
-        const ext::string& namespace_) -> dom::nodes::attr*
+        const ext::string& namespace_)
+        -> dom::nodes::attr*
 {
     // get the attribute by matching the namespace, local name and owner_element
     auto* attribute = get_attribute_by_ns(owner_element, local_name, namespace_);

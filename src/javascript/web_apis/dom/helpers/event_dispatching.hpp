@@ -22,30 +22,35 @@ struct dom::helpers::event_dispatching final
             nodes::event_target* shadow_adjusted_target,
             nodes::event_target* related_target,
             const ext::vector<const nodes::event_target*>& touch_targets,
-            bool slot_in_closed_tree) -> void;
+            bool slot_in_closed_tree)
+            -> void;
 
     // event invocation
     static auto invoke(
             internal::event_path_struct* event_path_struct,
             events::event* event,
-            unsigned char phase) -> void;
+            unsigned char phase)
+            -> void;
 
     static auto inner_invoke(
             events::event* event,
             const ext::vector<ext::string_any_map>& event_listeners,
-            unsigned char phase) -> void;
+            unsigned char phase)
+            -> void;
 
     // event firing
     template <class T=events::event>
     static auto fire_event(
             const ext::string& e,
             nodes::event_target* target,
-            const ext::string_any_map& init = {}) -> bool;
+            const ext::string_any_map& init = {})
+            -> bool;
 
     static auto fire_synthetic_pointer_event(
             const ext::string& e,
             const nodes::event_target* target,
-            bool not_trusted_flag = false) -> bool;
+            bool not_trusted_flag = false)
+            -> bool;
 };
 
 

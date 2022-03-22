@@ -27,8 +27,8 @@ public constructors:
     abort_signal();
 
 public methods:
-    static auto abort(ext::any reason = "") -> abort_signal;
-    static auto timeout(unsigned long long milliseconds) -> abort_signal;
+    new_obj static auto abort(ext::any reason = "") -> abort_signal;
+    new_obj static auto timeout(unsigned long long milliseconds) -> abort_signal;
     auto throw_if_aborted() const -> void;
 
 public properties:

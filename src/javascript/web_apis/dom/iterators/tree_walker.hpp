@@ -7,7 +7,7 @@
 namespace dom::iterators {class tree_walker;}
 
 
-class dom::iterators::tree_walker : public abstract_iterator
+class dom::iterators::tree_walker final : public abstract_iterator
 {
 public constructors:
     tree_walker();
