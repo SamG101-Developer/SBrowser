@@ -13,6 +13,30 @@
 // TODO -> when from_type/to_type used as parameter types, check if (const) ...& / ...&& should be used
 
 
+/* FUNCTION */
+//template<typename T>
+//struct v8pp::convert<std::function<T(...)>> {
+//    using from_type = std::function<T(...)>;
+//    using to_type = v8::Local<v8::Function>;
+//    
+//    static auto is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
+//    {
+//        // verify the value is a non-empty function
+//        return not value.IsEmpty() and value->IsFunction();
+//    }
+//    
+//    static auto from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
+//    {
+//        // validate the javascript function object
+//        if (not is_valid(isolate, v8_value))
+//            throw std::invalid_argument("Must be a non-null function");
+//        
+//        v8::HandleScope handle_scope{isolate};
+//        auto cpp_value = std::function{v8_value.template As<v8::Function>().};
+//    }
+//};
+
+
 /* STRING */
 template<>
 struct v8pp::convert<ext::string> {
@@ -33,8 +57,8 @@ struct v8pp::convert<ext::string> {
 
         // create the handle_scope and return the c++ string object
         v8::HandleScope handle_scope{isolate};
-        auto cpp_value = v8pp::convert<ext::string>::from_v8(isolate, v8_value.As<v8::String>());
-        return from_type{cpp_value};
+        auto cpp_value = v8pp::convert<std::string>::from_v8(isolate, v8_value.template As<v8::String>());
+        return from_type{cpp_value.c_str()};
     }
 
     static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
@@ -107,7 +131,7 @@ struct v8pp::convert<ext::vector<T>> {
 
         // create the handle_scope and return the c++ vector object
         v8::HandleScope handle_scope{isolate};
-        auto cpp_value = v8pp::convert<std::vector<T>>::from_v8(isolate, v8_value.As<v8::Array>());
+        auto cpp_value = v8pp::convert<std::vector<T>>::from_v8(isolate, v8_value.template As<v8::Array>());
         return from_type{cpp_value};
     }
 
@@ -149,7 +173,7 @@ struct v8pp::convert<ext::set<T>> {
 
         // create the handle_scope and return the c++ set object
         v8::HandleScope handle_scope{isolate};
-        auto cpp_value = v8pp::convert<std::set<T>>::from_v8(isolate, v8_value.As<v8::Set>());
+        auto cpp_value = v8pp::convert<std::set<T>>::from_v8(isolate, v8_value.template As<v8::Set>());
         return from_type{cpp_value};
     }
 
@@ -192,7 +216,7 @@ struct v8pp::convert<ext::infinity<T>> {
 
         // create the handle_scope and return the c++ object
         v8::HandleScope handle_scope{isolate};
-        auto cpp_value = v8pp::convert<T>::from_v8(v8_value.As<v8::Number>());
+        auto cpp_value = v8pp::convert<T>::from_v8(v8_value.template As<v8::Number>());
         return from_type{.m_positive=cpp_value >= 0.0};
     }
 

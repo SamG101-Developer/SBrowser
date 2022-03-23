@@ -11,16 +11,6 @@
 dom::mutations::mutation_observer::mutation_observer() : dom_object();
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-mutationobserver-mutationobserver
- * https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/MutationObserver
- *
- * The DOM MutationObserver() constructor — part of the MutationObserver interface — creates and returns a new observer
- * which invokes a specified callback when DOM events occur.
- *
- * DOM observation does not begin immediately; the observe() method must be called first to establish which portion of
- * the DOM to watch and what kinds of changes to watch for.
- */
 dom::mutations::mutation_observer::mutation_observer(
         mutation_callback&& callback)
 
@@ -35,19 +25,6 @@ dom::mutations::mutation_observer::mutation_observer(
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-mutationobserver-observe
- * https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/observe
- *
- * The MutationObserver method observe() configures the MutationObserver callback to begin receiving notifications of
- * changes to the DOM that match the given options.
- *
- * Depending on the configuration, the observer may watch a single Node in the DOM tree, or that node and some or all of
- * its descendant nodes.
- *
- * To stop the MutationObserver (so that none of its callbacks will be triggered any longer), call
- * MutationObserver.disconnect().
- */
 auto dom::mutations::mutation_observer::observe(
         const nodes::node* const target,
         ext::string_any_map&& options)
@@ -117,7 +94,8 @@ auto dom::mutations::mutation_observer::observe(
 }
 
 
-auto dom::mutations::mutation_observer::disconnect() -> void
+auto dom::mutations::mutation_observer::disconnect()
+        -> void
 {
     // iterate over each node that the observer is listening to and remove them if their observer is this object
     for (auto* node: *m_node_list)
@@ -129,17 +107,8 @@ auto dom::mutations::mutation_observer::disconnect() -> void
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-mutationobserver-takerecords
- * https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/takeRecords
- *
- * The MutationObserver method takeRecords() returns a list of all matching DOM changes that have been detected but not
- * yet processed by the observer's callback function, leaving the mutation queue empty.
- *
- * The most common use case for this is to immediately fetch all pending mutation records immediately prior to
- * disconnecting the observer, so that any pending mutations can be processed when shutting down the observer.
- */
-auto dom::mutations::mutation_observer::take_records() -> ext::vector<dom::mutations::mutation_record*>
+auto dom::mutations::mutation_observer::take_records()
+        -> ext::vector<dom::mutations::mutation_record*>
 {
     // copy the queue into a vector
     ext::vector<mutation_record*> vector {};
@@ -155,18 +124,13 @@ auto dom::mutations::mutation_observer::take_records() -> ext::vector<dom::mutat
 }
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-mutationobserver-disconnect
- * https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver/disconnect
- *
- * The MutationObserver method disconnect() tells the observer to stop watching for mutations.
- *
- * The observer can be reused by calling its observe() method again.
- */
-auto dom::mutations::mutation_observer::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::mutations::mutation_observer::v8(
+        v8::Isolate* isolate)
+        const -> ext::any
 {
     return v8pp::class_<mutation_record>{isolate}
             .template ctor<mutation_observer::mutation_callback&&>()
+            .template inherit<dom_object>()
             .template function("observe", &mutation_observer::observe)
             .template function("disconnect", &mutation_observer::disconnect)
             .template function("takeRecords", &mutation_observer::take_records)
