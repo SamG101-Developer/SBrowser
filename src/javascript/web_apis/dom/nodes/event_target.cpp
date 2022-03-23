@@ -45,7 +45,9 @@ auto dom::nodes::event_target::remove_event_listener(
 }
 
 
-auto dom::nodes::event_target::dispatch_event(events::event* const event) -> bool
+auto dom::nodes::event_target::dispatch_event(
+        events::event* const event)
+        -> bool
 {
     // if the dispatch is already set or the initialized flag isn't set, then throw an invalid state error
     helpers::exceptions::throw_v8_exception(
@@ -59,7 +61,9 @@ auto dom::nodes::event_target::dispatch_event(events::event* const event) -> boo
 }
 
 
-auto dom::nodes::event_target::get_the_parent(events::event* const event) -> dom::nodes::event_target*
+auto dom::nodes::event_target::get_the_parent(
+        events::event* const event)
+        -> dom::nodes::event_target*
 {
     // default behaviour for getting the parent in event traversal is that there is no parent
     return nullptr;

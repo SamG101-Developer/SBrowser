@@ -15,7 +15,9 @@ dom::nodes::shadow_root::shadow_root()
 }
 
 
-auto dom::nodes::shadow_root::get_the_parent(events::event* event) -> dom::nodes::event_target*
+auto dom::nodes::shadow_root::get_the_parent(
+        events::event* event)
+        -> dom::nodes::event_target*
 {
     // set the invocation target to the paths first invocation target, and the shadow root to its shadow root
     auto* invocation_target = event->path->front()->invocation_target;
@@ -28,7 +30,9 @@ auto dom::nodes::shadow_root::get_the_parent(events::event* event) -> dom::nodes
 }
 
 
-auto dom::nodes::shadow_root::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::shadow_root::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<shadow_root>{isolate}
             .template inherit<document_fragment>()

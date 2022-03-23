@@ -3,7 +3,7 @@
 
 dom::nodes::processing_instruction::processing_instruction()
         : character_data()
-        // , css::cssom::mixins::link_style() {
+        // , css::cssom::mixins::link_style()
 {
     // set the properties
     node_type << PROCESSING_INSTRUCTION_NODE;
@@ -11,7 +11,9 @@ dom::nodes::processing_instruction::processing_instruction()
 }
 
 
-auto dom::nodes::processing_instruction::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::processing_instruction::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<processing_instruction>{isolate}
             .template inherit<character_data>()

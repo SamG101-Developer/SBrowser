@@ -54,7 +54,7 @@ auto dom::aborting::abort_signal::v8(
 {
     return v8pp::class_<abort_signal>{isolate}
             .template inherit<event_target>()
-            .static_("timeout", &abort_signal::timeout)
+            .template static_("timeout", &abort_signal::timeout)
             .template function("abort", &abort_signal::abort)
             .template function("throwIfAborted", &abort_signal::throw_if_aborted)
             .template var("aborted", &abort_signal::aborted, true)

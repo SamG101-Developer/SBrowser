@@ -2,46 +2,35 @@
 #ifndef SBROWSER_NODE_HPP
 #define SBROWSER_NODE_HPP
 
-#include <ext/helpers/maps.hpp>
 #include <ext/dom_property.hpp>
+#include <ext/map.hpp>
 
 #include <dom/nodes/event_target.hpp>
 
 #include <veque.hpp>
 #include <QtWidgets/QWidget>
 
-namespace dom
-{
-    namespace nodes
-    {
-        class document;
-        class element;
-        class node;
-    }
-
-    namespace helpers
-    {
-        struct mutation_algorithms;
-        struct mutation_observers;
-    }
-
-    namespace internal {struct registered_observer;}
-    namespace mutations {class mutation_observer;}
-}
+namespace dom::nodes {class document;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class node;}
+namespace dom::helpers {struct mutation_algorithms;}
+namespace dom::helpers {struct mutation_observers;}
+namespace dom::internal {struct registered_observer;}
+namespace dom::mutations {class mutation_observer;}
 
 
 class dom::nodes::node : public event_target
 {
-public: friends
+public friends:
     friend struct helpers::mutation_algorithms;
     friend struct helpers::mutation_observers;
     friend class mutations::mutation_observer;
 
-public: constructors
+public constructors:
     node();
     ~node() override;
 
-public: static_constants
+public static_constants:
     static const unsigned short DOCUMENT_POSITION_DISCONNECTED = 0x01;
     static const unsigned short DOCUMENT_POSITION_PRECEDING = 0x02;
     static const unsigned short DOCUMENT_POSITION_FOLLOWING = 0x04;
@@ -59,7 +48,7 @@ public: static_constants
     static const unsigned short DOCUMENT_TYPE_NODE = 10;
     static const unsigned short DOCUMENT_FRAGMENT_NODE = 11;
 
-public: methods
+public methods:
     auto normalize() const -> void;
     auto has_child_nodes() const -> bool;
     auto contains(node* other) const -> bool;
@@ -91,24 +80,24 @@ public properties:
     ext::dom_property<node*, _F> previous_sibling;
     ext::dom_property<node*, _F> next_sibling;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected: accessors
+protected accessors:
     virtual auto get_node_value() const -> ext::string;
     virtual auto get_text_content() const -> ext::string;
 
     virtual auto set_node_value(const ext::string& val) -> void;
     virtual auto set_text_content(const ext::string& val) -> void;
 
-protected: internal_methods
+protected internal_methods:
     virtual auto render() const -> QWidget*;
 
-protected: internal_properties
-    QWidget* m_rendered_widget;
-    ext::vector<internal::registered_observer*>* m_registered_observer_list;
+protected internal_properties:
+    QWidget* m_rendered_widget = nullptr;
+    ext::vector<internal::registered_observer*>& m_registered_observer_list;
 
-private: accessors
+private accessors:
     auto get_is_connected() const -> bool;
     auto get_base_uri() const -> ext::string;
     auto get_first_child() const -> node*;

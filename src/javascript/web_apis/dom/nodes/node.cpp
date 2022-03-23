@@ -53,7 +53,8 @@ dom::nodes::node::~node()
 }
 
 
-auto dom::nodes::node::normalize() const -> void
+auto dom::nodes::node::normalize() const
+        -> void
 {
     // iterator over the text nodes that are descendants of this node
     for (const text* text_node: helpers::trees::descendant_text_nodes(this))
@@ -118,19 +119,22 @@ auto dom::nodes::node::normalize() const -> void
 }
 
 
-auto dom::nodes::node::has_child_nodes() const -> bool
+auto dom::nodes::node::has_child_nodes() const
+        -> bool
 {
     // return if there are any children
     return not child_nodes->empty();
 }
 
-auto dom::nodes::node::contains(node* other) const -> bool
+auto dom::nodes::node::contains(node* other) const
+        -> bool
 {
     // return if the other node is a descendant of this node
     return helpers::trees::is_descendant(other, this);
 }
 
-auto dom::nodes::node::is_equal_node(node* other) const -> bool
+auto dom::nodes::node::is_equal_node(node* other) const
+        -> bool
 {
     // base implementation (derived nodes will extend this method)
 
@@ -152,14 +156,18 @@ auto dom::nodes::node::is_equal_node(node* other) const -> bool
     return true;
 }
 
-auto dom::nodes::node::is_default_namespace(const ext::string& namespace_) const -> bool
+auto dom::nodes::node::is_default_namespace(
+        const ext::string& namespace_) const
+        -> bool
 {
     // return if the namespace of this node equals namespace generated from locating the empty namespace in this node
     return namespace_ == helpers::node_internals::locate_a_namespace(this, "");
 }
 
 
-auto dom::nodes::node::lookup_prefix(const ext::string& namespace_) const -> ext::string
+auto dom::nodes::node::lookup_prefix(
+        const ext::string& namespace_) const
+        -> ext::string
 {
     // element node: return the lookup for the element
     if (auto* element_node = dynamic_cast<const element*>(this))
@@ -188,14 +196,18 @@ auto dom::nodes::node::lookup_prefix(const ext::string& namespace_) const -> ext
 }
 
 
-auto dom::nodes::node::lookup_namespace_uri(const ext::string& prefix) const -> ext::string
+auto dom::nodes::node::lookup_namespace_uri(
+        const ext::string& prefix) const
+        -> ext::string
 {
     // lookup the namespace with the prefix
     return helpers::node_internals::locate_a_namespace(this, prefix);
 }
 
 
-auto dom::nodes::node::compare_document_position(node* other) const -> unsigned short
+auto dom::nodes::node::compare_document_position(
+        node* other) const
+        -> unsigned short
 {
     // if the nodes are the same then return 0 ie there is no comparison to be done
     if (this == other) return 0;
@@ -262,7 +274,9 @@ auto dom::nodes::node::compare_document_position(node* other) const -> unsigned 
 }
 
 
-auto dom::nodes::node::get_root_node(const ext::string_any_map& options) const -> node*
+auto dom::nodes::node::get_root_node(
+        const ext::string_any_map& options) const
+        -> node*
 {
     // return the shadow root if the <composed> option is true, otherwise the exposed tree root
     return options.at("composed").to<bool>()
@@ -271,7 +285,9 @@ auto dom::nodes::node::get_root_node(const ext::string_any_map& options) const -
 }
 
 
-auto dom::nodes::node::clone_node(bool deep) const -> node*
+auto dom::nodes::node::clone_node(
+        bool deep) const
+        -> node*
 {
     // if the root of the tree of this node is a shadow root, then throw a not support error
     helpers::exceptions::throw_v8_exception(
@@ -297,7 +313,9 @@ auto dom::nodes::node::insert_before(
 }
 
 
-auto dom::nodes::node::append_child(node* new_node) -> node*
+auto dom::nodes::node::append_child(
+        node* new_node)
+        -> node*
 {
     // append the new_node
     helpers::mutation_algorithms::append(new_node, this);
@@ -320,7 +338,9 @@ auto dom::nodes::node::replace_child(
 }
 
 
-auto dom::nodes::node::remove_child(node* old_node) -> node*
+auto dom::nodes::node::remove_child(
+        node* old_node)
+        -> node*
 {
     // remove the old node
     helpers::mutation_algorithms::pre_remove(old_node, this);
@@ -330,70 +350,80 @@ auto dom::nodes::node::remove_child(node* old_node) -> node*
 }
 
 
-auto dom::nodes::node::get_node_value() const -> ext::string
+auto dom::nodes::node::get_node_value() const
+        -> ext::string
 {
     // return the default node value - empty (abstract class)
     return "";
 }
 
 
-auto dom::nodes::node::get_text_content() const -> ext::string
+auto dom::nodes::node::get_text_content() const
+        -> ext::string
 {
     // return the default text content - empty (abstract class)
     return "";
 }
 
 
-auto dom::nodes::node::get_is_connected() const -> bool
+auto dom::nodes::node::get_is_connected() const
+        -> bool
 {
     // return if this node is connected, by calling the is_connected helper method
     return helpers::shadows::is_connected(this);
 }
 
 
-auto dom::nodes::node::get_base_uri() const -> ext::string
+auto dom::nodes::node::get_base_uri() const
+        -> ext::string
 {
     // return the serialization if the document's base uri
     return url::helpers::serializing::serialize_url(owner_document->base_uri);
 }
 
 
-auto dom::nodes::node::get_first_child() const -> node*
+auto dom::nodes::node::get_first_child() const
+        -> node*
 {
     // return the first child node
     return child_nodes->front();
 }
 
 
-auto dom::nodes::node::get_last_child() const -> node*
+auto dom::nodes::node::get_last_child() const
+        -> node*
 {
     // return the last child node
     return child_nodes->back();
 }
 
 
-auto dom::nodes::node::get_previous_sibling() const -> node*
+auto dom::nodes::node::get_previous_sibling() const
+        -> node*
 {
     // return the previous sibling of this node by getting the item before this node in the parent's child list
     return parent->child_nodes->item_before(this);
 }
 
 
-auto dom::nodes::node::get_next_sibling() const -> node*
+auto dom::nodes::node::get_next_sibling() const
+        -> node*
 {
     // return the next sibling of this node by getting the item after this node in the parent's child list
     return parent->child_nodes->item_after(this);
 }
 
 
-auto dom::nodes::node::get_parent_element() const -> element*
+auto dom::nodes::node::get_parent_element() const
+        -> element*
 {
     // get the parent node of this noe if it is element, otherwise null (dynamic_cast handles both cases)
     return ext::property_dynamic_cast<element*>(parent);
 }
 
 
-auto dom::nodes::node::set_parent_node(node* val) -> void
+auto dom::nodes::node::set_parent_node(node* val)
+        -> void
 {
     // remove this node from the current parent's child node list TODO : move to mutation algorithms?
     if (parent and parent_element->child_nodes->contains(this))
@@ -440,16 +470,18 @@ auto dom::nodes::node::set_parent_node(node* val) -> void
 }
 
 
-auto dom::nodes::node::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::node::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<node>{isolate}
             .template inherit<event_target>()
-            .static_("DOCUMENT_POSITION_DISCONNECTED", node::DOCUMENT_POSITION_DISCONNECTED)
-            .static_("DOCUMENT_POSITION_PRECEDING", node::DOCUMENT_POSITION_PRECEDING)
-            .static_("DOCUMENT_POSITION_FOLLOWING", node::DOCUMENT_POSITION_FOLLOWING)
-            .static_("DOCUMENT_POSITION_CONTAINS", node::DOCUMENT_POSITION_CONTAINS)
-            .static_("DOCUMENT_POSITION_CONTAINED_BY", node::DOCUMENT_POSITION_CONTAINED_BY)
-            .static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC)
+            .template static_("DOCUMENT_POSITION_DISCONNECTED", node::DOCUMENT_POSITION_DISCONNECTED, true)
+            .template static_("DOCUMENT_POSITION_PRECEDING", node::DOCUMENT_POSITION_PRECEDING, true)
+            .template static_("DOCUMENT_POSITION_FOLLOWING", node::DOCUMENT_POSITION_FOLLOWING, true)
+            .template static_("DOCUMENT_POSITION_CONTAINS", node::DOCUMENT_POSITION_CONTAINS, true)
+            .template static_("DOCUMENT_POSITION_CONTAINED_BY", node::DOCUMENT_POSITION_CONTAINED_BY, true)
+            .template static_("DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC", node::DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC, true)
             .template function("normalize", &node::normalize)
             .template function("hasChildNodes", &node::has_child_nodes)
             .template function("contains", &node::contains)

@@ -5,3 +5,6 @@ optimise ext library
 decide how to organise multi-spec classes (separate functions by spec? etc)
 organise one line methods in .cpp files
 update v8 to v9.8.177.4 (VS2022 v143 installation)
+
+explicit single argument ctors
+render widget in ctors - remove call to render()
