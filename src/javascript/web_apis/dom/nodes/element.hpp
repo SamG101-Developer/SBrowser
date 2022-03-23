@@ -13,39 +13,16 @@
 
 #include <veque.hpp>
 
-namespace dom
-{
-    namespace helpers
-    {
-        struct attributes;
-        struct custom_elements;
-        struct node_internals;
-    }
-    namespace internal {struct custom_element_definition;}
-    namespace nodes
-    {
-        class attr;
-        class element;
-        class shadow_root;
-    }
-}
-
+namespace dom::helpers {struct attributes;}
+namespace dom::helpers {struct custom_elements;}
+namespace dom::helpers {struct node_internals;}
+namespace dom::internal {struct custom_element_definition;}
+namespace dom::nodes {class attr;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class shadow_root;}
 namespace geometry::shapes{class dom_rect;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-element
- * https://developer.mozilla.org/en-US/docs/Web/API/Element
- *
- * Element is the most general base class from which all element objects (i.e. objects that represent elements) in a
- * Document inherit. It only has methods and properties common to all kinds of elements. More specific classes inherit
- * from Element.
- *
- * For example, the HTMLElement interface is the base interface for HTML elements, while the SVGElement interface is the
- * basis for all SVG elements. Most functionality is specified further down the class hierarchy.
- *
- * Languages outside the realm of the Web platform, like XUL through the XULElement interface, also implement Element.
- */
 class dom::nodes::element
         : public node
         , public mixins::parent_node<element>
@@ -56,17 +33,17 @@ class dom::nodes::element
         // , public css::cssom_view::mixins::scrollable<element>
         // , public css::cssom_view::mixins::geometry_utils<element> {
 {
-public: friends
+public friends:
     friend class document;
     friend struct helpers::attributes;
     friend struct helpers::custom_elements;
     friend struct helpers::node_internals;
 
-public: constructors
+public constructors:
     element();
     ~element() override;
 
-public: methods
+public methods:
     // dom
     auto has_attributes() const -> bool;
     auto get_attribute_names() const -> ext::vector<ext::string>;
@@ -113,7 +90,7 @@ public: methods
     auto get_bounding_client_rect() const -> geometry::shapes::dom_rect;
     auto scroll_into_view(const ext::string_any_map& options = {}) -> void;
 
-public: properties
+public properties:
     // dom
     ext::dom_property<ext::string, _F> namespace_uri;
     ext::dom_property<ext::string, _F> prefix;
@@ -139,11 +116,11 @@ public: properties
     // cs-shadow-parts
     ext::dom_property<ext::vector<ext::string>*, _F> parts;
 
-public: internal_methods
+public internal_methods:
     auto render() const -> QWidget* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private: internal_properties
+private internal_properties:
     ext::property<ext::string> m_qualified_name;
     ext::property<ext::string> m_html_uppercase_qualified_name;
 
@@ -152,7 +129,7 @@ private: internal_properties
     internal::custom_element_definition* m_custom_element_definition = nullptr;
     std::queue<std::function<void(element*)>> m_custom_element_reaction_queue;
 
-private: accessors
+private accessors:
     // dom
     auto get_text_content() const -> ext::string override;
     auto get_tag_name() const -> ext::string;
@@ -176,7 +153,7 @@ private: accessors
     auto get_m_qualified_name() const -> ext::string;
     auto get_m_html_qualified_uppercase_name() const -> ext::string;
 
-private: internal_properties
+private internal_properties:
     ext::vector<ext::string> m_shadow_attachable_local_names = {
             "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header",
             "main", "nav", "p", "section", "span"

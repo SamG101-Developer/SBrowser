@@ -10,7 +10,7 @@ namespace ext {template <typename T> class listlike;}
 
 
 template <typename T>
-class ext::listlike final
+class ext::listlike
 {
 public constructors:
     explicit listlike(ext::vector<T>* linked_list = {});

@@ -4,12 +4,6 @@
 #include <dom/helpers/trees.hpp>
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-documentfragment-documentfragment
- * https://developer.mozilla.org/en-US/docs/Web/API/DocumentFragment/DocumentFragment
- *
- * The DocumentFragment() constructor returns a new, empty DocumentFragment object.
- */
 dom::nodes::document_fragment::document_fragment()
         : node()
         , mixins::non_element_parent_node<document_fragment>()
@@ -22,21 +16,26 @@ dom::nodes::document_fragment::document_fragment()
 }
 
 
-auto dom::nodes::document_fragment::get_text_content() const -> ext::string
+auto dom::nodes::document_fragment::get_text_content() const
+        -> ext::string
 {
     // the text content is the descendant text contents of this node
     return helpers::trees::descendant_text_content(this);
 }
 
 
-auto dom::nodes::document_fragment::set_text_content(const ext::string& val) -> void
+auto dom::nodes::document_fragment::set_text_content(
+        const ext::string& val)
+        -> void
 {
     // replace all the text in this node with the new val
     helpers::node_internals::string_replace_all(val, this);
 }
 
 
-auto dom::nodes::document_fragment::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::document_fragment::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<document_fragment>{isolate}
             .template ctor<>()

@@ -7,13 +7,6 @@
 namespace dom::nodes {class cdata_section;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-cdatasection
- * https://developer.mozilla.org/en-US/docs/Web/API/CDATASection
- *
- * The CDATASection interface represents a CDATA section that can be used within XML to include extended portions of
- * unescaped text. When inside a CDATA section, the symbols < and & don't need escaping as they normally do.
- */
 class dom::nodes::cdata_section : public text
 {
 public: constructors

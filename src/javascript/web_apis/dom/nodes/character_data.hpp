@@ -10,14 +10,6 @@
 namespace dom::nodes {class character_data;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-characterdata
- * https://developer.mozilla.org/en-US/docs/Web/API/CharacterData
- *
- * The CharacterData abstract interface represents a Node object that contains characters. This is an abstract
- * interface, meaning there aren't any objects of type CharacterData: it is implemented by other interfaces like Text,
- * Comment, CDATASection, or ProcessingInstruction, which aren't abstract.
- */
 class dom::nodes::character_data
         : public node
         , public mixins::child_node<character_data>
@@ -37,7 +29,7 @@ public properties:
     ext::dom_property<ext::string, _F> data;
     ext::dom_property<unsigned long, _F> length;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

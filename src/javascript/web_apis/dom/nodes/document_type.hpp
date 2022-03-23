@@ -9,12 +9,6 @@ namespace dom::nodes {class document_type;}
 namespace dom::other {class dom_implementation;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-documenttype
- * https://developer.mozilla.org/en-US/docs/Web/API/DocumentType
- *
- * The DocumentType interface represents a Node containing a doctype.
- */
 class dom::nodes::document_type
         : public node
         , public mixins::child_node<document_type>
@@ -27,7 +21,7 @@ public properties:
     ext::dom_property<ext::string, _F> public_id;
     ext::dom_property<ext::string, _F> system_id;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

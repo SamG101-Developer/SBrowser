@@ -4,35 +4,10 @@
 
 #include <dom/nodes/node.hpp>
 
-namespace dom::nodes
-{
-    class attr;
-    class element;
-}
+namespace dom::nodes {class attr;}
+namespace dom::nodes {class element;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-attr
- * https://developer.mozilla.org/en-US/docs/Web/API/Attr
- *
- * The Attr interface represents one of an element's attributes as an object. In most situations, you will directly
- * retrieve the attribute value as a string (e.g., Element.getAttribute()), but certain functions (e.g.,
- * Element.getAttributeNode()) or means of iterating return Attr instances.
- *
- * The core idea of an object of type Attr is the association between a name and a value. An attribute may also be part
- * of a namespace and, in this case, it also has a URI identifying the namespace, and a prefix that is an abbreviation
- * for the namespace.
- *
- * The name is deemed local when it ignores the eventual namespace prefix and deemed qualified when it includes the
- * prefix of the namespace, if any, separated from the local name by a colon (:). We have three cases: an attribute
- * outside of a namespace, an attribute inside a namespace without a prefix defined, an attribute inside a namespace
- * with a prefix:
- *
- * Attribute	Namespace name	Namespace prefix	Attribute local name	Attribute qualified name
- * myAttr	    none	        none	            myAttr	                myAttr
- * myAttr	    mynamespace	    none	            myAttr	                myAttr
- * myAttr	    mynamespace	    myns	            myAttr	                myns:myAttr
- */
 class dom::nodes::attr : public node
 {
 public constructors:

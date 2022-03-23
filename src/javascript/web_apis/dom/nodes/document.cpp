@@ -36,13 +36,6 @@
 #include <QtCore/QPointer>
 
 
-/*
- * https://dom.spec.whatwg.org/#dom-document-document
- * https://developer.mozilla.org/en-US/docs/Web/API/Document/Document
- *
- * The Document constructor creates a new Document object that is a web page loaded in the browser and serving as an
- * entry point into the page's content.
- */
 dom::nodes::document::document()
         : node()
         , mixins::non_element_parent_node<document>()
@@ -134,7 +127,8 @@ auto dom::nodes::document::create_element_ns(
 }
 
 
-auto dom::nodes::document::create_document_fragment() const -> dom::nodes::document_fragment
+auto dom::nodes::document::create_document_fragment() const
+        -> dom::nodes::document_fragment
 {
     // create a new document fragment, and set the owner document to this document
     document_fragment document_fragment_node{};
@@ -145,7 +139,8 @@ auto dom::nodes::document::create_document_fragment() const -> dom::nodes::docum
 }
 
 
-auto dom::nodes::document::create_text_node(const ext::string& data) const -> dom::nodes::text
+auto dom::nodes::document::create_text_node(const ext::string& data) const
+        -> dom::nodes::text
 {
     // create a new text node, set the text to data, and set the owner document to this document
     text text_node{};
@@ -157,7 +152,9 @@ auto dom::nodes::document::create_text_node(const ext::string& data) const -> do
 }
 
 
-auto dom::nodes::document::create_cdata_section_node(const ext::string& data) const -> dom::nodes::cdata_section
+auto dom::nodes::document::create_cdata_section_node(
+        const ext::string& data) const
+        -> dom::nodes::cdata_section
 {
     // if the document type is html, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -181,7 +178,9 @@ auto dom::nodes::document::create_cdata_section_node(const ext::string& data) co
 }
 
 
-auto dom::nodes::document::create_comment(const ext::string& data) const -> dom::nodes::comment
+auto dom::nodes::document::create_comment(
+        const ext::string& data) const
+        -> dom::nodes::comment
 {
     // create a new comment node, and set the owner document to this document
     comment comment_node{};
@@ -215,7 +214,9 @@ auto dom::nodes::document::create_processing_instruction(
 }
 
 
-auto dom::nodes::document::create_attribute(const ext::string& local_name) const -> dom::nodes::attr
+auto dom::nodes::document::create_attribute(
+        const ext::string& local_name) const
+        -> dom::nodes::attr
 {
     // if the document type is html then set the local name to lowercase
     const ext::string html_qualified_namespace = m_type == "html"
@@ -326,7 +327,9 @@ auto dom::nodes::document::import_node(
 }
 
 
-auto dom::nodes::document::adopt_node(node* const node) -> dom::nodes::node*
+auto dom::nodes::document::adopt_node(
+        node* const node)
+        -> dom::nodes::node*
 {
     // if the node being adopted is a document, then throw a not supported error
     helpers::exceptions::throw_v8_exception(
@@ -350,7 +353,9 @@ auto dom::nodes::document::adopt_node(node* const node) -> dom::nodes::node*
 }
 
 
-auto dom::nodes::document::get_elements_by_name(const ext::string& element_name) const -> ext::vector<dom::nodes::node*>
+auto dom::nodes::document::get_elements_by_name(
+        const ext::string& element_name) const
+        -> ext::vector<dom::nodes::node*>
 {
     // filter the element descendants, by matching the elements with the same qualified name as element name, and
     // convert them back into nodes before returning the list
@@ -361,7 +366,8 @@ auto dom::nodes::document::get_elements_by_name(const ext::string& element_name)
 }
 
 
-auto dom::nodes::document::open() const -> dom::nodes::document*
+auto dom::nodes::document::open() const
+        -> dom::nodes::document*
 {
     // TODO
     return html::helpers::elements::document_open_steps(this);
@@ -384,7 +390,8 @@ auto dom::nodes::document::open(
 }
 
 
-auto dom::nodes::document::close() const -> void
+auto dom::nodes::document::close() const
+        -> void
 {
     // TODO
     helpers::exceptions::throw_v8_exception(
@@ -402,7 +409,8 @@ auto dom::nodes::document::close() const -> void
 
 
 template <typename ...strings>
-auto dom::nodes::document::write(strings... text) const -> void
+auto dom::nodes::document::write(strings... text) const
+        -> void
 {
     // TODO
     html::helpers::elements::document_write_steps(this, ext::concatenate_strings(text...))
@@ -410,7 +418,8 @@ auto dom::nodes::document::write(strings... text) const -> void
 
 
 template <typename ...strings>
-auto dom::nodes::document::writeln(strings... text) const -> void
+auto dom::nodes::document::writeln(strings... text) const
+        -> void
 {
     // TODO
     ext::vector<ext::string> new_lined_text;
@@ -420,7 +429,8 @@ auto dom::nodes::document::writeln(strings... text) const -> void
 }
 
 
-auto dom::nodes::document::has_focus() const -> bool
+auto dom::nodes::document::has_focus() const
+        -> bool
 {
     //TODO
     return html::helpers::elements::has_focus_steps(this);
@@ -475,132 +485,153 @@ auto dom::nodes::document::caret_position_from_point(
 }
 
 
-auto dom::nodes::document::get_the_parent(events::event* event) -> dom::nodes::event_target*
+auto dom::nodes::document::get_the_parent(
+        events::event* event)
+        -> dom::nodes::event_target*
 {
     return event->type == "load" or not m_browsing_context ? nullptr : &javascript::realms::relevant_global_object();
 }
 
 
-auto dom::nodes::document::get_m_html_element() const -> html::elements::html_html_element*
+auto dom::nodes::document::get_m_html_element() const
+        -> html::elements::html_html_element*
 {
     // the html element is the document element that is a html_html_element type
     return ext::property_dynamic_cast<html::elements::html_html_element*>(document_element);
 }
 
 
-auto dom::nodes::document::get_m_head_element() const -> html::elements::html_head_element*
+auto dom::nodes::document::get_m_head_element() const
+        -> html::elements::html_head_element*
 {
     // the head element is the first html_head_element that is a child of the html element
     return get_m_html_element()->children->cast_all<html::elements::html_head_element*>().front();
 }
 
 
-auto dom::nodes::document::get_m_title_element() const -> html::elements::html_title_element*
+auto dom::nodes::document::get_m_title_element() const
+        -> html::elements::html_title_element*
 {
     // the title element is the first child of this document that is a html_title_element
     return helpers::trees::descendants(this).cast_all<html::elements::html_title_element*>().front();
 }
 
 
-auto dom::nodes::document::get_m_body_element() const -> html::elements::html_body_element*
+auto dom::nodes::document::get_m_body_element() const
+        -> html::elements::html_body_element*
 {
     // the body element is the first child of this document that is a html_body_element
     return children->cast_all<html::elements::html_body_element*>().front();
 }
 
 
-auto dom::nodes::document::get_compat_mode() const -> ext::string
+auto dom::nodes::document::get_compat_mode() const
+        -> ext::string
 {
     // the compat mode depends on if the document mode is 'quirks' or not
     return m_mode == "quirks" ? "BackCompat" : "CSS1Compat";
 }
 
 
-auto dom::nodes::document::get_character_set() const -> ext::string
+auto dom::nodes::document::get_character_set() const
+        -> ext::string
 {
     // the character set is the name of the encoding used in the document
     return m_encoding->name;
 }
 
 
-auto dom::nodes::document::get_doctype() const -> dom::nodes::document_type*
+auto dom::nodes::document::get_doctype() const
+        -> dom::nodes::document_type*
 {
     // the doctype is the first child of this document that is a doctype node
     return child_nodes->cast_all<document_type*>().front();
 }
 
 
-auto dom::nodes::document::get_document_element() const -> dom::nodes::element*
+auto dom::nodes::document::get_document_element() const
+        -> dom::nodes::element*
 {
     // the document element is the first child of this document that is an element
     return child_nodes->cast_all<element*>().front();
 }
 
 
-auto dom::nodes::document::get_dir() const -> ext::string
+auto dom::nodes::document::get_dir() const
+        -> ext::string
 {
     // the dir is a wrapper for the html element's dir attribute
     return get_m_html_element()->dir;
 }
 
 
-auto dom::nodes::document::get_last_modified() const -> ext::string
+auto dom::nodes::document::get_last_modified() const
+        -> ext::string
 {
     // TODO
     return "" /* TODO from header */;
 }
 
 
-auto dom::nodes::document::get_body() const -> html::elements::html_body_element*
+auto dom::nodes::document::get_body() const
+        -> html::elements::html_body_element*
 {
     // the body is the document's body element
     return get_m_body_element();
 }
 
 
-auto dom::nodes::document::get_head() const -> html::elements::html_head_element*
+auto dom::nodes::document::get_head() const
+        -> html::elements::html_head_element*
 {
     // the head is the document's head element
     return get_m_head_element();
 }
 
 
-auto dom::nodes::document::get_title() const -> ext::string
+auto dom::nodes::document::get_title() const
+        -> ext::string
 {
     // the title is the child text content of the title element
     return helpers::trees::child_text_content(get_m_title_element());
 }
 
 
-auto dom::nodes::document::get_images() -> ext::vector<html::elements::html_image_element*>
+auto dom::nodes::document::get_images()
+        -> ext::vector<html::elements::html_image_element*>
 {
     // the images are the children of this document that are html_image_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_image_element*>();
 }
 
 
-auto dom::nodes::document::get_links() -> ext::vector<html::elements::html_link_element*>
+auto dom::nodes::document::get_links()
+        -> ext::vector<html::elements::html_link_element*>
 {
     // the links are the children of this document that are html_link_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_link_element*>();
 }
 
 
-auto dom::nodes::document::get_forms() -> ext::vector<html::elements::html_form_element*>
+auto dom::nodes::document::get_forms()
+        -> ext::vector<html::elements::html_form_element*>
 {
     // the forms are the children of this document that are html_form_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_form_element*>();
 }
 
 
-auto dom::nodes::document::get_scripts() -> ext::vector<html::elements::html_script_element*>
+auto dom::nodes::document::get_scripts()
+        -> ext::vector<html::elements::html_script_element*>
 {
     // the scripts are the children of this document that are html_script_element nodes which have the href attribute set
     return helpers::trees::descendants(this).cast_all<html::elements::html_script_element*>().filter([](auto* element) {return element->href;});
 }
 
 
-auto dom::nodes::document::set_title(const ext::string& val) -> void
+auto dom::nodes::document::set_title(
+        const ext::string& val)
+        -> void
 {
     // case for when the document element is a svg element
     if (dynamic_cast<svg::nodes::svg_element*>(document_element))
@@ -646,7 +677,9 @@ auto dom::nodes::document::set_title(const ext::string& val) -> void
 }
 
 
-auto dom::nodes::document::set_body(html::elements::html_body_element* val) -> void
+auto dom::nodes::document::set_body(
+        html::elements::html_body_element* val)
+        -> void
 {
     // if the new val isn't a html_body_element, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
@@ -665,7 +698,9 @@ auto dom::nodes::document::set_body(html::elements::html_body_element* val) -> v
 }
 
 
-auto dom::nodes::document::set_cookie(const ext::string& val) -> void
+auto dom::nodes::document::set_cookie(
+        const ext::string& val)
+        -> void
 {
     // if the document is cookie averse, then return
     if (html::helpers::cookies::is_cookie_averse_document(this))
@@ -682,7 +717,9 @@ auto dom::nodes::document::set_cookie(const ext::string& val) -> void
 }
 
 
-auto dom::nodes::document::set_ready_state(const ext::string& val) -> void
+auto dom::nodes::document::set_ready_state(
+        const ext::string& val)
+        -> void
 {
     if (ready_state == val) return;
     // TODO : parser stuff
@@ -690,7 +727,8 @@ auto dom::nodes::document::set_ready_state(const ext::string& val) -> void
 }
 
 
-auto dom::nodes::document::get_scrolling_element() const -> dom::nodes::element*
+auto dom::nodes::document::get_scrolling_element() const
+        -> dom::nodes::element*
 {
     return m_mode == "quirks" and body
             ? ext::property_dynamic_cast<element*>(body)
@@ -698,7 +736,9 @@ auto dom::nodes::document::get_scrolling_element() const -> dom::nodes::element*
 }
 
 
-auto dom::nodes::document::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::document::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<document>{isolate}
             .template ctor<>()

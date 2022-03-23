@@ -5,7 +5,7 @@
 #include <variant>
 
 #include <ext/map.hpp>
-#include <ext/mixins/listlike.hpp>
+#include <ext/listlike.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 
 #include <dom/nodes/node.hpp>
@@ -19,88 +19,43 @@
 
 namespace css::cssom_view::other {class caret_position;}
 namespace css::css_regions::elements {class named_flow;}
-
-namespace dom
-{
-    namespace helpers
-    {
-        struct custom_elements;
-        struct node_internals;
-    }
-
-    namespace iterators
-    {
-        class node_filter;
-        class node_iterator;
-        class tree_walker;
-    }
-
-    namespace nodes
-    {
-        class attr;
-        class cdata_section;
-        class comment;
-        class document;
-        class document_fragment;
-        class document_type;
-        class processing_instruction;
-        class text;
-        class window_proxy;
-    }
-
-    namespace ranges {class range;}
-    namespace other {class dom_implementation;}
-}
-
+namespace dom::helpers {struct custom_elements;}
+namespace dom::helpers {struct node_internals;}
+namespace dom::iterators {class node_filter;}
+namespace dom::iterators {class node_iterator;}
+namespace dom::iterators {class tree_walker;}
+namespace dom::nodes {class attr;}
+namespace dom::nodes {class cdata_section;}
+namespace dom::nodes {class comment;}
+namespace dom::nodes {class document;}
+namespace dom::nodes {class document_fragment;}
+namespace dom::nodes {class document_type;}
+namespace dom::nodes {class processing_instruction;}
+namespace dom::nodes {class text;}
+namespace dom::nodes {class window_proxy;}
+namespace dom::ranges {class range;}
+namespace dom::other {class dom_implementation;}
 namespace encoding {class encoding;}
-
-namespace html
-{
-    namespace elements
-    {
-        class html_body_element;
-        class html_head_element;
-        class html_html_element;
-        class html_image_element;
-        class html_form_element;
-        class html_link_element;
-        class html_script_element;
-        class html_title_element;
-    }
-
-    namespace internal
-    {
-        struct policy_container;
-        struct permissions_policy;
-        struct module_map;
-        struct cross_origin_opener_policy;
-        struct document_load_timing_information;
-        struct document_unload_timing_information;
-        struct browsing_context;
-        struct sandboxing_flags;
-    }
-
-    namespace other {class location;}
-}
-
+namespace html::elements {class html_body_element;}
+namespace html::elements {class html_head_element;}
+namespace html::elements {class html_html_element;}
+namespace html::elements {class html_image_element;}
+namespace html::elements {class html_form_element;}
+namespace html::elements {class html_link_element;}
+namespace html::elements {class html_script_element;}
+namespace html::elements {class html_title_element;}
+namespace html::internal {struct policy_container;}
+namespace html::internal {struct permissions_policy;}
+namespace html::internal {struct module_map;}
+namespace html::internal {struct cross_origin_opener_policy;}
+namespace html::internal {struct document_load_timing_information;}
+namespace html::internal {struct document_unload_timing_information;}
+namespace html::internal {struct browsing_context;}
+namespace html::internal {struct sandboxing_flags;}
+namespace html::other {class location;}
 namespace svg::elements {class svg_script_element;}
 
 
-/*
- * https://dom.spec.whatwg.org/#interface-document
- * https://developer.mozilla.org/en-US/docs/Web/API/Document
- *
- * The Document interface represents any web page loaded in the browser and serves as an entry point into the web page's]
- * content, which is the DOM tree.
- *
- * The DOM tree includes elements such as <body> and <table>, among many others. It provides functionality globally to
- * the document, like how to obtain the page's URL and create new elements in the document.
- *
- * The Document interface describes the common properties and methods for any kind of document. Depending on the
- * document's type (e.g. HTML, XML, SVG, …), a larger API is available: HTML documents, served with the "text/html"
- * content type, also implement the HTMLDocument interface, whereas XML and SVG documents implement the XMLDocument
- * interface.
- */
 class dom::nodes::document
         : public node
         , public mixins::non_element_parent_node<document>
@@ -247,14 +202,14 @@ private accessors:
     // dom
     auto get_compat_mode() const -> ext::string;
     auto get_character_set() const -> ext::string;
-    auto get_doctype() const -> document_type*;
-    auto get_document_element() const -> element*;
+    same_obj auto get_doctype() const -> document_type*;
+    same_obj auto get_document_element() const -> element*;
 
     // html
     auto get_dir() const -> ext::string;
     auto get_last_modified() const -> ext::string;
-    auto get_body() const -> html::elements::html_body_element*;
-    auto get_head() const -> html::elements::html_head_element*;
+    same_obj auto get_body() const -> html::elements::html_body_element*;
+    same_obj auto get_head() const -> html::elements::html_head_element*;
     auto get_title() const -> ext::string;
 
     new_obj auto get_images() -> ext::vector<html::elements::html_image_element*>;
@@ -268,7 +223,7 @@ private accessors:
     auto set_ready_state(const ext::string& val) -> void;
 
     // cssom-view
-    auto get_scrolling_element() const -> element*;
+    same_obj auto get_scrolling_element() const -> element*;
 };
 
 

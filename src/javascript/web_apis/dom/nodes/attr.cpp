@@ -19,49 +19,60 @@ dom::nodes::attr::attr() : node()
 }
 
 
-auto dom::nodes::attr::get_node_value() const -> ext::string
+auto dom::nodes::attr::get_node_value() const
+        -> ext::string
 {
     // the node_value is the attribute's value
     return value;
 }
 
 
-auto dom::nodes::attr::get_text_content() const -> ext::string
+auto dom::nodes::attr::get_text_content() const
+        -> ext::string
 {
     // the text_content is the attribute's value
     return value;
 }
 
 
-auto dom::nodes::attr::get_m_qualified_name() const -> ext::string
+auto dom::nodes::attr::get_m_qualified_name() const
+        -> ext::string
 {
     // the qualified name is the prefix and local name joined with a colon
     return prefix + ext::string{":"} + local_name;
 }
 
 
-void dom::nodes::attr::set_node_value(const ext::string& val)
+auto dom::nodes::attr::set_node_value(
+        const ext::string& val)
+        -> void
 {
     // the node_value is the attribute's value
     set_value(val);
 }
 
 
-void dom::nodes::attr::set_text_content(const ext::string& val)
+auto dom::nodes::attr::set_text_content(
+        const ext::string& val)
+        -> void
 {
     // the text_content is the attribute's value
     set_value(val);
 }
 
 
-void dom::nodes::attr::set_value(const ext::string& val)
+auto dom::nodes::attr::set_value(
+        const ext::string& val)
+        -> void
 {
     // setting the value calls a helper set method
     helpers::attributes::set_existing_attribute_value(this, val);
 }
 
 
-auto dom::nodes::attr::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::attr::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<attr>{isolate}
             .template inherit<node>()

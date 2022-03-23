@@ -1,6 +1,10 @@
 #ifndef SBROWSER_ATTRIBUTE_DESCRIPTORS_HPP
 #define SBROWSER_ATTRIBUTE_DESCRIPTORS_HPP
 
+// Apply the top two descriptors when a non-primitive object is being returned from a method that is exposed to
+// javascript
+
+
 #define new_obj \
 /*
  * create a new object from the method (c++ object on the stack returned)

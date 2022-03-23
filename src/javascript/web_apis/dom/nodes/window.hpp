@@ -2,7 +2,7 @@
 #ifndef SBROWSER_WINDOW_HPP
 #define SBROWSER_WINDOW_HPP
 
-#include <ext/mixins/listlike.hpp>
+#include <ext/listlike.hpp>
 #include <ext/dom_property.hpp>
 #include <javascript/interop/attribute_descriptors.hpp>
 

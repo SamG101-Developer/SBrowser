@@ -13,7 +13,9 @@ dom::nodes::document_type::document_type()
 }
 
 
-auto dom::nodes::document_type::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::document_type::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<document_type>{isolate}
             .template inherit<node>()

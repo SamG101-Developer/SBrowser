@@ -1,7 +1,8 @@
 #include "cdata_section.hpp"
 
 
-dom::nodes::cdata_section::cdata_section() : text()
+dom::nodes::cdata_section::cdata_section()
+        : text()
 {
     // set the properties
     node_type << CDATA_SECTION_NODE;
@@ -9,7 +10,9 @@ dom::nodes::cdata_section::cdata_section() : text()
 }
 
 
-auto dom::nodes::cdata_section::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::nodes::cdata_section::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<cdata_section>{isolate}
             .template inherit<text>()
