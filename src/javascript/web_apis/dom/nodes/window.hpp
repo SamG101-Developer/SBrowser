@@ -8,31 +8,17 @@
 
 #include <dom/nodes/event_target.hpp>
 
-namespace dom::nodes
-{
-    class document;
-    class element;
-    class window;
-    class window_proxy;
-}
-
-namespace html
-{
-    namespace custom_elements {struct custom_element_registry;}
-    namespace other
-    {
-        class location;
-        class history;
-        class navigator;
-        class bar_prop;
-    }
-}
-
-namespace css
-{
-    namespace cssom_view::other {class screen;}
-    namespace cssom::other {class css_style_declaration;}
-}
+namespace css::cssom_view::other {class screen;}
+namespace dom::nodes {class document;}
+namespace css::cssom::other {class css_style_declaration;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class window;}
+namespace dom::nodes {class window_proxy;}
+namespace html::custom_elements {struct custom_element_registry;}
+namespace html::other {class location;}
+namespace html::other {class history;}
+namespace html::other {class navigator;}
+namespace html::other {class bar_prop;}
 
 
 class dom::nodes::window
@@ -54,9 +40,9 @@ public methods:
 
     // user prompts
     auto print() -> void;
-    auto alert(const ext::string& message = "") -> void;
-    auto confirm(const ext::string& message = "") -> void;
-    auto prompt(const ext::string& message="", const ext::string& default_ = "") -> ext::string;
+    auto alert(const ext::string& message = "") const -> void;
+    auto confirm(const ext::string& message = "") const -> void;
+    auto prompt(const ext::string& message="", const ext::string& default_ = "") const -> ext::string;
     auto post_message(ext::string message, const ext::string_any_map& options = {}) -> void;
 
 public: methods
@@ -75,59 +61,59 @@ public: methods
 
 public: properties
     // current browsing context
-    ext::dom_property<ext::string, _F> name;
-    ext::dom_property<ext::string, _F> status;
-    ext::dom_property<bool, _F> closed;
+    ext::dom_property<ext::string> name;
+    ext::dom_property<ext::string> status;
+    ext::dom_property<bool> closed;
 
-    ext::dom_property<html::other::location*, _F> location;
-    ext::dom_property<html::other::history*, _F> history;
-    ext::dom_property<html::custom_elements::custom_element_registry*, _F> custom_elements;
+    ext::dom_property<html::other::location*> location;
+    ext::dom_property<html::other::history*> history;
+    ext::dom_property<html::custom_elements::custom_element_registry*> custom_elements;
 
-    ext::dom_property<window_proxy*, _F> window_;
-    ext::dom_property<window_proxy*, _F> self;
-    ext::dom_property<document*, _F> document;
+    ext::dom_property<window_proxy*> window_;
+    ext::dom_property<window_proxy*> self;
+    ext::dom_property<document*> document;
 
     // bar prop elements
-    ext::dom_property<html::other::bar_prop*, _F> location_bar;
-    ext::dom_property<html::other::bar_prop*, _F> menu_bar;
-    ext::dom_property<html::other::bar_prop*, _F> personal_bar;
-    ext::dom_property<html::other::bar_prop*, _F> scroll_bars;
-    ext::dom_property<html::other::bar_prop*, _F> status_bar;
-    ext::dom_property<html::other::bar_prop*, _F> tool_bar;
+    ext::dom_property<html::other::bar_prop*> location_bar;
+    ext::dom_property<html::other::bar_prop*> menu_bar;
+    ext::dom_property<html::other::bar_prop*> personal_bar;
+    ext::dom_property<html::other::bar_prop*> scroll_bars;
+    ext::dom_property<html::other::bar_prop*> status_bar;
+    ext::dom_property<html::other::bar_prop*> tool_bar;
 
     // animated types browsing context
-    ext::dom_property<ext::any, _F> opener;
-    ext::dom_property<unsigned long, _F> length;
-    ext::dom_property<element*, _F> frame_element;
-    ext::dom_property<window_proxy*, _F> frames;
-    ext::dom_property<window_proxy*, _F> top;
-    ext::dom_property<window_proxy*, _F> parent;
+    ext::dom_property<ext::any> opener;
+    ext::dom_property<unsigned long> length;
+    ext::dom_property<element*> frame_element;
+    ext::dom_property<window_proxy*> frames;
+    ext::dom_property<window_proxy*> top;
+    ext::dom_property<window_proxy*> parent;
 
     // user agent
-    ext::dom_property<bool, _F> origin_agent_cluster;
-    ext::dom_property<html::other::navigator*, _F> navigator;
+    ext::dom_property<bool> origin_agent_cluster;
+    ext::dom_property<html::other::navigator*> navigator;
 
 public: properties
     // viewport
-    ext::dom_property<long, _F> inner_width;
-    ext::dom_property<long, _F> inner_height;
+    ext::dom_property<long> inner_width;
+    ext::dom_property<long> inner_height;
 
     // viewport scrolling
-    ext::dom_property<double, _F> scroll_x;
-    ext::dom_property<double, _F> scroll_y;
-    ext::dom_property<double, _F> page_x_offset;
-    ext::dom_property<double, _F> page_y_offset;
+    ext::dom_property<double> scroll_x;
+    ext::dom_property<double> scroll_y;
+    ext::dom_property<double> page_x_offset;
+    ext::dom_property<double> page_y_offset;
 
     // client
-    ext::dom_property<long, _F> screen_x;
-    ext::dom_property<long, _F> screen_y;
-    ext::dom_property<long, _F> outer_width;
-    ext::dom_property<long, _F> outer_height;
-    ext::dom_property<double, _F> device_pixel_width;
+    ext::dom_property<long> screen_x;
+    ext::dom_property<long> screen_y;
+    ext::dom_property<long> outer_width;
+    ext::dom_property<long> outer_height;
+    ext::dom_property<double> device_pixel_width;
 
 public: properties
     // screens
-    ext::dom_property<css::cssom_view::other::screen*, _F> screen;
+    ext::dom_property<css::cssom_view::other::screen*> screen;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

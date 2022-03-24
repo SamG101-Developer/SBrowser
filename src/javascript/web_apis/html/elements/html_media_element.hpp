@@ -53,44 +53,44 @@ public: methods
 
 public: properties
     // Errors
-    ext::dom_property<html::media::media_error*, _F> error;
+    ext::dom_property<html::media::media_error*> error;
 
     // Networking
-    ext::dom_property<html::media::media_provider*, _F> src_object;
-    ext::dom_property<html::media::time_ranges*, _F> buffered;
+    ext::dom_property<html::media::media_provider*> src_object;
+    ext::dom_property<html::media::time_ranges*> buffered;
     ext::dom_property<ext::string, _T> src;
-    ext::dom_property<ext::string, _F> current_src;
+    ext::dom_property<ext::string> current_src;
     ext::dom_property<ext::string, _T> cross_origin;
     ext::dom_property<ext::string, _T> preload;
-    ext::dom_property<unsigned short, _F> network_state;
+    ext::dom_property<unsigned short> network_state;
 
     // Readiness
-    ext::dom_property<unsigned short, _F> ready_state;
-    ext::dom_property<bool, _F> seeking;
+    ext::dom_property<unsigned short> ready_state;
+    ext::dom_property<bool> seeking;
 
     // Playback
-    ext::dom_property<bool, _F> paused;
-    ext::dom_property<bool, _F> preserves_pitch;
-    ext::dom_property<bool, _F> ended;
+    ext::dom_property<bool> paused;
+    ext::dom_property<bool> preserves_pitch;
+    ext::dom_property<bool> ended;
     ext::dom_property<bool, _T> autoplay;
     ext::dom_property<bool, _T> loop;
-    ext::dom_property<double, _F> current_time;
-    ext::dom_property<double, _F> duration;
-    ext::dom_property<double, _F> default_playback_rate;
-    ext::dom_property<double, _F> playback_rate;
-    ext::dom_property<html::media::time_ranges*, _F> played;
-    ext::dom_property<html::media::time_ranges*, _F> seekable;
+    ext::dom_property<double> current_time;
+    ext::dom_property<double> duration;
+    ext::dom_property<double> default_playback_rate;
+    ext::dom_property<double> playback_rate;
+    ext::dom_property<html::media::time_ranges*> played;
+    ext::dom_property<html::media::time_ranges*> seekable;
 
     // Controls
     ext::dom_property<bool, _T> controls;
     ext::dom_property<bool, _T> default_muted;
-    ext::dom_property<bool, _F> muted;
-    ext::dom_property<double, _F> volume;
+    ext::dom_property<bool> muted;
+    ext::dom_property<double> volume;
 
     // Tracks
-    ext::dom_property<ext::vector<html::media::audio_track*>*, _F> audio_tracks;
-    ext::dom_property<ext::vector<html::media::video_track*>*, _F> video_tracks;
-    ext::dom_property<ext::vector<html::media::text_track*>*, _F> text_tracks;
+    ext::dom_property<ext::vector<html::media::audio_track*>*> audio_tracks;
+    ext::dom_property<ext::vector<html::media::video_track*>*> video_tracks;
+    ext::dom_property<ext::vector<html::media::text_track*>*> text_tracks;
 
 protected: internal_properties
     html::elements::html_media_element* m_media_provider_resource;

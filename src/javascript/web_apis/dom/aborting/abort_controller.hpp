@@ -19,7 +19,7 @@ public methods:
     auto abort(const ext::any& reason) const -> void;
 
 public properties:
-    ext::dom_property<abort_signal*, _F> signal;
+    ext::dom_property<abort_signal*> signal;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

@@ -31,7 +31,7 @@ public static_constants:
     static const unsigned long SHOW_DOCUMENT_FRAGMENT = 0x400;
 
 public properties:
-    ext::dom_property<std::function<unsigned short(const nodes::node*)>, _F> accept_node;
+    ext::dom_property<std::function<unsigned short(const nodes::node*)>> accept_node;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

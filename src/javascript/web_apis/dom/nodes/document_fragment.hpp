@@ -18,7 +18,7 @@ public constructors:
     document_fragment();
 
 public properties:
-    ext::dom_property<dom::nodes::element*, _F> host;
+    ext::dom_property<dom::nodes::element*> host;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

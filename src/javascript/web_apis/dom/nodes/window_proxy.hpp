@@ -7,10 +7,8 @@
 
 #include <v8.h>
 
-namespace dom::nodes {
-    class window;
-    class window_proxy;
-}
+namespace dom::nodes {class window;}
+namespace dom::nodes {class window_proxy;}
 
 
 // Pre-wrapped JavaScript Class

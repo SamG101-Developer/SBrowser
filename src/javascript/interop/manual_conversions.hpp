@@ -1,11 +1,12 @@
 #ifndef SBROWSER_MANUAL_CONVERSIONS_HPP
 #define SBROWSER_MANUAL_CONVERSIONS_HPP
 
-#include <ext/string.hpp>
-#include <ext/set.hpp>
-#include <ext/property.hpp>
 #include <ext/any.hpp>
 #include <ext/infinity.hpp>
+#include <ext/listlike.hpp>
+#include <ext/property.hpp>
+#include <ext/set.hpp>
+#include <ext/string.hpp>
 
 #include <v8pp/convert.hpp>
 
@@ -37,9 +38,54 @@
 //};
 
 
+/* LISTLIKE<T> */
+template <typename T>
+struct v8pp::convert<T>
+{
+    using from_type = ext::listlike<T>;
+    using to_type = v8::Local<v8::Object>;
+
+    static auto is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
+    {
+        // verify that the value is a non-empty object
+        return not value.IsEmpty() and value->IsObject();
+    }
+
+    static auto from_v8(v8::Isolate* isolate, v8::Local<v8::Value> v8_value) -> from_type
+    {
+        // validate the javascript object
+        if (not is_valid(isolate, v8_value))
+            throw std::invalid_argument("Must be a non-null object");
+
+        // create the handle_scope and return the c++ object
+        v8::HandleScope handle_scope{isolate};
+        auto cpp_value = ext::listlike<T>{};
+        auto v8_value_as_object = v8_value.template As<v8::Object>();
+
+        auto i = 0;
+        while (v8_value_as_object->Has(isolate->GetCurrentContext(), i).ToChecked())
+        {
+            cpp_value.m_linked_list->append(v8_value_as_object->Get(isolate->GetCurrentContext(), i));
+        }
+    }
+
+    static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
+    {
+        // create the handle_scope and return the javascript object
+        v8::EscapableHandleScope escapable_handle_scope{isolate};
+        auto v8_value = v8::Object::New(isolate);
+        for (auto i = 0; i < cpp_value.length; ++i)
+            v8_value->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value[i]));
+
+        return v8_value;
+    }
+};
+
+
 /* STRING */
 template<>
-struct v8pp::convert<ext::string> {
+struct v8pp::convert<ext::string>
+{
     using from_type = ext::string;
     using to_type = v8::Local<v8::String>;
 
@@ -75,7 +121,8 @@ struct v8pp::convert<ext::string> {
 
 /* PROPERTY */
 template <typename T>
-struct v8pp::convert<ext::property<T>> {
+struct v8pp::convert<ext::property<T>>
+{
     using from_type = T;
     using to_type = v8::Local<v8::Value>;
 
@@ -113,7 +160,8 @@ struct v8pp::is_wrapped_class<ext::property<T>> : std::false_type{};
 
 /* VECTOR */
 template <typename T>
-struct v8pp::convert<ext::vector<T>> {
+struct v8pp::convert<ext::vector<T>>
+{
     using from_type = ext::vector<T>;
     using to_type = v8::Local<v8::Array>;
 
@@ -155,7 +203,8 @@ struct v8pp::is_wrapped_class<ext::vector<T>> : std::false_type{};
 
 /* SET */
 template <typename T>
-struct v8pp::convert<ext::set<T>> {
+struct v8pp::convert<ext::set<T>>
+{
     using from_type = ext::set<T>;
     using to_type = v8::Local<v8::Set>;
     
@@ -198,7 +247,8 @@ struct v8pp::is_wrapped_class<ext::set<T>> : std::false_type{};
 
 /* INFINITY */
 template <typename T>
-struct v8pp::convert<ext::infinity<T>> {
+struct v8pp::convert<ext::infinity<T>>
+{
     using from_type = ext::infinity<T>;
     using to_type = v8::Local<v8::Number>;
 
@@ -236,7 +286,8 @@ struct v8pp::is_wrapped_class<ext::infinity<T>> : std::false_type{};
 
 /* ANY */
 template<>
-struct v8pp::convert<ext::any> { // TODO -> Date, Maps, Infinity, NaN, GlobalThis, Function, Symbol, Error, Math, RegExp, Buffers, Atomics, DataView, JSON, Promise, Generators/Functions, Reflect, Proxy, Intl., WebAssembly., Arguments
+struct v8pp::convert<ext::any>
+{ // TODO -> Date, Maps, Infinity, NaN, GlobalThis, Function, Symbol, Error, Math, RegExp, Buffers, Atomics, DataView, JSON, Promise, Generators/Functions, Reflect, Proxy, Intl., WebAssembly., Arguments
     using from_type = ext::any;
     using to_type = v8::Local<v8::Value>;
 

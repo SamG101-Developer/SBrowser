@@ -19,9 +19,9 @@ public constructors:
     shadow_root();
 
 public properties:
-    ext::dom_property<ext::string, _F> mode;
-    ext::dom_property<ext::string, _F> slot_assignment;
-    ext::dom_property<bool, _F> delegates_focus;
+    ext::dom_property<ext::string> mode;
+    ext::dom_property<ext::string> slot_assignment;
+    ext::dom_property<bool> delegates_focus;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

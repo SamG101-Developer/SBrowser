@@ -32,8 +32,8 @@ public methods:
     auto throw_if_aborted() const -> void;
 
 public properties:
-    ext::dom_property<bool    , _F> aborted;
-    ext::dom_property<ext::any, _F> reason;
+    ext::dom_property<bool    > aborted;
+    ext::dom_property<ext::any> reason;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

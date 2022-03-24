@@ -14,12 +14,12 @@ public constructors:
     attr();
 
 public properties:
-    ext::dom_property<ext::string, _F> namespace_uri;
-    ext::dom_property<ext::string, _F> prefix;
-    ext::dom_property<ext::string, _F> local_name;
-    ext::dom_property<ext::string, _F> name;
-    ext::dom_property<ext::string, _F> value;
-    ext::dom_property<element*, _F> owner_element;
+    ext::dom_property<ext::string> namespace_uri;
+    ext::dom_property<ext::string> prefix;
+    ext::dom_property<ext::string> local_name;
+    ext::dom_property<ext::string> name;
+    ext::dom_property<ext::string> value;
+    ext::dom_property<element*> owner_element;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

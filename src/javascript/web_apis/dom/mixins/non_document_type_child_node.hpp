@@ -16,8 +16,8 @@ public constructors:
     non_document_type_child_node();
 
 public properties:
-    ext::dom_property<nodes::element*, _F> previous_element_sibling;
-    ext::dom_property<nodes::element*, _F> next_element_sibling;
+    ext::dom_property<nodes::element*> previous_element_sibling;
+    ext::dom_property<nodes::element*> next_element_sibling;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

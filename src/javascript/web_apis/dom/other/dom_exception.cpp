@@ -3,7 +3,7 @@
 
 dom::other::dom_exception::dom_exception(
         const ext::string& message,
-        v8_custom_error_t type)
+        const v8_custom_error_t type)
 
         : dom_object()
 {
@@ -13,7 +13,9 @@ dom::other::dom_exception::dom_exception(
 }
 
 
-auto dom::other::dom_exception::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::other::dom_exception::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<dom_exception>{isolate}
             .template ctor<const ext::string&, v8_custom_error_t>()

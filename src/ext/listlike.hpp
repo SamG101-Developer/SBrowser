@@ -12,6 +12,9 @@ namespace ext {template <typename T> class listlike;}
 template <typename T>
 class ext::listlike
 {
+public friends:
+    friend v8pp::convert<ext::listlike<T>>;
+
 public constructors:
     explicit listlike(ext::vector<T>* linked_list = {});
 

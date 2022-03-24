@@ -15,15 +15,15 @@ public: constructors
     html_area_element();
 
 public: properties
-    ext::dom_property<ext::string, _F> alt;
-    ext::dom_property<ext::string, _F> coords;
-    ext::dom_property<ext::string, _F> shape;
-    ext::dom_property<ext::string, _F> target;
-    ext::dom_property<ext::string, _F> download;
-    ext::dom_property<ext::string, _F> ping;
-    ext::dom_property<ext::string, _F> rel;
-    ext::dom_property<ext::string, _F> referrerPolicy;
-    ext::dom_property<ext::vector<ext::string>*, _F> relList;
+    ext::dom_property<ext::string> alt;
+    ext::dom_property<ext::string> coords;
+    ext::dom_property<ext::string> shape;
+    ext::dom_property<ext::string> target;
+    ext::dom_property<ext::string> download;
+    ext::dom_property<ext::string> ping;
+    ext::dom_property<ext::string> rel;
+    ext::dom_property<ext::string> referrerPolicy;
+    ext::dom_property<ext::vector<ext::string>*> relList;
 };
 
 

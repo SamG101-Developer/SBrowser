@@ -20,17 +20,17 @@ public constructors:
     mutation_record();
 
 public properties:
-    ext::dom_property<ext::string, _F> type;
-    ext::dom_property<ext::string, _F> attribute_name;
-    ext::dom_property<ext::string, _F> attribute_namespace;
-    ext::dom_property<ext::string, _F> old_value;
+    ext::dom_property<ext::string> type;
+    ext::dom_property<ext::string> attribute_name;
+    ext::dom_property<ext::string> attribute_namespace;
+    ext::dom_property<ext::string> old_value;
 
-    ext::dom_property<nodes::node*, _F> target;
-    ext::dom_property<nodes::node*, _F> previous_sibling;
-    ext::dom_property<nodes::node*, _F> next_sibling;
+    ext::dom_property<nodes::node*> target;
+    ext::dom_property<nodes::node*> previous_sibling;
+    ext::dom_property<nodes::node*> next_sibling;
 
-    ext::dom_property<ext::vector<nodes::node*>, _F> added_nodes;
-    ext::dom_property<ext::vector<nodes::node*>, _F> removed_nodes;
+    ext::dom_property<ext::vector<nodes::node*>> added_nodes;
+    ext::dom_property<ext::vector<nodes::node*>> removed_nodes;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

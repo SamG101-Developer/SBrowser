@@ -31,7 +31,7 @@ public:
     ext::dom_property<ext::string, _T> translate;
     ext::dom_property<ext::string, _T> dir;
 
-    ext::dom_property<ext::string, _F> accessKeyLabel;
+    ext::dom_property<ext::string> accessKeyLabel;
     ext::dom_property<ext::string, _T> accessKey;
     ext::dom_property<ext::string, _T> autocapitalize;
     ext::dom_property<ext::string, _T> innerText;
@@ -42,11 +42,11 @@ public:
     ext::dom_property<bool, _T> spellcheck;
 
     // cssom-view
-    ext::dom_property<element*, _F> offsetParent;
-    ext::dom_property<long, _F> offsetTop;
-    ext::dom_property<long, _F> offsetLeft;
-    ext::dom_property<long, _F> offsetWidth;
-    ext::dom_property<long, _F> offsetHeight;
+    ext::dom_property<element*> offsetParent;
+    ext::dom_property<long> offsetTop;
+    ext::dom_property<long> offsetLeft;
+    ext::dom_property<long> offsetWidth;
+    ext::dom_property<long> offsetHeight;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

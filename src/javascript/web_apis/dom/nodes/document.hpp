@@ -119,43 +119,43 @@ public methods:
 
 public properties:
     // dom
-    ext::dom_property<ext::string, _F> url;
-    ext::dom_property<ext::string, _F> compat_mode;
-    ext::dom_property<ext::string, _F> character_set;
-    ext::dom_property<ext::string, _F> content_type;
-    ext::dom_property<document_type*, _F> doctype;
-    ext::dom_property<element*, _F> document_element;
-    ext::dom_property<other::dom_implementation*, _F> implementation;
+    ext::dom_property<ext::string> url;
+    ext::dom_property<ext::string> compat_mode;
+    ext::dom_property<ext::string> character_set;
+    ext::dom_property<ext::string> content_type;
+    ext::dom_property<document_type*> doctype;
+    ext::dom_property<element*> document_element;
+    ext::dom_property<other::dom_implementation*> implementation;
 
     // html
-    ext::dom_property<ext::string, _F> domain;
-    ext::dom_property<ext::string, _F> cookie;
-    ext::dom_property<ext::string, _F> referrer;
-    ext::dom_property<ext::string, _F> last_modified;
-    ext::dom_property<ext::string, _F> ready_state;
-    ext::dom_property<ext::string, _F> dir;
-    ext::dom_property<ext::string, _F> design_mode;
-    ext::dom_property<ext::string, _F> title;
+    ext::dom_property<ext::string> domain;
+    ext::dom_property<ext::string> cookie;
+    ext::dom_property<ext::string> referrer;
+    ext::dom_property<ext::string> last_modified;
+    ext::dom_property<ext::string> ready_state;
+    ext::dom_property<ext::string> dir;
+    ext::dom_property<ext::string> design_mode;
+    ext::dom_property<ext::string> title;
 
-    ext::dom_property<html::other::location*, _F> location;
-    ext::dom_property<html::elements::html_body_element*, _F> body;
-    ext::dom_property<html::elements::html_head_element*, _F> head;
+    ext::dom_property<html::other::location*> location;
+    ext::dom_property<html::elements::html_body_element*> body;
+    ext::dom_property<html::elements::html_head_element*> head;
 
-    ext::dom_property<ext::vector<html::elements::html_image_element*>, _F> images;
-    ext::dom_property<ext::vector<html::elements::html_link_element*>, _F> links;
-    ext::dom_property<ext::vector<html::elements::html_form_element*>, _F> forms;
-    ext::dom_property<ext::vector<html::elements::html_script_element*>, _F> scripts;
+    ext::dom_property<ext::vector<html::elements::html_image_element*>> images;
+    ext::dom_property<ext::vector<html::elements::html_link_element*>> links;
+    ext::dom_property<ext::vector<html::elements::html_form_element*>> forms;
+    ext::dom_property<ext::vector<html::elements::html_script_element*>> scripts;
 
-    ext::dom_property<window_proxy*, _F> default_view;
-    ext::dom_property<html_or_svg_script_element, _F> current_script;
-    ext::dom_property<ext::string, _F> visibility_state;
-    ext::dom_property<bool, _F> hidden;
+    ext::dom_property<window_proxy*> default_view;
+    ext::dom_property<html_or_svg_script_element> current_script;
+    ext::dom_property<ext::string> visibility_state;
+    ext::dom_property<bool> hidden;
 
     // cssom-view
-    ext::dom_property<element*, _F> scrolling_element;
+    ext::dom_property<element*> scrolling_element;
 
     // css-regions
-    ext::dom_property<ext::map<ext::string, css::css_regions::elements::named_flow*>*, _F> named_flows;
+    ext::dom_property<ext::map<ext::string, css::css_regions::elements::named_flow*>*> named_flows;
 
 public internal_methods:
     auto render() const -> QScrollArea* override;

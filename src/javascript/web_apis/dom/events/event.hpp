@@ -44,21 +44,21 @@ public methods:
     new_obj auto composed_path() const -> ext::vector<nodes::event_target*>;
 
 public properties:
-    ext::dom_property<ext::string, _F> type;
-    ext::dom_property<bool, _F> bubbles;
-    ext::dom_property<bool, _F> cancelable;
-    ext::dom_property<bool, _F> composed;
+    ext::dom_property<ext::string> type;
+    ext::dom_property<bool> bubbles;
+    ext::dom_property<bool> cancelable;
+    ext::dom_property<bool> composed;
 
-    ext::dom_property<nodes::event_target*, _F> target = nullptr;
-    ext::dom_property<nodes::event_target*, _F> current_target = nullptr;
-    ext::dom_property<nodes::event_target*, _F> related_target = nullptr;
+    ext::dom_property<nodes::event_target*> target = nullptr;
+    ext::dom_property<nodes::event_target*> current_target = nullptr;
+    ext::dom_property<nodes::event_target*> related_target = nullptr;
 
-    ext::dom_property<unsigned short, _F> event_phase;
-    ext::dom_property<double, _F> time_stamp = performance::time::dom_high_res_timestamp();
-    ext::dom_property<bool, _F> is_trusted;
+    ext::dom_property<unsigned short> event_phase;
+    ext::dom_property<double> time_stamp = performance::time::dom_high_res_timestamp();
+    ext::dom_property<bool> is_trusted;
 
-    ext::dom_property<ext::vector<nodes::event_target        *>*, _F> touch_targets;
-    ext::dom_property<ext::vector<internal::event_path_struct*>*, _F> path;
+    ext::dom_property<ext::vector<nodes::event_target        *>*> touch_targets;
+    ext::dom_property<ext::vector<internal::event_path_struct*>*> path;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

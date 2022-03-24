@@ -65,20 +65,20 @@ public methods:
     auto remove_child(node* old_node) -> node*;
 
 public properties:
-    ext::dom_property<unsigned short, _F> node_type;
+    ext::dom_property<unsigned short> node_type;
     ext::dom_property<ext::string, _T> node_name;
     ext::dom_property<ext::string, _T> node_value;
     ext::dom_property<ext::string, _T> text_content;
-    ext::dom_property<ext::string, _F> base_uri;
-    ext::dom_property<bool, _F> is_connected;
-    ext::dom_property<ext::vector<node*>*, _F> child_nodes;
-    ext::dom_property<node*, _F> parent;
-    ext::dom_property<element*, _F> parent_element;
-    ext::dom_property<document*, _F> owner_document;
-    ext::dom_property<node*, _F> first_child;
-    ext::dom_property<node*, _F> last_child;
-    ext::dom_property<node*, _F> previous_sibling;
-    ext::dom_property<node*, _F> next_sibling;
+    ext::dom_property<ext::string> base_uri;
+    ext::dom_property<bool> is_connected;
+    ext::dom_property<ext::vector<node*>*> child_nodes;
+    ext::dom_property<node*> parent;
+    ext::dom_property<element*> parent_element;
+    ext::dom_property<document*> owner_document;
+    ext::dom_property<node*> first_child;
+    ext::dom_property<node*> last_child;
+    ext::dom_property<node*> previous_sibling;
+    ext::dom_property<node*> next_sibling;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

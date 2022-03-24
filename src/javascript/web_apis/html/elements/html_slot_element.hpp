@@ -27,7 +27,7 @@ public: methods
     template <typename ...nodes_t> void assign(nodes_t... nodes);
 
 public: properties
-    ext::dom_property<ext::string, _F> name;
+    ext::dom_property<ext::string> name;
 
 private:
     ext::vector<dom::nodes::node*>* m_manually_assigned_nodes;

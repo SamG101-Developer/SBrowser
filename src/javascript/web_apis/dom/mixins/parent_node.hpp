@@ -26,10 +26,10 @@ public methods:
     auto query_selector_all(ext::string selectors) -> ext::vector<nodes::node*>;
 
 public properties:
-    ext::dom_property<ext::vector<nodes::element*>, _F> children;
-    ext::dom_property<nodes::element*, _F> first_element_child;
-    ext::dom_property<nodes::element*, _F> last_element_child;
-    ext::dom_property<size_t, _F> child_element_count;
+    ext::dom_property<ext::vector<nodes::element*>> children;
+    ext::dom_property<nodes::element*> first_element_child;
+    ext::dom_property<nodes::element*> last_element_child;
+    ext::dom_property<size_t> child_element_count;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

@@ -26,8 +26,8 @@ public: constructors
     dom_exception(const ext::string& message, v8_custom_error_t type);
 
 public: properties
-    ext::dom_property<ext::string, _F> message;
-    ext::dom_property<v8_custom_error_t, _F> type;
+    ext::dom_property<ext::string> message;
+    ext::dom_property<v8_custom_error_t> type;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

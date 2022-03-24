@@ -25,7 +25,7 @@ public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 public properties:
-    ext::dom_property<nodes::node*, _F> current_node;
+    ext::dom_property<nodes::node*> current_node;
 };
 
 

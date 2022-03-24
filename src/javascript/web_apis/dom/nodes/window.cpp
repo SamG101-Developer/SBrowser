@@ -19,7 +19,9 @@ dom::nodes::window::window()
 }
 
 
-auto dom::nodes::window::alert(const ext::string& message) -> void
+auto dom::nodes::window::alert(
+        const ext::string& message) const
+        -> void
 {
     // if the application can show dialogs, get the message
     if (html::helpers::dialogs::cannot_show_dialogs())
@@ -39,7 +41,9 @@ auto dom::nodes::window::alert(const ext::string& message) -> void
 }
 
 
-auto dom::nodes::window::confirm(const ext::string& message) -> void
+auto dom::nodes::window::confirm(
+        const ext::string& message) const
+        -> void
 {
     // if the application can show dialogs, get the message
     if (html::helpers::dialogs::cannot_show_dialogs())
@@ -61,7 +65,7 @@ auto dom::nodes::window::confirm(const ext::string& message) -> void
 
 auto dom::nodes::window::prompt(
         const ext::string& message,
-        const ext::string& default_)
+        const ext::string& default_) const
         -> ext::string
 {
     // if the application can show dialogs, get the message
@@ -90,7 +94,7 @@ auto dom::nodes::window::get_computed_style(
 {
 
     document* doc = elem->owner_document;
-    auto* object = new element{*elem};
+    const auto* const object = new element{*elem};
 
     if (not pseudo_element.empty() and pseudo_element.front() == ':')
         ; // TODO
@@ -109,8 +113,8 @@ auto dom::nodes::window::get_computed_style(
 
 
 auto dom::nodes::window::move_to(
-        long x,
-        long y)
+        const long x,
+        const long y)
         -> void
 {
     document->render()->move(x, y);
@@ -118,8 +122,8 @@ auto dom::nodes::window::move_to(
 
 
 auto dom::nodes::window::move_by(
-        long x,
-        long y)
+        const long x,
+        const long y)
         -> void
 {
     document->render()->move(
@@ -129,8 +133,8 @@ auto dom::nodes::window::move_by(
 
 
 auto dom::nodes::window::resize_to(
-        long width,
-        long height)
+        const long width,
+        const long height)
         -> void
 {
     document->render()->resize(width, height);
@@ -138,8 +142,8 @@ auto dom::nodes::window::resize_to(
 
 
 auto dom::nodes::window::resize_by(
-        long width,
-        long height)
+        const long width,
+        const long height)
         -> void
 {
     document->render()->resize(
@@ -148,8 +152,9 @@ auto dom::nodes::window::resize_by(
 }
 
 
-ext::any
-dom::nodes::window::v8(v8::Isolate* isolate) const
+auto dom::nodes::window::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<window>{isolate}
             .template inherit<event_target>()

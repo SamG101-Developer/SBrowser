@@ -26,8 +26,8 @@ public methods:
     auto replace_data(unsigned long offset, unsigned long count, const ext::string& new_data) -> void;
 
 public properties:
-    ext::dom_property<ext::string, _F> data;
-    ext::dom_property<unsigned long, _F> length;
+    ext::dom_property<ext::string> data;
+    ext::dom_property<unsigned long> length;
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

@@ -62,7 +62,7 @@ public: methods
     // geometry::shapes::dom_rect get_bounding_client_rect();
 
 public properties:
-    ext::dom_property<nodes::node*, _F> common_ancestor_container;
+    ext::dom_property<nodes::node*> common_ancestor_container;
 
 public: internal_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

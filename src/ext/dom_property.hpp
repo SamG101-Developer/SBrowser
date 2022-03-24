@@ -9,7 +9,7 @@ template <typename T, bool ce_reactions> void handle_ce_reactions(ext::dom_prope
 template <typename function> void handle_ce_reactions(const function& f);
 
 
-template <typename T, bool ce_reactions>
+template <typename T, bool ce_reactions=_F>
 struct ext::dom_property : public property<T>
 {
 public constructors:

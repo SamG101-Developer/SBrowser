@@ -15,15 +15,15 @@ public: constructors
     html_anchor_element();
 
 public: properties
-    ext::dom_property<ext::string, _F> target;
-    ext::dom_property<ext::string, _F> download;
-    ext::dom_property<ext::string, _F> ping;
-    ext::dom_property<ext::string, _F> rel;
-    ext::dom_property<ext::string, _F> hreflang;
-    ext::dom_property<ext::string, _F> type;
-    ext::dom_property<ext::string, _F> text;
-    ext::dom_property<ext::string, _F> referrerPolicy;
-    ext::dom_property<ext::vector<ext::string>*, _F> relList;
+    ext::dom_property<ext::string> target;
+    ext::dom_property<ext::string> download;
+    ext::dom_property<ext::string> ping;
+    ext::dom_property<ext::string> rel;
+    ext::dom_property<ext::string> hreflang;
+    ext::dom_property<ext::string> type;
+    ext::dom_property<ext::string> text;
+    ext::dom_property<ext::string> referrerPolicy;
+    ext::dom_property<ext::vector<ext::string>*> relList;
 
 private: accessors
     auto get_text() const -> ext::string;

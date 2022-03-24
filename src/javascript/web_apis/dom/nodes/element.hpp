@@ -92,29 +92,29 @@ public methods:
 
 public properties:
     // dom
-    ext::dom_property<ext::string, _F> namespace_uri;
-    ext::dom_property<ext::string, _F> prefix;
-    ext::dom_property<ext::string, _F> local_name;
-    ext::dom_property<ext::string, _F> tag_name;
+    ext::dom_property<ext::string> namespace_uri;
+    ext::dom_property<ext::string> prefix;
+    ext::dom_property<ext::string> local_name;
+    ext::dom_property<ext::string> tag_name;
     ext::dom_property<ext::string, _T> class_name;
     ext::dom_property<ext::string, _T> slot;
     ext::dom_property<ext::string, _T> id;
-    ext::dom_property<shadow_root*, _F> shadow_root_node;
-    ext::dom_property<ext::vector<attr*>*, _F> attributes;
-    ext::dom_property<ext::vector<ext::string>*, _F> class_list;
+    ext::dom_property<shadow_root*> shadow_root_node;
+    ext::dom_property<ext::vector<attr*>*> attributes;
+    ext::dom_property<ext::vector<ext::string>*> class_list;
 
     // cssom-view
-    ext::dom_property<double, _F> scroll_top;
-    ext::dom_property<double, _F> scroll_left;
-    ext::dom_property<double, _F> scroll_width;
-    ext::dom_property<double, _F> scroll_height;
-    ext::dom_property<double, _F> client_top;
-    ext::dom_property<double, _F> client_left;
-    ext::dom_property<double, _F> client_width;
-    ext::dom_property<double, _F> client_height;
+    ext::dom_property<double> scroll_top;
+    ext::dom_property<double> scroll_left;
+    ext::dom_property<double> scroll_width;
+    ext::dom_property<double> scroll_height;
+    ext::dom_property<double> client_top;
+    ext::dom_property<double> client_left;
+    ext::dom_property<double> client_width;
+    ext::dom_property<double> client_height;
 
     // cs-shadow-parts
-    ext::dom_property<ext::vector<ext::string>*, _F> parts;
+    ext::dom_property<ext::vector<ext::string>*> parts;
 
 public internal_methods:
     auto render() const -> QWidget* override;
