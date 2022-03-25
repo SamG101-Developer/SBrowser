@@ -30,12 +30,12 @@ public friends:
     friend property<T>& operator<<(property<T>& p, T&& o) {p.m_internal = std::move(o);};
 
     // casting
-    template <typename U, typename T> friend auto property_dynamic_cast(const ext::property<T>& o) -> U;
-    template <typename U, typename T> friend auto property_static_cast(const ext::property<T>& o) -> U;
-    template <typename U, typename T> friend auto property_const_cast(const ext::property<T>& o) -> U;
-    template <typename U, typename T> friend auto property_reinterpret_cast(const ext::property<T>& o) -> U;
-    template <typename U, typename T> friend auto property_any_cast(const ext::property<T>& o) -> U;
-    template <typename U, typename T> friend auto property_bit_cast(const ext::property<T>& o) -> U;
+    template <typename U, typename V> friend auto property_dynamic_cast(const ext::property<V>& o) -> U;
+    template <typename U, typename V> friend auto property_static_cast(const ext::property<V>& o) -> U;
+    template <typename U, typename V> friend auto property_const_cast(const ext::property<V>& o) -> U;
+    template <typename U, typename V> friend auto property_reinterpret_cast(const ext::property<V>& o) -> U;
+    template <typename U, typename V> friend auto property_any_cast(const ext::property<V>& o) -> U;
+    template <typename U, typename V> friend auto property_bit_cast(const ext::property<V>& o) -> U;
 
 public constructors:
     property();
@@ -90,8 +90,8 @@ public operators:
     template <typename U> auto operator^(const U& o) const -> property<T>;
     auto operator<<(size_t n) const -> property<T> requires (not std::is_arithmetic_v<T>);
     auto operator>>(size_t n) const -> property<T> requires (not std::is_arithmetic_v<T>);
-    auto operator++(int n) const -> const property<T>;
-    auto operator--(int n) const -> const property<T>;
+    auto operator++(int n) const -> property<T>;
+    auto operator--(int n) const -> property<T>;
 
     // unary mathematical operators
     auto operator+() const -> property<T>;
@@ -460,7 +460,7 @@ _FAST _INLINE auto ext::property<T>::operator>>(const size_t n) const -> ext::pr
 
 
 template <typename T>
-_FAST _INLINE auto ext::property<T>::operator++(const int n) const -> const ext::property<T>
+_FAST _INLINE auto ext::property<T>::operator++(const int n) const -> ext::property<T>
 {
     // increment the internal value by n and return the reference to the property
     return property<T>{*this} += n;
@@ -468,7 +468,7 @@ _FAST _INLINE auto ext::property<T>::operator++(const int n) const -> const ext:
 
 
 template <typename T>
-_FAST _INLINE auto ext::property<T>::operator--(const int n) const -> const ext::property<T>
+_FAST _INLINE auto ext::property<T>::operator--(const int n) const -> ext::property<T>
 {
     // decrement the internal value by n and return the reference to the property
     return property<T>{*this} -= n;
@@ -583,7 +583,7 @@ _FAST _INLINE auto ext::property<T>::operator*() const -> T requires (not std::i
 
 template <typename T>
 template <typename U>
-_FAST _INLINE auto ext::property<T>::operator[] (const size_t i) const -> U&
+_FAST _INLINE auto ext::property<T>::operator[](const size_t i) const -> U&
 {
     // get the element at index i, and return it
     return m_internal[i];
@@ -592,7 +592,7 @@ _FAST _INLINE auto ext::property<T>::operator[] (const size_t i) const -> U&
 
 template <typename T>
 template <typename U, typename ...Args>
-_FAST _INLINE auto ext::property<T>::operator() (Args&&... args) const -> U&
+_FAST _INLINE auto ext::property<T>::operator()(Args&&... args) const -> U&
 {
     // return the result of invoking the function stored as the internal value
     return m_internal(std::forward<Args...>(args...));
