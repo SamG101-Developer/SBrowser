@@ -14,7 +14,7 @@ namespace dom
 }
 
 
-class dom::mutations::mutation_record : public virtual dom_object
+class dom::mutations::mutation_record : virtual public dom_object
 {
 public constructors:
     mutation_record();

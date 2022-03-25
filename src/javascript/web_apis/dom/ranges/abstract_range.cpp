@@ -1,12 +1,12 @@
 #include "abstract_range.hpp"
 
 
-dom::ranges::abstract_range::abstract_range() : dom_object()
-{
-}
+dom::ranges::abstract_range::abstract_range() = default;
 
 
-auto dom::ranges::abstract_range::v8(v8::Isolate* isolate) const -> ext::any
+auto dom::ranges::abstract_range::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<abstract_range>{isolate}
             .template inherit<dom_object>()
@@ -17,6 +17,3 @@ auto dom::ranges::abstract_range::v8(v8::Isolate* isolate) const -> ext::any
             .template var("endOffset", &abstract_range::end_offset)
             .auto_wrap_objects();
 }
-
-
-

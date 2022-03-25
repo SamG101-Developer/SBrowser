@@ -1,5 +1,6 @@
 #include "range.hpp"
 
+#include <ext/exception.hpp>
 #include <javascript/environment/realms.hpp>
 
 #include <dom/nodes/character_data.hpp>
@@ -21,16 +22,16 @@ dom::ranges::range::range() : abstract_range()
     common_ancestor_container.getter = [this] {return get_common_ancestor_container();};
 
     // set the properties
-    start_container << (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
-    end_container << (nodes::node*)javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
+    start_container << javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
+    end_container << javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
     start_offset << (unsigned long)0;
     end_offset << (unsigned long)0;
 }
 
 
 auto dom::ranges::range::set_start(
-        nodes::node* node,
-        unsigned long offset)
+        nodes::node* const node,
+        const unsigned long offset)
         -> void
 {
     // if the parent exists, set the start node and offset to (node, offset), using the set_start_or_end helper method
@@ -39,7 +40,9 @@ auto dom::ranges::range::set_start(
 }
 
 
-auto dom::ranges::range::set_start_before(nodes::node* node) -> void
+auto dom::ranges::range::set_start_before(
+        nodes::node* const node)
+        -> void
 {
     // if the parent exists, set the start node and offset to (node, index of the node - so that the range starts before
     // the node), using the set_start_or_end helper method
@@ -48,7 +51,9 @@ auto dom::ranges::range::set_start_before(nodes::node* node) -> void
 }
 
 
-auto dom::ranges::range::set_start_after(nodes::node* node) -> void
+auto dom::ranges::range::set_start_after(
+        nodes::node* const node)
+        -> void
 {
     // if the parent exists, set the start node and offset to (node, index of the node + 1 - so that the range starts
     // after the node), using the set_start_or_end helper method
@@ -58,8 +63,8 @@ auto dom::ranges::range::set_start_after(nodes::node* node) -> void
 
 
 auto dom::ranges::range::set_end(
-        nodes::node* node,
-        unsigned long offset)
+        nodes::node* const node,
+        const unsigned long offset)
         -> void
 {
     // if the parent exists, set the end node and offset to (node, offset), using the set_start_or_end helper method
@@ -68,7 +73,9 @@ auto dom::ranges::range::set_end(
 }
 
 
-auto dom::ranges::range::set_end_before(nodes::node* node) -> void
+auto dom::ranges::range::set_end_before(
+        nodes::node* const node)
+        -> void
 {
     // if the parent exists, set the end node and offset to (node, index of the node - so that the range starts after
     // the node), using the set_start_or_end helper method
@@ -77,7 +84,9 @@ auto dom::ranges::range::set_end_before(nodes::node* node) -> void
 }
 
 
-auto dom::ranges::range::set_end_after(nodes::node* node) -> void
+auto dom::ranges::range::set_end_after(
+        nodes::node* const node)
+        -> void
 {
     // if the parent exists, set the end node and offset to (node, index of the node + 1 - so that the range starts
     // after the node), using the set_start_or_end helper method
@@ -86,9 +95,10 @@ auto dom::ranges::range::set_end_after(nodes::node* node) -> void
 }
 
 
-auto dom::ranges::range::insert_node(nodes::node* node) -> void
+auto dom::ranges::range::insert_node(
+        nodes::node* const node)
+        -> void
 {
-
     // if the start node is a textually based range container, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
             "start container must not be a text, processing_instruction",
@@ -99,7 +109,7 @@ auto dom::ranges::range::insert_node(nodes::node* node) -> void
     nodes::node* reference_node;
     nodes::node* parent;
     nodes::text* start_container_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
-    unsigned long new_offset = 0;
+    const unsigned long new_offset = 0;
 
     // if the start node is a text node, then set the reference node to the start node, otherwise the start node's child
     // at start_offset position in the child_nodes list
@@ -154,7 +164,9 @@ auto dom::ranges::range::insert_node(nodes::node* node) -> void
 }
 
 
-auto dom::ranges::range::intersects_node(nodes::node* node) -> bool
+auto dom::ranges::range::intersects_node(
+        nodes::node* const node)
+        -> bool
 {
     // if this range's root isn't the same root as the node's root, then return false, as they are both in different
     // trees
@@ -166,15 +178,15 @@ auto dom::ranges::range::intersects_node(nodes::node* node) -> bool
         return true;
 
     // save the parent as the node's parent, and the offset to the index of the node
-    nodes::node* parent = node->parent;
-    unsigned long offset = helpers::trees::index(node);
+    nodes::node* const parent = node->parent;
+    const unsigned long offset = helpers::trees::index(node);
 
     // save the parent's node and offset for before and after the parent (parent, offset) and (parent, offset + 1)
-    auto* parent_offset_node_0 = parent;
-    auto parent_offset_offset_0 = offset;
+    auto* const parent_offset_node_0 = parent;
+    const auto parent_offset_offset_0 = offset;
 
-    auto* parent_offset_node_1 = parent;
-    auto parent_offset_offset_1 = offset + 1;
+    auto* const parent_offset_node_1 = parent;
+    const auto parent_offset_offset_1 = offset + 1;
 
     // return true if the node and offset sit inbetween the start and end containers ie AFTER (start_container,
     // start_offset) and BEFORE (end_container, end_offset)
@@ -183,11 +195,13 @@ auto dom::ranges::range::intersects_node(nodes::node* node) -> bool
 }
 
 
-auto dom::ranges::range::select_node(nodes::node* node) -> void
+auto dom::ranges::range::select_node(
+        nodes::node* node)
+        -> void
 {
     // set the parent to the node's parent (if it exists), and the index to the index of the node
-    auto* parent = helpers::range_internals::check_parent_exists(node);
-    auto index = helpers::trees::index(node);
+    auto* const parent = helpers::range_internals::check_parent_exists(node);
+    const auto index = helpers::trees::index(node);
 
     // set the containers to the parent, end the index of the node's index and 1 after the node's index, such that the
     // only thing being selected by the range is the node
@@ -198,7 +212,9 @@ auto dom::ranges::range::select_node(nodes::node* node) -> void
 }
 
 
-auto dom::ranges::range::select_node_contents(nodes::node* node) -> void
+auto dom::ranges::range::select_node_contents(
+        nodes::node* const node)
+        -> void
 {
     // if the node is a document fragment, then throw an invalid node type error
     helpers::exceptions::throw_v8_exception(
@@ -216,8 +232,8 @@ auto dom::ranges::range::select_node_contents(nodes::node* node) -> void
 
 
 auto dom::ranges::range::compare_boundary_points(
-        unsigned short how,
-        ranges::range* source_range)
+        const unsigned short how,
+        ranges::range* const source_range)
         -> short
 {
     // if how isn't a known value, then throw a not supported error
@@ -242,7 +258,7 @@ auto dom::ranges::range::compare_boundary_points(
     switch (how) {
 
         // start to start is when comparing THAT START to THIS START
-        case (START_TO_START):
+        case START_TO_START:
         {
             std::tie(that_container, that_offset) = std::tie(source_range->start_container, source_range->start_offset);
             std::tie(this_container, this_offset) = std::tie(start_container, start_offset);
@@ -250,7 +266,7 @@ auto dom::ranges::range::compare_boundary_points(
         }
 
         // start to end is when comparing THAT START to THIS END
-        case (START_TO_END):
+        case START_TO_END:
         {
             std::tie(that_container, that_offset) = std::tie(source_range->start_container, source_range->start_offset);
             std::tie(this_container, this_offset) = std::tie(end_container, end_offset);
@@ -258,7 +274,7 @@ auto dom::ranges::range::compare_boundary_points(
         }
 
         // end to start is when comparing THAT END to THIS START
-        case (END_TO_START):
+        case END_TO_START:
         {
             std::tie(that_container, that_offset) = std::tie(source_range->end_container, source_range->end_offset);
             std::tie(this_container, this_offset) = std::tie(start_container, start_offset);
@@ -266,28 +282,35 @@ auto dom::ranges::range::compare_boundary_points(
         }
 
         // end to end is when comparing THAT END to THIS END
-        case (END_TO_END):
+        case END_TO_END:
         {
             std::tie(that_container, that_offset) = std::tie(source_range->end_container, source_range->end_offset);
             std::tie(this_container, this_offset) = std::tie(end_container, end_offset);
             break;
         }
+
+        default:
+            throw INVALID_ARGUMENT(how);
     }
 
     // determine the comparison value depending on the output of the position_relative helper method
     switch (helpers::range_internals::position_relative(this_container, this_offset, that_container, that_offset))
     {
         // before maps to -1
-        case (internal::boundary_point_comparison_position::BEFORE):
+        case internal::boundary_point_comparison_position::BEFORE:
             return -1;
 
         // equals maps to 0
-        case (internal::boundary_point_comparison_position::EQUALS):
+        case internal::boundary_point_comparison_position::EQUALS:
             return 0;
 
         // after maps to 1
-        case (internal::boundary_point_comparison_position::AFTER):
+        case internal::boundary_point_comparison_position::AFTER:
             return 1;
+
+        // impossible but a fail-safe
+        default:
+            throw INVALID_ENUM(boundary_point_comparison_position);
     }
 }
 
@@ -328,7 +351,8 @@ auto dom::ranges::range::compare_point(
 }
 
 
-auto dom::ranges::range::extract_contents() -> dom::nodes::document_fragment*
+auto dom::ranges::range::extract_contents()
+        -> dom::nodes::document_fragment*
 {
     // create a new document fragment, and if the range is collapsed, then return the document fragment as is (empty)
     auto* fragment = new nodes::document_fragment{};
@@ -373,7 +397,8 @@ auto dom::ranges::range::extract_contents() -> dom::nodes::document_fragment*
 }
 
 
-auto dom::ranges::range::clone_contents() -> dom::nodes::document_fragment*
+auto dom::ranges::range::clone_contents()
+        -> dom::nodes::document_fragment*
 {
     // create a new document fragment, and if the range is collapsed, then return the document fragment as is (empty)
     auto* fragment = new nodes::document_fragment{};
@@ -409,7 +434,8 @@ auto dom::ranges::range::clone_contents() -> dom::nodes::document_fragment*
 }
 
 
-auto dom::ranges::range::delete_contents() -> dom::nodes::document_fragment*
+auto dom::ranges::range::delete_contents()
+        -> dom::nodes::document_fragment*
 { // TODO : check this method against the DOM spec (or add replace_data offset info into comments)
 
     // return nullptr if the range is collapsed
@@ -420,7 +446,7 @@ auto dom::ranges::range::delete_contents() -> dom::nodes::document_fragment*
     // character data cast of the start node, and delete the data in it (replace with "")
     if (start_container == end_container and helpers::range_internals::is_textual_based_range_container(start_container))
     {
-        auto* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
+        auto* const start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
         helpers::texts::replace_data(start_container_character_data, start_offset, end_offset - start_offset, "");
     }
 
@@ -457,7 +483,9 @@ auto dom::ranges::range::delete_contents() -> dom::nodes::document_fragment*
 }
 
 
-auto dom::ranges::range::surround_contents(nodes::node* new_parent) -> dom::nodes::document_fragment*
+auto dom::ranges::range::surround_contents(
+        nodes::node* const new_parent)
+        -> dom::nodes::document_fragment*
 {
     // if there are text node descendants of this range's root that are partially contained, throw an invalid state error
     helpers::exceptions::throw_v8_exception(
@@ -472,7 +500,7 @@ auto dom::ranges::range::surround_contents(nodes::node* new_parent) -> dom::node
             [new_parent] {return dynamic_cast<nodes::document*>(new_parent) or dynamic_cast<nodes::document_fragment*>(new_parent) or dynamic_cast<nodes::document_type*>(new_parent);});
 
     // extract the contents of the range
-    auto* fragment = extract_contents();
+    auto* const fragment = extract_contents();
 
     // if the new parent has child nodes, then replace them all with nullptr
     if (new_parent->child_nodes)
@@ -486,7 +514,9 @@ auto dom::ranges::range::surround_contents(nodes::node* new_parent) -> dom::node
 }
 
 
-auto dom::ranges::range::collapse(bool to_start) -> void
+auto dom::ranges::range::collapse(
+        const bool to_start)
+        -> void
 {
     // if to_start is true, the set the end container to the start container, otherwise the other awayaround
     to_start
@@ -495,7 +525,8 @@ auto dom::ranges::range::collapse(bool to_start) -> void
 }
 
 
-auto dom::ranges::range::clone_range() -> dom::ranges::range*
+auto dom::ranges::range::clone_range()
+        -> dom::ranges::range*
 {
     // create a new range with the same nodes and offsets as this node
     auto range_object = new range{};
@@ -531,17 +562,18 @@ auto dom::ranges::range::is_point_in_range(
             [node, offset] {return offset > helpers::trees::length(node);});
 
     // the point is in the range if it between the start container/offset and end container/offset
-    return helpers::range_internals::position_relative(node, offset, start_container, start_offset) == AFTER
-            and helpers::range_internals::position_relative(node, offset, end_container, end_offset) == BEFORE;
+    return helpers::range_internals::position_relative(node, offset, start_container, start_offset) == internal::boundary_point_comparison_position::AFTER
+            and helpers::range_internals::position_relative(node, offset, end_container, end_offset) == internal::boundary_point_comparison_position::BEFORE;
 }
 
 
-auto dom::ranges::range::to_json() -> ext::string
+auto dom::ranges::range::to_json() const
+        -> ext::string
 {
     // create the output string, and the start and end containers as text nodes
     ext::string s;
-    auto* start_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
-    auto* end_text_node = ext::property_dynamic_cast<nodes::text*>(end_container);
+    const auto* const start_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
+    const auto* const end_text_node = ext::property_dynamic_cast<nodes::text*>(end_container);
 
     // if the start and end nodes are the same (and a text node), then return the substring of the text from between the
     // start and end offset
@@ -554,7 +586,7 @@ auto dom::ranges::range::to_json() -> ext::string
         s += start_text_node->data->substring(start_offset);
 
     // append the text from the descendant text nodes that are partially contained to the output string
-    for (auto* descendant_text_node: helpers::trees::descendant_text_nodes(m_root).filter([this](nodes::text* descendant_node) {return helpers::range_internals::contains(descendant_node, this);}))
+    for (const auto* const descendant_text_node: helpers::trees::descendant_text_nodes(m_root).filter([this](const nodes::text* const descendant_node) {return helpers::range_internals::contains(descendant_node, this);}))
         s += descendant_text_node->data->substring(start_offset);
 
     // if the end node is a text node, then append the substring upto the end offset to the output string
@@ -566,16 +598,17 @@ auto dom::ranges::range::to_json() -> ext::string
 }
 
 
-dom::nodes::node*
-dom::ranges::range::get_common_ancestor_container() const
+auto dom::ranges::range::get_common_ancestor_container() const
+        -> nodes::node*
 {
     // get the common ancestor of the two containers using the common_ancestor helper method
     return helpers::trees::common_ancestor(start_container, end_container);
 }
 
 
-ext::any
-dom::ranges::range::v8(v8::Isolate* isolate) const
+auto dom::ranges::range::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
 {
     return v8pp::class_<range>{isolate}
             .template ctor<>()

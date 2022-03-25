@@ -11,7 +11,7 @@ namespace dom::nodes {class element;}
 
 
 template <typename T>
-class dom::mixins::document_or_element_node : public virtual dom_object
+class dom::mixins::document_or_element_node : virtual public dom_object
 {
 public methods:
     auto get_elements_by_tag_name(const ext::string& qualified_name) -> ext::vector<nodes::element*>;

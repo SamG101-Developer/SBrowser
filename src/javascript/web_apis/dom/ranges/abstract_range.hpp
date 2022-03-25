@@ -4,17 +4,13 @@
 
 #include <ext/decorators.hpp>
 #include <ext/dom_property.hpp>
-
 #include <dom_object.hpp>
 
-namespace dom
-{
-    namespace nodes {class node;}
-    namespace ranges {class abstract_range;}
-}
+namespace dom::nodes {class node;}
+namespace dom::ranges {class abstract_range;}
 
 
-class dom::ranges::abstract_range : public dom_object
+class dom::ranges::abstract_range : virtual public dom_object
 {
 public constructors:
     abstract_range();
@@ -26,7 +22,7 @@ public properties:
     ext::dom_property<unsigned long> start_offset;
     ext::dom_property<unsigned long> end_offset;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

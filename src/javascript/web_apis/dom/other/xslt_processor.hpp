@@ -5,16 +5,10 @@
 #include <ext/decorators.hpp>
 #include <dom_object.hpp>
 
-namespace dom
-{
-    namespace other {class xslt_processor;}
-    namespace nodes
-    {
-        class document;
-        class document_fragment;
-        class node;
-    }
-}
+namespace dom::other {class xslt_processor;}
+namespace dom::nodes {class document;}
+namespace dom::nodes {class document_fragment;}
+namespace dom::nodes {class node;}
 
 
 class dom::other::xslt_processor : virtual public dom_object

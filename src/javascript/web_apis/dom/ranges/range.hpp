@@ -16,19 +16,19 @@ namespace geometry::shapes {class dom_rect;}
 
 class dom::ranges::range : public abstract_range
 {
-public: friends
+public friends:
     friend struct helpers::range_internals;
 
-public: constructors
+public constructors:
     range();
 
-public: static_constants
+public static_constants:
     static const short START_TO_START = 0;
     static const short START_TO_END = 1;
     static const short END_TO_END = 2;
     static const short END_TO_START = 3;
 
-public: methods
+public methods:
     // dom
     auto set_start(nodes::node* node, unsigned long offset) -> void;
     auto set_start_before(nodes::node* node) -> void;
@@ -55,7 +55,7 @@ public: methods
     auto clone_range() -> ranges::range*;
     auto is_point_in_range(nodes::node* node, unsigned long offset) -> bool;
 
-    auto to_json() -> ext::string;
+    auto to_json() const -> ext::string;
 
     // cssom-view TODO into cssom-view mixin?
     // ext::vector<geometry::shapes::dom_rect> get_client_rects();
@@ -64,11 +64,11 @@ public: methods
 public properties:
     ext::dom_property<nodes::node*> common_ancestor_container;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private: internal_properties
-    nodes::node* m_root;
+private internal_properties:
+    nodes::node* m_root = nullptr;
 
 private accessors:
     auto get_common_ancestor_container() const -> nodes::node*;

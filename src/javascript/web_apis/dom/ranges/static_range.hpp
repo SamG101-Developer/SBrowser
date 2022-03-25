@@ -10,11 +10,11 @@ namespace dom::ranges {class static_range;}
 
 class dom::ranges::static_range : public abstract_range
 {
-public: constructors
-    static_range(): abstract_range() {};
+public constructors:
+    static_range();
     static_range(const ext::string_any_map& init);
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

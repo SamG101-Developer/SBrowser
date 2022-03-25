@@ -12,7 +12,7 @@ namespace dom::nodes {class window_proxy;}
 
 
 // Pre-wrapped JavaScript Class
-class dom::nodes::window_proxy : public virtual dom_object
+class dom::nodes::window_proxy : virtual public dom_object
 {
 public: constructors
     window_proxy();
