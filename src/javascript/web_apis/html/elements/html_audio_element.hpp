@@ -9,8 +9,11 @@ namespace html::elements {class html_audio_element;}
 
 class html::elements::html_audio_element : public html_media_element
 {
-public:
+public constructors:
     html_audio_element();
+
+public internal_methods:
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

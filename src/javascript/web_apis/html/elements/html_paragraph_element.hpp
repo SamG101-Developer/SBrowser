@@ -4,13 +4,18 @@
 
 #include <html/elements/html_element.hpp>
 
+#include <QtWidgets/QLabel>
+
 namespace html::elements {class html_paragraph_element;}
 
 
 class html::elements::html_paragraph_element : public html_element
 {
-public: constructors
+public constructors:
     html_paragraph_element();
+
+public internal_methods:
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 
 

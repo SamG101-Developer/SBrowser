@@ -4,32 +4,29 @@
 
 #include <html/elements/html_element.hpp>
 
-namespace dom
-{
-    namespace helpers {struct shadows;}
-    namespace nodes {class node;}
-}
+namespace dom::helpers {struct shadows;}
+namespace dom::nodes {class node;}
 namespace html::elements {class html_slot_element;}
 
 
 class html::elements::html_slot_element : public html_element
 {
-public: friends
+public friends:
     friend struct dom::helpers::shadows;
     friend struct dom::helpers::mutation_algorithms;
 
-public: constructors
+public constructors:
     html_slot_element();
 
-public: methods
+public methods:
     ext::vector<dom::nodes::node*> assigned_nodes(const ext::string_any_map& options = {});
     ext::vector<dom::nodes::element*> assigned_elements(const ext::string_any_map& options = {});
     template <typename ...nodes_t> void assign(nodes_t... nodes);
 
-public: properties
-    ext::dom_property<ext::string> name;
+public properties:
+    ext::html_property<ext::string> name;
 
-private:
+private internal_properties:
     ext::vector<dom::nodes::node*>* m_manually_assigned_nodes;
     ext::vector<dom::nodes::node*>* m_assigned_nodes;
 };

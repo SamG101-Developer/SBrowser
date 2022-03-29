@@ -3,9 +3,7 @@
 #include <dom/helpers/event_listening.hpp>
 
 
-dom::events::event::event() : dom_object()
-{
-}
+dom::events::event::event() = default;
 
 
 dom::events::event::event(

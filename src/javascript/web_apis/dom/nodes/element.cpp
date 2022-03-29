@@ -309,7 +309,7 @@ auto dom::nodes::element::attach_shadow(
 auto dom::nodes::element::get_client_rects() const
         -> ext::vector<geometry::shapes::dom_rect>
 {
-    auto children = render()->children().toVector();
+    auto children = m_rendered_widget->children().toVector();
 
     return ext::vector<QObject*>{children.begin(), children.end()}
             .cast_all<QWidget*>()
@@ -399,7 +399,7 @@ auto dom::nodes::element::get_m_html_qualified_uppercase_name() const
 auto dom::nodes::element::render() const
         -> QWidget*
 {
-    return qobject_cast<QWidget*>(m_rendered_widget);
+    return m_rendered_widget;
 }
 
 

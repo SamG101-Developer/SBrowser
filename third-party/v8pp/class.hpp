@@ -355,7 +355,7 @@ public:
 
 	/// Set value as a class static property
 	template<typename Value>
-	class_& static_(const std::string& const& name, Value const& value, bool readonly = false)
+	class_& static_(const std::string& name, Value const& value, bool readonly = false)
 	{
 		v8::HandleScope scope(isolate());
 

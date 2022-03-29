@@ -36,6 +36,7 @@ namespace dom::nodes {class window_proxy;}
 namespace dom::ranges {class range;}
 namespace dom::other {class dom_implementation;}
 namespace encoding {class encoding;}
+namespace html::elements {class html_base_element;}
 namespace html::elements {class html_body_element;}
 namespace html::elements {class html_head_element;}
 namespace html::elements {class html_html_element;}
@@ -69,6 +70,7 @@ public friends:
     friend struct dom::helpers::custom_elements;
     friend struct dom::helpers::node_internals;
     friend class dom::other::dom_implementation;
+    friend class html::elements::html_base_element;
 
 public constructors:
     document();

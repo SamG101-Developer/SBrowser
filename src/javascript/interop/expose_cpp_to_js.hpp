@@ -57,7 +57,21 @@
 
 #include <geometry/shapes/dom_rect.hpp>
 
+#include <html/elements/html_anchor_element.hpp>
+#include <html/elements/html_area_element.hpp>
+#include <html/elements/html_audio_element.hpp>
+#include <html/elements/html_base_element.hpp>
+#include <html/elements/html_body_element.hpp>
+#include <html/elements/html_br_element.hpp>
+#include <html/elements/html_button_element.hpp>
+#include <html/elements/html_canvas_element.hpp>
+#include <html/elements/html_data_element.hpp>
+#include <html/elements/html_datalist_element.hpp>
 #include <html/elements/html_element.hpp>
+#include <html/elements/html_media_element.hpp>
+#include <html/elements/html_paragraph_element.hpp>
+#include <html/elements/html_slot_element.hpp>
+#include <html/elements/html_unknown_element.hpp>
 
 #include <v8.h>
 #include <v8pp/class.hpp>
@@ -131,6 +145,22 @@ javascript::interop::expose_cpp_to_js::expose(
     auto v8_xpath_expression = object_to_v8<dom::xpath::xpath_expression>(isolate);
     auto v8_xpath_result = object_to_v8<dom::xpath::xpath_result>(isolate);
 
+    auto v8_html_anchor_element = object_to_v8<html::elements::html_anchor_element>(isolate);
+    auto v8_html_area_element = object_to_v8<html::elements::html_area_element>(isolate);
+    auto v8_html_audio_element = object_to_v8<html::elements::html_audio_element>(isolate);
+    auto v8_html_base_element = object_to_v8<html::elements::html_base_element>(isolate);
+    auto v8_html_body_element = object_to_v8<html::elements::html_body_element>(isolate);
+    auto v8_html_br_element = object_to_v8<html::elements::html_br_element>(isolate);
+    auto v8_html_button_element = object_to_v8<html::elements::html_button_element>(isolate);
+    auto v8_html_canvas_element = object_to_v8<html::elements::html_canvas_element>(isolate);
+    auto v8_html_data_element = object_to_v8<html::elements::html_data_element>(isolate);
+    auto v8_html_datalist_element = object_to_v8<html::elements::html_datalist_element>(isolate);
+    auto v8_html_element = object_to_v8<html::elements::html_element>(isolate);
+    auto v8_html_media_element = object_to_v8<html::elements::html_media_element>(isolate);
+    auto v8_html_paragraph_element = object_to_v8<html::elements::html_paragraph_element>(isolate);
+    auto v8_html_slot_element = object_to_v8<html::elements::html_slot_element>(isolate);
+    auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
+
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;
 
@@ -165,10 +195,10 @@ javascript::interop::expose_cpp_to_js::expose(
                     .class_("Text", v8_text)
                     .class_("Window", v8_window)
                     .class_("WindowProxy", v8_window_proxy)
-                    .class_("XmlDocument", v8_xml_document)
+                    .class_("XMLDocument", v8_xml_document)
 
-                    .class_("DomException", v8_dom_exception)
-                    .class_("DomImplementation", v8_dom_implementation)
+                    .class_("DOMException", v8_dom_exception)
+                    .class_("DOMImplementation", v8_dom_implementation)
                     .class_("XSLTProcessor", v8_xslt_processor)
 
                     .class_("AbstractRange", v8_abstract_range)
@@ -177,7 +207,24 @@ javascript::interop::expose_cpp_to_js::expose(
 
                     .class_("XPathEvaluator", v8_xpath_evaluator)
                     .class_("XPathExpression", v8_xpath_expression)
-                    .class_("XPathResult", v8_xpath_result);
+                    .class_("XPathResult", v8_xpath_result)
+
+                    .class_("HTMLAnchorElement", v8_html_anchor_element)
+                    .class_("HTMLAreaElement", v8_html_area_element)
+                    .class_("HTMLAudioElement", v8_html_audio_element)
+                    .class_("HTMLBaseElement", v8_html_base_element)
+                    .class_("HTMLBodyElement", v8_html_body_element)
+                    .class_("HTMLBrElement", v8_html_br_element)
+                    .class_("HTMLButtonElement", v8_html_button_element)
+                    .class_("HTMLCanvasElement", v8_html_canvas_element)
+                    .class_("HTMLDataElement", v8_html_data_element)
+                    .class_("HTMLDataListElement", v8_html_data_element)
+                    .class_("HTMLElement", v8_html_element)
+                    .class_("HTMLMediaElement", v8_html_media_element)
+                    .class_("HTMLParagraphElement", v8_html_paragraph_element)
+                    .class_("HTMLSlotElement", v8_html_slot_element)
+                    .class_("HTMLUnknownElement", v8_html_unknown_element)
+                    ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
@@ -187,7 +234,8 @@ javascript::interop::expose_cpp_to_js::expose(
                     .class_("CustomEvent", v8_custom_event)
                     .class_("Event", v8_event)
                     .class_("EventTarget", v8_event_target)
-                    .class_("DomException", v8_dom_exception);
+                    .class_("DomException", v8_dom_exception)
+                    ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();
         }
@@ -195,7 +243,8 @@ javascript::interop::expose_cpp_to_js::expose(
         case javascript::environment::modules::module_type::audio_worklet: {
             v8_module
                     .class_("Event", v8_event)
-                    .class_("EventTarget", v8_event_target);
+                    .class_("EventTarget", v8_event_target)
+                    ;
 
             module_name = v8::String::NewFromUtf8(isolate, "AudioWorklet").ToLocalChecked();
         }

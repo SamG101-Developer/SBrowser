@@ -9,7 +9,7 @@ namespace html::elements {class html_unknown_element;}
 
 class html::elements::html_unknown_element : public html_element
 {
-public:
+public constructors:
     html_unknown_element();
 };
 

@@ -9,13 +9,13 @@ namespace html::elements {class html_base_element;}
 
 class html::elements::html_base_element : public html_element
 {
-public: constructors
+public constructors:
     html_base_element();
 
-    ext::dom_property<ext::string> href;
-    ext::dom_property<ext::string> target;
+    ext::html_property<ext::string> href;
+    ext::html_property<ext::string> target;
 
-private: accessors
+private accessors:
     auto get_href() const -> ext::string;
 
 };

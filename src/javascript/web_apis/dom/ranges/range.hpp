@@ -39,21 +39,21 @@ public methods:
     auto set_end_after(nodes::node* node) -> void;
 
     auto insert_node(nodes::node* node) -> void;
-    auto intersects_node(nodes::node* node) -> bool;
-    auto select_node(nodes::node* node) -> void;
+    auto intersects_node(const nodes::node* node) const -> bool;
+    auto select_node(const nodes::node* node) -> void;
     auto select_node_contents(nodes::node* node) -> void;
 
     auto compare_boundary_points(unsigned short how, ranges::range* source_range) -> short;
-    auto compare_point(nodes::node* node, unsigned long offset) -> short;
+    auto compare_point(nodes::node* node, unsigned long offset) const -> short;
 
-    auto extract_contents() -> nodes::document_fragment*;
-    auto clone_contents() -> nodes::document_fragment*;
-    auto delete_contents() -> nodes::document_fragment*;
-    auto surround_contents(nodes::node* new_parent) -> nodes::document_fragment*;
+    new_obj auto extract_contents() -> nodes::document_fragment;
+    new_obj auto clone_contents() -> nodes::document_fragment;
+    auto delete_contents() -> void;
+    auto surround_contents(nodes::node* new_parent) -> void;
 
     auto collapse(bool to_start = false) -> void;
-    auto clone_range() -> ranges::range*;
-    auto is_point_in_range(nodes::node* node, unsigned long offset) -> bool;
+    new_obj auto clone_range() const -> ranges::range;
+    auto is_point_in_range(nodes::node* node, unsigned long offset) const -> bool;
 
     auto to_json() const -> ext::string;
 

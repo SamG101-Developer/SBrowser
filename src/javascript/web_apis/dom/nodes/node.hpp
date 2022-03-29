@@ -8,6 +8,7 @@
 #include <dom/nodes/event_target.hpp>
 
 #include <veque.hpp>
+#include <QtCore/QPointer>
 #include <QtWidgets/QWidget>
 
 namespace dom::nodes {class document;}
@@ -81,6 +82,7 @@ public properties:
     ext::dom_property<node*> next_sibling;
 
 public internal_methods:
+    virtual auto render() const -> QWidget* {return nullptr;}
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected accessors:
@@ -89,9 +91,6 @@ protected accessors:
 
     virtual auto set_node_value(const ext::string& val) -> void;
     virtual auto set_text_content(const ext::string& val) -> void;
-
-protected internal_methods:
-    virtual auto render() const -> QWidget*;
 
 protected internal_properties:
     QWidget* m_rendered_widget = nullptr;

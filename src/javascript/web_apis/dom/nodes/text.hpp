@@ -24,7 +24,6 @@ public properties:
     ext::dom_property<ext::string> whole_text;
 
 public internal_methods:
-    auto render() const -> QLabel* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

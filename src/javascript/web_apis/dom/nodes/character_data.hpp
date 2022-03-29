@@ -3,9 +3,10 @@
 #define SBROWSER_CHARACTER_DATA_HPP
 
 #include <dom/nodes/node.hpp>
-
 #include <dom/mixins/child_node.hpp>
 #include <dom/mixins/non_document_type_child_node.hpp>
+
+#include <QtWidgets/QLabel>
 
 namespace dom::nodes {class character_data;}
 
@@ -30,6 +31,7 @@ public properties:
     ext::dom_property<unsigned long> length;
 
 public internal_methods:
+    auto render() const -> QLabel* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

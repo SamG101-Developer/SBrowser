@@ -22,7 +22,7 @@ public constructors:
 public operators:
     operator T() const override;
     auto operator=(const T& o) -> dom_property<T, ce_reactions>& override;
-    auto operator=(T&& o) -> dom_property<T, ce_reactions>& override;
+    auto operator=(T&& o) noexcept -> dom_property<T, ce_reactions>& override;
 };
 
 
@@ -44,21 +44,25 @@ _FAST _INLINE ext::dom_property<T, ce_reactions>::operator T() const
 
 
 template <typename T, bool ce_reactions>
-_FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(const T& o) -> dom_property<T, ce_reactions>&
+_FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(
+        const T& o)
+        -> dom_property<T, ce_reactions>&
 {
     // handle any custom element reactions, and perform default setting operations (for const reference)
     if constexpr(ce_reactions) handle_ce_reactions(*this);
-    this->setter(o);
+    property<T>::operator=(o);
     return *this;
 }
 
 
 template <typename T, bool ce_reactions>
-_FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(T&& o) -> dom_property<T, ce_reactions>&
+_FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(
+        T&& o) noexcept
+        -> dom_property<T, ce_reactions>&
 {
-    // handle any custom element reactions, and perform default setting operations (for const reference)
+    // handle any custom element reactions, and perform default setting operations (for movable)
     if constexpr(ce_reactions) handle_ce_reactions(*this);
-    this->setter(o);
+    property<T>::operator=(std::move(o));
     return *this;
 }
 

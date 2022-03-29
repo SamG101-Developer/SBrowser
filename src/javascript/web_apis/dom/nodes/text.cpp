@@ -3,8 +3,6 @@
 #include <dom/helpers/texts.hpp>
 #include <dom/helpers/trees.hpp>
 
-#include <QtWidgets/QVBoxLayout>
-
 
 dom::nodes::text::text(const ext::string& new_data)
         : character_data()
@@ -18,13 +16,6 @@ dom::nodes::text::text(const ext::string& new_data)
     // set the properties
     data      << new_data;
     node_type << TEXT_NODE;
-
-    // create the widget representation
-    auto widget = new QLabel{};
-    widget->setLayout(new QVBoxLayout{m_rendered_widget});
-    widget->hide();
-    widget->setWordWrap(true);
-    m_rendered_widget = widget;
 }
 
 
@@ -34,14 +25,6 @@ auto dom::nodes::text::split_text(
 {
     // return the split helper method output by splitting this text node at offset position
     return helpers::texts::split(this, offset);
-}
-
-
-auto dom::nodes::text::render() const
-        -> QLabel*
-{
-    // cast the QWidget to a QLabel
-    return qobject_cast<QLabel*>(m_rendered_widget);
 }
 
 
@@ -61,7 +44,7 @@ auto dom::nodes::text::set_data(
 {
     // set the data and update the label to show the new text
     data << val;
-    render()->setText(data);
+    qobject_cast<QLabel*>(m_rendered_widget)->setText(data);
 }
 
 

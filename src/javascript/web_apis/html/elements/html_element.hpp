@@ -2,6 +2,7 @@
 #ifndef SBROWSER_HTML_ELEMENT_HPP
 #define SBROWSER_HTML_ELEMENT_HPP
 
+#include <ext/html_property.hpp>
 #include <dom/nodes/element.hpp>
 
 
@@ -17,41 +18,41 @@ class html::elements::html_element
         // , mixins::element_content_editable
 {
 
-public: constructors
+public constructors:
     html_element();
 
-public: methods
+public methods:
     void click();
     other::element_internals* attach_internals();
 
 public:
     // html
-    ext::dom_property<ext::string, _T> title;
-    ext::dom_property<ext::string, _T> lang;
-    ext::dom_property<ext::string, _T> translate;
-    ext::dom_property<ext::string, _T> dir;
+    ext::html_property<ext::string, _T> title;
+    ext::html_property<ext::string, _T> lang;
+    ext::html_property<ext::string, _T> translate;
+    ext::html_property<ext::string, _T> dir;
 
-    ext::dom_property<ext::string> accessKeyLabel;
-    ext::dom_property<ext::string, _T> accessKey;
-    ext::dom_property<ext::string, _T> autocapitalize;
-    ext::dom_property<ext::string, _T> innerText;
-    ext::dom_property<ext::string, _T> outerText;
+    ext::html_property<ext::string> access_key_label;
+    ext::html_property<ext::string, _T> access_key;
+    ext::html_property<ext::string, _T> autocapitalize;
+    ext::html_property<ext::string, _T> inner_text;
+    ext::html_property<ext::string, _T> outer_text;
 
-    ext::dom_property<bool, _T> hidden;
-    ext::dom_property<bool, _T> draggable;
-    ext::dom_property<bool, _T> spellcheck;
+    ext::html_property<bool, _T> hidden;
+    ext::html_property<bool, _T> draggable;
+    ext::html_property<bool, _T> spellcheck;
 
     // cssom-view
-    ext::dom_property<element*> offsetParent;
-    ext::dom_property<long> offsetTop;
-    ext::dom_property<long> offsetLeft;
-    ext::dom_property<long> offsetWidth;
-    ext::dom_property<long> offsetHeight;
+    ext::html_property<element*> offset_parent;
+    ext::html_property<long> offset_top;
+    ext::html_property<long> offset_left;
+    ext::html_property<long> offset_width;
+    ext::html_property<long> offset_height;
 
-public: internal_methods
+public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private: accessors
+private accessors:
     // html
     auto get_inner_text() const -> ext::string;
     auto get_outer_text() const -> ext::string;

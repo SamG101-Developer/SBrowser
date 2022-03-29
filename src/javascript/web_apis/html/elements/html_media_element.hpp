@@ -28,7 +28,7 @@ namespace webidl::types
 
 class html::elements::html_media_element : public html_element
 {
-public: constructors
+public constructors:
     html_media_element();
 
     static const unsigned short NETWORK_EMPTY     = 0;
@@ -42,7 +42,7 @@ public: constructors
     static const unsigned short HAVE_FUTURE_DATA  = 3;
     static const unsigned short HAVE_ENOUGH_DATA  = 4;
 
-public: methods
+public methods:
     auto load() -> void;
     auto pause() -> void;
     auto play() -> webidl::types::promise<void>;
@@ -51,48 +51,51 @@ public: methods
     auto get_start_date() -> webidl::types::date;
     auto add_text_track(const ext::string& kind, const ext::string& label = "", const ext::string& language = "") -> ext::vector<html::media::text_track*>;
 
-public: properties
+public properties:
     // Errors
-    ext::dom_property<html::media::media_error*> error;
+    ext::html_property<html::media::media_error*> error;
 
     // Networking
-    ext::dom_property<html::media::media_provider*> src_object;
-    ext::dom_property<html::media::time_ranges*> buffered;
-    ext::dom_property<ext::string, _T> src;
-    ext::dom_property<ext::string> current_src;
-    ext::dom_property<ext::string, _T> cross_origin;
-    ext::dom_property<ext::string, _T> preload;
-    ext::dom_property<unsigned short> network_state;
+    ext::html_property<html::media::media_provider*> src_object;
+    ext::html_property<html::media::time_ranges*> buffered;
+    ext::html_property<ext::string, _T> src;
+    ext::html_property<ext::string> current_src;
+    ext::html_property<ext::string, _T> cross_origin;
+    ext::html_property<ext::string, _T> preload;
+    ext::html_property<unsigned short> network_state;
 
     // Readiness
-    ext::dom_property<unsigned short> ready_state;
-    ext::dom_property<bool> seeking;
+    ext::html_property<unsigned short> ready_state;
+    ext::html_property<bool> seeking;
 
     // Playback
-    ext::dom_property<bool> paused;
-    ext::dom_property<bool> preserves_pitch;
-    ext::dom_property<bool> ended;
-    ext::dom_property<bool, _T> autoplay;
-    ext::dom_property<bool, _T> loop;
-    ext::dom_property<double> current_time;
-    ext::dom_property<double> duration;
-    ext::dom_property<double> default_playback_rate;
-    ext::dom_property<double> playback_rate;
-    ext::dom_property<html::media::time_ranges*> played;
-    ext::dom_property<html::media::time_ranges*> seekable;
+    ext::html_property<bool> paused;
+    ext::html_property<bool> preserves_pitch;
+    ext::html_property<bool> ended;
+    ext::html_property<bool, _T> autoplay;
+    ext::html_property<bool, _T> loop;
+    ext::html_property<double> current_time;
+    ext::html_property<double> duration;
+    ext::html_property<double> default_playback_rate;
+    ext::html_property<double> playback_rate;
+    ext::html_property<html::media::time_ranges*> played;
+    ext::html_property<html::media::time_ranges*> seekable;
 
     // Controls
-    ext::dom_property<bool, _T> controls;
-    ext::dom_property<bool, _T> default_muted;
-    ext::dom_property<bool> muted;
-    ext::dom_property<double> volume;
+    ext::html_property<bool, _T> controls;
+    ext::html_property<bool, _T> default_muted;
+    ext::html_property<bool> muted;
+    ext::html_property<double> volume;
 
     // Tracks
-    ext::dom_property<ext::vector<html::media::audio_track*>*> audio_tracks;
-    ext::dom_property<ext::vector<html::media::video_track*>*> video_tracks;
-    ext::dom_property<ext::vector<html::media::text_track*>*> text_tracks;
+    ext::html_property<ext::vector<html::media::audio_track*>*> audio_tracks;
+    ext::html_property<ext::vector<html::media::video_track*>*> video_tracks;
+    ext::html_property<ext::vector<html::media::text_track*>*> text_tracks;
 
-protected: internal_properties
+public internal_methods:
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
+
+protected internal_properties:
     html::elements::html_media_element* m_media_provider_resource;
     html::media::media_provider* m_assigned_media_provider_object;
     // javaScript::scripting::media_task_source* m_elementEventTaskSource; // TOTO -> check type
@@ -109,7 +112,7 @@ protected: internal_properties
     ext::vector<html::media::text_track*> m_pending_text_tracks;
     ext::vector<html::media::text_track_cue*> m_newly_introduced_cues;
 
-private: accessors
+private accessors:
     auto get_current_time() const -> double;
     auto get_effective_media_volume() const -> double;
 

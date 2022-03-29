@@ -3,6 +3,9 @@
 #include <dom/helpers/texts.hpp>
 #include <dom/helpers/trees.hpp>
 
+#include <QtCore/QPointer>
+#include <QtWidgets/QVBoxLayout>
+
 
 dom::nodes::character_data::character_data()
         : node()
@@ -11,6 +14,13 @@ dom::nodes::character_data::character_data()
 {
     // set the custom accessors
     length.getter = [this] {return get_length();};
+
+    // create the widget representation
+    auto widget = QPointer<QLabel>{};
+    widget->setLayout(new QVBoxLayout{m_rendered_widget});
+    widget->hide();
+    widget->setWordWrap(true);
+    m_rendered_widget = widget;
 }
 
 
@@ -101,6 +111,13 @@ auto dom::nodes::character_data::set_text_content(const ext::string& val)
 {
     // set the text_content by replacing the data with the val
     replace_data(0, length, val);
+}
+
+
+auto dom::nodes::character_data::render() const
+        -> QLabel*
+{
+    return qobject_cast<QLabel*>(m_rendered_widget);
 }
 
 

@@ -69,9 +69,9 @@ public: methods
     constexpr auto c_str() const -> const char*;
 
 public: operators
-    auto to_std_string() const -> std::string;
-    auto to_qt_string() const -> QString;
-    auto to_v8_string() const -> v8::Local<v8::String>;
+    operator std::string() const;
+    operator QString() const;
+    operator v8::Local<v8::String>() const;
 
     auto operator+(const string& other) const -> string;
     auto operator+(const char* const other) const -> string;
@@ -256,10 +256,6 @@ auto ext::string::contains(const char* item) const -> bool
 }
 
 
-/**
- * use the .c_str() to keep compatibility with ext::string::c_str() -> also helps with messy (const char*) conversions
- * @return const char* string
- */
 constexpr auto ext::string::c_str() const -> const char*
 {
     // return the const char* representation of the internal string
@@ -267,34 +263,21 @@ constexpr auto ext::string::c_str() const -> const char*
 }
 
 
-/**
- * use the operator ext::string() to use APIs that require an ext::string input - the conversion is implicit to maintain
- * tidy code
- * @return ext::string string
- */
-auto ext::string::to_std_string() const -> std::string
+ext::string::operator std::string() const
 {
     // return the ext::string representation of the string
     return m_iterable;
 }
 
 
-/**
- * use the operator QString() to interact with the Qt6 APIs
- * @return QString string
- */
-auto ext::string::to_qt_string() const -> QString
+ext::string::operator QString() const
 {
     // return the QString representation of the string
     return {m_iterable.c_str()};
 }
 
 
-/**
- * use the operator v8::Local<v8::String> to interact with te v8 APIs
- * @return v8::Local<v8::String> string
- */
-auto ext::string::to_v8_string() const -> v8::Local<v8::String>
+ext::string::operator v8::Local<v8::String>() const
 {
     // return the v8::Local<v8::String> representation of the string
     return v8::String::NewFromUtf8(v8::Isolate::GetCurrent(), (const char*)this).ToLocalChecked();

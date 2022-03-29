@@ -108,8 +108,8 @@ auto dom::ranges::range::insert_node(
     // create the pointers for the reference node, parent, the start node cast to a text node, and the new offset
     nodes::node* reference_node;
     nodes::node* parent;
-    nodes::text* start_container_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
-    const unsigned long new_offset = 0;
+    nodes::text* const start_container_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
+    unsigned long new_offset = 0;
 
     // if the start node is a text node, then set the reference node to the start node, otherwise the start node's child
     // at start_offset position in the child_nodes list
@@ -165,7 +165,7 @@ auto dom::ranges::range::insert_node(
 
 
 auto dom::ranges::range::intersects_node(
-        nodes::node* const node)
+        const nodes::node* const node) const
         -> bool
 {
     // if this range's root isn't the same root as the node's root, then return false, as they are both in different
@@ -196,7 +196,7 @@ auto dom::ranges::range::intersects_node(
 
 
 auto dom::ranges::range::select_node(
-        nodes::node* node)
+        const nodes::node* const node)
         -> void
 {
     // set the parent to the node's parent (if it exists), and the index to the index of the node
@@ -316,8 +316,8 @@ auto dom::ranges::range::compare_boundary_points(
 
 
 auto dom::ranges::range::compare_point(
-        nodes::node* node,
-        unsigned long offset)
+        nodes::node* const node,
+        const unsigned long offset) const
         -> short
 {
     // if this range's root isn't the same root as the node's root, then throw a wrong document error
@@ -352,17 +352,17 @@ auto dom::ranges::range::compare_point(
 
 
 auto dom::ranges::range::extract_contents()
-        -> dom::nodes::document_fragment*
+        -> dom::nodes::document_fragment
 {
     // create a new document fragment, and if the range is collapsed, then return the document fragment as is (empty)
-    auto* fragment = new nodes::document_fragment{};
+    nodes::document_fragment fragment{};
     if (collapsed)
         return fragment;
 
     // if the start and end nodes are the same, and are textually based nodes, then return the output of the
     // clone_character_data_and_append helper method
     if (start_container == end_container and helpers::range_internals::is_textual_based_range_container(start_container))
-        return helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, end_offset - start_offset, true);
+        return *helpers::range_internals::clone_character_data_and_append(start_container, &fragment, start_offset, end_offset - start_offset, true);
 
     // extract information from this range and the start and end nodes into a set of variables
     auto&& [first_partially_contained_child, last_partially_contained_child, contained_children] = helpers::range_internals::get_range_helpers_variables(this, start_container, end_container);
@@ -373,18 +373,18 @@ auto dom::ranges::range::extract_contents()
     // if the first partially contained child is a textually based range container, then clone the character data and
     // append it to the fragment, otherwise append the first partially contained child to the fragment
     helpers::range_internals::is_textual_based_range_container(first_partially_contained_child)
-            ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, -start_offset + helpers::trees::length(start_container), true)
-            : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, fragment, start_container, end_container, start_offset, helpers::trees::length(first_partially_contained_child));
+            ? helpers::range_internals::clone_character_data_and_append(start_container, &fragment, start_offset, -start_offset + helpers::trees::length(start_container), true)
+            : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, &fragment, start_container, end_container, start_offset, helpers::trees::length(first_partially_contained_child));
 
     // for each node stored in the contained children, append them to the fragment sequentially
-    for (nodes::node* node: contained_children)
-        helpers::mutation_algorithms::append(node, fragment);
+    for (nodes::node* const node: contained_children)
+        helpers::mutation_algorithms::append(node, &fragment);
 
     // if the first partially contained child is a textually based range container, then clone the character data and
     // append it to the fragment, otherwise append the first partially contained child to the fragment
     helpers::range_internals::is_textual_based_range_container(last_partially_contained_child)
-            ? helpers::range_internals::clone_character_data_and_append(end_container, fragment, 0, end_offset, true)
-            : helpers::range_internals::append_to_sub_fragment(last_partially_contained_child, fragment, start_container, end_container, 0, end_offset);
+            ? helpers::range_internals::clone_character_data_and_append(end_container, &fragment, 0, end_offset, true)
+            : helpers::range_internals::append_to_sub_fragment(last_partially_contained_child, &fragment, start_container, end_container, 0, end_offset);
 
     // set the start and end nodes to the new_node, and set the start and end offsets to the new_offset
     start_container = new_node;
@@ -398,36 +398,36 @@ auto dom::ranges::range::extract_contents()
 
 
 auto dom::ranges::range::clone_contents()
-        -> dom::nodes::document_fragment*
+        -> dom::nodes::document_fragment
 {
     // create a new document fragment, and if the range is collapsed, then return the document fragment as is (empty)
-    auto* fragment = new nodes::document_fragment{};
+    nodes::document_fragment fragment{};
     if (collapsed)
         return fragment;
 
     // if the start and end nodes are the same, and the start node is a textually based range container, then clone the
     // character data and append it to the fragment
     if (start_container == end_container and helpers::range_internals::is_textual_based_range_container(start_container))
-        return helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, end_offset - start_offset, false);
+        return *helpers::range_internals::clone_character_data_and_append(start_container, &fragment, start_offset, end_offset - start_offset, false);
 
     // extract information from this range and the start and end nodes into a set of variables
-    auto [first_partially_contained_child, last_partially_contained_child, contained_children] = helpers::range_internals::get_range_helpers_variables(this, start_container, end_container);
+    const auto [first_partially_contained_child, last_partially_contained_child, contained_children] = helpers::range_internals::get_range_helpers_variables(this, start_container, end_container);
 
     // if the first partially contained child is a textually based range container, then clone the character data and
     // append it to the fragment, otherwise append the first partially contained child to the fragment
     helpers::range_internals::is_textual_based_range_container(first_partially_contained_child)
-            ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, start_offset, helpers::trees::length(start_container) - (long)start_offset, false)
-            : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, fragment, start_container, first_partially_contained_child, start_offset, helpers::trees::length(first_partially_contained_child));
+            ? helpers::range_internals::clone_character_data_and_append(start_container, &fragment, start_offset, helpers::trees::length(start_container) - (long)start_offset, false)
+            : helpers::range_internals::append_to_sub_fragment(first_partially_contained_child, &fragment, start_container, first_partially_contained_child, start_offset, helpers::trees::length(first_partially_contained_child));
 
     // for each node stored in the contained children, append them to the fragment sequentially
-    for (nodes::node* node: contained_children)
-        helpers::mutation_algorithms::append(node->clone_node(true), fragment);
+    for (const nodes::node* const node: contained_children)
+        helpers::mutation_algorithms::append(node->clone_node(true), &fragment);
 
     // if the first partially contained child is a textually based range container, then clone the character data and
     // append it to the fragment, otherwise append the first partially contained child to the fragment
     helpers::range_internals::is_textual_based_range_container(last_partially_contained_child)
-            ? helpers::range_internals::clone_character_data_and_append(start_container, fragment, 0, end_offset, false)
-            : helpers::range_internals::append_to_sub_fragment(last_partially_contained_child, fragment, last_partially_contained_child, end_container, 0, end_offset);
+            ? helpers::range_internals::clone_character_data_and_append(start_container, &fragment, 0, end_offset, false)
+            : helpers::range_internals::append_to_sub_fragment(last_partially_contained_child, &fragment, last_partially_contained_child, end_container, 0, end_offset);
 
     // return the document fragment
     return fragment;
@@ -435,12 +435,12 @@ auto dom::ranges::range::clone_contents()
 
 
 auto dom::ranges::range::delete_contents()
-        -> dom::nodes::document_fragment*
+        -> void
 { // TODO : check this method against the DOM spec (or add replace_data offset info into comments)
 
     // return nullptr if the range is collapsed
     if (collapsed)
-        return nullptr;
+        return;
 
     // if the start and end nodes are the same, and the start node is a textually based range container, get the
     // character data cast of the start node, and delete the data in it (replace with "")
@@ -451,27 +451,27 @@ auto dom::ranges::range::delete_contents()
     }
 
     // create a new node and offset and save the information about it (new_node, new_offset)
-    auto [new_node, new_offset] = helpers::range_internals::create_new_node_and_offset(start_container, end_container, start_offset);
+    const auto [new_node, new_offset] = helpers::range_internals::create_new_node_and_offset(start_container, end_container, start_offset);
 
     // the nodes to remove are the all the descendants of this range's root, who are contained by this range, and whose
     // parents aren't contained by this range
-    auto nodes_to_remove = helpers::trees::descendants(m_root)
+    const auto nodes_to_remove = helpers::trees::descendants(m_root)
             .filter([this](auto* node) {return helpers::range_internals::contains(node, this);})
             .filter([this](auto* node) {return not helpers::range_internals::contains(node->parent_node, this);});
 
     // if the start node is a textually based range container, then delete the data in its character data cast
     if (helpers::range_internals::is_textual_based_range_container(start_container)) {
-        auto* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
+        auto* const start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(start_container);
         helpers::texts::replace_data(start_container_character_data, start_offset, -start_offset + helpers::trees::length(start_container), "");
     }
 
     // remove each node in the nodes_to_remove_list
-    for (nodes::node* node: nodes_to_remove)
+    for (const nodes::node* const node: nodes_to_remove)
         helpers::mutation_algorithms::remove(node);
 
     // if the start node is a textually based range container, then delete the data in its character data cast
     if (helpers::range_internals::is_textual_based_range_container(end_container)) {
-        auto* start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(end_container);
+        auto* const start_container_character_data = ext::property_dynamic_cast<nodes::character_data*>(end_container);
         helpers::texts::replace_data(start_container_character_data, 0, end_offset, "");
     }
 
@@ -485,7 +485,7 @@ auto dom::ranges::range::delete_contents()
 
 auto dom::ranges::range::surround_contents(
         nodes::node* const new_parent)
-        -> dom::nodes::document_fragment*
+        -> void
 {
     // if there are text node descendants of this range's root that are partially contained, throw an invalid state error
     helpers::exceptions::throw_v8_exception(
@@ -500,7 +500,7 @@ auto dom::ranges::range::surround_contents(
             [new_parent] {return dynamic_cast<nodes::document*>(new_parent) or dynamic_cast<nodes::document_fragment*>(new_parent) or dynamic_cast<nodes::document_type*>(new_parent);});
 
     // extract the contents of the range
-    auto* const fragment = extract_contents();
+    const auto fragment = extract_contents();
 
     // if the new parent has child nodes, then replace them all with nullptr
     if (new_parent->child_nodes)
@@ -509,7 +509,7 @@ auto dom::ranges::range::surround_contents(
     // insert the new_parent into the range, append the new parent into the fragment, and select the new_parent in the
     // node
     insert_node(new_parent);
-    helpers::mutation_algorithms::append(fragment, new_parent);
+    helpers::mutation_algorithms::append(&fragment, new_parent);
     select_node(new_parent);
 }
 
@@ -518,22 +518,22 @@ auto dom::ranges::range::collapse(
         const bool to_start)
         -> void
 {
-    // if to_start is true, the set the end container to the start container, otherwise the other awayaround
+    // if to_start is true, the set the end container to the start container, otherwise the other away around
     to_start
             ? end_container = start_container
             : start_container = end_container;
 }
 
 
-auto dom::ranges::range::clone_range()
-        -> dom::ranges::range*
+auto dom::ranges::range::clone_range() const
+        -> dom::ranges::range
 {
     // create a new range with the same nodes and offsets as this node
-    auto range_object = new range{};
-    range_object->start_container = start_container;
-    range_object->start_offset = start_offset;
-    range_object->end_container = end_container;
-    range_object->end_offset = end_offset;
+    range range_object{};
+    range_object.start_container = start_container;
+    range_object.start_offset = start_offset;
+    range_object.end_container = end_container;
+    range_object.end_offset = end_offset;
 
     // return the range
     return range_object;
@@ -541,8 +541,8 @@ auto dom::ranges::range::clone_range()
 
 
 auto dom::ranges::range::is_point_in_range(
-        nodes::node* node,
-        unsigned long offset)
+        nodes::node* const node,
+        const unsigned long offset) const
         -> bool
 {
     // return false if this range's root isn't the same root as the node's root
