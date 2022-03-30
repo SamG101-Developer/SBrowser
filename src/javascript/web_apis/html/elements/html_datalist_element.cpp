@@ -2,7 +2,7 @@
 
 #include <html/helpers/custom_html_elements.hpp>
 
-#include <QtWidgets/QVBoxLayout>
+#include <QtWidgets/QMenu>
 
 
 html::elements::html_datalist_element::html_datalist_element()
@@ -11,8 +11,8 @@ html::elements::html_datalist_element::html_datalist_element()
     // set the properties
     local_name = "datalist";
 
-    auto widget = QPointer<QComboBox>{};
-    widget->setLayout(new QVBoxLayout{});
+    auto widget = QPointer<QPushButton>{};
+    widget->setMenu(new QMenu{});
     m_rendered_widget = widget;
 
     HTML_CONSTRUCTOR
@@ -20,7 +20,7 @@ html::elements::html_datalist_element::html_datalist_element()
 
 
 auto html::elements::html_datalist_element::render() const
-        -> QComboBox*
+        -> QPushButton*
 {
-    return qobject_cast<QComboBox*>(m_rendered_widget);
+    return qobject_cast<QPushButton*>(m_rendered_widget);
 }

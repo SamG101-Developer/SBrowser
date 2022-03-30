@@ -1,5 +1,9 @@
 #include "html_element.hpp"
 
+#include <dom/helpers/custom_elements.hpp>
+#include <dom/helpers/event_dispatching.hpp>
+#include <dom/helpers/exceptions.hpp>
+
 #include <html/helpers/custom_html_elements.hpp>
 
 
@@ -27,11 +31,75 @@ html::elements::html_element::html_element()
 }
 
 
+auto html::elements::html_element::click()
+        -> void
+{
+    // do not allow clicks on disabled forms
+    if (auto* form_control = ext::property_dynamic_cast<html_form_element*>(parent_element) and helpers::form_controls::is_disabled(form_control))
+        return;
+
+    // cannot click during another click (asynchronous processing)
+    if (m_click_in_progress_flag)
+        return;
+
+    // set the click flag, fire the event, and then unset the click flag
+    m_click_in_progress_flag = true;
+    dom::helpers::event_dispatching::fire_synthetic_pointer_event("click", this, true);
+    m_click_in_progress_flag = false;
+}
+
+
+auto html::elements::html_element::attach_internals()
+        -> other::element_internals
+{
+    // if the 'is' value is empty, then throw a not supported error
+    dom::helpers::exceptions::throw_v8_exception(
+            "'is' value must be non-null in order to attach internals",
+            NOT_SUPPORTED_ERR,
+            [this] {return m_is.empty();});
+
+    // get the custom element definition using the empty 'is' value
+    auto* definition = dom::helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, "");
+
+    // if the definition is null, then throw a not supported error
+    dom::helpers::exceptions::throw_v8_exception(
+            "definition must be non-null in order to attach internals",
+            NOT_SUPPORTED_ERR,
+            [definition] {return definition != nullptr;});
+
+    // if the definition has disable_internals enabled, then throw a not supported error
+    dom::helpers::exceptions::throw_v8_exception(
+            "definition's disableInternals must be false in order to attach internals",
+            NOT_SUPPORTED_ERR,
+            [definition] {return definition->disable_internals;});
+
+    // if the element already has internals attached, then throw a not supported error
+    dom::helpers::exceptions::throw_v8_exception(
+            "cannot have already attached internals when attaching internals",
+            NOT_SUPPORTED_ERR,
+            [this] {return m_attached_internals;});
+
+    // if the definition is not precustomized or custom, then throw a not supported error
+    dom::helpers::exceptions::throw_v8_exception(
+            "custom element state must be 'precustomized' or 'custom' in order to attach internals",
+            NOT_SUPPORTED_ERR,
+            [this] {return not ext::vector<ext::string>{"precustomized", "custom"}.contains(m_custom_element_state);});
+
+    // set the attached internals to true, and return a new other::element_internals object with the target set to this
+    m_attached_internals = true;
+    other::element_internals internals{};
+    internals.target = this;
+    return internals;
+}
+
+
 auto html::elements::html_element::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<html_element>{isolate}
             .template ctor<>()
             .template inherit<dom::nodes::element>()
+            .template function("click", &html_element::click)
+            .template function("attachInternals", &html_element::attach_internals)
             .template var("title", html_element::title)
             .template var("lang", html_element::lang)
             .template var("translate", html_element::translate)
@@ -42,6 +110,7 @@ auto html::elements::html_element::v8(v8::Isolate* isolate) const -> ext::any
             .template var("inner_text", html_element::inner_text)
             .template var("outer_text", html_element::outer_text)
             .template var("hidden", html_element::hidden)
+            .template var("inert", html_element::inert)
             .template var("draggable", html_element::draggable)
             .template var("spellcheck", html_element::spellcheck)
             .template var("offset_parent", html_element::offset_parent)

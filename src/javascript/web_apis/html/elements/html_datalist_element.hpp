@@ -4,7 +4,7 @@
 
 #include <html/elements/html_element.hpp>
 
-#include <QtWidgets/QComboBox>
+#include <QtWidgets/QPushButton>
 
 namespace html::elements {class html_datalist_element;}
 
@@ -18,7 +18,7 @@ public properties:
     ext::html_property<ext::vector<dom::nodes::element*>*> options;
 
 public internal_methods:
-    auto render() const -> QComboBox* override;
+    auto render() const -> QPushButton* override;
 };
 
 

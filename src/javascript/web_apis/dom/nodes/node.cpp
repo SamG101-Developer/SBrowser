@@ -470,6 +470,13 @@ auto dom::nodes::node::set_parent_node(node* val)
 }
 
 
+auto dom::nodes::node::render() const
+        -> QWidget*
+{
+    return nullptr;
+}
+
+
 auto dom::nodes::node::v8(
         v8::Isolate* isolate) const
         -> ext::any

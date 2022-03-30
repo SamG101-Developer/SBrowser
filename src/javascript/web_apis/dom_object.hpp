@@ -11,7 +11,7 @@
 
 
 class dom_object {
-public: constructors
+public constructors:
     dom_object() = default;
     dom_object(const dom_object&) = default;
     dom_object(dom_object&&) noexcept = default;
@@ -20,7 +20,7 @@ public: constructors
 
     virtual ~dom_object() = default;
 
-public: internal_methods
+public internal_methods:
     virtual auto v8(v8::Isolate* isolate) const -> ext::any = 0;
 };
 

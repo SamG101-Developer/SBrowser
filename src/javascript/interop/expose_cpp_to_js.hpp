@@ -67,7 +67,12 @@
 #include <html/elements/html_canvas_element.hpp>
 #include <html/elements/html_data_element.hpp>
 #include <html/elements/html_datalist_element.hpp>
+#include <html/elements/html_details_element.hpp>
+#include <html/elements/html_dialog_element.hpp>
+#include <html/elements/html_div_element.hpp>
+#include <html/elements/html_dlist_element.hpp>
 #include <html/elements/html_element.hpp>
+#include <html/elements/html_field_set_element.hpp>
 #include <html/elements/html_media_element.hpp>
 #include <html/elements/html_paragraph_element.hpp>
 #include <html/elements/html_slot_element.hpp>
@@ -80,28 +85,32 @@
 
 namespace javascript::interop::expose_cpp_to_js
 {
-    template <typename T> auto object_to_v8(v8::Isolate* isolate)  requires std::is_base_of_v<dom_object, T>;
-    void expose(v8::Isolate* isolate, v8::Persistent<v8::Context>& persistent_context, javascript::environment::modules::module_type module_type);
+    template <typename T> auto object_to_v8(v8::Isolate* isolate) requires std::is_base_of_v<dom_object, T>;
+    auto expose(v8::Isolate* isolate, v8::Persistent<v8::Context>& persistent_context, javascript::environment::modules::module_type module_type) -> void;
 }
 
 
 template <typename T>
 auto javascript::interop::expose_cpp_to_js::object_to_v8(v8::Isolate* isolate) requires std::is_base_of_v<dom_object, T>
 {
+    // create a temporary instance of the object, return the v8 conversion, and map it to the correct type. an instance
+    // has to be made, as the conversion method is virtual and therefore can not be static
     return T{}.v8(isolate).template to<v8pp::class_<T>>();
 }
 
 
-void
-javascript::interop::expose_cpp_to_js::expose(
+auto javascript::interop::expose_cpp_to_js::expose(
         v8::Isolate* isolate,
         v8::Persistent<v8::Context>& persistent_context,
         javascript::environment::modules::module_type module_type)
+        -> void
 {
+    // derive a local context from the persistent one, and enter it
     v8::Local<v8::Context> local_context = v8::Local<v8::Context>::New(isolate, persistent_context);
     local_context->Enter();
 
     // TODO : formatting - templating makes me feel ill
+    // create the v8 classes from the c++ classes, linked to the current isolate
     auto v8_abort_controller = object_to_v8<dom::aborting::abort_controller>(isolate);
     auto v8_abort_signal = object_to_v8<dom::aborting::abort_signal>(isolate);
 
@@ -155,15 +164,22 @@ javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_canvas_element = object_to_v8<html::elements::html_canvas_element>(isolate);
     auto v8_html_data_element = object_to_v8<html::elements::html_data_element>(isolate);
     auto v8_html_datalist_element = object_to_v8<html::elements::html_datalist_element>(isolate);
+    auto v8_html_details_element = object_to_v8<html::elements::html_details_element>(isolate);
+    auto v8_html_dialog_element = object_to_v8<html::elements::html_dialog_element>(isolate);
+    auto v8_html_div_element = object_to_v8<html::elements::html_div_element>(isolate);
+    auto v8_html_dlist_element = object_to_v8<html::elements::html_dlist_element>(isolate);
     auto v8_html_element = object_to_v8<html::elements::html_element>(isolate);
+    auto v8_html_field_set_element = object_to_v8<html::elements::html_field_set_element>(isolate);
     auto v8_html_media_element = object_to_v8<html::elements::html_media_element>(isolate);
     auto v8_html_paragraph_element = object_to_v8<html::elements::html_paragraph_element>(isolate);
     auto v8_html_slot_element = object_to_v8<html::elements::html_slot_element>(isolate);
     auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
 
+    // create the module and an empty module name
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;
 
+    // expose certain classes depending on the module type (window, worker, etc)
     switch(module_type) {
         case javascript::environment::modules::module_type::window: {
             v8_module
@@ -219,7 +235,12 @@ javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLCanvasElement", v8_html_canvas_element)
                     .class_("HTMLDataElement", v8_html_data_element)
                     .class_("HTMLDataListElement", v8_html_data_element)
+                    .class_("HTMLDetailsElement", v8_html_details_element)
+                    .class_("HTMLDialogElement", v8_html_dialog_element)
+                    .class_("HTMLDivElement", v8_html_div_element)
+                    .class_("HTMLDListElement", v8_html_dlist_element)
                     .class_("HTMLElement", v8_html_element)
+                    .class_("HTMLFieldSetElement", v8_html_field_set_element)
                     .class_("HTMLMediaElement", v8_html_media_element)
                     .class_("HTMLParagraphElement", v8_html_paragraph_element)
                     .class_("HTMLSlotElement", v8_html_slot_element)
@@ -253,6 +274,9 @@ javascript::interop::expose_cpp_to_js::expose(
             module_name = v8::String::NewFromUtf8(isolate, "Unknown").ToLocalChecked();
     }
 
+    // append the module into the context
+    // TODO : globalize the classes so Document() can be used instead of Window.Document() - I have a script to do this,
+    //  but need to pass in the module name as a parameter)
     local_context->Global()->Set(local_context, module_name, v8_module.new_instance());
 }
 

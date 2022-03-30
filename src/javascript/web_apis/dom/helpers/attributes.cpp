@@ -207,7 +207,7 @@ auto dom::helpers::attributes::set_attribute(
 
     // if the owner element non-nullptr and doesn't match the new owner element, then throw an inuse attribute error
     exceptions::throw_v8_exception(
-            "attribute's element is non-null doesn't equal element",
+            "attribute's element is non-null and doesn't equal element",
             INUSE_ATTRIBUTE_ERR,
             [attribute, new_owner_element] {return attribute->owner_element and attribute->owner_element != new_owner_element;});
 

@@ -22,8 +22,8 @@ public constructors:
     html_element();
 
 public methods:
-    void click();
-    other::element_internals* attach_internals();
+    auto click() -> void;
+    new_obj auto attach_internals() -> other::element_internals;
 
 public:
     // html
@@ -39,6 +39,7 @@ public:
     ext::html_property<ext::string, _T> outer_text;
 
     ext::html_property<bool, _T> hidden;
+    ext::html_property<bool, _T> inert;
     ext::html_property<bool, _T> draggable;
     ext::html_property<bool, _T> spellcheck;
 
@@ -51,6 +52,10 @@ public:
 
 public internal_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
+
+private internal_properties:
+    bool m_click_in_progress_flag = false;
+    bool m_attached_internals;
 
 private accessors:
     // html

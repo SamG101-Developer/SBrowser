@@ -120,12 +120,14 @@ public internal_methods:
     auto render() const -> QWidget* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
+protected internal_properties:
+    ext::string m_is;
+    ext::string m_custom_element_state;
+
 private internal_properties:
     ext::property<ext::string> m_qualified_name;
     ext::property<ext::string> m_html_uppercase_qualified_name;
 
-    ext::string m_is;
-    ext::string m_custom_element_state;
     internal::custom_element_definition* m_custom_element_definition = nullptr;
     std::queue<std::function<void(element*)>> m_custom_element_reaction_queue;
 
