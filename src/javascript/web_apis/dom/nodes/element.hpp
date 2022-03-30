@@ -43,7 +43,7 @@ public constructors:
     element();
     ~element() override;
 
-public methods:
+public js_methods:
     // dom
     auto has_attributes() const -> bool;
     auto get_attribute_names() const -> ext::vector<ext::string>;
@@ -90,7 +90,7 @@ public methods:
     auto get_bounding_client_rect() const -> geometry::shapes::dom_rect;
     auto scroll_into_view(const ext::string_any_map& options = {}) -> void;
 
-public properties:
+public js_properties:
     // dom
     ext::dom_property<ext::string> namespace_uri;
     ext::dom_property<ext::string> prefix;
@@ -116,15 +116,15 @@ public properties:
     // cs-shadow-parts
     ext::dom_property<ext::vector<ext::string>*> parts;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QWidget* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected internal_properties:
+protected cpp_properties:
     ext::string m_is;
     ext::string m_custom_element_state;
 
-private internal_properties:
+private cpp_properties:
     ext::property<ext::string> m_qualified_name;
     ext::property<ext::string> m_html_uppercase_qualified_name;
 
@@ -155,7 +155,7 @@ private accessors:
     auto get_m_qualified_name() const -> ext::string;
     auto get_m_html_qualified_uppercase_name() const -> ext::string;
 
-private internal_properties:
+private cpp_properties:
     ext::vector<ext::string> m_shadow_attachable_local_names = {
             "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header",
             "main", "nav", "p", "section", "span"

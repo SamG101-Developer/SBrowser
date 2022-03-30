@@ -14,7 +14,7 @@ class html::elements::html_anchor_element
 public constructors:
     html_anchor_element();
 
-public properties:
+public js_properties:
     ext::html_property<ext::string> target;
     ext::html_property<ext::string> download;
     ext::html_property<ext::string> ping;
@@ -25,7 +25,7 @@ public properties:
     ext::html_property<ext::string> referrerPolicy;
     ext::html_property<ext::vector<ext::string>*> relList;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private accessors:

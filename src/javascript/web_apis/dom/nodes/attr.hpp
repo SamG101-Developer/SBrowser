@@ -13,7 +13,7 @@ class dom::nodes::attr : public node
 public constructors:
     attr();
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> namespace_uri;
     ext::dom_property<ext::string> prefix;
     ext::dom_property<ext::string> local_name;
@@ -21,11 +21,11 @@ public properties:
     ext::dom_property<ext::string> value;
     ext::dom_property<element*> owner_element;
 
-public: internal_methods
+public: cpp_methods
     auto render() const -> QWidget* override {return nullptr;}
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected internal_properties:
+protected cpp_properties:
     ext::property<ext::string> m_qualified_name;
 
 private accessors:

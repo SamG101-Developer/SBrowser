@@ -12,7 +12,7 @@ class dom::nodes::comment : public character_data
 public: constructors
     comment(const ext::string& new_data = "");
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

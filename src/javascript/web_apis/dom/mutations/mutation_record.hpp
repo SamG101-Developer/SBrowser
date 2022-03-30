@@ -19,7 +19,7 @@ class dom::mutations::mutation_record : virtual public dom_object
 public constructors:
     mutation_record();
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> type;
     ext::dom_property<ext::string> attribute_name;
     ext::dom_property<ext::string> attribute_namespace;
@@ -32,7 +32,7 @@ public properties:
     ext::dom_property<ext::vector<nodes::node*>> added_nodes;
     ext::dom_property<ext::vector<nodes::node*>> removed_nodes;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

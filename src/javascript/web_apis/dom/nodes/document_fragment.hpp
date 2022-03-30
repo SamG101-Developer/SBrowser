@@ -17,10 +17,10 @@ class dom::nodes::document_fragment
 public constructors:
     document_fragment();
 
-public properties:
+public js_properties:
     ext::dom_property<dom::nodes::element*> host;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QWidget* override {return nullptr;}
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 

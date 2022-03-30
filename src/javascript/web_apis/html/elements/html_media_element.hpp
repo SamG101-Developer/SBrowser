@@ -19,12 +19,6 @@ namespace html
     }
 }
 
-namespace webidl::types
-{
-    template <typename T> class promise;
-    class date;
-}
-
 
 class html::elements::html_media_element : public html_element
 {
@@ -42,7 +36,7 @@ public constructors:
     static const unsigned short HAVE_FUTURE_DATA  = 3;
     static const unsigned short HAVE_ENOUGH_DATA  = 4;
 
-public methods:
+public js_methods:
     auto load() -> void;
     auto pause() -> void;
     auto play() -> webidl::types::promise<void>;
@@ -51,7 +45,7 @@ public methods:
     auto get_start_date() -> webidl::types::date;
     auto add_text_track(const ext::string& kind, const ext::string& label = "", const ext::string& language = "") -> ext::vector<html::media::text_track*>;
 
-public properties:
+public js_properties:
     // Errors
     ext::html_property<html::media::media_error*> error;
 
@@ -92,10 +86,10 @@ public properties:
     ext::html_property<ext::vector<html::media::video_track*>*> video_tracks;
     ext::html_property<ext::vector<html::media::text_track*>*> text_tracks;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-protected internal_properties:
+protected cpp_properties:
     html::elements::html_media_element* m_media_provider_resource;
     html::media::media_provider* m_assigned_media_provider_object;
     // javaScript::scripting::media_task_source* m_elementEventTaskSource; // TOTO -> check type

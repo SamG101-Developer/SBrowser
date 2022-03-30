@@ -18,7 +18,7 @@ class html::elements::html_button_element
 public constructors:
     html_button_element();
 
-public properties:
+public js_properties:
     ext::html_property<ext::string, _T> form_action;
     ext::html_property<ext::string, _T> form_enctype;
     ext::html_property<ext::string, _T> form_method;
@@ -34,7 +34,7 @@ public properties:
     ext::html_property<ext::vector<dom::nodes::node*>*> labels;
     ext::html_property<html::elements::html_form_element*> form;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QPushButton* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 

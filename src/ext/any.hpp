@@ -30,7 +30,7 @@ public constructors:
     template <typename T> auto operator=(const T& other) -> any& {m_value = other; return *this;}
     template <typename T> auto operator=(T&& other) noexcept -> any& {m_value = std::forward<T&>(other); return *this;}
 
-public methods:
+public js_methods:
     auto type() const -> const type_info&;
     auto empty() const -> bool;
     auto contains_pointer() const -> bool;
@@ -42,7 +42,7 @@ public methods:
 public operators:
     operator bool() const;
 
-private internal_properties:
+private cpp_properties:
     std::any m_value;
 };
 

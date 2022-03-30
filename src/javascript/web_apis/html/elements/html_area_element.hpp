@@ -14,7 +14,7 @@ class html::elements::html_area_element
 public constructors:
     html_area_element();
 
-public properties:
+public js_properties:
     ext::html_property<ext::string> alt;
     ext::html_property<ext::string> coords;
     ext::html_property<ext::string> shape;
@@ -25,7 +25,7 @@ public properties:
     ext::html_property<ext::string> referrerPolicy;
     ext::html_property<ext::vector<ext::string>*> relList;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 

@@ -26,19 +26,19 @@ public aliases:
 public constructors:
     abort_signal();
 
-public methods:
+public js_methods:
     new_obj static auto abort(ext::any reason = "") -> abort_signal;
     new_obj static auto timeout(unsigned long long milliseconds) -> abort_signal;
     auto throw_if_aborted() const -> void;
 
-public properties:
+public js_properties:
     ext::dom_property<bool    > aborted;
     ext::dom_property<ext::any> reason;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private internal_properties:
+private cpp_properties:
     abort_signal_callbacks m_abort_algorithms;
 
 };

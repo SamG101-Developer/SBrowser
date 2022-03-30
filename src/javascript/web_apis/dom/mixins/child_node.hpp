@@ -12,13 +12,13 @@ namespace dom::mixins {template <typename T> class child_node;}
 template <typename T>
 class dom::mixins::child_node : virtual public dom_object
 {
-public methods:
+public js_methods:
     unscopable template<typename ...nodes_or_strings_t> auto before(nodes_or_strings_t... nodes) -> void;
     unscopable template<typename ...nodes_or_strings_t> auto after(nodes_or_strings_t... nodes) -> void;
     unscopable template<typename ...nodes_or_strings_t> auto replace_with(nodes_or_strings_t... nodes) -> void;
     unscopable auto remove() -> void;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

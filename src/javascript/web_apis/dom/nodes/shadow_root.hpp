@@ -18,18 +18,18 @@ public friends:
 public constructors:
     shadow_root();
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> mode;
     ext::dom_property<ext::string> slot_assignment;
     ext::dom_property<bool> delegates_focus;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected internal_properties:
+protected cpp_properties:
     bool m_available_to_internals = false;
 
-protected internal_methods:
+protected cpp_methods:
     auto get_the_parent(events::event* event) -> event_target* override;
 };
 

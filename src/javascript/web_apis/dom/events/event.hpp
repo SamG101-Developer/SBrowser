@@ -36,14 +36,14 @@ public static_constants:
     static constexpr unsigned char AT_TARGET = 2;
     static constexpr unsigned char BUBBLING_PHASE = 3;
 
-public methods:
+public js_methods:
     auto stop_propagation() -> void;
     auto stop_immediate_propagation() -> void;
     auto prevent_default() -> void;
 
     new_obj auto composed_path() const -> ext::vector<nodes::event_target*>;
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> type;
     ext::dom_property<bool> bubbles;
     ext::dom_property<bool> cancelable;
@@ -60,10 +60,10 @@ public properties:
     ext::dom_property<ext::vector<nodes::event_target        *>*> touch_targets;
     ext::dom_property<ext::vector<internal::event_path_struct*>*> path;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private internal_properties:
+private cpp_properties:
     bool m_stop_propagation_flag = false;
     bool m_stop_immediate_propagation_flag = false;
     bool m_canceled_flag = false;

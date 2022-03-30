@@ -15,10 +15,10 @@ public constructors:
     using event::event;
     custom_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
 
-public properties:
+public js_properties:
     ext::dom_property<ext::any> detail;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

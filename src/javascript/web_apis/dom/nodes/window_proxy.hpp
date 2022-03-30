@@ -19,7 +19,7 @@ public: constructors
 
     ~window_proxy() override; // TODO -> delete active document etc?
 
-public: javascript_slot_methods
+public: js_slot_methods
     auto get_prototype_of() -> v8::Local<v8::Object>;
     auto set_prototype_of(v8::Local<v8::Object> V) -> void;
     auto is_extensible_prototype_of() -> v8::Local<v8::Boolean>;
@@ -31,10 +31,10 @@ public: javascript_slot_methods
     auto delete_(v8::Local<v8::Number> P) -> v8::Local<v8::Boolean>;
     auto own_property_keys() -> v8::Local<v8::Array>;
 
-public: javascript_slots
+public: js_slots
     window* s_window;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

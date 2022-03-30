@@ -9,6 +9,7 @@
 
 html::elements::html_element::html_element()
         : dom::nodes::element{}
+        , mixins::html_or_svg_element<html_element>{}
 {
     // set the custom accessors
     inner_text.getter = [this] {return get_inner_text();};
@@ -99,6 +100,7 @@ auto html::elements::html_element::v8(v8::Isolate* isolate) const -> ext::any
     return v8pp::class_<html_element>{isolate}
             .ctor<>()
             .inherit<dom::nodes::element>()
+            .inherit<mixins::html_or_svg_element<html_element>>()
             .function("click", &html_element::click)
             .function("attachInternals", &html_element::attach_internals)
             .var("title", html_element::title)

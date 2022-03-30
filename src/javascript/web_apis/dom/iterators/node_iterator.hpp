@@ -16,18 +16,18 @@ public friends:
 public constructors:
     node_iterator();
 
-public methods:
+public js_methods:
     auto next_node() -> nodes::node*;
     auto previous_node() -> nodes::node*;
 
-public properties:
+public js_properties:
     ext::dom_property<nodes::node*> reference_node;
     ext::dom_property<bool> pointer_before_reference_node;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private internal_properties:
+private cpp_properties:
     ext::vector<nodes::node*> iterator_collection;
 };
 

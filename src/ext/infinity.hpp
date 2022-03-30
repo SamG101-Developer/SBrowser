@@ -17,7 +17,7 @@ public operators:
     auto operator -() const -> ext::infinity<T> requires (std::is_signed_v<T>);
     auto operator +() const -> ext::infinity<T> requires (std::is_signed_v<T>);
 
-private internal_properties:
+private cpp_properties:
     bool m_positive = true;
 };
 

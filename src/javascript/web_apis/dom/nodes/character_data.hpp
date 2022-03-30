@@ -19,18 +19,18 @@ class dom::nodes::character_data
 public constructors:
     character_data();
 
-public methods:
+public js_methods:
     auto substring_data(unsigned long offset, unsigned long count) const -> ext::string;
     auto append_data(const ext::string& new_data) -> void;
     auto insert_data(unsigned long offset, const ext::string& new_data) -> void;
     auto delete_data(unsigned long offset, unsigned long count) -> void;
     auto replace_data(unsigned long offset, unsigned long count, const ext::string& new_data) -> void;
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> data;
     ext::dom_property<unsigned long> length;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QLabel* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 

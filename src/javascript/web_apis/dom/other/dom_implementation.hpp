@@ -18,15 +18,15 @@ public: constructors
     dom_implementation();
     ~dom_implementation() override;
 
-public: methods
+public: js_methods
     new_obj auto create_document_type(const ext::string& qualified_name, const ext::string& public_id, const ext::string& system_id) const -> nodes::document_type;
     new_obj auto create_document(const ext::string& namespace_, const ext::string& qualified_name, nodes::document_type* document_type = nullptr) const -> nodes::xml_document;
     new_obj auto create_html_document(const ext::string& title = "") const -> nodes::document;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private: internal_properties
+private: cpp_properties
     nodes::document* m_associated_document = nullptr;
 };
 

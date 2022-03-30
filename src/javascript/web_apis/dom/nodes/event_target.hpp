@@ -27,18 +27,18 @@ public constructors:
     event_target() = default;
     ~event_target() override;
 
-public methods:
+public js_methods:
     auto add_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map& options) -> void;
     auto remove_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map& options) -> void;
     auto dispatch_event(events::event* event) -> bool;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected internal_methods:
+protected cpp_methods:
     virtual auto get_the_parent(events::event* event) -> event_target*;
 
-private internal_properties:
+private cpp_properties:
     ext::vector<ext::string_any_map> m_event_listeners;
 };
 

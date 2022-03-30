@@ -13,7 +13,7 @@ struct ext::html_property : public dom_property<T, ce_reactions>
 public constructors:
     html_property() = default;
 
-public methods:
+public js_methods:
     template <typename F, typename U> auto attach_qt_updater(F method, U pointer) -> void;
 
 public operators:

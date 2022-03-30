@@ -20,7 +20,7 @@ public constructors:
 
     virtual ~dom_object() = default;
 
-public internal_methods:
+public cpp_methods:
     virtual auto v8(v8::Isolate* isolate) const -> ext::any = 0;
 };
 

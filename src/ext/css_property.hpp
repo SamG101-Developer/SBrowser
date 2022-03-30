@@ -48,7 +48,7 @@ public constructors:
             percentage_t&& percentage_type = NA, canonical_order_t&& canonical_order_type = PER_GRAMMAR,
             media_t&& media_type = HIDDEN);
 
-private internal_properties:
+private cpp_properties:
     string m_name;
     string m_initial;
     bool m_inherited;

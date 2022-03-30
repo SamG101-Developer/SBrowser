@@ -12,17 +12,17 @@ struct ext::css_shorthand_property final : public property<ext::string>
 public constructors:
     explicit css_shorthand_property(string&& name);
 
-public methods:
+public js_methods:
     auto add_css_property(css_property& css_longhand_property) -> css_shorthand_property&;
 
 public operators:
     auto operator=(const string& o) -> css_shorthand_property& override;
     operator string() const override;
 
-public internal_properties:
+public cpp_properties:
     vector<css_property> css_properties;
 
-private internal_properties:
+private cpp_properties:
     string m_name;
     string m_initial;
 };

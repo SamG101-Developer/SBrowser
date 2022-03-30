@@ -24,20 +24,20 @@ public enums:
 public constructors:
     html_canvas_element();
 
-public methods:
+public js_methods:
     new_obj auto get_context(const ext::string& context_id, ext::any* options = nullptr) -> rendering_context_t;
     new_obj auto transfer_control_to_offscreen() -> canvasing::offscreen_canvas;
     auto to_data_url(const ext::string& type = "image/png", ext::any* quality = nullptr) -> ext::string;
     auto to_blob(blob_callback_t&& callback, const ext::string& type = "image/png", ext::any* quality = nullptr);
 
-public properties:
+public js_properties:
     ext::html_property<unsigned long, _T> width;
     ext::html_property<unsigned long, _T> height;
 
-public internal_properties:
+public cpp_properties:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-protected internal_properties:
+protected cpp_properties:
     context_mode m_context_mode;
     images::image_bitmap* m_bitmap = nullptr;
 };

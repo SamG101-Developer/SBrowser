@@ -26,12 +26,12 @@ class dom::xpath::xpath_evaluator : public dom_object
 public: constructors
     xpath_evaluator();
 
-public: methods
+public: js_methods
     auto create_expression(const ext::string& expression, xpath_ns_resolver* resolver = nullptr) -> xpath_expression*;
     auto create_ns_resolver(nodes::node* node_resolver) -> xpath_ns_resolver*;
     auto evaluate(const ext::string& expression, nodes::node* context_node, xpath_ns_resolver* resolver = nullptr, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

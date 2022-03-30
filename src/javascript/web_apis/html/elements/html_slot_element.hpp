@@ -18,15 +18,15 @@ public friends:
 public constructors:
     html_slot_element();
 
-public methods:
+public js_methods:
     ext::vector<dom::nodes::node*> assigned_nodes(const ext::string_any_map& options = {});
     ext::vector<dom::nodes::element*> assigned_elements(const ext::string_any_map& options = {});
     template <typename ...nodes_t> void assign(nodes_t... nodes);
 
-public properties:
+public js_properties:
     ext::html_property<ext::string> name;
 
-private internal_properties:
+private cpp_properties:
     ext::vector<dom::nodes::node*>* m_manually_assigned_nodes;
     ext::vector<dom::nodes::node*>* m_assigned_nodes;
 };

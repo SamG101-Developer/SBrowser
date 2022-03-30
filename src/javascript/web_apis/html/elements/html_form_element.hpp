@@ -14,12 +14,12 @@ class html::elements::html_form_element
 public constructors:
     html_form_element();
 
-public methods:
+public js_methods:
     auto submit() -> void;
     auto reset() -> void;
     auto requestSubmit(html_element* submitter) -> void;
 
-public properties:
+public js_properties:
     ext::html_property<ext::string, _T> acceptCharset;
     ext::html_property<ext::string, _T> action;
     ext::html_property<ext::string, _T> autocomplete;
@@ -34,10 +34,10 @@ public properties:
     ext::html_property<ext::vector<ext::string>*> relList;
     ext::html_property<ext::vector<html_form_element*>*> elements;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
-protected internal_properties:
+protected cpp_properties:
     bool m_locked_for_reset = false;
 };
 

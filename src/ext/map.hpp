@@ -24,7 +24,7 @@ public constructors:
     map<K, V>& operator=(const map<K, V>&) = default;
     map<K, V>& operator=(map<K, V>&&) noexcept = default;
 
-public methods:
+public js_methods:
     auto insert(const K& key, const V& value) -> ext::map<K, V>&;
     auto at(const K& key) const -> V&;
     auto has_key(const K& key) const -> bool;

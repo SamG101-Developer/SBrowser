@@ -31,6 +31,15 @@
 #include <dom/other/dom_implementation.hpp>
 #include <dom/ranges/range.hpp>
 
+#include <html/elements/html_body_element.hpp>
+#include <html/elements/html_frame_set_element.hpp>
+#include <html/elements/html_head_element.hpp>
+#include <html/elements/html_html_element.hpp>
+
+#include <html/helpers/document_internals.hpp>
+
+#include <web_idl/types/date.hpp>
+
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QVBoxLayout>
 #include <QtCore/QPointer>
@@ -53,6 +62,7 @@ dom::nodes::document::document()
 
     dir.getter           = [this] {return get_compat_mode();};
     last_modified.getter = [this] {return get_last_modified();};
+    cookie.getter        = [this] {return get_cookie();};
     body.getter          = [this] {return get_body();};
     head.getter          = [this] {return get_head();};
     title.getter         = [this] {return get_title();};
@@ -361,7 +371,7 @@ auto dom::nodes::document::get_elements_by_name(
     // convert them back into nodes before returning the list
     return helpers::trees::descendants(this)
             .cast_all<element*>()
-            .filter([element_name](const element* const node) {return node->get_m_qualified_name() == element_name;})
+            .filter([element_name](const element* const node) {return node->m_qualified_name == element_name;})
             .cast_all<node*>();
 }
 
@@ -568,16 +578,51 @@ auto dom::nodes::document::get_dir() const
 auto dom::nodes::document::get_last_modified() const
         -> ext::string
 {
-    // TODO
-    return "" /* TODO from header */;
+    // move the date as a string-double ie "1234.5" into a string
+    ext::string last_modified_string;
+    last_modified >> last_modified_string;
+
+    // convert this string into a webidl data object via a double
+    double last_modified_double = std::stod(last_modified_string);
+    webidl::types::date last_modified_date{last_modified_double};
+
+    // format the date string from the web idl date type and return it
+    auto formatted_date = std::format(
+            "{}/{}/{} {}:{}:{}",
+            last_modified_date.month(), last_modified_date.day(), last_modified_date.year(),
+            last_modified_date.hour(), last_modified_date.minute(), last_modified_date.second());
+
+    return ext::string{formatted_date};
+}
+
+
+auto dom::nodes::document::get_cookie() const
+        -> ext::string
+{
+    // return the empty string if the document is cookie averse
+    if (html::helpers::document_internals::is_cookie_averse_document(this))
+        return "";
+
+    // if the origin is opaque, then throw a security error
+    helpers::exceptions::throw_v8_exception(
+            "document must have a non-opaque origin in order to access the cookies",
+            SECURITY_ERR,
+            [this] {return m_origin == "opaque";});
+
+    // return the cookie string
+    ext::string cookie_string;
+    cookie >> cookie_string;
+    return cookie_string;
 }
 
 
 auto dom::nodes::document::get_body() const
         -> html::elements::html_body_element*
 {
-    // the body is the document's body element
-    return get_m_body_element();
+    // the body is the document's body element or first frameset element if there is no body element
+    return get_m_body_element()
+            ? get_m_body_element()
+            : get_m_html_element()->children->cast_all<html::elements::html_frame_set_elememt*>().front();
 }
 
 
@@ -593,7 +638,9 @@ auto dom::nodes::document::get_title() const
         -> ext::string
 {
     // the title is the child text content of the title element
-    return helpers::trees::child_text_content(get_m_title_element());
+    return helpers::trees::child_text_content(ext::property_dynamic_cast<svg::elements::svg_element*>(document_element)
+            ? document_element->children->cast_all<svg::elements::svg_title_element*>().front()
+            : get_m_title_element());
 }
 
 
@@ -634,7 +681,7 @@ auto dom::nodes::document::set_title(
         -> void
 {
     // case for when the document element is a svg element
-    if (dynamic_cast<svg::nodes::svg_element*>(document_element))
+    if (dynamic_cast<svg::elements::svg_element*>(document_element))
     {
         // the title element is the first child of the document that is a svg title element
         auto* title_element = document_element->child_nodes->cast_all<svg::nodes::svg_title_element*>().front();
@@ -662,7 +709,7 @@ auto dom::nodes::document::set_title(
 
         // the title element is the html title element if it exists
         if (get_m_title_element())
-            auto* title_element = get_m_title_element();
+            title_element = get_m_title_element();
 
         // otherwise, set the title element to the creation of an element
         else
@@ -683,9 +730,17 @@ auto dom::nodes::document::set_body(
 {
     // if the new val isn't a html_body_element, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
-            "body attribute must be a HTMLBodyElement",
+            "body attribute must be a HTMLBodyElement or HTMLFrameSetElement",
             HIERARCHY_REQUEST_ERR,
-            [val] {return dynamic_cast<html::elements::html_body_element*>(val);});
+            [val] {return multi_cast<html::elements::html_body_element*, html::elements::html_frame_set_element*>(val);});
+
+    // return if the new body is the same as the current body element
+    if (body == val)
+        return;
+
+    // replace the current body element with the new body if there is a new body
+    if (val)
+        helpers::mutation_algorithms::replace(body, parent_element, val);
 
     // if the new val is null and there is no document element, then throw a hierarchy request error
     helpers::exceptions::throw_v8_exception(
@@ -703,7 +758,7 @@ auto dom::nodes::document::set_cookie(
         -> void
 {
     // if the document is cookie averse, then return
-    if (html::helpers::cookies::is_cookie_averse_document(this))
+    if (html::helpers::document_internals::is_cookie_averse_document(this))
         return;
 
     // if the origin is opaque, then throw a security error
@@ -722,8 +777,11 @@ auto dom::nodes::document::set_ready_state(
         -> void
 {
     if (ready_state == val) return;
-    // TODO : parser stuff
-    helpers::event_dispatching::fire_event<>("readyStateChange", this);
+    ready_state << val;
+
+    // TODO : html parser association
+
+    helpers::event_dispatching::fire_event<>("readystatechange", this);
 }
 
 

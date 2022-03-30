@@ -12,10 +12,10 @@ class html::elements::html_details_element : public html_element
 public constructors:
     html_details_element();
 
-public properties:
+public js_properties:
     ext::html_property<bool, _T> open;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QWidget* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };

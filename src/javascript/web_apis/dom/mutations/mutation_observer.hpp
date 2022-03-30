@@ -29,15 +29,15 @@ public constructors:
     mutation_observer();
     mutation_observer(mutation_callback&& callback);
 
-public methods:
+public js_methods:
     auto observe(const nodes::node* target, ext::string_any_map&& options = {}) -> void;
     auto disconnect() -> void;
     auto take_records() -> ext::vector<mutation_record*>;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private internal_properties:
+private cpp_properties:
     mutation_callback m_callback;
     ext::vector<nodes::node*>* m_node_list;
     std::queue<mutation_record*>* m_record_queue;

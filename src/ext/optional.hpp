@@ -20,14 +20,14 @@ public constructors:
     optional<T>& operator=(const T& other);
     optional<T>& operator=(T&& other) noexcept;
 
-public methods:
+public js_methods:
     bool empty() const;
 
 public operators:
     operator bool() const;
     operator T() const;
 
-private internal_properties:
+private cpp_properties:
     std::optional<T> m_value;
 };
 

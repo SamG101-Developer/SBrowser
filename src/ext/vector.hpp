@@ -47,7 +47,7 @@ public constructors:
 
     ~vector() override;
 
-public methods:
+public js_methods:
     auto slice(size_t front_index, size_t back_index) const -> vector<T>&;
     auto item_before(const T& item) const -> T&;
     auto item_after(const T& item) const -> T&;

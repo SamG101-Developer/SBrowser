@@ -210,6 +210,9 @@ auto dom::helpers::trees::descendant_text_content(
         const nodes::node* const node_a)
         -> ext::string
 {
+    // return empty string for nullptr node
+    if (not node_a) return "";
+
     // get the descendant nodes that are text nodes, and join the data stored in them
     auto text_content = descendants(node_a)
             .template cast_all<nodes::text*>()
@@ -225,6 +228,9 @@ auto dom::helpers::trees::child_text_content(
         const nodes::node* const node_a)
         -> ext::string
 {
+    // return empty string for nullptr node
+    if (not node_a) return "";
+
     // get the child nodes that are text nodes, and join the data stored in them
     auto text_content = node_a->child_nodes
             ->template cast_all<nodes::text*>()

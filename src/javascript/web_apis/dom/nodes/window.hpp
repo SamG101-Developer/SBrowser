@@ -30,7 +30,7 @@ class dom::nodes::window
 public constructors:
     window();
 
-public methods:
+public js_methods:
     // current browsing context
     auto close() -> void;
     auto stop() -> void;
@@ -45,21 +45,21 @@ public methods:
     auto prompt(const ext::string& message="", const ext::string& default_ = "") const -> ext::string;
     auto post_message(ext::string message, const ext::string_any_map& options = {}) -> void;
 
-public: methods
+public: js_methods
     new_obj auto get_computed_style(element* elem, const ext::string& pseudo_element) -> css::cssom::other::css_style_declaration*;
 
-public: methods
+public: js_methods
     // spatial navigation
     auto navigate(const ext::string& direction) -> void;
 
-public: methods
+public: js_methods
     // cssom-view browsing context
     auto move_to(long x, long y) -> void;
     auto move_by(long x, long y) -> void;
     auto resize_to(long width, long height) -> void;
     auto resize_by(long width, long height) -> void;
 
-public: properties
+public: js_properties
     // current browsing context
     ext::dom_property<ext::string> name;
     ext::dom_property<ext::string> status;
@@ -93,7 +93,7 @@ public: properties
     ext::dom_property<bool> origin_agent_cluster;
     ext::dom_property<html::other::navigator*> navigator;
 
-public: properties
+public: js_properties
     // viewport
     ext::dom_property<long> inner_width;
     ext::dom_property<long> inner_height;
@@ -111,11 +111,11 @@ public: properties
     ext::dom_property<long> outer_height;
     ext::dom_property<double> device_pixel_width;
 
-public: properties
+public: js_properties
     // screens
     ext::dom_property<css::cssom_view::other::screen*> screen;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: accessors

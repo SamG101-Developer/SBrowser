@@ -20,13 +20,13 @@ public friends:
 public constructors:
     slottable();
 
-public properties:
+public js_properties:
     ext::dom_property<html::elements::html_slot_element*> assigned_slot;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private internal_properties:
+private cpp_properties:
     ext::string m_name;
     html::elements::html_slot_element* m_manual_slot_assignment = nullptr;
 

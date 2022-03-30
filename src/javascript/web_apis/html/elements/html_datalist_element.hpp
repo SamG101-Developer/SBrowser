@@ -14,10 +14,10 @@ class html::elements::html_datalist_element : public html_element
 public constructors:
     html_datalist_element();
 
-public properties:
+public js_properties:
     ext::html_property<ext::vector<dom::nodes::element*>*> options;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QPushButton* override;
 };
 

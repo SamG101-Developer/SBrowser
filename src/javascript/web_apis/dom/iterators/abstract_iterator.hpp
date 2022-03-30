@@ -20,12 +20,12 @@ public friends:
 public constructors:
     abstract_iterator();
 
-public properties:
+public js_properties:
     ext::dom_property<nodes::node*> root;
     ext::dom_property<node_filter*> filter;
     ext::dom_property<unsigned long> what_to_show;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private:

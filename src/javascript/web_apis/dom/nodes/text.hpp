@@ -17,13 +17,13 @@ class dom::nodes::text
 public constructors:
     text(const ext::string& new_data = "");
 
-public methods:
+public js_methods:
     auto split_text(unsigned long offset) -> text*;
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> whole_text;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

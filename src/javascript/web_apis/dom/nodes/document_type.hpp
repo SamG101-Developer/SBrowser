@@ -16,12 +16,12 @@ class dom::nodes::document_type
 public constructors:
     document_type();
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> name;
     ext::dom_property<ext::string> public_id;
     ext::dom_property<ext::string> system_id;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QWidget* override {return nullptr;}
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };

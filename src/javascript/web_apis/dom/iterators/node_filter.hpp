@@ -30,10 +30,10 @@ public static_constants:
     static const unsigned long SHOW_DOCUMENT_TYPE = 0x200;
     static const unsigned long SHOW_DOCUMENT_FRAGMENT = 0x400;
 
-public properties:
+public js_properties:
     ext::dom_property<std::function<unsigned short(const nodes::node*)>> accept_node;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

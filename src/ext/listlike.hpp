@@ -22,10 +22,10 @@ public operators:
     virtual auto operator[] (size_t index) -> T&;
     virtual auto operator[] (const ext::string& index) -> T&;
 
-public properties:
+public js_properties:
     ext::property<size_t> length;
 
-private internal_methods:
+private cpp_methods:
     ext::vector<T>* m_linked_list;
 
 private accessors:

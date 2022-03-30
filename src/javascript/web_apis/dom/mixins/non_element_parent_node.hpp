@@ -12,10 +12,10 @@ namespace dom::nodes {class element;}
 template <typename T>
 class dom::mixins::non_element_parent_node : public dom_object
 {
-public methods:
+public js_methods:
     auto get_element_by_id(const ext::string& element_id) -> nodes::element*;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

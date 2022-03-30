@@ -4,6 +4,7 @@
 
 #include <ext/html_property.hpp>
 #include <dom/nodes/element.hpp>
+#include <html/mixins/html_or_svg_element.hpp>
 
 
 namespace html {
@@ -14,14 +15,14 @@ namespace html {
 
 class html::elements::html_element
         : public dom::nodes::element
-        // , mixins::html_or_svg_element
+        , public mixins::html_or_svg_element<html_element>
         // , mixins::element_content_editable
 {
 
 public constructors:
     html_element();
 
-public methods:
+public js_methods:
     auto click() -> void;
     new_obj auto attach_internals() -> other::element_internals;
 
@@ -50,10 +51,10 @@ public:
     ext::html_property<long> offset_width;
     ext::html_property<long> offset_height;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-private internal_properties:
+private cpp_properties:
     bool m_click_in_progress_flag = false;
     bool m_attached_internals;
 

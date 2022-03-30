@@ -51,7 +51,7 @@ public: constructors
     auto operator=(std::string&& other) -> string&;
     auto operator=(QString&& other) -> string&;
 
-public: methods
+public: js_methods
     // modifiers
     auto ltrim() -> string&;
     auto rtrim() -> string&;

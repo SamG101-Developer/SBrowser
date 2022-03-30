@@ -15,14 +15,14 @@ template <typename T>
 class dom::mixins::document_or_shadow_root : public dom_object
 {
 public constructors:
-    // dom
+    // html
     ext::dom_property<nodes::element*> active_element;
 
     // cssom
     ext::dom_property<ext::vector<css::cssom::style_sheets::css_style_sheet*>*> style_sheets;
     ext::dom_property<ext::vector<css::cssom::style_sheets::css_style_sheet*>*> adopted_style_sheets;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

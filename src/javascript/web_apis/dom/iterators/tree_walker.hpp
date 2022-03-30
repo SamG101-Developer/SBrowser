@@ -12,7 +12,7 @@ class dom::iterators::tree_walker final : public abstract_iterator
 public constructors:
     tree_walker();
 
-public methods:
+public js_methods:
     auto parent_node() -> nodes::node*;
     auto first_child() -> nodes::node*;
     auto last_child() -> nodes::node*;
@@ -21,10 +21,10 @@ public methods:
     auto previous_node() -> nodes::node*;
     auto next_node() -> nodes::node*;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-public properties:
+public js_properties:
     ext::dom_property<nodes::node*> current_node;
 };
 

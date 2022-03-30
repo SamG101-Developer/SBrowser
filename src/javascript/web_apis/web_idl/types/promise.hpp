@@ -18,15 +18,15 @@ class webidl::types::promise {
 public: constructors
     promise();
 
-public: methods
+public: js_methods
     auto resolve(dom::nodes::event_target* value = nullptr) -> void;
-    auto reject(dom::other::dom_exception& value) -> void;
+    auto reject(const dom::other::dom_exception& value) -> void;
     auto is_fulfilled() -> bool;
 
 public: operators
     bool operator==(promise<T>& other);
 
-private: internal_properties
+private: cpp_properties
     v8::Isolate* m_isolate;
     v8::Local<v8::Context> m_context;
     v8::Local<v8::Promise::Resolver> m_promise;
@@ -50,7 +50,7 @@ auto webidl::types::promise<T>::resolve(dom::nodes::event_target* value) -> void
 
 
 template <typename T>
-auto webidl::types::promise<T>::reject(dom::other::dom_exception& value) -> void
+auto webidl::types::promise<T>::reject(const dom::other::dom_exception& value) -> void
 {
     m_fulfilled = not m_promise->Reject(m_context, v8pp::convert<decltype(value)>::to_v8(m_isolate,value)).ToChecked();
 }

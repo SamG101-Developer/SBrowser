@@ -11,10 +11,19 @@ class webidl::types::date {
 public: constructors
     date(double time);
 
+public js_methods:
+    const char* year();
+    const char* month();
+    const char* day();
+    const char* hour();
+    const char* minute();
+    const char* second();
+    const char* milliseconds();
+
 public: operators
     operator double() const;
 
-private: internal_properties
+private: cpp_properties
     double m_time;
 };
 

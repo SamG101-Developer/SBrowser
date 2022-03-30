@@ -5,7 +5,9 @@
 #include <variant>
 
 #include <ext/map.hpp>
+#include <ext/set.hpp>
 #include <ext/listlike.hpp>
+
 #include <javascript/interop/attribute_descriptors.hpp>
 
 #include <dom/nodes/node.hpp>
@@ -45,6 +47,7 @@ namespace html::elements {class html_form_element;}
 namespace html::elements {class html_link_element;}
 namespace html::elements {class html_script_element;}
 namespace html::elements {class html_title_element;}
+namespace html::helpers {struct document_internals;}
 namespace html::internal {struct policy_container;}
 namespace html::internal {struct permissions_policy;}
 namespace html::internal {struct module_map;}
@@ -71,6 +74,8 @@ public friends:
     friend struct dom::helpers::node_internals;
     friend class dom::other::dom_implementation;
     friend class html::elements::html_base_element;
+    friend class html::elements::html_image_element;
+    friend struct html::helpers::document_internals;
 
 public constructors:
     document();
@@ -80,7 +85,7 @@ public constructors:
 private aliases:
     using html_or_svg_script_element = std::variant<html::elements::html_script_element*, svg::elements::svg_script_element*>;
 
-public methods:
+public js_methods:
     // dom
     new_obj auto create_element(const ext::string& local_name, const ext::string_any_map& options = {}) const -> element;
     new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map& options = {}) const -> element;
@@ -119,9 +124,9 @@ public methods:
     auto elements_from_point(double x, double y) const -> ext::vector<element*>;
     auto caret_position_from_point(double x, double y) const -> css::cssom_view::other::caret_position*;
 
-public properties:
+public js_properties:
     // dom
-    ext::dom_property<ext::string> url;
+    ext::dom_property<url::url*> url;
     ext::dom_property<ext::string> compat_mode;
     ext::dom_property<ext::string> character_set;
     ext::dom_property<ext::string> content_type;
@@ -159,20 +164,20 @@ public properties:
     // css-regions
     ext::dom_property<ext::map<ext::string, css::css_regions::elements::named_flow*>*> named_flows;
 
-public internal_methods:
+public cpp_methods:
     auto render() const -> QScrollArea* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected internal_methods:
+protected cpp_methods:
     auto get_the_parent(events::event* event) -> event_target* override;
 
-private internal_methods:
+private cpp_methods:
     html::elements::html_html_element* get_m_html_element() const;
     html::elements::html_head_element* get_m_head_element() const;
     html::elements::html_title_element* get_m_title_element() const;
     html::elements::html_body_element* get_m_body_element() const;
 
-private internal_properties:
+private cpp_properties:
     // dom
     encoding::encoding* m_encoding = nullptr;
     ext::string m_type = "xml";
@@ -189,8 +194,10 @@ private internal_properties:
 
     bool m_is_initial = false;
     bool m_will_declaratively_refresh = false;
-    ext::string m_navigation_id;
+    ext::string m_navigation_id = "";
     unsigned short m_sandboxing_flag = 0;
+
+    ext::set<element*> m_render_blocking_elements {};
 
     html::internal::browsing_context* m_browsing_context = nullptr;
     ext::string m_fallback_base_url;
@@ -210,6 +217,7 @@ private accessors:
     // html
     auto get_dir() const -> ext::string;
     auto get_last_modified() const -> ext::string;
+    auto get_cookie() const -> ext::string;
     same_obj auto get_body() const -> html::elements::html_body_element*;
     same_obj auto get_head() const -> html::elements::html_head_element*;
     auto get_title() const -> ext::string;

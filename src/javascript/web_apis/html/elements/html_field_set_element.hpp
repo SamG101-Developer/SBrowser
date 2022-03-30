@@ -15,14 +15,14 @@ class html::elements::html_field_set_element
 public constructors:
     html_field_set_element();
 
-public properties:
+public js_properties:
     ext::html_property<bool, _T> disabled;
     ext::html_property<html_form_element*> form;
     ext::html_property<ext::string, _T> name;
     ext::html_property<ext::string> type;
     ext::html_property<ext::vector<dom::nodes::element*>*> elements;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 

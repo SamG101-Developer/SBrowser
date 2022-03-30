@@ -22,10 +22,10 @@ class dom::xpath::xpath_expression : public dom_object
 public: constructors
     xpath_expression();
 
-public: methods
+public: js_methods
     auto evaluate(nodes::node* context_node, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result*;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

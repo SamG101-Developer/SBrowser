@@ -15,14 +15,14 @@ class dom::ranges::abstract_range : virtual public dom_object
 public constructors:
     abstract_range();
 
-public properties:
+public js_properties:
     ext::dom_property<bool> collapsed;
     ext::dom_property<nodes::node*> start_container;
     ext::dom_property<nodes::node*> end_container;
     ext::dom_property<unsigned long> start_offset;
     ext::dom_property<unsigned long> end_offset;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

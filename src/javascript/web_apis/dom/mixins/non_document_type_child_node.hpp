@@ -15,11 +15,11 @@ class dom::mixins::non_document_type_child_node : public dom_object
 public constructors:
     non_document_type_child_node();
 
-public properties:
+public js_properties:
     ext::dom_property<nodes::element*> previous_element_sibling;
     ext::dom_property<nodes::element*> next_element_sibling;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

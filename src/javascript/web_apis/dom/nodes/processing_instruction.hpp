@@ -14,10 +14,10 @@ class dom::nodes::processing_instruction
 public constructors:
     processing_instruction();
 
-public properties:
+public js_properties:
     ext::dom_property<ext::string> target;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

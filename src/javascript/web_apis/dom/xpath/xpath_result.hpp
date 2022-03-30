@@ -30,11 +30,11 @@ public: static_constants
     static const unsigned short ANY_UNORDERED_NODE_TYPE = 8;
     static const unsigned short FIRST_ORDERED_NODE_TYPE = 9;
 
-public: methods
+public: js_methods
     auto iterate_next() -> nodes::node*;
     auto snapshot_item(unsigned long index) -> nodes::node*;
 
-public: properties
+public: js_properties
     ext::dom_property<unsigned short> result_type;
     ext::dom_property<double> number_value;
     ext::dom_property<ext::string> string_value;
@@ -43,7 +43,7 @@ public: properties
     ext::dom_property<bool> invalid_iterator_state;
     ext::dom_property<unsigned long> snapshot_length;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

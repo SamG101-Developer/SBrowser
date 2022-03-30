@@ -16,7 +16,7 @@ class dom::other::xslt_processor : virtual public dom_object
 public: constructors
     xslt_processor();
 
-public: methods
+public: js_methods
     auto import_stylesheet(nodes::node* style) -> void;
 
     auto transform_to_fragment(nodes::node* source, nodes::document* output) -> nodes::document_fragment*;
@@ -28,7 +28,7 @@ public: methods
     auto clear_parameters() -> void;
     auto reset() -> void;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

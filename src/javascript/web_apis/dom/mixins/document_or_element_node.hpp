@@ -13,12 +13,12 @@ namespace dom::nodes {class element;}
 template <typename T>
 class dom::mixins::document_or_element_node : virtual public dom_object
 {
-public methods:
+public js_methods:
     auto get_elements_by_tag_name(const ext::string& qualified_name) -> ext::vector<nodes::element*>;
     auto get_elements_by_tag_name_ns(const ext::string& namespace_, const ext::string& local_name) -> ext::vector<nodes::element*>;
     auto get_elements_by_class_name(const ext::string& class_names) -> ext::vector<nodes::element*>;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

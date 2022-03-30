@@ -21,7 +21,7 @@ public: constructors
     ext::dom_property<double> bottom;
     ext::dom_property<double> left;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: accessors

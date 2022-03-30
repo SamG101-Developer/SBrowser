@@ -14,7 +14,7 @@ public constructors:
     static_range();
     explicit static_range(const ext::string_any_map& init);
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

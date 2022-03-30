@@ -15,7 +15,7 @@ class render::custom_layouts::custom_vbox_layout : public QVBoxLayout
 signals:
     void widget_added(QWidget*);
 
-public methods:
+public js_methods:
     auto addItem(QLayoutItem* item) -> void override;
 };
 

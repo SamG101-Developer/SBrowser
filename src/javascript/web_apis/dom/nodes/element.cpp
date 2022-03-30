@@ -33,6 +33,9 @@ dom::nodes::element::element()
     tag_name.getter         = [this] {return get_tag_name();};
     shadow_root_node.getter = [this] {return get_shadow_root();};
 
+    m_qualified_name.getter         = [this] {return get_m_qualified_name();};
+    m_html_uppercase_qualified_name = [this] {return get_m_html_qualified_uppercase_name();};
+
     // set the properties
     node_type        << ELEMENT_NODE;
     shadow_root_node << nullptr;
@@ -360,7 +363,7 @@ auto dom::nodes::element::get_tag_name() const
         -> ext::string
 {
     // the tag name is the html qualified name
-    return get_m_html_qualified_uppercase_name();
+    return m_html_uppercase_qualified_name;
 }
 
 
@@ -392,7 +395,7 @@ auto dom::nodes::element::get_m_html_qualified_uppercase_name() const
         -> ext::string
 {
     // the html qualified uppercase name is the qualified name, in uppercase if the element is html
-    return helpers::node_internals::is_html(this) ? get_m_qualified_name().new_uppercase() : get_m_qualified_name();
+    return helpers::node_internals::is_html(this) ? m_qualified_name->new_uppercase() : m_qualified_name;
 }
 
 

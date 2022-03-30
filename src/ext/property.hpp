@@ -120,13 +120,13 @@ public operators:
     // boolean conversion operator (given that the type isn't a boolean type)
     operator bool() const requires (!std::is_same_v<T, bool>);
 
-public internal_properties:
+public cpp_properties:
     // custom deleter, getter and setter
     std::function<void()> deleter;
     std::function<std::remove_extent_t<T>()> getter;
     std::function<void(std::remove_extent_t<T>)> setter;
 
-private internal_properties:
+private cpp_properties:
     // internal value being stored
     T m_internal;
 };

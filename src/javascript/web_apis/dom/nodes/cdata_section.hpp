@@ -12,7 +12,7 @@ class dom::nodes::cdata_section : public text
 public: constructors
     cdata_section();
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

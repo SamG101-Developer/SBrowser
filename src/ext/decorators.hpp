@@ -13,7 +13,7 @@
  * JavaScript exposed: NO
  */
 
-#define static_constants\
+#define static_constants \
 /*
  * static constants for a class
  * JavaScript exposed: YES
@@ -31,37 +31,37 @@
  * JavaScript exposed: SOMETIMES
  */
 
-#define methods \
+#define js_methods \
 /*
  * class methods
  * JavaScript exposed: YES
  */
 
-#define internal_methods \
+#define cpp_methods \
 /*
  * class methods only ever executed by c++
  * JavaScript exposed: NO
  */
 
-#define properties \
+#define js_properties \
 /*
  * class properties (can have custom getters, setters and deleters)
  * JavaScript exposed: YES
  */
 
-#define internal_properties \
+#define cpp_properties \
 /*
- * class properties only ever executed by c++
+ * class properties only ever accessed by c++
  * javascript exposed: NO
  */
 
-#define javascript_slot_methods \
+#define js_slot_methods \
 /*
  * javascript slot methods accessible by [[slot_method]]() syntax
  * javascript exposed: YES
  */
 
-#define javascript_slots \
+#define js_slots \
 /*
  * javascript slots accessible by [[slot_name]] syntax
  * javascript exposed: YES

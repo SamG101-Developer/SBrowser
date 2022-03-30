@@ -49,7 +49,7 @@ public static_constants:
     static const unsigned short DOCUMENT_TYPE_NODE = 10;
     static const unsigned short DOCUMENT_FRAGMENT_NODE = 11;
 
-public methods:
+public js_methods:
     auto normalize() const -> void;
     auto has_child_nodes() const -> bool;
     auto contains(node* other) const -> bool;
@@ -65,7 +65,7 @@ public methods:
     auto replace_child(node* old_node, node* new_node) -> node*;
     auto remove_child(node* old_node) -> node*;
 
-public properties:
+public js_properties:
     ext::dom_property<unsigned short> node_type;
     ext::dom_property<ext::string, _T> node_name;
     ext::dom_property<ext::string, _T> node_value;
@@ -81,7 +81,7 @@ public properties:
     ext::dom_property<node*> previous_sibling;
     ext::dom_property<node*> next_sibling;
 
-public internal_methods:
+public cpp_methods:
     virtual auto render() const -> QWidget* = 0 {return nullptr;};
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
@@ -92,7 +92,7 @@ protected accessors:
     virtual auto set_node_value(const ext::string& val) -> void;
     virtual auto set_text_content(const ext::string& val) -> void;
 
-protected internal_properties:
+protected cpp_properties:
     QWidget* m_rendered_widget = nullptr;
     ext::vector<internal::registered_observer*>& m_registered_observer_list;
 

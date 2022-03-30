@@ -14,7 +14,7 @@ public constructors:
     set() = default;
     explicit set(const std::set<T>& o);
 
-public methods:
+public js_methods:
     auto add(const T& item) -> ext::set<T>&;
 };
 

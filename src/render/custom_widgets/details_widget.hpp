@@ -14,10 +14,10 @@ class render::custom_widgets::details_widget : public QWidget
 public constructors:
     details_widget(QWidget* parent = nullptr);
 
-public methods:
+public js_methods:
     void mouseReleaseEvent(QMouseEvent* event) override;
 
-protected internal_properties:
+protected cpp_properties:
     QPointer<QWidget> m_details{};
 };
 

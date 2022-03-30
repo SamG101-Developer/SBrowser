@@ -11,10 +11,10 @@ class html::elements::html_data_element : public html_element
 public constructors:
     html_data_element();
 
-public properties:
+public js_properties:
     ext::html_property<ext::string, _T> value;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 

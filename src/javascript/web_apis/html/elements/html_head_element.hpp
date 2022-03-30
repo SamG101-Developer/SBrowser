@@ -12,7 +12,7 @@ class html::elements::html_head_element : public html_element
 public constructors:
     html_head_element();
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 

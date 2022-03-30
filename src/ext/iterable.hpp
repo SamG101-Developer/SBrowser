@@ -66,7 +66,7 @@ public operators:
     virtual auto operator!() const -> bool;
     auto operator==(const iterable<T, C>& o) const -> bool;
 
-protected internal_properties:
+protected cpp_properties:
     C m_iterable;
 };
 

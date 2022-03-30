@@ -11,7 +11,7 @@ class geometry::shapes::dom_rect : public geometry::shapes::dom_rect_readonly {
 public: constructors
     dom_rect(double x = 0, double y = 0, double width = 0, double height = 0);
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::anyoverride;
 
 private: accessors

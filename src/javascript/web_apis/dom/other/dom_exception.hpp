@@ -25,11 +25,11 @@ public: constructors
     dom_exception() = default;
     dom_exception(const ext::string& message, v8_custom_error_t type);
 
-public: properties
+public: js_properties
     ext::dom_property<ext::string> message;
     ext::dom_property<v8_custom_error_t> type;
 
-public: internal_methods
+public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
