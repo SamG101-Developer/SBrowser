@@ -73,10 +73,10 @@ auto dom::nodes::event_target::get_the_parent(
 auto dom::nodes::event_target::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<event_target>{isolate}
-            .template ctor<>()
-            .template inherit<dom_object>()
-            .template function("addEventListener", &event_target::add_event_listener)
-            .template function("removeEventListener", &event_target::remove_event_listener)
-            .template function("dispatchEvent", &event_target::dispatch_event)
+            .ctor<>()
+            .inherit<dom_object>()
+            .function("addEventListener", &event_target::add_event_listener)
+            .function("removeEventListener", &event_target::remove_event_listener)
+            .function("dispatchEvent", &event_target::dispatch_event)
             .auto_wrap_objects();
 }

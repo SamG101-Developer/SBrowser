@@ -111,7 +111,7 @@ template <typename T>
 auto dom::mixins::child_node<T>::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<dom::mixins::child_node<dom::nodes::node>>{isolate}
-            .template inherit<dom_object>()
+            .inherit<dom_object>()
             .auto_wrap_objects();
 }
 

@@ -116,14 +116,14 @@ auto dom::mixins::parent_node<T>::v8(
         -> ext::any
 {
     return v8pp::class_<parent_node<dom::nodes::node>>{isolate}
-            .template inherit<dom_object>()
-            .template function("querySelector", &parent_node<dom::nodes::node>::query_selector)
-            .template function("querySelectorAll", &parent_node<dom::nodes::node>::query_selector_all)
+            .inherit<dom_object>()
+            .function("querySelector", &parent_node<dom::nodes::node>::query_selector)
+            .function("querySelectorAll", &parent_node<dom::nodes::node>::query_selector_all)
 
-            .template var("children", &parent_node<dom::nodes::node>::children)
-            .template var("firstElementChild", &parent_node<dom::nodes::node>::first_element_child)
-            .template var("lastElementChild", &parent_node<dom::nodes::node>::last_element_child)
-            .template var("childElementCount", &parent_node<dom::nodes::node>::child_element_count)
+            .var("children", &parent_node<dom::nodes::node>::children)
+            .var("firstElementChild", &parent_node<dom::nodes::node>::first_element_child)
+            .var("lastElementChild", &parent_node<dom::nodes::node>::last_element_child)
+            .var("childElementCount", &parent_node<dom::nodes::node>::child_element_count)
             .auto_wrap_objects();
 }
 

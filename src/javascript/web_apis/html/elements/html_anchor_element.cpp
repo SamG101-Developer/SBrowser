@@ -11,12 +11,12 @@ html::elements::html_anchor_element::html_anchor_element()
 {
     // set the properties
     relList << new ext::vector<ext::string>{};
-    local_name << "a";
 
     // set the custom accessors
     text.getter = [this] {return get_text();};
     text.setter = [this](auto && PH1) {set_text(std::forward<decltype(PH1)>(PH1));};
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -43,8 +43,8 @@ auto html::elements::html_anchor_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_anchor_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_paragraph_element>()
-//            .template inherit<mixins::html_hyperlink_element_utils>()
+            .ctor<>()
+            .inherit<html_paragraph_element>()
+            .inherit<mixins::html_hyperlink_element_utils>()
             .auto_wrap_objects();
 }

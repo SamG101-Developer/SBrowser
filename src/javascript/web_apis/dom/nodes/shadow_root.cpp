@@ -35,11 +35,11 @@ auto dom::nodes::shadow_root::v8(
         -> ext::any
 {
     return v8pp::class_<shadow_root>{isolate}
-            .template inherit<document_fragment>()
-            .template inherit<mixins::document_or_shadow_root<shadow_root>>()
-            .template var("mode", &shadow_root::mode, true)
-            .template var("delegatesFocus", &shadow_root::delegates_focus, true)
-            .template var("slotAssignment", &shadow_root::slot_assignment, true)
-            .template var("host", &shadow_root::host, true)
+            .inherit<document_fragment>()
+            .inherit<mixins::document_or_shadow_root<shadow_root>>()
+            .var("mode", &shadow_root::mode, true)
+            .var("delegatesFocus", &shadow_root::delegates_focus, true)
+            .var("slotAssignment", &shadow_root::slot_assignment, true)
+            .var("host", &shadow_root::host, true)
             .auto_wrap_objects();
 }

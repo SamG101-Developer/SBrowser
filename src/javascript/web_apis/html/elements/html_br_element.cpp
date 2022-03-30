@@ -6,6 +6,6 @@
 html::elements::html_br_element::html_br_element()
         : html_element()
 {
-    local_name = "br";
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }

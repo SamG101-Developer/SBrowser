@@ -25,8 +25,8 @@ auto dom::mixins::non_element_parent_node<T>::v8(
         -> ext::any
 {
     return v8pp::class_<non_element_parent_node<T>>{isolate}
-            .template inherit<dom_object>()
-            .template function("getElementById", &non_element_parent_node<T>::get_element_by_id)
+            .inherit<dom_object>()
+            .function("getElementById", &non_element_parent_node<T>::get_element_by_id)
             .auto_wrap_objects();
 }
 

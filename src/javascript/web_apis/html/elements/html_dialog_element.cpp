@@ -11,12 +11,12 @@ html::elements::html_dialog_element::html_dialog_element()
         : html_element{}
 {
     // set the properties
-    local_name = "dialog";
-    return_value = "";
+    return_value << "";
 
-    auto widget = QPointer<QDialog>{};
-    m_rendered_widget = widget;
+    // create the widget representation
+    m_rendered_widget = QPointer<QDialog>{};
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -102,12 +102,12 @@ auto html::elements::html_dialog_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_dialog_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_element>()
-            .template function("show", &html_dialog_element::show)
-            .template function("showModal", &html_dialog_element::show_modal)
-            .template function("close", &html_dialog_element::close)
-            .template var("open", &html_dialog_element::open)
-            .template var("returnValue", &html_dialog_element::return_value)
+            .ctor<>()
+            .inherit<html_element>()
+            .function("show", &html_dialog_element::show)
+            .function("showModal", &html_dialog_element::show_modal)
+            .function("close", &html_dialog_element::close)
+            .var("open", &html_dialog_element::open)
+            .var("returnValue", &html_dialog_element::return_value)
             .auto_wrap_objects();
 }

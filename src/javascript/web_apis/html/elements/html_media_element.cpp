@@ -24,6 +24,7 @@ html::elements::html_media_element::html_media_element()
     m_default_playback_start_position = 0.0;
     m_earliest_possible_position = 0.0;
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -31,6 +32,7 @@ html::elements::html_media_element::html_media_element()
 auto html::elements::html_media_element::load()
         -> void
 {
+    // load the media using the helper method
     helpers::media::media_element_load_algorithm(this);
 }
 
@@ -38,8 +40,11 @@ auto html::elements::html_media_element::load()
 auto html::elements::html_media_element::pause()
         -> void
 {
+    // if network state is empty, then select the correct media source using the helper method
     if (network_state == NETWORK_EMPTY)
         helpers::media::resource_selection_algorithm(this);
+
+    // pause the media using the helper method
     html::helpers::media::internal_pause_steps(this);
 }
 
@@ -101,42 +106,42 @@ auto html::elements::html_media_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_media_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_element>()
-            .template function("load", &html_media_element::load)
-            .template function("pause", &html_media_element::pause)
-//            .template function("play", &html_media_element::play)
-            .template function("canPlayTime", &html_media_element::can_play_time)
-            .template function("fastSeek", &html_media_element::fast_seek)
-//            .template function("getStartDate", &html_media_element::get_start_date)
-            .template function("addTextTrack", &html_media_element::add_text_track)
-            .template var("error", &html_media_element::error)
-            .template var("srcObject", &html_media_element::src_object)
-            .template var("buffered", &html_media_element::buffered)
-            .template var("src", &html_media_element::src)
-            .template var("currentSrc", &html_media_element::current_src)
-            .template var("crossOrigin", &html_media_element::cross_origin)
-            .template var("preload", &html_media_element::preload)
-            .template var("networkState", &html_media_element::network_state)
-            .template var("readyState", &html_media_element::ready_state)
-            .template var("seeking", &html_media_element::seeking)
-            .template var("paused", &html_media_element::paused)
-            .template var("preservesPitch", &html_media_element::preserves_pitch)
-            .template var("ended", &html_media_element::ended)
-            .template var("autoplay", &html_media_element::autoplay)
-            .template var("loop", &html_media_element::loop)
-            .template var("currentTime", &html_media_element::current_time)
-            .template var("duration", &html_media_element::duration)
-            .template var("defaultPlaybackRate", &html_media_element::default_playback_rate)
-            .template var("playbackRate", &html_media_element::playback_rate)
-            .template var("played", &html_media_element::played)
-            .template var("seekable", &html_media_element::seekable)
-            .template var("controls", &html_media_element::controls)
-            .template var("defaultMuted", &html_media_element::default_muted)
-            .template var("muted", &html_media_element::muted)
-            .template var("volume", &html_media_element::volume)
-            .template var("audioTracks", &html_media_element::audio_tracks)
-            .template var("videoTracks", &html_media_element::video_tracks)
-            .template var("textTracks", &html_media_element::text_tracks)
+            .ctor<>()
+            .inherit<html_element>()
+            .function("load", &html_media_element::load)
+            .function("pause", &html_media_element::pause)
+//            .function("play", &html_media_element::play)
+            .function("canPlayTime", &html_media_element::can_play_time)
+            .function("fastSeek", &html_media_element::fast_seek)
+//            .function("getStartDate", &html_media_element::get_start_date)
+            .function("addTextTrack", &html_media_element::add_text_track)
+            .var("error", &html_media_element::error)
+            .var("srcObject", &html_media_element::src_object)
+            .var("buffered", &html_media_element::buffered)
+            .var("src", &html_media_element::src)
+            .var("currentSrc", &html_media_element::current_src)
+            .var("crossOrigin", &html_media_element::cross_origin)
+            .var("preload", &html_media_element::preload)
+            .var("networkState", &html_media_element::network_state)
+            .var("readyState", &html_media_element::ready_state)
+            .var("seeking", &html_media_element::seeking)
+            .var("paused", &html_media_element::paused)
+            .var("preservesPitch", &html_media_element::preserves_pitch)
+            .var("ended", &html_media_element::ended)
+            .var("autoplay", &html_media_element::autoplay)
+            .var("loop", &html_media_element::loop)
+            .var("currentTime", &html_media_element::current_time)
+            .var("duration", &html_media_element::duration)
+            .var("defaultPlaybackRate", &html_media_element::default_playback_rate)
+            .var("playbackRate", &html_media_element::playback_rate)
+            .var("played", &html_media_element::played)
+            .var("seekable", &html_media_element::seekable)
+            .var("controls", &html_media_element::controls)
+            .var("defaultMuted", &html_media_element::default_muted)
+            .var("muted", &html_media_element::muted)
+            .var("volume", &html_media_element::volume)
+            .var("audioTracks", &html_media_element::audio_tracks)
+            .var("videoTracks", &html_media_element::video_tracks)
+            .var("textTracks", &html_media_element::text_tracks)
             .auto_wrap_objects();
 }

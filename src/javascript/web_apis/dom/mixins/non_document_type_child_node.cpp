@@ -49,9 +49,9 @@ auto dom::mixins::non_document_type_child_node<T>::v8(
         -> ext::any
 {
     return v8pp::class_<non_document_type_child_node<T>>{isolate}
-            .template inherit<dom_object>()
-            .template var("previousElementSibling", &non_document_type_child_node<T>::previous_element_sibling)
-            .template var("nextElementSibling", &non_document_type_child_node<T>::next_element_sibling)
+            .inherit<dom_object>()
+            .var("previousElementSibling", &non_document_type_child_node<T>::previous_element_sibling)
+            .var("nextElementSibling", &non_document_type_child_node<T>::next_element_sibling)
             .auto_wrap_objects();
 }
 

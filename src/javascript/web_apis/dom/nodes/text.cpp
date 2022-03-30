@@ -53,11 +53,11 @@ auto dom::nodes::text::v8(
         -> ext::any
 {
     return v8pp::class_<text>{isolate}
-            .template ctor<>()
-            .template ctor<const ext::string&>()
-            .template inherit<character_data>()
-            .template inherit<mixins::slottable<text>>()
-            .template function("splitText", &text::split_text)
-            .template var("wholeText", &text::whole_text, true)
+            .ctor<>()
+            .ctor<const ext::string&>()
+            .inherit<character_data>()
+            .inherit<mixins::slottable<text>>()
+            .function("splitText", &text::split_text)
+            .var("wholeText", &text::whole_text, true)
             .auto_wrap_objects();
 }

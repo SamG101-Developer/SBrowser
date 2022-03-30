@@ -26,9 +26,9 @@ auto dom::aborting::abort_controller::v8(
         -> ext::any
 {
     return v8pp::class_<abort_controller>{isolate}
-            .template ctor<>()
-            .template inherit<dom_object>()
-            .template function("abort", &abort_controller::abort)
-            .template var("signal", &abort_controller::signal, true)
+            .ctor<>()
+            .inherit<dom_object>()
+            .function("abort", &abort_controller::abort)
+            .var("signal", &abort_controller::signal, true)
             .auto_wrap_objects();
 }

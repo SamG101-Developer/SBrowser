@@ -10,10 +10,10 @@ auto dom::mixins::document_or_shadow_root<T>::v8(
         -> ext::any
 {
     return v8pp::class_<document_or_shadow_root<T>>{isolate}
-            .template inherit<dom_object>()
-            .template var("activeElement", &document_or_shadow_root<T>::active_element)
-            .template var("styleSheets", &document_or_shadow_root<T>::style_sheets)
-            .template var("adoptedStyleSheets", &document_or_shadow_root<T>::adopted_style_sheets)
+            .inherit<dom_object>()
+            .var("activeElement", &document_or_shadow_root<T>::active_element)
+            .var("styleSheets", &document_or_shadow_root<T>::style_sheets)
+            .var("adoptedStyleSheets", &document_or_shadow_root<T>::adopted_style_sheets)
             .auto_wrap_objects();
 }
 

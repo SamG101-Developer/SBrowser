@@ -8,11 +8,11 @@
 html::elements::html_canvas_element::html_canvas_element()
         : html_element()
 {
-    local_name = "canvas";
-
+    // attach the qt functions
     width.attach_qt_updater(&QWidget::setFixedWidth, this);
     height.attach_qt_updater(&QWidget::setFixedHeight, this);
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -129,13 +129,13 @@ auto html::elements::html_canvas_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_canvas_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_element>()
-//            .template function("getContext", &html_canvas_element::get_context)
-//            .template function("transferControlToOffscreen", &html_canvas_element::transfer_control_to_offscreen)
-            .template function("toDataUrl", &html_canvas_element::to_data_url)
-            .template function("toBlob", &html_canvas_element::to_blob)
-            .template var("width", &html_canvas_element::width)
-            .template var("width", &html_canvas_element::height)
+            .ctor<>()
+            .inherit<html_element>()
+//            .function("getContext", &html_canvas_element::get_context)
+//            .function("transferControlToOffscreen", &html_canvas_element::transfer_control_to_offscreen)
+            .function("toDataUrl", &html_canvas_element::to_data_url)
+            .function("toBlob", &html_canvas_element::to_blob)
+            .var("width", &html_canvas_element::width)
+            .var("width", &html_canvas_element::height)
             .auto_wrap_objects();
 }

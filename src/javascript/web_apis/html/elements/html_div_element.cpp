@@ -6,7 +6,7 @@
 html::elements::html_div_element::html_div_element()
         : html_element{}
 {
-    local_name = "div";
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -16,7 +16,7 @@ auto html::elements::html_div_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_div_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_element>()
+            .ctor<>()
+            .inherit<html_element>()
             .auto_wrap_objects();
 }

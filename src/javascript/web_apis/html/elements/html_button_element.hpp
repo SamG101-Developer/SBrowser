@@ -36,6 +36,7 @@ public properties:
 
 public internal_methods:
     auto render() const -> QPushButton* override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected accessors:
     auto set_type(const ext::string& val) -> void;

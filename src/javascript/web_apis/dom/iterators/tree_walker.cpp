@@ -73,14 +73,14 @@ auto dom::iterators::tree_walker::v8(
         -> ext::any
 {
     return v8pp::class_<tree_walker>{isolate}
-            .template inherit<abstract_iterator>()
-            .template function("parentNode", &tree_walker::parent_node)
-            .template function("firstChild", &tree_walker::first_child)
-            .template function("lastChild", &tree_walker::last_child)
-            .template function("previousSibling", &tree_walker::previous_sibling)
-            .template function("nextSibling", &tree_walker::next_sibling)
-            .template function("previousNode", &tree_walker::previous_node)
-            .template function("nextNode", &tree_walker::next_node)
-            .template var("currentNode", &tree_walker::current_node)
+            .inherit<abstract_iterator>()
+            .function("parentNode", &tree_walker::parent_node)
+            .function("firstChild", &tree_walker::first_child)
+            .function("lastChild", &tree_walker::last_child)
+            .function("previousSibling", &tree_walker::previous_sibling)
+            .function("nextSibling", &tree_walker::next_sibling)
+            .function("previousNode", &tree_walker::previous_node)
+            .function("nextNode", &tree_walker::next_node)
+            .var("currentNode", &tree_walker::current_node)
             .auto_wrap_objects();
 }

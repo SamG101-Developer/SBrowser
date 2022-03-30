@@ -27,10 +27,10 @@ auto dom::iterators::node_iterator::v8(
         -> ext::any
 {
     return v8pp::class_<node_iterator>{isolate}
-            .template inherit<abstract_iterator>()
-            .template function("nextNode", &node_iterator::next_node)
-            .template function("previousNode", &node_iterator::previous_node)
-            .template var("referenceNode", &node_iterator::reference_node)
-            .template var("pointerBeforeReferenceNode", &node_iterator::pointer_before_reference_node)
+            .inherit<abstract_iterator>()
+            .function("nextNode", &node_iterator::next_node)
+            .function("previousNode", &node_iterator::previous_node)
+            .var("referenceNode", &node_iterator::reference_node)
+            .var("pointerBeforeReferenceNode", &node_iterator::pointer_before_reference_node)
             .auto_wrap_objects();
 }

@@ -53,11 +53,11 @@ auto dom::aborting::abort_signal::v8(
         -> ext::any
 {
     return v8pp::class_<abort_signal>{isolate}
-            .template inherit<event_target>()
+            .inherit<event_target>()
             .template static_("timeout", &abort_signal::timeout)
-            .template function("abort", &abort_signal::abort)
-            .template function("throwIfAborted", &abort_signal::throw_if_aborted)
-            .template var("aborted", &abort_signal::aborted, true)
-            .template var("reason", &abort_signal::reason)
+            .function("abort", &abort_signal::abort)
+            .function("throwIfAborted", &abort_signal::throw_if_aborted)
+            .var("aborted", &abort_signal::aborted, true)
+            .var("reason", &abort_signal::reason)
             .auto_wrap_objects();
 }

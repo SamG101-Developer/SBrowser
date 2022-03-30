@@ -129,10 +129,10 @@ auto dom::mutations::mutation_observer::v8(
         const -> ext::any
 {
     return v8pp::class_<mutation_record>{isolate}
-            .template ctor<mutation_observer::mutation_callback&&>()
-            .template inherit<dom_object>()
-            .template function("observe", &mutation_observer::observe)
-            .template function("disconnect", &mutation_observer::disconnect)
-            .template function("takeRecords", &mutation_observer::take_records)
+            .ctor<mutation_observer::mutation_callback&&>()
+            .inherit<dom_object>()
+            .function("observe", &mutation_observer::observe)
+            .function("disconnect", &mutation_observer::disconnect)
+            .function("takeRecords", &mutation_observer::take_records)
             .auto_wrap_objects();
 }

@@ -1,4 +1,8 @@
 #include "html_unknown_element.hpp"
 
 
-html::elements::html_unknown_element::html_unknown_element() = default;
+html::elements::html_unknown_element::html_unknown_element()
+        : html_element{}
+{
+    // DON'T initialize html constructor with boilerplate code
+}

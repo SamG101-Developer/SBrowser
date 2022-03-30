@@ -24,6 +24,6 @@ auto dom::iterators::node_filter::v8(v8::Isolate* isolate) const -> ext::any
             .template static_("SHOW_DOCUMENT", node_filter::SHOW_DOCUMENT)
             .template static_("SHOW_DOCUMENT_TYPE", node_filter::SHOW_DOCUMENT_TYPE)
             .template static_("SHOW_DOCUMENT_FRAGMENT", node_filter::SHOW_DOCUMENT_FRAGMENT)
-            .template var("acceptNode", &node_filter::accept_node, false)
+            .var("acceptNode", &node_filter::accept_node, false)
             .auto_wrap_objects();
 }

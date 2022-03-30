@@ -9,7 +9,7 @@ html::elements::html_audio_element::html_audio_element()
     // set the attributes
     m_rendered_widget = nullptr;
 
-    local_name = "audio";
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -19,7 +19,7 @@ auto html::elements::html_audio_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_audio_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_media_element>()
+            .ctor<>()
+            .inherit<html_media_element>()
             .auto_wrap_objects();
 }

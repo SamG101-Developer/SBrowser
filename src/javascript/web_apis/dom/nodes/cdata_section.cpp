@@ -15,6 +15,6 @@ auto dom::nodes::cdata_section::v8(
         -> ext::any
 {
     return v8pp::class_<cdata_section>{isolate}
-            .template inherit<text>()
+            .inherit<text>()
             .auto_wrap_objects();
 }

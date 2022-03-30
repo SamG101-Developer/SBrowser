@@ -46,10 +46,10 @@ auto dom::mixins::document_or_element_node<T>::v8(
         -> ext::any
 {
     return v8pp::class_<document_or_element_node<dom::nodes::node>>{isolate}
-            .template inherit<dom_object>()
-            .template function("getElementsByTagName", &document_or_element_node<T>::get_elements_by_tag_name)
-            .template function("getElementsByTagNameNS", &document_or_element_node<T>::get_elements_by_tag_name_ns)
-            .template function("getElementsByClassName", &document_or_element_node<T>::get_elements_by_class_name)
+            .inherit<dom_object>()
+            .function("getElementsByTagName", &document_or_element_node<T>::get_elements_by_tag_name)
+            .function("getElementsByTagNameNS", &document_or_element_node<T>::get_elements_by_tag_name_ns)
+            .function("getElementsByClassName", &document_or_element_node<T>::get_elements_by_class_name)
             .auto_wrap_objects();
 }
 

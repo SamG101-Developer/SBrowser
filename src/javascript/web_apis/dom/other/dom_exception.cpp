@@ -18,9 +18,9 @@ auto dom::other::dom_exception::v8(
         -> ext::any
 {
     return v8pp::class_<dom_exception>{isolate}
-            .template ctor<const ext::string&, v8_custom_error_t>()
-            .template var("message", &dom::other::dom_exception::message)
-            .template var("type", &dom::other::dom_exception::type)
+            .ctor<const ext::string&, v8_custom_error_t>()
+            .var("message", &dom::other::dom_exception::message)
+            .var("type", &dom::other::dom_exception::type)
             .template static_("INDEX_SIZE_ERR", v8_custom_error_t::INDEX_SIZE_ERR)
             .template static_("DOMSTRING_SIZE_ERR", v8_custom_error_t::DOMSTRING_SIZE_ERR)
             .template static_("HIERARCHY_REQUEST_ERR", v8_custom_error_t::HIERARCHY_REQUEST_ERR)

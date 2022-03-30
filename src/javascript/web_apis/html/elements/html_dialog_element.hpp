@@ -28,8 +28,8 @@ public internal_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override
 
 protected internal_properties:
-    dom::nodes::element* m_previously_focused_element;
-    bool m_modal_flag;
+    dom::nodes::element* m_previously_focused_element = nullptr;
+    bool m_modal_flag = false;
 };
 
 

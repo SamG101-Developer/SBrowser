@@ -1,21 +1,21 @@
-#include "html_paragraph_element.hpp"
+#include "html_hr_element.hpp"
 
 #include <html/helpers/custom_html_elements.hpp>
 
 
-html::elements::html_paragraph_element::html_paragraph_element()
-        : html_element()
+html::elements::html_hr_element::html_hr_element()
+        : html_element{}
 {
     // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
 
-auto html::elements::html_paragraph_element::v8(
+auto html::elements::html_hr_element::v8(
         v8::Isolate* isolate) const
         -> ext::any
 {
-    return v8pp::class_<html_paragraph_element>{isolate}
+    return v8pp::class_<html_hr_element>{isolate}
             .ctor<>()
             .inherit<html_element>()
             .auto_wrap_objects();

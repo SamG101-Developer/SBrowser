@@ -9,6 +9,6 @@ auto dom::nodes::xml_document::v8(
         -> ext::any
 {
     return v8pp::class_<xml_document>{isolate}
-            .template inherit<document>()
+            .inherit<document>()
             .auto_wrap_objects();
 }

@@ -29,7 +29,7 @@ auto dom::mixins::slottable<T>::v8(
         -> ext::any
 {
     return v8pp::class_<slottable<dom::nodes::node>>{isolate}
-            .template var("assignedSlot", &slottable<dom::nodes::node>::assigned_slot)
+            .var("assignedSlot", &slottable<dom::nodes::node>::assigned_slot)
             .auto_wrap_objects();
 }
 

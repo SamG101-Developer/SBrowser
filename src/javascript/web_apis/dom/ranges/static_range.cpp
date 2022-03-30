@@ -37,7 +37,7 @@ auto dom::ranges::static_range::v8(
         -> ext::any
 {
     return v8pp::class_<static_range>{isolate}
-            .template ctor<const ext::string_any_map&>()
-            .template inherit<abstract_range>()
+            .ctor<const ext::string_any_map&>()
+            .inherit<abstract_range>()
             .auto_wrap_objects();
 }

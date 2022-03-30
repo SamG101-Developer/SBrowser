@@ -17,8 +17,8 @@ auto dom::nodes::comment::v8(
         -> ext::any
 {
     return v8pp::class_<comment>{isolate}
-            .template ctor<>()
-            .template ctor<const ext::string&>()
-            .template inherit<character_data>()
+            .ctor<>()
+            .ctor<const ext::string&>()
+            .inherit<character_data>()
             .auto_wrap_objects();
 }

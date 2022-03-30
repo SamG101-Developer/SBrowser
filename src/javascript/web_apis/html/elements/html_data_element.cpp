@@ -6,7 +6,7 @@
 html::elements::html_data_element::html_data_element()
         : html_element{}
 {
-    local_name = "data";
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -16,7 +16,7 @@ auto html::elements::html_data_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_data_element>{isolate}
-            .template ctor<>()
+            .ctor<>()
             .inherit<html_element>()
             .var("value", &html_data_element::value)
             .auto_wrap_objects();

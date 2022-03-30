@@ -4,12 +4,13 @@
 #include <html/elements/html_button_element.hpp>
 #include <html/helpers/custom_html_elements.hpp>
 
+// TODO : tidy
+
 
 html::elements::html_form_element::html_form_element()
         : html_element{}
 {
-    local_name = "";
-
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 

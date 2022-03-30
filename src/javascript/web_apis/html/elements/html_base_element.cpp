@@ -10,6 +10,7 @@ html::elements::html_base_element::html_base_element()
     // set the custom accessors
     href.getter = [this] {return get_href();};
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 

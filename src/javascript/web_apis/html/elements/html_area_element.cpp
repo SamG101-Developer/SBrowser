@@ -9,8 +9,8 @@ html::elements::html_area_element::html_area_element()
 {
     // set the properties
     relList << new ext::vector<ext::string>{};
-    local_name << "area";
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -20,17 +20,17 @@ auto html::elements::html_area_element::v8(
         -> ext::any
 {
     return v8pp::class_<html_area_element>{isolate}
-            .template ctor<>()
-            .template inherit<html_area_element>()
-//            .template inherit<mixins::html_hyperlink_element_utils>()
-            .template var("alt", html_area_element::alt)
-            .template var("coords", html_area_element::coords)
-            .template var("shape", html_area_element::shape)
-            .template var("target", html_area_element::target)
-            .template var("download", html_area_element::download)
-            .template var("ping", html_area_element::ping)
-            .template var("rel", html_area_element::rel)
-            .template var("referrerPolicy", html_area_element::referrerPolicy)
-            .template var("relList", html_area_element::relList)
+            .ctor<>()
+            .inherit<html_area_element>()
+//            .inherit<mixins::html_hyperlink_element_utils>()
+            .var("alt", html_area_element::alt)
+            .var("coords", html_area_element::coords)
+            .var("shape", html_area_element::shape)
+            .var("target", html_area_element::target)
+            .var("download", html_area_element::download)
+            .var("ping", html_area_element::ping)
+            .var("rel", html_area_element::rel)
+            .var("referrerPolicy", html_area_element::referrerPolicy)
+            .var("relList", html_area_element::relList)
             .auto_wrap_objects();
 }

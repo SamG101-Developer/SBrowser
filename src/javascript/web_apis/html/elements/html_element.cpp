@@ -27,6 +27,7 @@ html::elements::html_element::html_element()
     offset_width.setter  = [this](auto&& PH1) { set_offset_width(std::forward<decltype(PH1)>(PH1));};
     offset_height.setter = [this](auto&& PH1) { set_offset_height(std::forward<decltype(PH1)>(PH1));};
 
+    // initialize html constructor with boilerplate code
     HTML_CONSTRUCTOR
 }
 
@@ -96,27 +97,27 @@ auto html::elements::html_element::attach_internals()
 auto html::elements::html_element::v8(v8::Isolate* isolate) const -> ext::any
 {
     return v8pp::class_<html_element>{isolate}
-            .template ctor<>()
-            .template inherit<dom::nodes::element>()
-            .template function("click", &html_element::click)
-            .template function("attachInternals", &html_element::attach_internals)
-            .template var("title", html_element::title)
-            .template var("lang", html_element::lang)
-            .template var("translate", html_element::translate)
-            .template var("dir", html_element::dir)
-            .template var("access_key_label", html_element::access_key_label)
-            .template var("access_key", html_element::access_key)
-            .template var("autocapitalize", html_element::autocapitalize)
-            .template var("inner_text", html_element::inner_text)
-            .template var("outer_text", html_element::outer_text)
-            .template var("hidden", html_element::hidden)
-            .template var("inert", html_element::inert)
-            .template var("draggable", html_element::draggable)
-            .template var("spellcheck", html_element::spellcheck)
-            .template var("offset_parent", html_element::offset_parent)
-            .template var("offset_top", html_element::offset_top)
-            .template var("offset_left", html_element::offset_left)
-            .template var("offset_width", html_element::offset_width)
-            .template var("offset_height", html_element::offset_height)
+            .ctor<>()
+            .inherit<dom::nodes::element>()
+            .function("click", &html_element::click)
+            .function("attachInternals", &html_element::attach_internals)
+            .var("title", html_element::title)
+            .var("lang", html_element::lang)
+            .var("translate", html_element::translate)
+            .var("dir", html_element::dir)
+            .var("access_key_label", html_element::access_key_label)
+            .var("access_key", html_element::access_key)
+            .var("autocapitalize", html_element::autocapitalize)
+            .var("inner_text", html_element::inner_text)
+            .var("outer_text", html_element::outer_text)
+            .var("hidden", html_element::hidden)
+            .var("inert", html_element::inert)
+            .var("draggable", html_element::draggable)
+            .var("spellcheck", html_element::spellcheck)
+            .var("offset_parent", html_element::offset_parent)
+            .var("offset_top", html_element::offset_top)
+            .var("offset_left", html_element::offset_left)
+            .var("offset_width", html_element::offset_width)
+            .var("offset_height", html_element::offset_height)
             .auto_wrap_objects();
 }
