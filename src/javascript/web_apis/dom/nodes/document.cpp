@@ -432,7 +432,7 @@ auto dom::nodes::document::writeln(strings... text) const
         -> void
 {
     // TODO
-    ext::vector<ext::string> new_lined_text;
+    ext::string_vector new_lined_text;
     new_lined_text = {text...};
     new_lined_text.template for_each([](ext::string& string) -> ext::string {string += "\n";});
     write(new_lined_text);

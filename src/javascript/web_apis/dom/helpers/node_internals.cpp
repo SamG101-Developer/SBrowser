@@ -217,7 +217,7 @@ auto dom::helpers::node_internals::list_of_elements_with_class_names(
     return trees::descendants(node)
             .cast_all<nodes::element*>()
             .filter([node, classes](const nodes::element* const descendant_element) {
-                ext::vector<ext::string> class_list = *descendant_element->class_list;
+                ext::string_vector class_list = *descendant_element->class_list;
                 if (node->owner_document->m_mode == "quirks")
                     class_list.for_each([](ext::string& string) {string.to_lowercase();});
 
@@ -265,18 +265,6 @@ auto dom::helpers::node_internals::is_html(
 {
     // return if the element is in the html namespace, and the document's type is html
     return element->namespace_uri == namespaces::HTML and element->owner_document->m_type == "html";
-}
-
-
-auto dom::helpers::node_internals::advisory_information(
-        html::elements::html_element* const element)
-        -> ext::string
-{
-    // return the element title if it exists, the parent's advisory information if there is a parent, otherwise an empty
-    // string - in other words, move directly up the tree until the title attribute is set, otherwise an empty string
-    return element->title ? element->title : element->parent_element
-            ? advisory_information(ext::property_dynamic_cast<html::elements::html_element*>(element->parent_element))
-            : "";
 }
 
 

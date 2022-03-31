@@ -12,9 +12,6 @@ html::elements::html_datalist_element::html_datalist_element()
     auto widget = QPointer<QPushButton>{};
     widget->setMenu(new QMenu{});
     m_rendered_widget = widget;
-
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
 }
 
 

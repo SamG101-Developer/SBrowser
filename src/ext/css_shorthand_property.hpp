@@ -77,7 +77,7 @@ auto contained_items(ext::css_shorthand_property& property, const ext::string& s
 
     // if there are fewer items than desired then return the first item duplicated n times, otherwise the split items
     return sub_items.length() < sub_items_desired_length
-            ? ext::vector<ext::string>{sub_items.front()} * sub_items_desired_length
+            ? ext::string_vector{sub_items.front()} * sub_items_desired_length
             : sub_items;
 }
 

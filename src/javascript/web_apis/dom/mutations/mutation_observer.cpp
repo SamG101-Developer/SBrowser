@@ -31,7 +31,7 @@ auto dom::mutations::mutation_observer::observe(
         -> void
 {
     // extract the attribute filter as a vector of strings
-    auto attribute_filter = options.at("attribute_filter").to<ext::vector<ext::string>>();
+    auto attribute_filter = options.at("attribute_filter").to<ext::string_vector>();
 
     // if the <attributeFilter> option isn't empty, then set the <attribute> option to true
     if (not attribute_filter.empty())

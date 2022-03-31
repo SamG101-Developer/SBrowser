@@ -13,14 +13,14 @@ namespace html::mixins {template <typename T> class html_or_svg_element;}
 
 
 template <typename T>
-class html::mixins::html_or_svg_element : public virtual dom_object
+class html::mixins::html_or_svg_element : virtual public dom_object
 {
 public js_methods:
     auto blur() -> void;
     auto focus(const ext::string_any_map& options) -> void;
 
 public js_properties:
-    ext::html_property<ext::map<ext::string, ext::string>> data_set;
+    ext::html_property<ext::string_string_map> data_set;
     ext::html_property<ext::string> nonce;
     ext::html_property<bool, _T> autofocus;
     ext::html_property<long, _T> tab_index;

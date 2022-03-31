@@ -3,14 +3,15 @@
 #define SBROWSER_HTML_ELEMENT_HPP
 
 #include <ext/html_property.hpp>
+#include <ext/map.hpp>
+
 #include <dom/nodes/element.hpp>
 #include <html/mixins/html_or_svg_element.hpp>
 
 
-namespace html {
-    namespace elements {class html_element;}
-    namespace other {class element_internals;}
-}
+namespace html::elements {class html_element;}
+namespace html::other {class element_internals;}
+namespace html::internal {enum class translation_mode;}
 
 
 class html::elements::html_element
@@ -54,14 +55,22 @@ public:
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
+protected:
+    explicit html_element(int) {/* NO_HTML_CONSTRUCTOR */}
+
 private cpp_properties:
     bool m_click_in_progress_flag = false;
     bool m_attached_internals;
+
+private cpp_properties:
+    internal::translation_mode m_translation_mode;
 
 private accessors:
     // html
     auto get_inner_text() const -> ext::string;
     auto get_outer_text() const -> ext::string;
+    auto get_lang() const -> ext::string;
+    auto get_translate() const -> ext::string;
 
     auto set_inner_text(const ext::string& val) -> void;
     auto set_outer_text(const ext::string& val) -> void;

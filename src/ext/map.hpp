@@ -11,6 +11,7 @@
 namespace ext {template <typename K, typename V> class map;}
 namespace ext {template <typename K, typename V> using cmap = const map<K, V>;}
 namespace ext {using string_any_map = map<string, any>;}
+namespace ext {using string_string_map = map<string, string>;}
 
 
 template <typename K, typename V>

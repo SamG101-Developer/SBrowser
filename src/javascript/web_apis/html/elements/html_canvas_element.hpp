@@ -35,10 +35,10 @@ public js_properties:
     ext::html_property<unsigned long, _T> height;
 
 public cpp_properties:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:
-    context_mode m_context_mode;
+    context_mode m_context_mode = context_mode::NONE;
     images::image_bitmap* m_bitmap = nullptr;
 };
 

@@ -30,11 +30,6 @@ struct dom::helpers::texts final
             unsigned long offset,
             unsigned long count)
             -> ext::string;
-
-    // other general helper methods for text
-    static auto advisory_information(
-            nodes::element* element)
-            -> ext::string;
 };
 
 

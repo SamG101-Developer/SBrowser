@@ -12,7 +12,7 @@ namespace dom::nodes {class element;}
 
 
 template <typename T>
-class dom::mixins::document_or_shadow_root : public dom_object
+class dom::mixins::document_or_shadow_root : virtual public dom_object
 {
 public constructors:
     // html

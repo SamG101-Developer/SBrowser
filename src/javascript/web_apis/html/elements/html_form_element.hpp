@@ -3,12 +3,14 @@
 #define SBROWSER_HTML_FORM_ELEMENT_HPP
 
 #include <html/elements/html_element.hpp>
+#include <html/mixins/targetable.hpp>
 
 namespace html::elements {class html_form_element;}
 
 
 class html::elements::html_form_element
         : public html_element
+        , public mixins::targetable<html_form_element>
         , public mixins::validatable
 {
 public constructors:
@@ -27,11 +29,10 @@ public js_properties:
     ext::html_property<ext::string, _T> encoding;
     ext::html_property<ext::string, _T> method;
     ext::html_property<ext::string, _T> name;
-    ext::html_property<ext::string, _T> target;
     ext::html_property<ext::string, _T> rel;
     ext::html_property<bool, _T> noValidate;
 
-    ext::html_property<ext::vector<ext::string>*> relList;
+    ext::html_property<ext::string_vector*> relList;
     ext::html_property<ext::vector<html_form_element*>*> elements;
 
 public cpp_methods:

@@ -119,6 +119,10 @@ struct dom::helpers::trees final
             const nodes::node* node_a,
             const nodes::node* node_b)
             -> nodes::node*;
+
+    static auto is_document_element(
+            const nodes::node* node_a)
+            -> bool;
 };
 
 

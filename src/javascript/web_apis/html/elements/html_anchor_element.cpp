@@ -2,22 +2,19 @@
 
 #include <dom/helpers/node_internals.hpp>
 #include <dom/helpers/trees.hpp>
-#include <html/helpers/custom_html_elements.hpp>
 
 
 html::elements::html_anchor_element::html_anchor_element()
         : html_paragraph_element{}
+        , mixins::targetable<html_anchor_element>{}
         , mixins::html_hyperlink_element_utils{}
 {
     // set the properties
-    relList << new ext::vector<ext::string>{};
+    relList << new ext::string_vector{};
 
     // set the custom accessors
     text.getter = [this] {return get_text();};
     text.setter = [this](auto && PH1) {set_text(std::forward<decltype(PH1)>(PH1));};
-
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
 }
 
 
@@ -45,6 +42,15 @@ auto html::elements::html_anchor_element::v8(
     return v8pp::class_<html_anchor_element>{isolate}
             .ctor<>()
             .inherit<html_paragraph_element>()
-            .inherit<mixins::html_hyperlink_element_utils>()
+            .inherit<mixins::targetable<html_anchor_element>>()
+//            .inherit<mixins::html_hyperlink_element_utils>()
+            .var("download", &html_anchor_element::download)
+            .var("ping", &html_anchor_element::ping)
+            .var("rel", &html_anchor_element::rel)
+            .var("hreflang", &html_anchor_element::hreflang)
+            .var("type", &html_anchor_element::type)
+            .var("text", &html_anchor_element::text)
+            .var("referrerPolicy", &html_anchor_element::referrerPolicy)
+            .var("relList", &html_anchor_element::relList)
             .auto_wrap_objects();
 }

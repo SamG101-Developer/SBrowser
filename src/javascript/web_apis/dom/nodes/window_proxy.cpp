@@ -142,7 +142,7 @@ v8::Local<v8::Array>
 dom::nodes::window_proxy::own_property_keys() {
 
     v8::Local<v8::Object> W = v8pp::convert<window*>::to_v8(v8::Isolate::GetCurrent(), s_window);
-    ext::vector<ext::string> keys;
+    ext::string_vector keys;
 
     uint32_t max_properties = html::helpers::windows::number_of_tree_child_browsing_contexts(W);
 
@@ -151,7 +151,7 @@ dom::nodes::window_proxy::own_property_keys() {
 
     return not javascript::helpers::is_platform_object_same_origin(W)
             ? v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), keys.join())
-            : v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), keys.join() + v8pp::convert<ext::vector<ext::string>>::from_v8(javascript::helpers::cross_origin_own_property_keys(W)));
+            : v8pp::convert<ext::string>::to_v8(v8::Isolate::GetCurrent(), keys.join() + v8pp::convert<ext::string_vector>::from_v8(javascript::helpers::cross_origin_own_property_keys(W)));
 }
 
 

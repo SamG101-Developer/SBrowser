@@ -4,8 +4,8 @@
 #include <dom/helpers/mutation_observers.hpp>
 #include <html/events/track_event.hpp>
 #include <html/helpers/custom_html_elements.hpp>
-#include <web_idl/date.hpp>
-#include <web_idl/promise.hpp>
+#include <web_idl/types/date.hpp>
+#include <web_idl/types/promise.hpp>
 
 
 html::elements::html_media_element::html_media_element()
@@ -24,8 +24,7 @@ html::elements::html_media_element::html_media_element()
     m_default_playback_start_position = 0.0;
     m_earliest_possible_position = 0.0;
 
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
+
 }
 
 

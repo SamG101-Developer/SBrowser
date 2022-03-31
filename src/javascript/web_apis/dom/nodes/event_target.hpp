@@ -7,7 +7,6 @@
 #include <ext/map.hpp>
 #include <ext/string.hpp>
 #include <ext/vector.hpp>
-#include <ext/decorators.hpp>
 #include <dom_object.hpp>
 
 namespace dom::events {class event;}

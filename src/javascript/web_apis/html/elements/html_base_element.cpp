@@ -1,7 +1,6 @@
 #include "html_base_element.hpp"
 
 #include <dom/nodes/document.hpp>
-#include <html/helpers/custom_html_elements.hpp>
 
 
 html::elements::html_base_element::html_base_element()
@@ -9,9 +8,6 @@ html::elements::html_base_element::html_base_element()
 {
     // set the custom accessors
     href.getter = [this] {return get_href();};
-
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
 }
 
 

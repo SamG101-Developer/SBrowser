@@ -7,14 +7,11 @@
 
 html::elements::html_iframe_element::html_iframe_element()
         : html_element{}
-        , mixins::lazy_loading
+        , mixins::lazy_loading{}
 {
     // attach the qt functions
     width.attach_qt_updater(&QWidget::setFixedWidth, this);
     height.attach_qt_updater(&QWidget::setFixedHeight, this);
-
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
 }
 
 

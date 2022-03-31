@@ -40,7 +40,7 @@ dom::nodes::element::element()
     node_type        << ELEMENT_NODE;
     shadow_root_node << nullptr;
     attributes       << new ext::vector<attr*>{};
-    class_list       << new ext::vector<ext::string>{};
+    class_list       << new ext::string_vector{};
 
     // set the attributes
     m_custom_element_reaction_queue = {};
@@ -67,7 +67,7 @@ auto dom::nodes::element::has_attributes() const
 
 
 auto dom::nodes::element::get_attribute_names() const
-        -> ext::vector<ext::string>
+        -> ext::string_vector
 {
     // return a list of attributes transformed into their names
     return attributes->transform<ext::string>([](attr* attribute) -> ext::string {return attribute->name;});

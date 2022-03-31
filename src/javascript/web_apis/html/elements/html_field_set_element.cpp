@@ -12,8 +12,7 @@ html::elements::html_field_set_element::html_field_set_element()
     // attach the qt functions
     disabled.attach_qt_updater(&QWidget::setDisabled, this);
 
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
+
 }
 
 

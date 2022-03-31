@@ -20,10 +20,10 @@ class html::elements::html_image_element
 public constructors:
     html_image_element();
 
-public methods:
+public js_methods:
     auto decode() -> webidl::types::promise<void>;
 
-public properties:
+public js_properties:
     ext::html_property<ext::string, _T> alt;
     ext::html_property<ext::string, _T> src;
     ext::html_property<ext::string, _T> srcset;
@@ -42,7 +42,7 @@ public properties:
     ext::html_property<bool, _T> is_map;
     ext::html_property<bool> complete;
 
-public internal_methods:
+public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
     auto render() const -> QLabel* override;
 
@@ -58,7 +58,7 @@ private accessors:
     auto set_width(unsigned long val) -> void;
     auto set_height(unsigned long val) -> void;
 
-private internal_properties:
+private cpp_properties:
     html_image_element* m_dimension_attribute_src;
     internal::image_request* m_current_request = nullptr;
     internal::image_request* m_pending_request = nullptr;

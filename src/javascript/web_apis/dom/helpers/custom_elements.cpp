@@ -186,7 +186,7 @@ auto dom::helpers::custom_elements::upgrade_element(
     // iterate over the attributes in the element's attribute list, and enqueue a custom element reaction for each
     // attribute for attributeChangedCallback
     for (auto* const attribute: *element->attributes)
-        enqueue_custom_element_callback_reaction(element, "attributeChangedCallback", ext::vector<ext::string>{attribute->local_name, "", attribute->value, attribute->namespace_uri});
+        enqueue_custom_element_callback_reaction(element, "attributeChangedCallback", ext::string_vector{attribute->local_name, "", attribute->value, attribute->namespace_uri});
 
     // if the element is connected, then enqueue a custom element reaction for the connectedCallback function
     if (shadows::is_connected(element))
@@ -281,7 +281,7 @@ auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue
 auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
         const nodes::element* const element,
         const ext::string& callback_name,
-        ext::vector<ext::string>&& args)
+        ext::string_vector&& args)
         -> void
 {
     // get the definition from the element, and the callback from it

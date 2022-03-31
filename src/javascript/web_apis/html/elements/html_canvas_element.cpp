@@ -11,9 +11,6 @@ html::elements::html_canvas_element::html_canvas_element()
     // attach the qt functions
     width.attach_qt_updater(&QWidget::setFixedWidth, this);
     height.attach_qt_updater(&QWidget::setFixedHeight, this);
-
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
 }
 
 

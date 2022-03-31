@@ -92,7 +92,7 @@ auto dom::helpers::mutation_observers::queue_mutation_record(
     for (auto* const node: nodes) {
         for (auto* const registered: *node->m_registered_observer_list) {
             const auto& options = registered->options;
-            const auto attribute_filter = options.at("attributeFilter").to<ext::vector<ext::string>>();
+            const auto attribute_filter = options.at("attributeFilter").to<ext::string_vector>();
 
             if (not ((node != target and not options.at("subtree").to<bool>()))
                     or (type == "attributes" and not options.at("attributes").to<bool>())

@@ -3,12 +3,7 @@
 #include <html/helpers/custom_html_elements.hpp>
 
 
-html::elements::html_head_element::html_head_element()
-        : html_element{}
-{
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
-}
+html::elements::html_head_element::html_head_element() = default;
 
 
 auto html::elements::html_head_element::v8(

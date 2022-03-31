@@ -31,7 +31,7 @@ public js_properties:
     ext::html_property<bool, _T> allow_fullscreen;
     ext::html_property<dom::nodes::document*, _T> content_document;
     ext::html_property<dom::nodes::window_proxy*, _T> content_window;
-    ext::html_property<ext::vector<ext::string>*> sandbox;
+    ext::html_property<ext::string_vector*> sandbox;
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;

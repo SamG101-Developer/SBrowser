@@ -8,36 +8,66 @@
 #include <performance/time/dom_high_res_timestamp.hpp>
 
 
-namespace dom::nodes {
-    class document;
-    class element;
-    class window;
-    class window_proxy;
-}
-
-namespace html {
-    namespace helpers {struct document_internals;}
-    namespace internal {
-        struct policy_container;
-        struct permissions_policy;
-        struct module_map;
-        struct cross_origin_opener_policy;
-        struct document_load_timing_information;
-        struct document_unload_timing_information;
-        struct browsing_context;
-        struct sandboxing_flags;
-    }
-}
+namespace dom::nodes {class document;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class window;}
+namespace dom::nodes {class window_proxy;}
+namespace html::elements {class html_meta_element;}
+namespace html::helpers {struct document_internals;}
+namespace html::internal {struct policy_container;}
+namespace html::internal {struct permissions_policy;}
+namespace html::internal {struct module_map;}
+namespace html::internal {struct cross_origin_opener_policy;}
+namespace html::internal {struct document_load_timing_information;}
+namespace html::internal {struct document_unload_timing_information;}
+namespace html::internal {struct browsing_context;}
+namespace html::internal {struct sandboxing_flags;}
 
 
 struct html::helpers::document_internals {
-    static auto is_active_document(dom::nodes::document* document) -> bool;
-    static auto is_still_on_initial(internal::browsing_context* context) -> bool;
-    static auto is_cookie_averse_document(const dom::nodes::document* document) -> bool;
-    static auto allows_adding_render_blocking_elements(const dom::nodes::document* document) -> bool;
-    static auto is_render_blocked(const dom::nodes::document* document) -> bool;
-    static auto block_rendering(dom::nodes::document* document, dom::nodes::element* element) -> void;
-    static auto unblock_rendering(dom::nodes::document* document, dom::nodes::element* element) -> void;
+    static auto is_active_document(
+            dom::nodes::document* document)
+            -> bool;
+
+    static auto is_still_on_initial(
+            internal::browsing_context* context)
+            -> bool;
+
+    static auto is_cookie_averse_document(
+            const dom::nodes::document* document)
+            -> bool;
+
+    static auto allows_adding_render_blocking_elements(
+            const dom::nodes::document* document)
+            -> bool;
+
+    static auto is_render_blocked(
+            const dom::nodes::document* document)
+            -> bool;
+
+    static auto block_rendering(
+            dom::nodes::document* document,
+            dom::nodes::element* element)
+            -> void;
+
+    static auto unblock_rendering(
+            dom::nodes::document* document,
+            dom::nodes::element* element)
+            -> void;
+
+    static auto advisory_information(
+            dom::nodes::element* element)
+            -> ext::string;
+
+    static auto shared_declarative_refresh_steps(
+            dom::nodes::document* document,
+            ext::string input,
+            html::elements::html_meta_element* meta_element = nullptr)
+            -> void;
+
+    static auto has_a_stylesheet_that_is_blocking_scripts(
+            dom::nodes::document* document)
+            -> bool;
 };
 
 

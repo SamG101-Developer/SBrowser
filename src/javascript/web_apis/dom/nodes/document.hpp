@@ -58,6 +58,7 @@ namespace html::internal {struct browsing_context;}
 namespace html::internal {struct sandboxing_flags;}
 namespace html::other {class location;}
 namespace svg::elements {class svg_script_element;}
+namespace url {class url;}
 
 
 class dom::nodes::document
@@ -202,6 +203,7 @@ private cpp_properties:
     html::internal::browsing_context* m_browsing_context = nullptr;
     ext::string m_fallback_base_url;
     ext::string m_document_base_url;
+
     int m_script_blocking_stylesheet_counter = 0;
 
     int m_throw_on_dynamic_markup_insertion_counter = 0;

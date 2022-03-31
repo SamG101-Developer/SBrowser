@@ -16,8 +16,7 @@ html::elements::html_dialog_element::html_dialog_element()
     // create the widget representation
     m_rendered_widget = QPointer<QDialog>{};
 
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
+
 }
 
 

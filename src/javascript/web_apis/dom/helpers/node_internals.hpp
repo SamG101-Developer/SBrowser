@@ -64,7 +64,6 @@ struct dom::helpers::node_internals final
     static auto is_html(const nodes::element* element) -> bool;
 
     static auto has_active_parser(nodes::document* document) -> bool;
-    static auto advisory_information(html::elements::html_element* element) -> ext::string;
 
     static auto document_has_style_sheets_blocking_scripts(nodes::document* document) -> bool;
 

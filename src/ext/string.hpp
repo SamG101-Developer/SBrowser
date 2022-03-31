@@ -51,22 +51,20 @@ public: constructors
     auto operator=(std::string&& other) -> string&;
     auto operator=(QString&& other) -> string&;
 
-public: js_methods
-    // modifiers
-    auto ltrim() -> string&;
-    auto rtrim() -> string&;
-    auto trim() -> string&;
-
+public: cpp_methods
     // algorithms
     auto to_lowercase() -> string&;
     auto to_uppercase() -> string&;
     auto new_lowercase() const -> string;
     auto new_uppercase() const -> string;
     auto substring(size_t offset, size_t count = std::string::npos) const -> string;
+    auto substring(const_iterator begin_iter, const_iterator end_iter) const -> string;
     auto replace(size_t offset, size_t count, const string& replacement) -> string;
     auto split(char delimiter, size_t max_delimiters = 1) const -> ext::vector<string>;
     auto contains(const char* item) const -> bool;
     constexpr auto c_str() const -> const char*;
+
+    auto is_numeric() -> bool;
 
 public: operators
     operator std::string() const;
@@ -76,6 +74,7 @@ public: operators
     auto operator+(const string& other) const -> string;
     auto operator+(const char* const other) const -> string;
     auto operator+=(const string& other) -> string&;
+    auto operator+=(char other) -> string&;
 
     auto operator!() const -> bool override;
     auto operator<=>(const string& other) const -> signed char;
@@ -128,7 +127,7 @@ auto ext::string::operator=(char&& other) -> ext::string&
 
 auto ext::string::operator=(std::string&& other) -> ext::string&
 {
-    // set the iterable from a ext::string r-value reference type, and return the reference to the string
+    // set the iterable from an ext::string r-value reference type, and return the reference to the string
     m_iterable = std::move(other);
     return *this;
 }
@@ -138,31 +137,6 @@ auto ext::string::operator=(QString&& other) -> ext::string&
 {
     // set the iterable from a QString r-value reference type, and return the reference to the string
     m_iterable = std::move(other).toStdString();
-    return *this;
-}
-
-
-auto ext::string::ltrim() -> ext::string&
-{
-    // remove all the spaces from the left-hand side of the string, and return the reference to the string
-    m_iterable.erase(begin(), begin() + (decltype(m_iterable)::difference_type)m_iterable.find_first_not_of(' '));
-    return *this;
-}
-
-
-auto ext::string::rtrim() -> ext::string&
-{
-    // remove all the spaces from the right-hand side of the string, and return the reference to the string
-    m_iterable.erase(begin() + (decltype(m_iterable)::difference_type)m_iterable.find_last_not_of(' '), end());
-    return *this;
-}
-
-
-auto ext::string::trim() -> ext::string&
-{
-    // remove all the spaces from both sides of the string, and return the reference to the string
-    ltrim();
-    rtrim();
     return *this;
 }
 
@@ -200,8 +174,14 @@ auto ext::string::new_uppercase() const -> ext::string
 auto ext::string::substring(const size_t offset, const size_t count) const -> ext::string
 {
     // create a substring from the internal value and wrap it into ext::string, and return it
-    string substring;
-    return substring = m_iterable.substr(offset, count);
+    return string{m_iterable.substr(offset, count)};
+}
+
+
+auto ext::string::substring(const_iterator begin_iter, const_iterator end_iter) const -> string
+{
+    // create a substring between two iterators and wrap it into ext::string, and return it
+    return string{m_iterable.substr(std::distance(begin(), std::move(begin_iter)), std::distance(begin(), std::move(end_iter)))};
 }
 
 
@@ -212,7 +192,7 @@ auto ext::string::replace(const size_t offset, const size_t count, const string&
 }
 
 
-auto ext::string::split(const char delimiter, const size_t max_delimiters) const -> ext::vector<ext::string>
+auto ext::string::split(const char delimiter, const size_t max_delimiters) const -> ext::string_vector
 {
     // create an empty output vector, and initialize position variables to 0
     ext::vector<string> out {};

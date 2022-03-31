@@ -4,7 +4,7 @@
 
 #include <javascript/environment/realms.hpp>
 
-#define HTML_CONSTRUCTOR
+#define
 //    auto* registry = javascript::realms::current_global_object().get<html::internal::custom_element_registry*>(m_local_name); \
 //    if (javascript::helpers::new_target() == javascript::helpers::active_function_object())                                   \
 //    {                                                                                                                         \

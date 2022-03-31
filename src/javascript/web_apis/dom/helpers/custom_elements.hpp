@@ -48,7 +48,7 @@ struct dom::helpers::custom_elements final
     static auto enqueue_custom_element_callback_reaction(
             const nodes::element* element,
             const ext::string& callback_name,
-            ext::vector<ext::string>&& args)
+            ext::string_vector&& args)
             -> void;
 
     static auto enqueue_custom_element_upgrade_reaction(
@@ -82,7 +82,7 @@ struct dom::internal::custom_element_definition
     ext::string name;
     ext::string local_name;
 
-    ext::vector<ext::string> observed_attributes;
+    ext::string_vector observed_attributes;
     ext::vector<nodes::element*> construction_stack;
     nodes::element* constructor;
 

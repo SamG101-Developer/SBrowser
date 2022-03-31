@@ -17,7 +17,7 @@ namespace dom
 }
 
 
-class dom::xpath::xpath_expression : public dom_object
+class dom::xpath::xpath_expression : virtual public dom_object
 {
 public: constructors
     xpath_expression();

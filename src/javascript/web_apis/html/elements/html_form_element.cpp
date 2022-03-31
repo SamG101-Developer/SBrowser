@@ -7,12 +7,7 @@
 // TODO : tidy
 
 
-html::elements::html_form_element::html_form_element()
-        : html_element{}
-{
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
-}
+html::elements::html_form_element::html_form_element() = default;
 
 
 auto html::elements::html_form_element::submit()
@@ -61,4 +56,31 @@ auto html::elements::html_form_element::reset()
     m_locked_for_reset = true;
     helpers::form_controls::reset_form(this);
     m_locked_for_reset = false;
+}
+
+
+auto html::elements::html_form_element::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
+{
+    return v8pp::class_<html_form_element>{isolate}
+            .ctor<>()
+            .inherit<html_element>()
+            .inherit<mixins::targetable<html_form_element>>()
+//            .inherit<mixins::validatable>()
+            .function("auto submit", &html_form_element::submit)
+            .function("auto reset", &html_form_element::reset)
+            .function("auto requestSubmit", &html_form_element::requestSubmit)
+            .var("acceptCharset", &html_form_element::acceptCharset)
+            .var("action", &html_form_element::action)
+            .var("autocomplete", &html_form_element::autocomplete)
+            .var("enctype", &html_form_element::enctype)
+            .var("encoding", &html_form_element::encoding)
+            .var("method", &html_form_element::method)
+            .var("name", &html_form_element::name)
+            .var("rel", &html_form_element::rel)
+            .var("noValidate", &html_form_element::noValidate)
+            .var("relList", &html_form_element::relList)
+            .var("elements", &html_form_element::elements)
+            .auto_wrap_objects();
 }

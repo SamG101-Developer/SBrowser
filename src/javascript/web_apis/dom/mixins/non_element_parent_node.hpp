@@ -10,7 +10,7 @@ namespace dom::nodes {class element;}
 
 
 template <typename T>
-class dom::mixins::non_element_parent_node : public dom_object
+class dom::mixins::non_element_parent_node : virtual public dom_object
 {
 public js_methods:
     auto get_element_by_id(const ext::string& element_id) -> nodes::element*;

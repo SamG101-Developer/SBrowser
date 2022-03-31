@@ -46,7 +46,7 @@ public constructors:
 public js_methods:
     // dom
     auto has_attributes() const -> bool;
-    auto get_attribute_names() const -> ext::vector<ext::string>;
+    auto get_attribute_names() const -> ext::string_vector;
 
     auto has_attribute(const ext::string& name) const -> bool;
     auto has_attribute_ns(const ext::string& namespace_, const ext::string& local_name) const -> bool;
@@ -101,7 +101,7 @@ public js_properties:
     ext::dom_property<ext::string, _T> id;
     ext::dom_property<shadow_root*> shadow_root_node;
     ext::dom_property<ext::vector<attr*>*> attributes;
-    ext::dom_property<ext::vector<ext::string>*> class_list;
+    ext::dom_property<ext::string_vector*> class_list;
 
     // cssom-view
     ext::dom_property<double> scroll_top;
@@ -114,7 +114,7 @@ public js_properties:
     ext::dom_property<double> client_height;
 
     // cs-shadow-parts
-    ext::dom_property<ext::vector<ext::string>*> parts;
+    ext::dom_property<ext::string_vector*> parts;
 
 public cpp_methods:
     auto render() const -> QWidget* override;
@@ -156,7 +156,7 @@ private accessors:
     auto get_m_html_qualified_uppercase_name() const -> ext::string;
 
 private cpp_properties:
-    ext::vector<ext::string> m_shadow_attachable_local_names = {
+    ext::string_vector m_shadow_attachable_local_names = {
             "article", "aside", "blockquote", "body", "div", "footer", "h1", "h2", "h3", "h4", "h5", "h6", "header",
             "main", "nav", "p", "section", "span"
     };

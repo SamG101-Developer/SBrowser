@@ -24,3 +24,14 @@ auto html::mixins::lazy_loading::set_loading(
     loading << val;
 }
 
+
+auto html::mixins::lazy_loading::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
+{
+    return v8pp::class_<lazy_loading>{isolate}
+            .inherit<dom_object>()
+            .var("loading", &lazy_loading::loading)
+            .auto_wrap_objects();
+}
+

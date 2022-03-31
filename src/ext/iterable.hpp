@@ -22,6 +22,7 @@ class ext::iterable
 public aliases:
     using iterator = typename C::iterator;
     using const_iterator = typename C::const_iterator;
+    using reverse_iterator = typename C::reverse_iterator;
 
 public constructors:
     iterable() = default;
@@ -42,6 +43,8 @@ public constructors:
     auto begin() const -> const_iterator ;
     auto end() -> iterator;
     auto end() const -> const_iterator;
+    auto rbegin() -> reverse_iterator;
+    auto rend() -> reverse_iterator;
 
     auto empty() const noexcept -> bool;
     auto length() const noexcept -> size_t;
@@ -54,6 +57,10 @@ public constructors:
     auto reverse() -> iterable<T, C>&;
     auto sort() -> iterable<T, C>&;
     auto clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
+
+    auto ltrim(T item) -> iterable<T, C>&;
+    auto rtrim(T item) -> iterable<T, C>&;
+    auto trim(T item) -> iterable<T, C>&;
 
     auto reversed() const -> iterable<T, C>;
     auto sorted() const -> iterable<T, C>;
@@ -160,6 +167,22 @@ auto ext::iterable<T, C>::end() const -> ext::iterable<T, C>::const_iterator
 {
     // return the const end iterator for the iterable
     return m_iterable.end();
+}
+
+
+template <typename T, typename C>
+auto ext::iterable<T, C>::rbegin() -> reverse_iterator
+{
+    // return the reverse begin iterator
+    return m_iterable.rbegin();
+}
+
+
+template <typename T, typename C>
+auto ext::iterable<T, C>::rend() -> reverse_iterator
+{
+    // return the reverse end iterator
+    return m_iterable.rend();
 }
 
 
@@ -293,6 +316,34 @@ auto ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_point
     if constexpr(std::is_pointer_v<T>)
         remove(nullptr, true);
 
+    return *this;
+}
+
+
+template <typename T, typename C>
+auto ext::iterable<T, C>::ltrim(T item) -> ext::iterable<T, C>&
+{
+    // remove all the items from the left-hand side of the iterable, and return the reference to the iterable
+    m_iterable.erase(begin(), begin() + std::distance(begin(), std::find_if_not(begin(), end(), [item](T element){return element == item;})));
+    return *this;
+}
+
+
+template <typename T, typename C>
+auto ext::iterable<T, C>::rtrim(T item) -> ext::iterable<T, C>&
+{
+    // remove all the items from the right-hand side of the iterable, and return the reference to the iterable
+    m_iterable.erase(begin() + std::distance(rbegin(), std::find_if_not(rbegin(), rend(), [item](T element){return element == item;})), end());
+    return *this;
+}
+
+
+template <typename T, typename C>
+auto ext::iterable<T, C>::trim(T item) -> ext::iterable<T, C>&
+{
+    // remove all the items from both sides of the iterable, and return the reference to the iterable
+    ltrim(item);
+    rtrim(item);
     return *this;
 }
 

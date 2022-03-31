@@ -39,8 +39,7 @@ html::elements::html_image_element::html_image_element()
     widget->setPixmap(QPixmap{});
     m_rendered_widget = widget;
 
-    // initialize html constructor with boilerplate code
-    HTML_CONSTRUCTOR
+
 }
 
 
