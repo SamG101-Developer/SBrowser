@@ -118,7 +118,7 @@ auto html::elements::html_image_element::get_width() const
         -> unsigned long
 {
     // return the width of the pixmap
-    return render()->isVisible() ? render()->pixmap().width() : html::helpers::images::density_corrected_intrinsic_size(this).width;
+    return qt()->isVisible() ? qt()->pixmap().width() : html::helpers::images::density_corrected_intrinsic_size(this).width;
 }
 
 
@@ -126,7 +126,7 @@ auto html::elements::html_image_element::get_height() const
         -> unsigned long
 {
     // return the height of the pixmap
-    return render()->isVisible() ? render()->pixmap().height() : html::helpers::images::density_corrected_intrinsic_size(this).height;
+    return qt()->isVisible() ? qt()->pixmap().height() : html::helpers::images::density_corrected_intrinsic_size(this).height;
 }
 
 
@@ -163,19 +163,19 @@ auto html::elements::html_image_element::set_alt(
     alt << val;
 
     // if {src: set, image: valid, alt: empty (doesn't matter)}, then do nothing (render the image)
-    if (src and not render()->pixmap().isNull())
+    if (src and not qt()->pixmap().isNull())
         ;
 
         // if {src: set, image: NOT valid, alt NOT empty}, then set the label to the alt text
-    else if (src and render()->pixmap().isNull() and not alt->empty())
-        render()->setText(alt);
+    else if (src and qt()->pixmap().isNull() and not alt->empty())
+        qt()->setText(alt);
 
         // if {src: set, image: NOT valid, alt empty}, then set the label to the title etc
-    else if (src and render()->pixmap().isNull() and alt->empty())
+    else if (src and qt()->pixmap().isNull() and alt->empty())
     {
         // set the displayed text to te title if it exists
         if (not title->empty())
-            render()->setText(title);
+            qt()->setText(title);
 
             // otherwise, set the displayed text to the first related figcaption's text content
         else
@@ -191,13 +191,13 @@ auto html::elements::html_image_element::set_alt(
                     .filter([](html_element* element) {return element->local_name == "figcaption";}).front();
 
             // set the text to the descendant text content of the figcaption
-            render()->setText(dom::helpers::trees::descendant_text_content(related_figcaption));
+            qt()->setText(dom::helpers::trees::descendant_text_content(related_figcaption));
         }
     }
 
         // if {src: NOT set, image: NOT valid (implied), alt: empty}, then the image is empty, don't render
     else
-        render()->clear();
+        qt()->clear();
 }
 
 
@@ -215,7 +215,7 @@ auto html::elements::html_image_element::set_width(
 {
     // set the width of the image
     width << val;
-    render()->pixmap().scaledToWidth(width);
+    qt()->pixmap().scaledToWidth(width);
 }
 
 
@@ -225,11 +225,11 @@ auto html::elements::html_image_element::set_height(
 {
     // set the height for the image
     height << val;
-    render()->pixmap().scaledToHeight(height);
+    qt()->pixmap().scaledToHeight(height);
 }
 
 
-auto html::elements::html_image_element::render() const
+auto html::elements::html_image_element::qt() const
         -> QLabel*
 {
     return qobject_cast<QLabel*>(m_rendered_widget);

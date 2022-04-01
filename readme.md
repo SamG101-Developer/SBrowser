@@ -16,7 +16,7 @@ backend, that heavily encrypts and routes traffic across the globe, ensuring pri
 
 
 - Rendering Engine
-  - Qt6 widget renders for different objects - overriding the virtual render() method
+  - Qt6 widget renders for different objects - overriding the virtual qt() method
   - Css integration with regex type and attribute matching with the cssom engine
   - Css applies every attribute (if applicable) in the paint event (executes in < 1/60 second))
 

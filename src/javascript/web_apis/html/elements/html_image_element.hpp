@@ -44,7 +44,7 @@ public js_properties:
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
-    auto render() const -> QLabel* override;
+    auto qt() const -> QLabel* override;
 
 private accessors:
     auto get_width() const -> unsigned long;

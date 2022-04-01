@@ -80,13 +80,19 @@
 #include <html/elements/html_html_element.hpp>
 #include <html/elements/html_iframe_element.hpp>
 #include <html/elements/html_image_element.hpp>
+#include <html/elements/html_li_element.hpp>
 #include <html/elements/html_link_element.hpp>
 #include <html/elements/html_media_element.hpp>
 #include <html/elements/html_meta_element.hpp>
+#include <html/elements/html_menu_element.hpp>
+#include <html/elements/html_olist_element.hpp>
 #include <html/elements/html_paragraph_element.hpp>
+#include <html/elements/html_pre_element.hpp>
+#include <html/elements/html_quote_element.hpp>
 #include <html/elements/html_slot_element.hpp>
 #include <html/elements/html_style_element.hpp>
 #include <html/elements/html_title_element.hpp>
+#include <html/elements/html_ulist_element.hpp>
 #include <html/elements/html_unknown_element.hpp>
 
 #include <v8.h>
@@ -188,13 +194,19 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_html_element = object_to_v8<html::elements::html_html_element>(isolate);
     auto v8_html_iframe_element = object_to_v8<html::elements::html_iframe_element>(isolate);
     auto v8_html_image_element = object_to_v8<html::elements::html_image_element>(isolate);
+    auto v8_html_li_element = object_to_v8<html::elements::html_li_element>(isolate);
     auto v8_html_link_element = object_to_v8<html::elements::html_link_element>(isolate);
     auto v8_html_media_element = object_to_v8<html::elements::html_media_element>(isolate);
     auto v8_html_meta_element = object_to_v8<html::elements::html_meta_element>(isolate);
+    auto v8_html_menu_element = object_to_v8<html::elements::html_menu_element>(isolate);
+    auto v8_html_olist_element = object_to_v8<html::elements::html_olist_element>(isolate);
     auto v8_html_paragraph_element = object_to_v8<html::elements::html_paragraph_element>(isolate);
+    auto v8_html_pre_element = object_to_v8<html::elements::html_pre_element>(isolate);
+    auto v8_html_quote_element = object_to_v8<html::elements::html_quote_element>(isolate);
     auto v8_html_slot_element = object_to_v8<html::elements::html_slot_element>(isolate);
     auto v8_html_style_element = object_to_v8<html::elements::html_style_element>(isolate);
     auto v8_html_title_element  = object_to_v8<html::elements::html_title_element>(isolate);
+    auto v8_html_ulist_element = object_to_v8<html::elements::html_ulist_element>(isolate);
     auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
 
     // create the module and an empty module name
@@ -270,12 +282,19 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLHtmlElement", v8_html_html_element)
                     .class_("HTMLIFrameElement", v8_html_iframe_element)
                     .class_("HTMLImageElement", v8_html_image_element)
+                    .class_("HTMLLIElement", v8_html_li_element)
                     .class_("HTMLLinkElement", v8_html_link_element)
                     .class_("HTMLMediaElement", v8_html_media_element)
                     .class_("HTMLMetaElement", v8_html_meta_element)
+                    .class_("HTMLMenuElement", v8_html_menu_element)
+                    .class_("HTMLOListElement", v8_html_olist_element)
                     .class_("HTMLParagraphElement", v8_html_paragraph_element)
+                    .class_("HTMLPreElement", v8_html_pre_element)
+                    .class_("HTMLQuoteElement", v8_html_pre_element)
                     .class_("HTMLSlotElement", v8_html_slot_element)
+                    .class_("HTMLStyleElement", v8_html_style_element)
                     .class_("HTMLTitleElement", v8_html_title_element)
+                    .class_("HTMLUListElement", v8_html_ulist_element)
                     .class_("HTMLUnknownElement", v8_html_unknown_element)
                     ;
 

@@ -40,7 +40,7 @@ auto html::elements::html_button_element::set_type(
 }
 
 
-auto html::elements::html_button_element::render() const
+auto html::elements::html_button_element::qt() const
 -> QPushButton* {
 
     // cast to QPushButton

@@ -437,21 +437,21 @@ auto dom::nodes::node::set_parent_node(node* val)
     if (m_rendered_widget->isWidgetType())
     {
         // scrollable widget parent: append to the QScrollArea's internal widget's layout
-        if (auto* new_parent_scroll_widget = dynamic_cast<QScrollArea*>(val->render()))
+        if (auto* new_parent_scroll_widget = dynamic_cast<QScrollArea*>(val->qt()))
         {
             auto* this_widget = dynamic_cast<QWidget*>(m_rendered_widget);
             new_parent_scroll_widget->widget()->layout()->addWidget(this_widget);
         }
 
         // widget action (for menus and similar) parent: append to the TODO
-        else if (auto new_parent_action_widget = dynamic_cast<QWidgetAction*>(val->render()))
+        else if (auto new_parent_action_widget = dynamic_cast<QWidgetAction*>(val->qt()))
         {
             auto* this_widget = dynamic_cast<QWidget*>(m_rendered_widget);
             new_parent_action_widget->setDefaultWidget(this_widget);
         }
 
         // widget parent: append to the QWidget's layout
-        else if (auto* new_parent_widget = dynamic_cast<QWidget*>(val->render()))
+        else if (auto* new_parent_widget = dynamic_cast<QWidget*>(val->qt()))
         {
             auto* this_widget = dynamic_cast<QWidget*>(m_rendered_widget);
             new_parent_widget->layout()->addWidget(this_widget);
@@ -459,7 +459,7 @@ auto dom::nodes::node::set_parent_node(node* val)
 
         // should never reach here (failsafe for incorrect c++ code implementations)
         else {
-            std::cout << "error widget type trying to render" << std::endl;
+            std::cout << "error widget type trying to qt" << std::endl;
             delete m_rendered_widget;
             return;
         }
@@ -470,7 +470,7 @@ auto dom::nodes::node::set_parent_node(node* val)
 }
 
 
-auto dom::nodes::node::render() const
+auto dom::nodes::node::qt() const
         -> QWidget*
 {
     return nullptr;

@@ -117,7 +117,7 @@ public js_properties:
     ext::dom_property<ext::string_vector*> parts;
 
 public cpp_methods:
-    auto render() const -> QWidget* override;
+    auto qt() const -> QWidget* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:

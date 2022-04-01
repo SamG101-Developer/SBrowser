@@ -16,7 +16,7 @@ public js_properties:
     ext::html_property<bool, _T> open;
 
 public cpp_methods:
-    auto render() const -> QWidget* override;
+    auto qt() const -> QWidget* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 

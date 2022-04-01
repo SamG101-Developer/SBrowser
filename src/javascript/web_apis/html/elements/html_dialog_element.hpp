@@ -24,7 +24,7 @@ public js_properties:
     ext::html_property<ext::string> return_value;
 
 public cpp_methods:
-    auto render() const -> QDialog* override;
+    auto qt() const -> QDialog* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override
 
 protected cpp_properties:

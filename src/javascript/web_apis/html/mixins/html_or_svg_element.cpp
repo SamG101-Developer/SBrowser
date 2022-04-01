@@ -7,7 +7,7 @@ template <typename T>
 auto html::mixins::html_or_svg_element<T>::blur() -> void
 {
     auto* base = static_cast<T*>(this);
-    base->render()->clearFocus();
+    base->qt()->clearFocus();
 }
 
 
@@ -18,7 +18,7 @@ auto html::mixins::html_or_svg_element<T>::focus(
 {
     auto prevent_scroll = options.at("preventScroll").template to<bool>(); // TODO : something here
     auto* base = static_cast<T*>(this);
-    base->render()->setFocus();
+    base->qt()->setFocus();
 }
 
 

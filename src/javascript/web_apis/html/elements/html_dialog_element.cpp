@@ -28,7 +28,7 @@ auto html::elements::html_dialog_element::show()
 
     // reset the open property and focus on the previously_focused_element (focus ordering)
     open = false;
-    m_previously_focused_element->render()->setFocus();
+    m_previously_focused_element->qt()->setFocus();
 
     // focus on the dialog
     html::helpers::focusing::dialog_focusing_steps(this);
@@ -58,7 +58,7 @@ auto html::elements::html_dialog_element::show_modal()
     // TODO -> top layer stuff (fullscreen API) ie show the dialog
 
     // focus on the previously_focused_element (focus ordering)
-    m_previously_focused_element->render()->setFocus();
+    m_previously_focused_element->qt()->setFocus();
 
     // focus on the dialog
     html::helpers::focusing::dialog_focusing_steps(this);
@@ -89,7 +89,7 @@ auto html::elements::html_dialog_element::close(
 }
 
 
-auto html::elements::html_dialog_element::render() const
+auto html::elements::html_dialog_element::qt() const
         -> QDialog*
 {
     return qobject_cast<QDialog*>(m_rendered_widget);

@@ -2,12 +2,17 @@
 #ifndef SBROWSER_HTML_ELEMENT_INTERNALS_HPP
 #define SBROWSER_HTML_ELEMENT_INTERNALS_HPP
 
+#include <ext/map.hpp>
 #include <ext/string.hpp>
 
 namespace dom::nodes {class document;}
 namespace dom::nodes {class document_fragment;}
+namespace dom::nodes {class node;}
 namespace dom::nodes {class text;}
+namespace html::elements {class html_dlist_element;}
 namespace html::elements {class html_element;}
+namespace html::elements {class html_olist_element;}
+namespace html::elements {class html_li_element;}
 namespace html::helpers {struct html_element_internals;}
 namespace html::internal {enum class direction_mode;}
 namespace html::internal {enum class translation_mode;}
@@ -44,6 +49,25 @@ struct html::helpers::html_element_internals
 
     static auto walk_subtree_rooted_at_sectioning_element(
             elements::html_element* element)
+            -> void;
+
+    static auto starting_value(
+            elements::html_olist_element* element)
+            -> int;
+
+    static auto list_owner(
+            elements::html_li_element* element)
+            -> elements::html_element*;
+
+    static auto name_value_group(
+            elements::html_dlist_element* element)
+            -> ext::vector<ext::string_string_map>;
+
+    static auto process_dt_or_dd(
+            dom::nodes::node* node,
+            ext::vector<ext::string_string_map>& groups,
+            ext::string_string_map& current,
+            bool& seen_dd)
             -> void;
 };
 

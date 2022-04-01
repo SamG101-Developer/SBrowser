@@ -35,7 +35,7 @@ public js_properties:
     ext::html_property<html::elements::html_form_element*> form;
 
 public cpp_methods:
-    auto render() const -> QPushButton* override;
+    auto qt() const -> QPushButton* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 protected accessors:

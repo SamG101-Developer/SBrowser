@@ -82,7 +82,7 @@ public js_properties:
     ext::dom_property<node*> next_sibling;
 
 public cpp_methods:
-    virtual auto render() const -> QWidget* = 0 {return nullptr;};
+    virtual auto qt() const -> QWidget* = 0 {return nullptr;};
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected accessors:

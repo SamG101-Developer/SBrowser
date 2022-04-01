@@ -31,7 +31,7 @@ public js_properties:
     ext::dom_property<unsigned long> length;
 
 public cpp_methods:
-    auto render() const -> QLabel* override;
+    auto qt() const -> QLabel* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

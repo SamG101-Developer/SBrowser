@@ -15,7 +15,7 @@ html::elements::html_datalist_element::html_datalist_element()
 }
 
 
-auto html::elements::html_datalist_element::render() const
+auto html::elements::html_datalist_element::qt() const
         -> QPushButton*
 {
     return qobject_cast<QPushButton*>(m_rendered_widget);

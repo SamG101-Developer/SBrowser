@@ -166,7 +166,7 @@ public js_properties:
     ext::dom_property<ext::map<ext::string, css::css_regions::elements::named_flow*>*> named_flows;
 
 public cpp_methods:
-    auto render() const -> QScrollArea* override;
+    auto qt() const -> QScrollArea* override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_methods:

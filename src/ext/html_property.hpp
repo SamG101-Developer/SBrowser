@@ -10,6 +10,9 @@ namespace ext {template <typename T, bool ce_reactions> struct html_property;}
 template <typename T, bool ce_reactions=_F>
 struct ext::html_property : public dom_property<T, ce_reactions>
 {
+public aliases:
+    using qt_updater_t = std::function<void(T)>;
+
 public constructors:
     html_property() = default;
 
@@ -22,7 +25,7 @@ public operators:
 
 private:
     bool m_qt_updater_attached = false;
-    auto m_qt_updater;
+    qt_updater_t m_qt_updater;
 };
 
 
@@ -35,7 +38,7 @@ auto ext::html_property<T, ce_reactions>::attach_qt_updater(
 {
     // set the attached attribute to true and attach the update
     m_qt_updater_attached = true;
-    m_qt_updater = std::bind(method, pointer->render());
+    m_qt_updater = std::bind(method, pointer->qt());
 }
 
 

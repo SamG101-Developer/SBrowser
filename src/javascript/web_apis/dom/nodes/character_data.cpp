@@ -114,7 +114,7 @@ auto dom::nodes::character_data::set_text_content(const ext::string& val)
 }
 
 
-auto dom::nodes::character_data::render() const
+auto dom::nodes::character_data::qt() const
         -> QLabel*
 {
     return qobject_cast<QLabel*>(m_rendered_widget);

@@ -467,7 +467,7 @@ auto dom::nodes::document::elements_from_point(
 
     return helpers::trees::descendants(this)
             .cast_all<element*>()
-            .filter([x, y](element* node) {node->render()->geometry().contains(x, y);});
+            .filter([x, y](element* node) {node->qt()->geometry().contains(x, y);});
 }
 
 
@@ -477,14 +477,14 @@ auto dom::nodes::document::caret_position_from_point(
         -> css::cssom_view::other::caret_position*
 {
 
-    if (not render()->widget())
+    if (not qt()->widget())
         return nullptr;
     
     if (x < 0 or y < 0)
         return nullptr;
 
     auto* caret_position = nullptr;
-    if (auto* text_insertion_widget = dynamic_cast<QLineEdit*>(render()->widget()->childAt(x, y))) {
+    if (auto* text_insertion_widget = dynamic_cast<QLineEdit*>(qt()->widget()->childAt(x, y))) {
         caret_position = new css::cssom_view::other::caret_position{};
         caret_position->m_range = new ranges::raneg{};
         caret_position->offset_node = caret_position->m_range->start_container;

@@ -399,7 +399,7 @@ auto dom::nodes::element::get_m_html_qualified_uppercase_name() const
 }
 
 
-auto dom::nodes::element::render() const
+auto dom::nodes::element::qt() const
         -> QWidget*
 {
     return m_rendered_widget;

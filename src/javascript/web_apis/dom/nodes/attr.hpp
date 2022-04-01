@@ -22,7 +22,7 @@ public js_properties:
     ext::dom_property<element*> owner_element;
 
 public: cpp_methods
-    auto render() const -> QWidget* override {return nullptr;}
+    auto qt() const -> QWidget* override {return nullptr;}
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:

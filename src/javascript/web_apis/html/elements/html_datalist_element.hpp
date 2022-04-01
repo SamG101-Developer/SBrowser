@@ -18,7 +18,7 @@ public js_properties:
     ext::html_property<ext::vector<dom::nodes::element*>*> options;
 
 public cpp_methods:
-    auto render() const -> QPushButton* override;
+    auto qt() const -> QPushButton* override;
 };
 
 

@@ -21,7 +21,7 @@ public js_properties:
     ext::dom_property<dom::nodes::element*> host;
 
 public cpp_methods:
-    auto render() const -> QWidget* override {return nullptr;}
+    auto qt() const -> QWidget* override {return nullptr;}
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:

@@ -32,7 +32,7 @@ auto dom::nodes::window::alert(
 
     // create the message box and display the message TODO : remove to render stack
     QMessageBox message_box;
-    message_box.setParent(document->render());
+    message_box.setParent(document->qt());
     message_box.setIcon(QMessageBox::Icon::Information);
     message_box.setText(message);
     message_box.addButton(QMessageBox::Ok);
@@ -54,7 +54,7 @@ auto dom::nodes::window::confirm(
 
     // create the message box and display the message TODO : remove to render stack
     QMessageBox message_box;
-    message_box.setParent(document->render());
+    message_box.setParent(document->qt());
     message_box.setIcon(QMessageBox::Icon::Question);
     message_box.setText(message);
     message_box.addButton(QMessageBox::Cancel);
@@ -78,7 +78,7 @@ auto dom::nodes::window::prompt(
 
     // create the message box and display the message TODO : remove to render stack
     QInputDialog input_dialog;
-    input_dialog.setParent(document->render());
+    input_dialog.setParent(document->qt());
     input_dialog.setLabelText(message);
     input_dialog.setTextValue(default_);
     input_dialog.exec();
@@ -117,7 +117,7 @@ auto dom::nodes::window::move_to(
         const long y)
         -> void
 {
-    document->render()->move(x, y);
+    document->qt()->move(x, y);
 }
 
 
@@ -126,9 +126,9 @@ auto dom::nodes::window::move_by(
         const long y)
         -> void
 {
-    document->render()->move(
-            x - document->render()->x(),
-            y - document->render()->y());
+    document->qt()->move(
+            x - document->qt()->x(),
+            y - document->qt()->y());
 }
 
 
@@ -137,7 +137,7 @@ auto dom::nodes::window::resize_to(
         const long height)
         -> void
 {
-    document->render()->resize(width, height);
+    document->qt()->resize(width, height);
 }
 
 
@@ -146,9 +146,9 @@ auto dom::nodes::window::resize_by(
         const long height)
         -> void
 {
-    document->render()->resize(
-            width - document->render()->width(),
-            height - document->render()->height());
+    document->qt()->resize(
+            width - document->qt()->width(),
+            height - document->qt()->height());
 }
 
 
