@@ -42,11 +42,6 @@ struct html::helpers::html_element_internals
             dom::nodes::text* text_node)
             -> void;
 
-    template <typename T>
-    static auto get_text_elements_target(
-            mixins::targetable<T>* element)
-            -> ext::string;
-
     static auto walk_subtree_rooted_at_sectioning_element(
             elements::html_element* element)
             -> void;

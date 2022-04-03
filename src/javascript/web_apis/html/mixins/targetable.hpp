@@ -3,6 +3,7 @@
 #define SBROWSER_TARGETABLE_HPP
 
 #include <ext/html_property.hpp>
+#include <ext/string.hpp>
 #include <dom_object.hpp>
 
 namespace html::mixins {template <typename T> class targetable;}
@@ -12,6 +13,7 @@ template <typename T>
 class html::mixins::targetable : virtual public dom_object
 {
 public js_properties:
+    ext::html_property<ext::string, _T> rel;
     ext::html_property<ext::string> target;
 
 public cpp_methods:

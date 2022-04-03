@@ -68,6 +68,11 @@ struct html::helpers::document_internals {
     static auto has_a_stylesheet_that_is_blocking_scripts(
             dom::nodes::document* document)
             -> bool;
+
+    static auto allowed_to_use(
+            dom::nodes::document* document,
+            const ext::string& feature) // TODO : type
+            -> bool;
 };
 
 

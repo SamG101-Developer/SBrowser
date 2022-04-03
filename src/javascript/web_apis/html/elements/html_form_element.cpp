@@ -78,7 +78,6 @@ auto html::elements::html_form_element::v8(
             .var("encoding", &html_form_element::encoding)
             .var("method", &html_form_element::method)
             .var("name", &html_form_element::name)
-            .var("rel", &html_form_element::rel)
             .var("noValidate", &html_form_element::noValidate)
             .var("relList", &html_form_element::relList)
             .var("elements", &html_form_element::elements)

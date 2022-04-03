@@ -12,6 +12,7 @@ auto html::mixins::targetable<T>::v8(
 {
     return v8pp::class_<targetable<T>>{isolate}
             .template inherit<dom_object>()
+            .template var("rel", &targetable::rel)
             .template var("target", &targetable::target)
             .auto_wrap_objects();
 }

@@ -18,7 +18,7 @@ auto html::mixins::lazy_loading::set_loading(
 
         // invoke the lazy load and clear them afterwards
         m_lazy_load_resumption_steps();
-        m_lazy_load_resumption_steps = [] {};
+        m_lazy_load_resumption_steps = std::function{[] {}};
     }
 
     loading << val;

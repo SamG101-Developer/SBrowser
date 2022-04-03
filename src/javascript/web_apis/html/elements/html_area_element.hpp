@@ -4,6 +4,7 @@
 
 #include <html/elements/html_element.hpp>
 #include <html/mixins/targetable.hpp>
+#include <html/mixins/html_hyperlink_element_utils.hpp>
 
 namespace html::elements {class html_area_element;}
 
@@ -22,7 +23,6 @@ public js_properties:
     ext::html_property<ext::string> shape;
     ext::html_property<ext::string> download;
     ext::html_property<ext::string> ping;
-    ext::html_property<ext::string> rel;
     ext::html_property<ext::string> referrerPolicy;
     ext::html_property<ext::string_vector*> relList;
 

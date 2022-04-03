@@ -31,10 +31,18 @@ public js_properties:
     ext::html_property<bool, _T> allow_fullscreen;
     ext::html_property<dom::nodes::document*, _T> content_document;
     ext::html_property<dom::nodes::window_proxy*, _T> content_window;
-    ext::html_property<ext::string_vector*> sandbox;
+    ext::html_property<ext::string> sandbox;
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
+
+private cpp_properties:
+    bool m_current_navigation_was_lazy_loaded = false;
+
+private accessors:
+    auto get_content_window() const -> dom::nodes::window_proxy*;
+
+    auto set_sandbox(const ext::string& val) -> void;
 };
 
 

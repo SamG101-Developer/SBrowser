@@ -150,3 +150,24 @@ auto html::helpers::document_internals::has_a_stylesheet_that_is_blocking_script
                     and document->m_browsing_context->container_document()
                     and document->m_browsing_context->container_document()->m_script_blocking_stylesheet_counter > 0;
 }
+
+
+auto html::helpers::document_internals::allowed_to_use(
+        dom::nodes::document* document,
+        const ext::string& feature)
+        -> bool
+{
+    // return false if there is no browsing context
+    if (document->m_browsing_context == nullptr)
+        return false;
+
+    // return false if the browsing context's active document isn't document
+    if (document->m_browsing_context->active_document() != document)
+        return false;
+
+    // TODO : permission policy API
+
+
+    // default to returning false
+    return false;
+}

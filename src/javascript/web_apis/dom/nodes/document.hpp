@@ -209,6 +209,9 @@ private cpp_properties:
     int m_throw_on_dynamic_markup_insertion_counter = 0;
     int m_ignore_destructive_writes_counter = 0;
 
+    bool iframe_load_in_progress_flag = false;
+    bool mute_iframe_load_flag = false;
+
 private accessors:
     // dom
     auto get_compat_mode() const -> ext::string;

@@ -25,6 +25,7 @@ html::elements::html_image_element::html_image_element()
     natural_width.getter = [this] {return get_natural_width();};
     natural_height.getter = [this] {return get_natural_height();};
     complete.getter = [this] {return get_complete();};
+    current_src.getter = [this] {return get_current_src();};
 
     alt.setter = [this](auto&& PH1) {set_alt(std::forward<decltype(PH1)>(PH1));};
     src.setter = [this](auto&& PH1) {set_src(std::forward<decltype(PH1)>(PH1));};
@@ -152,7 +153,15 @@ auto html::elements::html_image_element::get_complete()
     // return if the image is complete or not
     return (src->empty() and srcset->empty())
             or (m_current_request->state == internal::image_request_state::COMPLETELY_AVAILABLE and not m_pending_request)
-            or (m_current_request->state == internal::image_request_state::BROKEN               and not m_pending_request)
+            or (m_current_request->state == internal::image_request_state::BROKEN               and not m_pending_request);
+}
+
+
+auto html::elements::html_image_element::get_current_src()
+        -> ext::string
+{
+    // return the current request's current url
+    return m_current_request->current_url;
 }
 
 

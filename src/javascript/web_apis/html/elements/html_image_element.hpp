@@ -9,6 +9,7 @@
 #include <QtWidgets/QLabel>
 
 namespace html::elements {class html_image_element;}
+namespace html::helpers {struct images;}
 namespace html::internal {struct image_dimensions;}
 namespace html::internal {struct image_request;}
 
@@ -17,6 +18,9 @@ class html::elements::html_image_element
         : public html_element
         , public mixins::lazy_loading
 {
+public friends:
+    friend struct helpers::images;
+
 public constructors:
     html_image_element();
 
@@ -46,12 +50,17 @@ public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
     auto qt() const -> QLabel* override;
 
+protected cpp_methods:
+    auto insertion_steps() -> void override;
+    auto removal_steps(dom::nodes::node* old_parent) -> void override;
+
 private accessors:
     auto get_width() const -> unsigned long;
     auto get_height() const -> unsigned long;
     auto get_natural_width() const -> unsigned long;
     auto get_natural_height() const -> unsigned long;
     auto get_complete() -> bool;
+    auto get_current_src() -> ext::string;
 
     auto set_alt(const ext::string& val) -> void;
     auto set_src(const ext::string& val) -> void;
@@ -60,11 +69,11 @@ private accessors:
 
 private cpp_properties:
     html_image_element* m_dimension_attribute_src;
+
     internal::image_request* m_current_request = nullptr;
     internal::image_request* m_pending_request = nullptr;
+
     html_image_element* m_last_selected_source = nullptr;
-    int m_current_pixel_density = 1;
-    internal::image_dimensions* m_preferred_density_corrected_dimensions = nullptr;
 };
 
 

@@ -66,24 +66,6 @@ auto html::helpers::html_element_internals::merge_with_next_text_node(
 }
 
 
-template <typename T>
-auto html::helpers::html_element_internals::get_text_elements_target(
-        mixins::targetable<T>* element)
-        -> ext::string
-{
-    // if the element has a target, then return the target attribute
-    if (not element->target->empty())
-        return element->target;
-
-    // otherwise, if there is a HTMLBaseElement in the document, return its target attribute
-    else if (auto* base_element = static_cast<T*>(element)->owner_document->child_nodes->template cast_all<elements::html_base_element*>().front())
-        return base_element->target;
-
-    // otherwise, there is no target, so return the empty string
-    return "";
-}
-
-
 auto html::helpers::html_element_internals::starting_value(
         elements::html_olist_element* element)
         -> int {

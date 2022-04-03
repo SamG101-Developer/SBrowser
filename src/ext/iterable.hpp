@@ -66,6 +66,7 @@ public constructors:
     auto sorted() const -> iterable<T, C>;
 
     auto find(const T& object, size_t offset = 0) const -> size_t;
+    auto count(const T& object) const -> size_t;
     auto contains(const T& item) const -> bool;
     auto print() const -> void;
 
@@ -369,6 +370,14 @@ auto ext::iterable<T, C>::find(const T& object, const size_t offset) const -> si
 {
     // return the index of an item in the iterable by comparing iterator positions
     return std::distance(begin(), std::find(begin() + offset, end(), object));
+}
+
+
+template <typename T, typename C>
+auto ext::iterable<T, C>::count(const T& object) const -> size_t
+{
+    // return the number of occurrences of an object
+    return std::count(m_iterable.begin(), m_iterable.end(), object);
 }
 
 

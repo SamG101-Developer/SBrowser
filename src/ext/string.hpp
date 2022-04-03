@@ -192,8 +192,10 @@ auto ext::string::replace(const size_t offset, const size_t count, const string&
 }
 
 
-auto ext::string::split(const char delimiter, const size_t max_delimiters) const -> ext::string_vector
+auto ext::string::split(const char delimiter, size_t max_delimiters) const -> ext::string_vector
 {
+    max_delimiters = max_delimiters < 0 ? count(delimiter) : max_delimiters;
+
     // create an empty output vector, and initialize position variables to 0
     ext::vector<string> out {};
     size_t current_position = 0;

@@ -85,15 +85,22 @@
 #include <html/elements/html_media_element.hpp>
 #include <html/elements/html_meta_element.hpp>
 #include <html/elements/html_menu_element.hpp>
+#include <html/elements/html_mod_element.hpp>
 #include <html/elements/html_olist_element.hpp>
 #include <html/elements/html_paragraph_element.hpp>
+#include <html/elements/html_picture_element.hpp>
 #include <html/elements/html_pre_element.hpp>
 #include <html/elements/html_quote_element.hpp>
 #include <html/elements/html_slot_element.hpp>
+#include <html/elements/html_source_element.hpp>
+#include <html/elements/html_span_element.hpp>
 #include <html/elements/html_style_element.hpp>
 #include <html/elements/html_title_element.hpp>
+#include <html/elements/html_time_element.hpp>
+#include <html/elements/html_track_element.hpp>
 #include <html/elements/html_ulist_element.hpp>
 #include <html/elements/html_unknown_element.hpp>
+#include <html/elements/html_video_element.hpp>
 
 #include <v8.h>
 #include <v8pp/class.hpp>
@@ -199,15 +206,22 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_media_element = object_to_v8<html::elements::html_media_element>(isolate);
     auto v8_html_meta_element = object_to_v8<html::elements::html_meta_element>(isolate);
     auto v8_html_menu_element = object_to_v8<html::elements::html_menu_element>(isolate);
+    auto v8_html_mod_element = object_to_v8<html::elements::html_mod_element>(isolate);
     auto v8_html_olist_element = object_to_v8<html::elements::html_olist_element>(isolate);
     auto v8_html_paragraph_element = object_to_v8<html::elements::html_paragraph_element>(isolate);
     auto v8_html_pre_element = object_to_v8<html::elements::html_pre_element>(isolate);
+    auto v8_html_picture_element = object_to_v8<html::elements::html_picture_element>(isolate);
     auto v8_html_quote_element = object_to_v8<html::elements::html_quote_element>(isolate);
     auto v8_html_slot_element = object_to_v8<html::elements::html_slot_element>(isolate);
+    auto v8_html_source_element = object_to_v8<html::elements::html_source_element>(isolate);
+    auto v8_html_span_element = object_to_v8<html::elements::html_span_element>(isolate);
     auto v8_html_style_element = object_to_v8<html::elements::html_style_element>(isolate);
-    auto v8_html_title_element  = object_to_v8<html::elements::html_title_element>(isolate);
+    auto v8_html_title_element = object_to_v8<html::elements::html_title_element>(isolate);
+    auto v8_html_track_element = object_to_v8<html::elements::html_track_element>(isolate);
+    auto v8_html_time_element = object_to_v8<html::elements::html_time_element>(isolate);
     auto v8_html_ulist_element = object_to_v8<html::elements::html_ulist_element>(isolate);
     auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
+    auto v8_html_video_element = object_to_v8<html::elements::html_video_element>(isolate);
 
     // create the module and an empty module name
     v8pp::module v8_module{isolate};
@@ -239,7 +253,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("DocumentType", v8_document_type)
                     .class_("Element", v8_element)
                     .class_("EventTarget", v8_event_target)
-                    .class_("Node", v8_node)
+//                    .class_("Node", v8_node) TODO -> pure virtual method 'qt()' causing issues here
                     .class_("ProcessingInstruction", v8_processing_instruction)
                     .class_("ShadowRoot", v8_shadow_root)
                     .class_("Text", v8_text)
@@ -264,7 +278,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLAudioElement", v8_html_audio_element)
                     .class_("HTMLBaseElement", v8_html_base_element)
                     .class_("HTMLBodyElement", v8_html_body_element)
-                    .class_("HTMLBrElement", v8_html_br_element)
+                    .class_("HTMLBRElement", v8_html_br_element)
                     .class_("HTMLButtonElement", v8_html_button_element)
                     .class_("HTMLCanvasElement", v8_html_canvas_element)
                     .class_("HTMLDataElement", v8_html_data_element)
@@ -287,15 +301,22 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLMediaElement", v8_html_media_element)
                     .class_("HTMLMetaElement", v8_html_meta_element)
                     .class_("HTMLMenuElement", v8_html_menu_element)
+                    .class_("HTMLModElement", v8_html_mod_element)
                     .class_("HTMLOListElement", v8_html_olist_element)
+                    .class_("HTMLPictureElement", v8_html_picture_element)
                     .class_("HTMLParagraphElement", v8_html_paragraph_element)
                     .class_("HTMLPreElement", v8_html_pre_element)
                     .class_("HTMLQuoteElement", v8_html_pre_element)
                     .class_("HTMLSlotElement", v8_html_slot_element)
+                    .class_("HTMLSourceElement", v8_html_source_element)
+                    .class_("HTMLSpanElement", v8_html_span_element)
                     .class_("HTMLStyleElement", v8_html_style_element)
                     .class_("HTMLTitleElement", v8_html_title_element)
+                    .class_("HTMLTimeElement", v8_html_time_element)
+                    .class_("HTMLTrackElement", v8_html_track_element)
                     .class_("HTMLUListElement", v8_html_ulist_element)
                     .class_("HTMLUnknownElement", v8_html_unknown_element)
+                    .class_("HTMLVideoElement", v8_html_video_element)
                     ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();

@@ -30,9 +30,9 @@ file(GLOB v8_DLLs ${CMAKE_SOURCE_DIR}/third-party/v8.redist-v143-x64.9.8.177.4/l
 link_libraries(${v8_LIBs})
 
 # Link Qt6
-include_directories(third-party/qt-6.0.1/include)
-file(GLOB qt_LIBs ${CMAKE_SOURCE_DIR}/third-party/qt-6.0.1/lib/*.lib)
-file(GLOB qt_DLLs ${CMAKE_SOURCE_DIR}/third-party/qt-6.0.1/bin/*.dll)
+include_directories(third-party/qt-6.2.4/include)
+file(GLOB qt_LIBs ${CMAKE_SOURCE_DIR}/third-party/qt-6.2.4/lib/*.lib)
+file(GLOB qt_DLLs ${CMAKE_SOURCE_DIR}/third-party/qt-6.2.4/bin/*.dll)
 link_libraries(${qt_LIBs})
 
 # Create exe
@@ -48,4 +48,4 @@ foreach(qt_DLL ${qt_DLLs})
 endforeach()
 
 
-file(COPY third-party/qt-6.0.1/plugins/platforms DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})
+file(COPY third-party/qt-6.2.4/plugins/platforms DESTINATION ${CMAKE_RUNTIME_OUTPUT_DIRECTORY})

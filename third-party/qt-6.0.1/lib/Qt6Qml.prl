@@ -1,4 +1,0 @@
-QMAKE_PRL_BUILD_DIR = C:/qtb/bld/qtdeclarative/src/qml
-QMAKE_PRL_TARGET = Qt6Qml.lib
-QMAKE_PRL_CONFIG = shared
-QMAKE_PRL_VERSION = 6.0.1

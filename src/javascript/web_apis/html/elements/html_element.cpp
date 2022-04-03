@@ -4,6 +4,7 @@
 #include <dom/helpers/event_dispatching.hpp>
 #include <dom/helpers/exceptions.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
+#include <dom/helpers/namespaces.hpp>
 #include <dom/helpers/trees.hpp>
 #include <dom/nodes/document_fragment.hpp>
 #include <dom/nodes/text.hpp>
@@ -198,6 +199,20 @@ auto html::elements::html_element::set_outer_text(
     // merge the previous node if it is a text node
     if (auto* text_node = dynamic_cast<dom::nodes::text*>(prev))
         helpers::html_element_internals::merge_with_next_text_node(text_node);
+}
+
+
+auto html::elements::html_element::insertion_steps()
+        -> void
+{
+    // TODO : form stuff
+}
+
+
+auto html::elements::html_element::removal_steps(dom::nodes::node* old_parent)
+        -> void
+{
+    // TODO : form stuff
 }
 
 

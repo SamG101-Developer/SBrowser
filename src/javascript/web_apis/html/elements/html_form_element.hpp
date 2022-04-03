@@ -29,7 +29,6 @@ public js_properties:
     ext::html_property<ext::string, _T> encoding;
     ext::html_property<ext::string, _T> method;
     ext::html_property<ext::string, _T> name;
-    ext::html_property<ext::string, _T> rel;
     ext::html_property<bool, _T> noValidate;
 
     ext::html_property<ext::string_vector*> relList;

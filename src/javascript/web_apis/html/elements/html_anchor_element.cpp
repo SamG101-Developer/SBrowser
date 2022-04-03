@@ -1,7 +1,12 @@
 #include "html_anchor_element.hpp"
 
+#include <dom/events/event.hpp>
 #include <dom/helpers/node_internals.hpp>
 #include <dom/helpers/trees.hpp>
+
+#include <html/elements/html_image_element.hpp>
+
+#include <QtGui/QCursor>
 
 
 html::elements::html_anchor_element::html_anchor_element()
@@ -35,6 +40,36 @@ auto html::elements::html_anchor_element::set_text(
 }
 
 
+auto html::elements::html_anchor_element::activation_behaviour(
+        dom::events::event* event)
+        -> void
+{
+    // return if there is no href
+    if (href->empty())
+        return;
+
+    // create the hyperlink suffix
+    ext::string hyperlink_suffix;
+
+    // handle image element map if there is one
+    if (auto* image_element = ext::property_dynamic_cast<elements::html_image_element*>(event->target); image_element->is_map)
+    {
+        // set the x and y to the different in the mouse position to the image position (positive value)
+        int x = std::max(0, event->is_trusted ? QCursor::pos().x() - image_element->qt()->x() : 0);
+        int y = std::max(0, event->is_trusted ? QCursor::pos().y() - image_element->qt()->y() : 0);
+
+        // the hyperlink suffix is the x and y position with comma separation, after a question mark
+        hyperlink_suffix = "?" + std::to_string(x) + "," + std::to_string(y);
+    }
+
+    // download or follow the hyperlink depending on the download attribute value
+    if (not download->empty())
+        helpers::hyperlinks::download_hyperlink(this, hyperlink_suffix);
+    else
+        helpers::hyperlinks::follow_hyperlink(this, hyperlink_suffix);
+}
+
+
 auto html::elements::html_anchor_element::v8(
         v8::Isolate* isolate) const
         -> ext::any
@@ -46,11 +81,10 @@ auto html::elements::html_anchor_element::v8(
 //            .inherit<mixins::html_hyperlink_element_utils>()
             .var("download", &html_anchor_element::download)
             .var("ping", &html_anchor_element::ping)
-            .var("rel", &html_anchor_element::rel)
             .var("hreflang", &html_anchor_element::hreflang)
             .var("type", &html_anchor_element::type)
             .var("text", &html_anchor_element::text)
-            .var("referrerPolicy", &html_anchor_element::referrerPolicy)
+            .var("referrerPolicy", &html_anchor_element::referrer_policy)
             .var("relList", &html_anchor_element::relList)
             .auto_wrap_objects();
 }

@@ -55,7 +55,11 @@ public:
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected:
+protected cpp_methods:
+    auto insertion_steps() -> void override;
+    auto removal_steps(dom::nodes::node* old_parent) -> void override;
+
+protected constructors:
     explicit html_element(int) {/* NO_HTML_CONSTRUCTOR */}
 
 private cpp_properties:
