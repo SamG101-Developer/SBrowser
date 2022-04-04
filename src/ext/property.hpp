@@ -28,6 +28,11 @@ public friends:
     // override setter
     friend property<T>& operator<<(property<T>& p, const T& o) {p.m_internal = o;};
     friend property<T>& operator<<(property<T>& p, T&& o) {p.m_internal = std::move(o);};
+    friend property<T>& operator<<=(property<T>& p, const T& o) {p.m_internal += o;}
+    friend property<T>& operator<<=(property<T>& p, T&& o) {p.m_internal += std::move(o);}
+
+    // swapping
+    // friend auto swap(ext::property<T>& a, ext::property<T>& b) {std::swap(a.m_internal, b.m_internal);}
 
     // casting
     template <typename U, typename V> friend auto property_dynamic_cast(const ext::property<V>& o) -> U;

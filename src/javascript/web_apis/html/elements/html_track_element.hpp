@@ -5,7 +5,7 @@
 #include <html/elements/html_element.hpp>
 
 namespace html::elements {class html_track_element;}
-namespace html::tracks {class text_track;}
+namespace html::media {class text_track;}
 
 
 class html::elements::html_track_element : public html_element
@@ -26,7 +26,7 @@ public js_properties:
     ext::html_property<ext::string, _T> label;
     ext::html_property<bool, _T> default_;
     ext::html_property<unsigned short> ready_state;
-    ext::html_property<tracks::text_track*> track;
+    ext::html_property<media::text_track*> track;
 
 private accessors:
     auto set_kind(const ext::string& val) -> void;

@@ -1,0 +1,292 @@
+-1 - nothing
+0  - 5 minutes - 1 hour
+1  - 4 hours
+2  - 1 day
+3  - 3 days
+4  - 1 week+
+
+accessibility_mapping: https://w3c.github.io/html-aam/
+app_manifest         : https://www.w3.org/TR/appmanifest/ (???)
+aria                 : https://w3c.github.io/aria/
+                     : https://w3c.github.io/html-aria/
+
+background_fetch : https://wicg.github.io/background-fetch/ (0)
+background_sync  : https://wicg.github.io/background-sync/spec/
+background_tasks : https://w3c.github.io/requestidlecallback/ (0)
+barcode_detection: https://wicg.github.io/shape-detection-api/ (0)
+battery          : https://w3c.github.io/battery/ (0)
+beacon           : https://w3c.github.io/beacon/ (0)
+bluetooth        : https://webbluetoothcg.github.io/web-bluetooth (1)
+broadcast_channel: https://html.spec.whatwg.org/ (0)
+
+canvas               : https://html.spec.whatwg.org
+channel_messaging    : https://html.spec.whatwg.org (0)
+clipboard            : https://w3c.github.io/clipboard-apis/ (0)
+compression_streams  : https://wicg.github.io/compression/ (0)
+console              : https://console.spec.whatwg.org/ (1)
+contact_picker       : https://w3c.github.io/contact-api/spec/ (0)
+content_index        : https://wicg.github.io/content-index/spec/
+content_sec_policy   : https://w3c.github.io/webappsec-csp/
+                     : https://www.w3.org/TR/CSP3/
+cookie_store         : https://wicg.github.io/cookie-store/ (1)
+credential_management: https://w3c.github.io/webappsec-credential-management/ (1)
+custom_state_pseudo_class: https://wicg.github.io/custom-state-pseudo-class/
+
+device_orientation       : https://w3c.github.io/deviceorientation/ (0)
+device_posture           : https://w3c.github.io/device-posture/
+dom                      : https://dom.spec.whatwg.org/ (3)
+dom_parsing_serialization: https://w3c.github.io/DOM-Parsing/
+
+encoding                  : https://encoding.spec.whatwg.org/ (2)
+encrypted_media_extensions: https://w3c.github.io/encrypted-media/ (1)
+exec_command              : https://w3c.github.io/editing/docs/execCommand/
+eyedropper                : https://wicg.github.io/eyedropper-api/ (0)
+
+fetch             : https://fetch.spec.whatwg.org/ (3)
+file_system_access: https://wicg.github.io/file-system-access/ (1)
+file_entries      : https://wicg.github.io/entries-api/ (0)
+fullscreen_api    : https://fullscreen.spec.whatwg.org/ (0)
+
+gamepad           : https://w3c.github.io/gamepad/
+gamepad_extensions: https://w3c.github.io/gamepad/extensions.html
+geolocation       : https://w3c.github.io/geolocation-api/ (1)
+gestures          : https://developer.apple.com/documentation/webkitjs/gestureevent (???)
+
+html           : https://html.spec.whatwg.org/ (4)
+html_drag_drop : https://html.spec.whatwg.org/ (0)
+html_sanitizer : https://wicg.github.io/sanitizer-api/ (0)
+high_res_timing: https://w3c.github.io/hr-time/
+               : https://w3c.github.io/navigation-timing/
+               : https://w3c.github.io/performance-timeline/
+               : https://w3c.github.io/resource-timing/
+               : https://w3c.github.io/user-timing/
+html_sourcing  : https://dev.w3.org/html5/html-sourcing-inband-tracks/ (???)
+history        : https://html.spec.whatwg.org/ (0)
+
+image_capture            : https://w3c.github.io/mediacapture-image/ (0)
+indexed_db               : https://w3c.github.io/IndexedDB/ (2)
+input_device_capabilities: https://wicg.github.io/input-device-capabilities/
+input_events             : https://w3c.github.io/input-events/ (0)
+intersection_observer    : https://w3c.github.io/IntersectionObserver/ (1)
+
+keyboard_map : https://wicg.github.io/keyboard-map/ (0)
+keyboard_lock: https://wicg.github.io/keyboard-lock/ (0)
+
+largest_contentful_paint: https://w3c.github.io/largest-contentful-paint/ (0)
+layout_instability      : https://wicg.github.io/layout-instability/ (0)
+long_tasks              : https://w3c.github.io/longtasks/ (0)
+
+math_ml              : https://w3c.github.io/mathml-core/
+                     : https://www.w3.org/TR/MathML3/
+media_capabilities   : https://w3c.github.io/media-capabilities/ (0)
+media_capture_record : https://w3c.github.io/mediacapture-record/
+media_capture_streams: https://w3c.github.io/mediacapture-main/
+media_capture_element: https://w3c.github.io/mediacapture-fromelement/
+media_session        : https://w3c.github.io/mediasession/ (1)
+media_extensions     : https://w3c.github.io/media-source/ (1)
+mixed_content        : https://w3c.github.io/webappsec-mixed-content/ (-1)
+
+network_information: https://wicg.github.io/netinfo/ (0)
+
+page_visibility   : https://w3c.github.io/page-visibility/ (0)
+paint_timing      : https://w3c.github.io/paint-timing/ (0)
+payment_request   : https://w3c.github.io/payment-request/ (1)
+                  : https://w3c.github.io/payment-method-id/ (0)
+periodic_sync     : https://wicg.github.io/periodic-background-sync/ (0)
+permissions       : https://w3c.github.io/permissions/ (1)
+permissions_policy: https://w3c.github.io/webappsec-permissions-policy/ (0)
+picture_in_picture: https://w3c.github.io/picture-in-picture/ (0)
+pointer_events    : https://w3c.github.io/pointerevents/ (0)
+pointer_lock      : https://w3c.github.io/pointerlock/ (0)
+preload           : https://w3c.github.io/preload/
+presentation      : https://w3c.github.io/presentation-api/ (1)
+push              : https://w3c.github.io/push-api/ (1)
+
+referrer_policy: https://w3c.github.io/webappsec-referrer-policy/ (-1)
+remote_playback: https://w3c.github.io/remote-playback/ (0)
+reporting      : https://w3c.github.io/reporting/ (-1)
+               : https://www.w3.org/TR/reporting-1/
+resize_observer: https://drafts.csswg.org/resize-observer/ (0)
+resource_hints : https://www.w3.org/TR/resource-hints/ (-1)
+
+screen_capture    : https://w3c.github.io/mediacapture-screen-share/ (0)
+screen_orientation: https://w3c.github.io/screen-orientation/ (0)
+screen_wake_lock  : https://w3c.github.io/screen-wake-lock/ (0)
+secure_contexts   : https://w3c.github.io/webappsec-secure-contexts/ (-1)
+selection         : https://w3c.github.io/selection-api/ (0)
+sensors           : https://w3c.github.io/sensors/ (0)
+                  : https://w3c.github.io/accelerometer/ (0)
+                  : https://w3c.github.io/ambient-light/ (0)
+                  : https://w3c.github.io/gyroscope/ (0)
+                  : https://w3c.github.io/magnetometer/ (0)
+                  : https://w3c.github.io/orientation-sensor/ (0)
+server_sent_events: https://html.spec.whatwg.org/ (0)
+service_workers   : https://w3c.github.io/ServiceWorker/ (2)
+sr_integrity      : https://www.w3.org/TR/SRI/ (0)
+storage           : https://storage.spec.whatwg.org/ (1)
+storage_access    : ?
+streams           : https://streams.spec.whatwg.org/ (3)
+svg               : https://svgwg.org/svg2-draft/ (2)
+svg_animations    : https://svgwg.org/specs/animations/ (0)
+svg_integration   : https://svgwg.org/specs/integration/ (0)
+svg_streams       : https://svgwg.org/specs/streaming/ (0)
+svg_transforms    : https://svgwg.org/specs/transform/ (0)
+svg_markers       : https://svgwg.org/specs/markers/
+svg_paths         : https://svgwg.org/specs/paths/
+svg_strokes       : https://svgwg.org/specs/strokes/
+svg_native        : https://svgwg.org/specs/svg-native/
+
+touch_events : https://w3c.github.io/touch-events/ (0)
+trusted_types: https://w3c.github.io/webappsec-trusted-types/dist/spec/
+
+ui_events       : https://w3c.github.io/uievents (0)
+upgrade_requests: https://www.w3.org/TR/upgrade-insecure-requests/ (0)
+url             : https://url.spec.whatwg.org/ (2)
+url_pattern     : https://wicg.github.io/urlpattern/ (1)
+uuid            : https://wicg.github.io/uuid/ (0)
+
+vibration      : https://w3c.github.io/vibration/ (1)
+visual_viewport: https://wicg.github.io/visual-viewport/ (0)
+
+web_audio         : https://webaudio.github.io/web-audio-api/ (2)
+web_authentication: https://w3c.github.io/webauthn/ (2)
+web_crypto        : https://w3c.github.io/webcrypto/ (3)
+web_midi          : https://webaudio.github.io/web-midi-api/ (1)
+web_locks         : https://w3c.github.io/web-locks/
+web_nfc           : https://w3c.github.io/web-nfc/
+web_notifications : https://notifications.spec.whatwg.org/ (0)
+web_share         : https://w3c.github.io/web-share/ (0)
+web_speech        : https://wicg.github.io/speech-api/ (2)
+web_storage       : https://html.spec.whatwg.org/ (0)
+web_usb           : https://wicg.github.io/webusb/
+web_workers       : https://html.spec.whatwg.org/ (2)
+web_codecs        : https://w3c.github.io/webcodecs/ (1)
+web_idl           : https://webidl.spec.whatwg.org/
+web_gl            : https://www.khronos.org/registry/webgl/specs/latest/1.0/
+                  : https://www.khronos.org/registry/webgl/specs/latest/2.0/
+                  : https://www.khronos.org/registry/OpenGL-Refpages/es2.0/xhtml/
+                  : https://www.khronos.org/registry/OpenGL-Refpages/es3.0/html/
+                  : https://www.khronos.org/registry/webgl/extensions/
+web_gpu           : https://gpuweb.github.io/gpuweb/
+                  : https://gpuweb.github.io/gpuweb/wgsl/
+web_hid           : https://wicg.github.io/webhid/ (0)
+web_otp           : https://wicg.github.io/web-otp/ (0)
+web_rtc           : https://w3c.github.io/webrtc-pc/ (0)
+web_vtt           : https://w3c.github.io/webvtt/ (0)
+web_serial        : https://wicg.github.io/serial/
+web_xr_device     : https://immersive-web.github.io/webxr/ (2)
+                  : https://immersive-web.github.io/anchors/ (0)
+                  : https://immersive-web.github.io/webxr-ar-module/ (0)
+                  : https://immersive-web.github.io/depth-sensing/ (0)
+                  : https://immersive-web.github.io/dom-overlays/ (0)
+                  : https://immersive-web.github.io/webxr-gamepads-module/ (0)
+                  : https://immersive-web.github.io/webxr-hand-input/ (1)
+                  : https://immersive-web.github.io/hit-test/ (1)
+                  : https://immersive-web.github.io/layers/ (2)
+                  : https://immersive-web.github.io/lighting-estimation/ (1)
+web_sockets       : https://datatracker.ietf.org/doc/html/rfc6455
+                  : https://html.spec.whatwg.org/
+webdriver         : https://www.w3.org/TR/webdriver1/
+webdriver_bidi    : https://w3c.github.io/webdriver-bidi/
+window_controls   : https://wicg.github.io/window-controls-overlay/ (0)
+
+xml_http_requests: https://xhr.spec.whatwg.org/ (1)
+
+css_box_alignment_3      : https://drafts.csswg.org/css-align-3/
+css_animations_2         : https://drafts.csswg.org/css-animations-2/
+css_background_4         : https://drafts.csswg.org/css-backgrounds-4/
+css_box_4                : https://drafts.csswg.org/css-box-4/
+css_fragmentation_4      : https://drafts.csswg.org/css-break-4/
+css_cascading_6          : https://drafts.csswg.org/css-cascade-6/
+css_color_5              : https://drafts.csswg.org/css-color-5/
+css_color_adjust_1       : https://drafts.csswg.org/css-color-adjust-1/
+css_color_hdr_1          : https://drafts.csswg.org/css-color-hdr/
+css_conditionals_5       : https://drafts.csswg.org/css-conditional-5/
+css_conditional_values_1 : https://drafts.csswg.org/css-conditional-values-1/
+css_containment_3        : https://drafts.csswg.org/css-contain-3/
+css_generated_content_3  : https://drafts.csswg.org/css-content-3/
+css_counter_styles_3     : https://drafts.csswg.org/css-counter-styles-3/
+css_device_adaptation_1  : https://drafts.csswg.org/css-device-adapt-1/
+css_display_3            : https://drafts.csswg.org/css-display-3/
+css_easing_2             : https://drafts.csswg.org/css-easing-2/
+css_egg_1                : https://drafts.csswg.org/css-egg-1/
+css_env_1                : https://drafts.csswg.org/css-env-1/
+css_exclusions_1         : https://drafts.csswg.org/css-exclusions-1/
+css_extensions_1         : https://drafts.csswg.org/css-extensions-1/
+css_flexbox_1            : https://drafts.csswg.org/css-flexbox-1/
+css_font_loading_3       : https://drafts.csswg.org/css-font-loading-3/
+css_fonts_5              : https://drafts.csswg.org/css-fonts-5/
+css_form_styling_1       : https://drafts.csswg.org/css-forms-1/
+css_gcpm_4               : https://drafts.csswg.org/css-gcpm-4/
+css_grid_layout_3        : https://drafts.csswg.org/css-grid-3/
+css_highlight_1          : https://drafts.csswg.org/css-highlight-api-1/
+css_images_4             : https://drafts.csswg.org/css-images-4/
+css_inline_layout_3      : https://drafts.csswg.org/css-inline-3/
+css_inline_grid_1        : https://drafts.csswg.org/css-line-grid-1/
+css_lists_3              : https://drafts.csswg.org/css-lists-3/
+css_logical_properties_1 : https://drafts.csswg.org/css-logical-1/
+css_mobile_preferences_2 : https://drafts.csswg.org/css-mobile/
+css_multicol_2           : https://drafts.csswg.org/css-multicol-2/
+css_namespaces_1         : https://drafts.csswg.org/css-namespaces-3/
+css_spatial_navigation_1 : https://drafts.csswg.org/css-nav-1/
+css_nesting_1            : https://drafts.csswg.org/css-nesting-1/
+css_overflow_4           : https://drafts.csswg.org/css-overflow-4/
+css_overscroll_1         : https://drafts.csswg.org/css-overscroll-1/
+css_paged_media_4        : https://drafts.csswg.org/css-page-4/
+css_page_floats_3        : https://drafts.csswg.org/css-page-floats-3/
+css_page_templates_1     : https://drafts.csswg.org/css-page-template-1/
+css_positioned_layout_3  : https://drafts.csswg.org/css-position-3/
+css_presentation_levels_1: https://drafts.csswg.org/css-preslev-1/
+css_print_profile_1      : https://drafts.csswg.org/css-print/
+css_pseudo_elements_4    : https://drafts.csswg.org/css-pseudo-4/
+css_regions_1            : https://drafts.csswg.org/css-regions-1/
+css_rhythmic_sizing_1    : https://drafts.csswg.org/css-rhythm-1/
+css_round_display_1      : https://drafts.csswg.org/css-round-display-1/
+css_ruby_1               : https://drafts.csswg.org/css-ruby-1/
+css_scoping_1            : https://drafts.csswg.org/css-scoping-1/
+css_scroll_anchoring_1   : https://drafts.csswg.org/css-scroll-anchoring-1/
+css_scroll_snap_2        : https://drafts.csswg.org/css-scroll-snap-2/
+css_scroll_bars_1        : https://drafts.csswg.org/css-scrollbars-1/
+css_shadow_parts_1       : https://drafts.csswg.org/css-shadow-parts-1/
+css_shapes_2             : https://drafts.csswg.org/css-shapes-2/
+css_size_adjustment_1    : https://drafts.csswg.org/css-size-adjust-1/
+css_sizing_4             : https://drafts.csswg.org/css-sizing-4/
+css_speech_1             : https://drafts.csswg.org/css-speech-1/
+css_style_attributes_1   : https://drafts.csswg.org/css-style-attr-1/
+css_syntax_3             : https://drafts.csswg.org/css-syntax-3/
+css_tables_3             : https://drafts.csswg.org/css-tables-3/
+css_template_layout_1    : https://drafts.csswg.org/css-template-1/
+css_text_4               : https://drafts.csswg.org/css-text-4/
+css_text_decoration_4    : https://drafts.csswg.org/css-text-decor-4/
+css_transforms_2         : https://drafts.csswg.org/css-transforms-2/
+css_transitions_2        : https://drafts.csswg.org/css-transitions-2/
+css_tv_1                 : https://drafts.csswg.org/css-tv/
+css_user_interface_4     : https://drafts.csswg.org/css-ui-4/
+css_values_and_units_5   : https://drafts.csswg.org/css-values-5/
+css_variables_1          : https://drafts.csswg.org/css-variables-1/
+css_will_change_1        : https://drafts.csswg.org/css-will-change-1/
+css_writing_modes_4      : https://drafts.csswg.org/css-writing-modes-4/
+css_2                    : https://drafts.csswg.org/css2/
+cssom_1                  : https://drafts.csswg.org/cssom-1/
+cssom_view_1             : https://drafts.csswg.org/cssom-view-1/
+css_media_queries_5      : https://drafts.csswg.org/mediaqueries-5/
+css_resize_observer_1    : https://drafts.csswg.org/resize-observer-1/
+css_scroll_animations_1  : https://drafts.csswg.org/scroll-animations-1/
+css_selectors_4          : https://drafts.csswg.org/selectors-4/
+css_non_element_1        : https://drafts.csswg.org/selectors-nonelement-1/
+css_web_animations_2     : https://drafts.csswg.org/web-animations-2/
+css_box_tree_1           : https://drafts.css-houdini.org/box-tree-api/
+css_animation_worklet_1  : https://drafts.css-houdini.org/css-animation-worklet-1/
+css_layout_1             : https://drafts.css-houdini.org/css-layout-api/
+css_painting_3           : https://drafts.css-houdini.org/css-paint-api/
+css_parser_1             : https://drafts.css-houdini.org/css-parser-api/
+css_properties_values_1  : https://drafts.css-houdini.org/css-properties-values-api/
+css_typed_om_2           : https://drafts.css-houdini.org/css-typed-om-2/
+css_font_metrics_1       : https://drafts.css-houdini.org/font-metrics-api/
+css_compositing_2        : https://drafts.fxtf.org/compositing/
+css_masking_1            : https://drafts.fxtf.org/css-masking-1/
+css_shading_1            : https://drafts.fxtf.org/custom/
+css_fill_and_stroke_1    : https://drafts.fxtf.org/fill-stroke/
+css_filter_effects_2     : https://drafts.fxtf.org/filter-effects-2/
+css_geometry             : https://drafts.fxtf.org/geometry/ (1)
+css_motion_path          : https://drafts.fxtf.org/motion-1/

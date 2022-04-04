@@ -3,25 +3,25 @@
 #define SBROWSER_HTML_MEDIA_ELEMENT_HPP
 
 #include <html/elements/html_element.hpp>
+#include <web_idl/types/promise.hpp>
+#include <web_idl/types/date.hpp>
 
-namespace html
-{
-    namespace elements {class html_media_element;}
-    namespace media
-    {
-        class audio_track;
-        class media_error;
-        class media_provider;
-        class text_track;
-        class text_track_cue;
-        class time_ranges;
-        class video_track;
-    }
-}
+namespace html::elements {class html_media_element;}
+namespace html::helpers {struct media_internals;}
+namespace html::media{class audio_track;}
+namespace html::media{class media_error;}
+namespace html::media{class media_provider;}
+namespace html::media{class text_track;}
+namespace html::media{class text_track_cue;}
+namespace html::media{class time_ranges;}
+namespace html::media{class video_track;}
 
 
 class html::elements::html_media_element : public html_element
 {
+public friends:
+    friend struct helpers::media_internals;
+
 public constructors:
     html_media_element();
 
@@ -40,38 +40,34 @@ public js_methods:
     auto load() -> void;
     auto pause() -> void;
     auto play() -> webidl::types::promise<void>;
-    auto can_play_time(const ext::string& type) -> ext::string;
+    auto can_play_type(const ext::string& type) -> ext::string;
     auto fast_seek(double time) -> void;
     auto get_start_date() -> webidl::types::date;
     auto add_text_track(const ext::string& kind, const ext::string& label = "", const ext::string& language = "") -> ext::vector<html::media::text_track*>;
 
 public js_properties:
-    // Errors
     ext::html_property<html::media::media_error*> error;
 
-    // Networking
-    ext::html_property<html::media::media_provider*> src_object;
-    ext::html_property<html::media::time_ranges*> buffered;
     ext::html_property<ext::string, _T> src;
+    ext::html_property<html::media::media_provider*> src_object;
     ext::html_property<ext::string> current_src;
     ext::html_property<ext::string, _T> cross_origin;
-    ext::html_property<ext::string, _T> preload;
     ext::html_property<unsigned short> network_state;
+    ext::html_property<ext::string, _T> preload;
+    ext::html_property<html::media::time_ranges*> buffered;
 
-    // Readiness
     ext::html_property<unsigned short> ready_state;
     ext::html_property<bool> seeking;
 
-    // Playback
-    ext::html_property<bool> paused;
-    ext::html_property<bool> preserves_pitch;
-    ext::html_property<bool> ended;
-    ext::html_property<bool, _T> autoplay;
-    ext::html_property<bool, _T> loop;
     ext::html_property<double> current_time;
     ext::html_property<double> duration;
     ext::html_property<double> default_playback_rate;
     ext::html_property<double> playback_rate;
+    ext::html_property<bool, _T> autoplay;
+    ext::html_property<bool, _T> loop;
+    ext::html_property<bool> paused;
+    ext::html_property<bool> preserves_pitch;
+    ext::html_property<bool> ended;
     ext::html_property<html::media::time_ranges*> played;
     ext::html_property<html::media::time_ranges*> seekable;
 
@@ -102,7 +98,11 @@ protected cpp_properties:
     double m_earliest_possible_position;
     double m_effective_media_volume;
 
-    ext::vector<webidl::types::promise<void>*> m_pending_promises;
+    bool m_show_poster_flag;
+    bool m_can_autoplay_flag;
+    bool m_delaying_the_load_event_flag;
+
+    ext::vector<webidl::types::promise<void>> m_pending_promises;
     ext::vector<html::media::text_track*> m_pending_text_tracks;
     ext::vector<html::media::text_track_cue*> m_newly_introduced_cues;
 
@@ -110,6 +110,7 @@ private accessors:
     auto get_current_time() const -> double;
     auto get_effective_media_volume() const -> double;
 
+    auto set_ready_state(unsigned short val) -> void;
     auto set_current_time(double val) -> void;
 };
 

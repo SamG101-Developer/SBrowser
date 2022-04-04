@@ -55,7 +55,6 @@
 #include <dom/xpath/xpath_expression.hpp>
 #include <dom/xpath/xpath_result.hpp>
 
-#include <geometry/shapes/dom_rect.hpp>
 
 #include <html/elements/html_anchor_element.hpp>
 #include <html/elements/html_area_element.hpp>
@@ -101,6 +100,10 @@
 #include <html/elements/html_ulist_element.hpp>
 #include <html/elements/html_unknown_element.hpp>
 #include <html/elements/html_video_element.hpp>
+
+#include <html/media/audio_track.hpp>
+#include <html/media/video_track.hpp>
+
 
 #include <v8.h>
 #include <v8pp/class.hpp>
@@ -223,6 +226,9 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
     auto v8_html_video_element = object_to_v8<html::elements::html_video_element>(isolate);
 
+    auto v8_html_audio_track = object_to_v8<html::media::audio_track>(isolate);
+    auto v8_html_video_track = object_to_v8<html::media::video_track>(isolate);
+
     // create the module and an empty module name
     v8pp::module v8_module{isolate};
     v8::Local<v8::String> module_name;
@@ -317,6 +323,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLUListElement", v8_html_ulist_element)
                     .class_("HTMLUnknownElement", v8_html_unknown_element)
                     .class_("HTMLVideoElement", v8_html_video_element)
+                    .class_("AudioTrack", v8_html_audio_track)
+                    .class_("VideoTrack", v8_html_video_track)
                     ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
