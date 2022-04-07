@@ -26,7 +26,7 @@ public js_methods:
     auto query_selector_all(ext::string selectors) -> ext::vector<nodes::node*>;
 
 public js_properties:
-    ext::dom_property<ext::vector<nodes::element*>> children;
+    ext::dom_property<ext::vector<nodes::element*>*> children;
     ext::dom_property<nodes::element*> first_element_child;
     ext::dom_property<nodes::element*> last_element_child;
     ext::dom_property<size_t> child_element_count;
@@ -35,7 +35,7 @@ public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:
-    auto get_children() const -> ext::vector<nodes::element*>;
+    auto get_children() const -> ext::vector<nodes::element*>*;
     auto get_first_element_child() const -> nodes::element*;
     auto get_last_element_child() const -> nodes::element*;
     auto get_child_element_count() const -> size_t;

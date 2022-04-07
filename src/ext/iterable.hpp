@@ -223,7 +223,7 @@ auto ext::iterable<T, C>::remove_if(
     while (std::find_if(begin(), end(), function) != end())
     {
         // remove the item, and continue looping if looking for all matches
-        std::remove_if(begin(), end(), function);
+        m_iterable.erase(std::remove_if(begin(), end(), function));
         if (not all) break;
     }
 
@@ -263,7 +263,7 @@ auto ext::iterable<T, C>::remove(
     while (contains(item))
     {
         // remove the item, and continue looping if looking for all matches
-        auto _ = std::remove(begin(), end(), item);
+        auto _ = m_iterable.erase(std::remove(begin(), end(), item));
         if (not all) break;
     }
 

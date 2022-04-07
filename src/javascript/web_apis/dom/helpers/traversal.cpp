@@ -15,9 +15,8 @@ auto dom::helpers::traversal::filter(
         iterators::abstract_iterator* const iterator)
         -> unsigned short
 {
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "an iterator must be inactive in order to be filtered",
-            INVALID_STATE_ERR,
             [iterator] {return iterator->m_active_flag;});
 
     unsigned short n = node->node_type - (unsigned short)1;

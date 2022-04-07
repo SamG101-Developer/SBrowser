@@ -31,9 +31,8 @@ auto dom::aborting::abort_signal::throw_if_aborted(
         -> void
 {
     // if a reason has been given, then throw an abort error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<ABORT_ERR>(
             ext::property_any_cast<other::dom_exception>(reason).message,
-            ABORT_ERR,
             [this] {return reason->to<bool>();});
 }
 

@@ -39,15 +39,13 @@ auto html::elements::html_dialog_element::show_modal()
         -> void
 {
     // if this dialog is already open, throw an invalid state error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "subject must not have an open attribute set in order to show dialog in modal mode",
-            INVALID_STATE_ERR,
             [this] {return open;});
 
     // if this dialog is not connected, throw an invalid state error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "subject must be connected in order to show dialog in modal mode",
-            INVALID_STATE_ERR,
             [this] {return not dom::helpers::shadows::is_connected(this);});
 
     // reset the open property and set the m_modal_flag to true

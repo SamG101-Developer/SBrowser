@@ -2,12 +2,17 @@
 
 #include <thread>
 
+#include <ext/infinity.hpp>
+
 #include <dom/nodes/document.hpp>
 #include <dom/other/dom_exception.hpp>
 #include <dom/helpers/mutation_observers.hpp>
 #include <dom/helpers/event_dispatching.hpp>
 
 #include <html/elements/html_media_element.hpp>
+#include <html/media/text_track.hpp>
+#include <html/media/text_track_cue.hpp>
+#include <html/media/time_ranges.hpp>
 
 
 auto html::helpers::media_internals::is_eligible_for_autoplay(
@@ -196,4 +201,82 @@ auto html::helpers::media_internals::seek(
         dom::helpers::mutation_observers::queue_media_element_task(element, [&element] {dom::helpers::event_dispatching::fire_event<>("timeupdate", element);});
         dom::helpers::mutation_observers::queue_media_element_task(element, [&element] {dom::helpers::event_dispatching::fire_event<>("seeked", element);});
     });
+}
+
+
+auto html::helpers::media_internals::populate_list_of_pending_tracks(
+        elements::html_media_element* element)
+        -> void
+{
+    // add all the non-disabled tracks that are loading to the pending text tracks of the media element
+    element->text_tracks
+            ->filter([](media::text_track* track) {return track->m_readiness_state == track_readiness_state::LOADING and track->mode != "disabled";})
+            .for_each([&element](media::text_track* track) {element->m_pending_text_tracks.append(track);});
+}
+
+
+auto html::helpers::media_internals::are_text_tracks_ready(
+        elements::html_media_element* element)
+        -> bool
+{
+    // the text tracks on a meda element are ready when there aren't any pending tracks, end the element isn't blocked
+    return element->m_pending_text_tracks.empty() and not element->m_blocked_on_parser_flag;
+}
+
+
+auto html::helpers::media_internals::effective_media_volume(
+        elements::html_media_element* element)
+        -> double
+{
+    // TODO : user defined override
+
+    if (element->muted)
+        return 0;
+
+    // TODO : ?
+}
+
+
+auto html::helpers::media_internals::is_unbounded_text_track(
+        media::text_track_cue* track_cue)
+        -> bool
+{
+    // a text track cue is unbounded if its end time is infinity
+    return track_cue->end_time == ext::infinity<double>{};
+}
+
+
+auto html::helpers::media_internals::honour_user_preferences_for_automatic_track_selection(
+        elements::html_media_element* element)
+        -> void
+{
+    // select automatic tracks for subtitles / captions, followed by descriptions
+    perform_automatic_track_selection(ext::string_vector{"subtitles", "captions"});
+    perform_automatic_track_selection(ext::string_vector{"descriptions"});
+
+    // set all the tracks whose kind is chapters / metadata and are defaulted and in disabled mode to hidden mode
+    element->text_tracks
+            ->filter([](media::text_track* track) {return (track->kind == "chapters" or track->kind == "metadata") and track->default_ and track->mode == "disabled"})
+            .for_each([](media::text_track* track) {track->mode = "hidden";});
+
+    // set the flag which shows that automatic selection has happened
+    element->m_did_perform_automatic_track_selection_flag = true;
+}
+
+
+auto html::helpers::media_internals::is_normalized_time_range(
+        media::time_ranges* time_ranges)
+        -> bool
+{
+    // iterate over the time ranges, starting at the 1st (not 0th) item
+    for (auto index = 1; index < time_ranges->length; ++index)
+    {
+        // check that each consecutive time range has no overlap or touch, and that the length of the time range >= 0
+        // (ie return false if the opposite occurs)
+        if (time_ranges->start(index) <= time_ranges->end(index - 1) or time_ranges->start(index) > time_ranges->end(index))
+            return false;
+    }
+
+    // otherwise, return true, as the time ranges are normalized
+    return true;
 }

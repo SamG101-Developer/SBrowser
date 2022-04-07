@@ -7,6 +7,7 @@
 #include <web_idl/types/date.hpp>
 
 namespace html::elements {class html_media_element;}
+namespace html::elements {class html_track_element;}
 namespace html::helpers {struct media_internals;}
 namespace html::media{class audio_track;}
 namespace html::media{class media_error;}
@@ -21,6 +22,8 @@ class html::elements::html_media_element : public html_element
 {
 public friends:
     friend struct helpers::media_internals;
+    friend class html_track_element;
+    friend class media::text_track;
 
 public constructors:
     html_media_element();
@@ -96,11 +99,15 @@ protected cpp_properties:
     double m_official_playback_position;
     double m_default_playback_start_position;
     double m_earliest_possible_position;
+    double m_playback_volume;
     double m_effective_media_volume;
 
-    bool m_show_poster_flag;
-    bool m_can_autoplay_flag;
-    bool m_delaying_the_load_event_flag;
+    bool m_show_poster_flag = false;
+    bool m_can_autoplay_flag = false;
+    bool m_delaying_the_load_event_flag = false;
+    bool m_blocked_on_parser_flag = false;
+    bool m_did_perform_automatic_track_selection_flag = false;
+    bool m_pending_text_track_change_notification_flag = false;
 
     ext::vector<webidl::types::promise<void>> m_pending_promises;
     ext::vector<html::media::text_track*> m_pending_text_tracks;

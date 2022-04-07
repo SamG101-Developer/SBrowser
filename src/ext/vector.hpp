@@ -11,6 +11,8 @@
 
 #include <veque/include/veque.hpp>
 
+#define LIVE_MUTABLE /* Fire changes to attached live filters */
+
 namespace ext {template <typename T> class vector;}
 namespace ext {template <typename T> using cvector = const vector<T>;}
 namespace ext {class string;}
@@ -54,12 +56,13 @@ public js_methods:
     template <typename F> auto first_match(const F& function) const -> T&;
     template <typename F> auto last_match(const F& function) const -> T&;
 
-    auto reserve(size_t count) -> void;
+    auto reserve(size_t count) -> vector<T>&;
+    auto shrink_to_fit() -> vector<T>&;
     auto append(const T& item) -> vector<T>&;
     auto prepend(const T& item) -> vector<T>&;
     auto insert(const T& item, size_t index = -1) -> vector<T>&;
     auto extend(const vector<T>& other, size_t index = -1) -> vector<T>&;
-    auto pop(size_t index = -1) -> vector<T>&;
+    auto pop(size_t index = -1) -> T&;
     auto clear() -> vector<T>& override;
     auto max_element() const -> T&;
     auto min_element() const -> T&;
@@ -74,8 +77,15 @@ public js_methods:
 
     auto intersection(vector<T>& other) const -> vector<T>&;
     auto join(char&& delimiter = ' ') const -> const char*;
-    auto flatten() -> vector<T>&;
+    template <typename U=std::remove_extent_t<T>> auto flatten() -> vector<U>;
     auto call_all() const -> void requires std::is_invocable_v<T>;
+
+    template <typename F> auto attach_live_filtered(ext::vector<T>* live_iterable, F&& filter_lambda) -> void;
+
+private js_properties:
+    std::function<T()> m_live_filtered_attachment_method;
+    bool m_has_live_filtered_attachment_method;
+    ext::vector<T>* m_live_filtered_iterable;
 
 public operators:
     auto operator*(size_t n) const -> ext::vector<T>;
@@ -189,10 +199,20 @@ auto ext::vector<T>::last_match(const F& function) const -> T&
 
 
 template <typename T>
-auto ext::vector<T>::reserve(size_t count) -> void
+auto ext::vector<T>::reserve(size_t count) -> vector<T>&
 {
-    // reserve count amount of object space in the veque for quicker insertion
+    // reserve count amount of object space in the veque for quicker insertion, and return a reference to it
     this->m_iterable.reserve();
+    return *this;
+}
+
+
+template <typename T>
+auto ext::vector<T>::shrink_to_fit() -> vector <T>&
+{
+    // shrink the empty reserved space around the number of objects in the veque, and return a reference to it
+    this->m_iterable->shrink_to_fit();
+    return *this;
 }
 
 
@@ -236,11 +256,12 @@ auto ext::vector<T>::extend(const vector<T>& other, size_t index) -> ext::vector
 
 
 template <typename T>
-auto ext::vector<T>::pop(size_t index) -> ext::vector<T>&
+auto ext::vector<T>::pop(size_t index) -> T&
 {
     // remove an item based on its index - syntactic sugar for v.remove(v.at(...))
-    this->remove(this->at(index));
-    return *this;
+    auto item = this->at(index);
+    this->remove(item);
+    return item;
 }
 
 
@@ -373,7 +394,8 @@ auto ext::vector<T>::join(char&& delimiter) const -> const char*
 
 
 template <typename T>
-auto ext::vector<T>::flatten() -> ext::vector<T>&
+template <typename U>
+auto ext::vector<T>::flatten() -> ext::vector<U>
 {
     /* TODO */
 }
@@ -384,6 +406,16 @@ auto ext::vector<T>::call_all() const -> void requires std::is_invocable_v<T>
 {
     // invoke each function in the veque
     for_each([](const T& item) {item();});
+}
+
+
+template <typename T>
+template <typename F>
+auto ext::vector<T>::attach_live_filtered(ext::vector<T>* live_iterable, F&& filter_lambda) -> void
+{
+    // attach the auto live filter, and set the flag for it
+    m_has_live_filtered_attachment_method = true;
+    m_live_filtered_attachment_method = std::forward<>(filter_lambda);
 }
 
 

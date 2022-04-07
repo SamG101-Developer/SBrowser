@@ -26,9 +26,8 @@ auto dom::helpers::texts::replace_data(
     const auto length = trees::length(text_node);
 
     // if teh offset > count, then throw an index size error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "offset must be <= length of the character_data node",
-            INDEX_SIZE_ERR,
             [offset, count] {return offset > count;});
 
     // queue a mutation record for the text node, as the data is about to be replaced
@@ -80,9 +79,8 @@ auto dom::helpers::texts::split(
     const auto count = length - offset;
     const auto new_data = substring_data(text_node, offset, count);
 
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "offset must be <= length of the text node",
-            INDEX_SIZE_ERR,
             [offset, length] {return offset > length;});
 
     auto* const new_text_node = new nodes::text{new_data};
@@ -124,9 +122,8 @@ auto dom::helpers::texts::substring_data(
         unsigned long count) -> ext::string
 {
     const auto length = trees::length(text_node);
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "offset must be <= length of the text node",
-            INDEX_SIZE_ERR,
             [offset, length] {return offset > length;});
 
     count = std::min(count, length - offset);

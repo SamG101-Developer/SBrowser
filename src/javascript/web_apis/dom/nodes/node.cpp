@@ -290,9 +290,8 @@ auto dom::nodes::node::clone_node(
         -> node*
 {
     // if the root of the tree of this node is a shadow root, then throw a not support error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot clone a shadow root node",
-            NOT_SUPPORTED_ERR,
             [this] {return helpers::shadows::is_shadow_root(this);});
 
     // return the clone helper method

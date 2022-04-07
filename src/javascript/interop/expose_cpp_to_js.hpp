@@ -81,6 +81,7 @@
 #include <html/elements/html_image_element.hpp>
 #include <html/elements/html_li_element.hpp>
 #include <html/elements/html_link_element.hpp>
+#include <html/elements/html_map_element.hpp>
 #include <html/elements/html_media_element.hpp>
 #include <html/elements/html_meta_element.hpp>
 #include <html/elements/html_menu_element.hpp>
@@ -94,6 +95,12 @@
 #include <html/elements/html_source_element.hpp>
 #include <html/elements/html_span_element.hpp>
 #include <html/elements/html_style_element.hpp>
+#include <html/elements/html_table_caption_element.hpp>
+#include <html/elements/html_table_cell_element.hpp>
+#include <html/elements/html_table_col_element.hpp>
+#include <html/elements/html_table_element.hpp>
+#include <html/elements/html_table_row_element.hpp>
+#include <html/elements/html_table_section_element.hpp>
 #include <html/elements/html_title_element.hpp>
 #include <html/elements/html_time_element.hpp>
 #include <html/elements/html_track_element.hpp>
@@ -101,9 +108,13 @@
 #include <html/elements/html_unknown_element.hpp>
 #include <html/elements/html_video_element.hpp>
 
-#include <html/media/audio_track.hpp>
-#include <html/media/video_track.hpp>
+#include <html/events/track_event.hpp>
 
+#include <html/media/audio_track.hpp>
+#include <html/media/text_track.hpp>
+#include <html/media/text_track_cue.hpp>
+#include <html/media/video_track.hpp>
+#include <html/media/time_ranges.hpp>
 
 #include <v8.h>
 #include <v8pp/class.hpp>
@@ -206,6 +217,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_image_element = object_to_v8<html::elements::html_image_element>(isolate);
     auto v8_html_li_element = object_to_v8<html::elements::html_li_element>(isolate);
     auto v8_html_link_element = object_to_v8<html::elements::html_link_element>(isolate);
+    auto v8_html_map_element = object_to_v8<html::elements::html_map_element>(isolate);
     auto v8_html_media_element = object_to_v8<html::elements::html_media_element>(isolate);
     auto v8_html_meta_element = object_to_v8<html::elements::html_meta_element>(isolate);
     auto v8_html_menu_element = object_to_v8<html::elements::html_menu_element>(isolate);
@@ -219,6 +231,12 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_source_element = object_to_v8<html::elements::html_source_element>(isolate);
     auto v8_html_span_element = object_to_v8<html::elements::html_span_element>(isolate);
     auto v8_html_style_element = object_to_v8<html::elements::html_style_element>(isolate);
+    auto v8_html_table_caption_element = object_to_v8<html::elements::html_table_caption_element>(isolate);
+    auto v8_html_table_cell_element = object_to_v8<html::elements::html_table_cell_element>(isolate);
+    auto v8_html_table_col_element = object_to_v8<html::elements::html_table_col_element>(isolate);
+    auto v8_html_table_element = object_to_v8<html::elements::html_table_element>(isolate);
+    auto v8_html_table_row_element = object_to_v8<html::elements::html_table_row_element>(isolate);
+    auto v8_html_table_section_element = object_to_v8<html::elements::html_table_section_element>(isolate);
     auto v8_html_title_element = object_to_v8<html::elements::html_title_element>(isolate);
     auto v8_html_track_element = object_to_v8<html::elements::html_track_element>(isolate);
     auto v8_html_time_element = object_to_v8<html::elements::html_time_element>(isolate);
@@ -226,8 +244,13 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
     auto v8_html_video_element = object_to_v8<html::elements::html_video_element>(isolate);
 
+    auto v8_html_track_event = object_to_v8<html::events::track_event>(isolate);
+
     auto v8_html_audio_track = object_to_v8<html::media::audio_track>(isolate);
+    auto v8_html_text_track = object_to_v8<html::media::text_track>(isolate);
+    auto v8_html_text_track_cue = object_to_v8<html::media::text_track_cue>(isolate);
     auto v8_html_video_track = object_to_v8<html::media::video_track>(isolate);
+    auto v8_html_time_ranges = object_to_v8<html::media::time_ranges>(isolate);
 
     // create the module and an empty module name
     v8pp::module v8_module{isolate};
@@ -235,7 +258,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
 
     // expose certain classes depending on the module type (window, worker, etc)
     switch(module_type) {
-        case javascript::environment::modules::module_type::window: {
+        case javascript::environment::modules::module_type::window:
+        {
             v8_module
                     .class_("AbortController", v8_abort_controller)
                     .class_("AbortSignal", v8_abort_signal)
@@ -304,6 +328,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLImageElement", v8_html_image_element)
                     .class_("HTMLLIElement", v8_html_li_element)
                     .class_("HTMLLinkElement", v8_html_link_element)
+                    .class_("HTMLMapElement", v8_html_map_element)
                     .class_("HTMLMediaElement", v8_html_media_element)
                     .class_("HTMLMetaElement", v8_html_meta_element)
                     .class_("HTMLMenuElement", v8_html_menu_element)
@@ -317,20 +342,33 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLSourceElement", v8_html_source_element)
                     .class_("HTMLSpanElement", v8_html_span_element)
                     .class_("HTMLStyleElement", v8_html_style_element)
+                    .class_("HTMLTableCaptionElement", v8_html_table_caption_element)
+                    .class_("HTMLTableCellElement", v8_html_table_cell_element)
+                    .class_("HTMLTableColElement", v8_html_table_col_element)
+                    .class_("HTMLTableElement", v8_html_table_element)
+                    .class_("HTMLTableRowElement", v8_html_table_row_element)
+                    .class_("HTMLTableSectionElement", v8_html_table_section_element)
                     .class_("HTMLTitleElement", v8_html_title_element)
                     .class_("HTMLTimeElement", v8_html_time_element)
                     .class_("HTMLTrackElement", v8_html_track_element)
                     .class_("HTMLUListElement", v8_html_ulist_element)
                     .class_("HTMLUnknownElement", v8_html_unknown_element)
                     .class_("HTMLVideoElement", v8_html_video_element)
+
+                    .class_("TrackEvent", v8_html_track_event)
+
                     .class_("AudioTrack", v8_html_audio_track)
+                    .class_("TextTrack", v8_html_text_track)
+                    .class_("TextTrackCue", v8_html_text_track_cue)
+                    .class_("TimeRanges", v8_html_time_ranges)
                     .class_("VideoTrack", v8_html_video_track)
                     ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
 
-        case javascript::environment::modules::module_type::worker: {
+        case javascript::environment::modules::module_type::worker:
+        {
             v8_module
                     .class_("CustomEvent", v8_custom_event)
                     .class_("Event", v8_event)
@@ -341,7 +379,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
             module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();
         }
 
-        case javascript::environment::modules::module_type::audio_worklet: {
+        case javascript::environment::modules::module_type::audio_worklet:
+        {
             v8_module
                     .class_("Event", v8_event)
                     .class_("EventTarget", v8_event_target)
@@ -349,9 +388,6 @@ auto javascript::interop::expose_cpp_to_js::expose(
 
             module_name = v8::String::NewFromUtf8(isolate, "AudioWorklet").ToLocalChecked();
         }
-
-        default:
-            module_name = v8::String::NewFromUtf8(isolate, "Unknown").ToLocalChecked();
     }
 
     // append the module into the context

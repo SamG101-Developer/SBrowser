@@ -8,6 +8,8 @@
 namespace dom::other {class dom_exception;}
 namespace html::elements {class html_media_element;}
 namespace html::helpers {struct media_internals;}
+namespace html::media {class text_track_cue;}
+namespace html::media {class time_ranges;}
 
 
 struct html::helpers::media_internals
@@ -99,9 +101,43 @@ struct html::helpers::media_internals
             bool approximate_for_speed = false)
             -> void;
 
-    static auto popuplate_list_of_pending_tracks(
+    static auto populate_list_of_pending_tracks(
             elements::html_media_element* element)
             -> void;
+
+    static auto are_text_tracks_ready(
+            elements::html_media_element* element)
+            -> bool;
+
+    static auto effective_media_volume(
+            elements::html_media_element* element)
+            -> double;
+
+    static auto is_unbounded_text_track(
+            media::text_track_cue* track_cue)
+            -> bool;
+
+    static auto expose_a_media_resource_specific_text_track(
+            elements::html_media_element* element,
+            const ext::string& relevant_data)
+            -> void;
+
+    static auto honour_user_preferences_for_automatic_track_selection(
+            elements::html_media_element* element)
+            -> void;
+
+    static auto perform_automatic_track_selection(
+            const ext::string_vector& text_track_kinds)
+            -> void;
+
+    static auto start_track_processing_model(
+            media::text_track* track,
+            elements::html_track_element* element)
+            -> void;
+
+    static auto is_normalized_time_range(
+            media::time_ranges* time_ranges)
+            -> bool;
 
     enum class track_readiness_state
     {

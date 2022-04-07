@@ -2,6 +2,7 @@
 #define SBROWSER_DOM_OBJECT_HPP
 
 #include <ext/any.hpp>
+#include <ext/casting.hpp>
 #include <ext/decorators.hpp>
 #include <ext/dom_property.hpp>
 
@@ -51,14 +52,6 @@ auto dom_object::has_activation_behaviour()
 }
 
 
-template <typename ...Args, typename U>
-auto multi_cast(
-        U* cls)
-        -> bool
-{
-    // check if an object matches any of the types in Args
-    return (... ||(nullptr != dynamic_cast<Args>(cls)));
-}
 
 
 #endif //SBROWSER_DOM_OBJECT_HPP

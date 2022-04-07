@@ -30,8 +30,7 @@ html::elements::html_media_element::html_media_element()
     m_official_playback_position = 0.0;
     m_default_playback_start_position = 0.0;
     m_earliest_possible_position = 0.0;
-
-
+    m_playback_volume = 1.0; // TODO : remember across sessions (config file / QSettings?)
 }
 
 
@@ -114,13 +113,17 @@ auto html::elements::html_media_element::add_text_track(
     text_track->language = language;
     text_track->mode = "hidden";
     text_track->cues = new ext::vector<media::text_track_cue*>{};
-    text_track->m_readiness_state = "loaded";
+    text_track->m_readiness_state = helpers::media_internals::track_readiness_state::LOADING;
 
     // append tbe text track to the class's text tracks
     text_tracks->append(text_track);
 
-    // queue the media element on the observers and return the text tracks
-    dom::helpers::mutation_observers::queue_media_element_task(this, [this](){dom::helpers::event_dispatching::fire_event<events::track_event>("addTrack", text_tracks->front());});
+    // queue a media element task to fire a track addtrack event at the track
+    dom::helpers::mutation_observers::queue_media_element_task(this, [this, &text_track](){
+        dom::helpers::event_dispatching::fire_event<events::track_event>("addtrack", text_tracks, {{"track", text_track}});
+    });
+
+    // return the text tracks
     return *text_tracks;
 }
 

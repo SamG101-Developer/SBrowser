@@ -48,21 +48,18 @@ auto dom::mutations::mutation_observer::observe(
         options.at("characterData") = true;
 
     // if the <attributes> or <characterData> option is true but the <childList> option is false, then throw an error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<V8_TYPE_ERROR>(
             "if 'childList' is true, one from ['attributes', 'characterData'] must also be true",
-            &v8::Exception::TypeError,
             [options] {return not options.at("childList").to<bool>() or options.at("attributes").to<bool>() or options.at("characterData").to<bool>();});
 
     // if the <attributeOldValue> option is true but the <attribute> value is false, then trow an error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<V8_TYPE_ERROR>(
             "if 'attributesOldValue' is true, 'attributes' must be true",
-            &v8::Exception::TypeError,
             [options] {return options.at("attributesOldValue").to<bool>() and not options.at("attributes").to<bool>();});
 
     // if the <attributeFilter> option isn't empty and the <attribute> option is false, then throw as error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<V8_TYPE_ERROR>(
             "if 'attributesFilter' is not empty, 'attributes' must be true",
-            &v8::Exception::TypeError,
             [options, &attribute_filter] {return not attribute_filter.empty() and not options.at("attributes").to<bool>();});
 
     // iterate over the registered observer list

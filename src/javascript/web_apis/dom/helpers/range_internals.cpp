@@ -42,14 +42,12 @@ auto dom::helpers::range_internals::set_start_or_end(
         const bool start)
         -> void
 {
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
             "node must be a non-document_type node",
-            INVALID_NODE_TYPE_ERR,
             [container] {return dynamic_cast<nodes::document_type*>(container);});
 
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "offset must be <= index of the node",
-            INDEX_SIZE_ERR,
             [container, offset] {return offset > trees::index(container);});
 
     // set the container to the start of the range
@@ -147,9 +145,8 @@ auto dom::helpers::range_internals::get_range_helpers_variables(
     auto contained_children = common_ancestor->child_nodes->filter([range](const nodes::node* const node) {return contains(node, range);});
 
     // if any of the contained_children is a document type, then throw a hierarchy request error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "children of the common ancestor of the start and end container of a range must be non-document_type nodes",
-            HIERARCHY_REQUEST_ERR,
             [contained_children] {return contained_children.any_of([](nodes::node* contained_child) -> bool {return dynamic_cast<nodes::document_type*>(contained_child);});});
 
     // return a tuple containing the first and last partially contained nodes, and the contained children
@@ -162,9 +159,8 @@ auto dom::helpers::range_internals::check_parent_exists(
         -> dom::nodes::node*
 {
     // if the node doesn't have a parent, then throw an invalid node error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
             "node must have a parent",
-            INVALID_NODE_TYPE_ERR,
             [node] {return not node->parent;});
 
     // return the parent of the node

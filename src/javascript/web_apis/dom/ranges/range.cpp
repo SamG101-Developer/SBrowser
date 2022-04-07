@@ -100,9 +100,8 @@ auto dom::ranges::range::insert_node(
         -> void
 {
     // if the start node is a textually based range container, then throw a hierarchy request error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "start container must not be a text, processing_instruction",
-            HIERARCHY_REQUEST_ERR,
             [this] {return helpers::range_internals::is_textual_based_range_container(start_container);});
 
     // create the pointers for the reference node, parent, the start node cast to a text node, and the new offset
@@ -217,9 +216,8 @@ auto dom::ranges::range::select_node_contents(
         -> void
 {
     // if the node is a document fragment, then throw an invalid node type error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
             "node must be a non-document_fragment node",
-            INVALID_NODE_TYPE_ERR,
             [node] {return dynamic_cast<nodes::document_fragment*>(node);});
 
     // set the containers to the node, with the offsets at 0 and the length of the node, such that the only thing being
@@ -237,15 +235,13 @@ auto dom::ranges::range::compare_boundary_points(
         -> short
 {
     // if how isn't a known value, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "unknown method of comparison",
-            NOT_SUPPORTED_ERR,
             [how] {return not ext::vector<short>{START_TO_START, START_TO_END, END_TO_START, END_TO_END}.contains(how);});
 
     // if this range's root isn't the same root as the source_ranges's root, then throw a wrong document error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<WRONG_DOCUMENT_ERR>(
             "this range's root must match the source_range's root",
-            WRONG_DOCUMENT_ERR,
             [this, source_range] {return m_root != source_range->m_root;});
 
     // create variables for the containers and offsets
@@ -321,21 +317,18 @@ auto dom::ranges::range::compare_point(
         -> short
 {
     // if this range's root isn't the same root as the node's root, then throw a wrong document error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<WRONG_DOCUMENT_ERR>(
             "this range must be in the same document as the node",
-            WRONG_DOCUMENT_ERR,
             [node, this] {return m_root != helpers::trees::root(node);});
 
     // if the node is a document fragment node, then throw an invalid node type error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
             "node must be a non-document_fragment node",
-            INVALID_NODE_TYPE_ERR,
             [node] {return dynamic_cast<nodes::document_fragment*>(node);});
 
     // if the offset is greater than the length of the node, then throw an index size error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "offset must be <= length of the node",
-            INDEX_SIZE_ERR,
             [node, offset] {return offset > helpers::trees::length(node);});
 
     // if the (node, offset) is before the start, then return -1
@@ -488,15 +481,13 @@ auto dom::ranges::range::surround_contents(
         -> void
 {
     // if there are text node descendants of this range's root that are partially contained, throw an invalid state error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "cannot surround the contents of a range that partially contains a text node",
-            INVALID_STATE_ERR,
             [this] {return not helpers::trees::descendant_text_nodes(m_root).filter([this](auto* node) {return helpers::range_internals::partially_contains(node, this);}).empty();});
 
     // if the new_parent is a document, document_fragment or document_type, then throw an invalid node type error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
             "cannot surround the contents of a range with a new parent that is a document, document_fragment or document_type",
-            INVALID_NODE_TYPE_ERR,
             [new_parent] {return dynamic_cast<nodes::document*>(new_parent) or dynamic_cast<nodes::document_fragment*>(new_parent) or dynamic_cast<nodes::document_type*>(new_parent);});
 
     // extract the contents of the range
@@ -550,15 +541,13 @@ auto dom::ranges::range::is_point_in_range(
         return false;
 
     // if the node is a document_type node, then throw an invalid node type error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
             "node cannot be a doctype node",
-            INVALID_NODE_TYPE_ERR,
             [node] -> bool {return dynamic_cast<nodes::document_type*>(node);});
 
     // if the offset > the length of the node, then throw an index error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "offset must be <= the length of the node",
-            INDEX_SIZE_ERR,
             [node, offset] {return offset > helpers::trees::length(node);});
 
     // the point is in the range if it between the start container/offset and end container/offset

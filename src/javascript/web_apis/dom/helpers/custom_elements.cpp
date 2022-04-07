@@ -16,6 +16,7 @@
 #include <html/helpers/custom_html_elements.hpp>
 
 
+template <typename T>
 auto dom::helpers::custom_elements::create_an_element(
         nodes::document* const document,
         const ext::string& local_name,
@@ -23,7 +24,7 @@ auto dom::helpers::custom_elements::create_an_element(
         const ext::string& prefix,
         const ext::string& is,
         const bool synchronous_custom_elements_flag)
-        -> dom::nodes::element* {
+        -> T* {
 
     // create a result pointer to store the created element, and a definition struct holding private information about
     // the custom element (like an PIMPL without the pointer -> uses a lookup table instead)
@@ -86,33 +87,28 @@ auto dom::helpers::custom_elements::create_an_element(
             assert(result->namespace_uri == namespaces::HTML);
 
             // if the result's attribute list is not empty, then throw a not supported error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
                     "custom element must have an empty attribute list",
-                    NOT_SUPPORTED_ERR,
                     [&result] {return not result->attributes->empty();});
 
             // if the result's child list is not empty, then throw a not supported error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
                     "custom element must have an empty child nodes list",
-                    NOT_SUPPORTED_ERR,
                     [&result] {return not result->child_nodes->empty();});
 
             // if the result has a parent, then throw a not supported error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
                     "custom element must have a null / undefined parent",
-                    NOT_SUPPORTED_ERR,
                     [&result] {return result->parent;});
 
             // if the result has an owner document, then throw a not supported error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
                     "custom element must have a null / undefined document",
-                    NOT_SUPPORTED_ERR,
                     [&result] {return result->owner_document;});
 
             // if the result's local name != local_name, then throw a not supported error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
                     "custom element's local name must match local name",
-                    NOT_SUPPORTED_ERR,
                     [result, local_name] {return result->local_name != local_name;});
 
             // set the prefix and is value to the result
@@ -163,7 +159,7 @@ auto dom::helpers::custom_elements::create_an_element(
     }
 
     // return the result element (anything derived from dom::nodes::element*), cast up to a dom::nodes::element*
-    return result;
+    return dynamic_cast<T*>(result);
 }
 
 
@@ -200,9 +196,8 @@ auto dom::helpers::custom_elements::upgrade_element(
     v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
 
     // if the definition has shadows disabled, and the element has a shadow root, then throw a not supported error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "if the definition has shadows disabled, the element cannot have a shadow root",
-            NOT_SUPPORTED_ERR,
             [definition, element] {return definition->disable_shadow and element->shadow_root_node;});
 
     // set the custom element state to "precustomized", as the element is being upgraded, but hasn't been upgraded yet

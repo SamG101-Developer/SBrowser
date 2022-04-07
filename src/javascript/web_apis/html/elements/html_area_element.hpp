@@ -27,6 +27,7 @@ public js_properties:
     ext::html_property<ext::string_vector*> relList;
 
 public cpp_methods:
+    auto activation_behaviour(dom::events::event* event) -> void override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 };
 

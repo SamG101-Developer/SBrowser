@@ -15,22 +15,22 @@ namespace webidl::types {template <typename T> class promise;}
 
 template <typename T>
 class webidl::types::promise {
-public: constructors
+public constructors:
     promise();
 
-public: js_methods
+public cpp_methods:
     auto resolve(dom::nodes::event_target* value = nullptr) -> void;
     auto reject(const dom::other::dom_exception& value) -> void;
     auto is_fulfilled() -> bool;
 
-public: operators
-    bool operator==(promise<T>& other);
+public operators:
+    bool operator==(const promise<T>& other);
 
 private: cpp_properties
     v8::Isolate* m_isolate;
     v8::Local<v8::Context> m_context;
     v8::Local<v8::Promise::Resolver> m_promise;
-    bool m_fulfilled;
+    bool m_fulfilled = false;
 };
 
 
@@ -64,7 +64,7 @@ auto webidl::types::promise<T>::is_fulfilled() -> bool
 
 
 template <typename T>
-bool webidl::types::promise<T>::operator==(promise<T>& other)
+bool webidl::types::promise<T>::operator==(const promise<T>& other)
 {
     return this == &other;
 }

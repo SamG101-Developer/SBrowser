@@ -76,7 +76,7 @@ auto dom::mixins::parent_node<T>::replace_children(
 
 template <typename T>
 auto dom::mixins::parent_node<T>::get_children() const
-        -> ext::vector<dom::nodes::element*>
+        -> ext::vector<dom::nodes::element*>*
 {
     // return all the children that are element type nodes
     return static_cast<const T*>(this)->child_nodes->template cast_all<nodes::element*>();

@@ -167,15 +167,13 @@ auto dom::nodes::document::create_cdata_section_node(
         -> dom::nodes::cdata_section
 {
     // if the document type is html, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "html documents cannot create cdata_section nodes",
-            NOT_SUPPORTED_ERR,
             [this] {return m_type == "html";});
 
     // if ']]>' is in the data, then throw an invalid character error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_CHARACTER_ERR>(
             "cdata_section data cannot contain ']]>'",
-            INVALID_CHARACTER_ERR,
             [data] {return data.contains("]]>");});
 
     // create a new cdata_section node, and set the owner document to this document
@@ -208,9 +206,8 @@ auto dom::nodes::document::create_processing_instruction(
         -> dom::nodes::processing_instruction
 {
     // if '?>' is in the data, then throw an invalid character error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_CHARACTER_ERR>(
             "processing_instruction data cannot contain '?>'",
-            INVALID_CHARACTER_ERR,
             [data] {return data.contains("?>");});
 
     // create a new comment node, and set the owner document to this document
@@ -321,15 +318,13 @@ auto dom::nodes::document::import_node(
         -> dom::nodes::node*
 {
     // if the node being imported is a document, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot import a document node",
-            NOT_SUPPORTED_ERR,
             [node] {return dynamic_cast<document*>(node);});
 
     // if the node being imported is a shadow_root, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot import a shadowroot node",
-            NOT_SUPPORTED_ERR,
             [node] {return helpers::shadows::is_shadow_root(node);});
 
     // clone the node into this document
@@ -342,15 +337,13 @@ auto dom::nodes::document::adopt_node(
         -> dom::nodes::node*
 {
     // if the node being adopted is a document, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot adopt a document node",
-            NOT_SUPPORTED_ERR,
             [node] {return dynamic_cast<document*>(node);});
 
     // if the node being adopted is a shadow_root, then throw a hierarchy request error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "cannot adopt a shadowroot node",
-            HIERARCHY_REQUEST_ERR,
             [node] {return helpers::shadows::is_shadow_root(node);});
 
     // return nullptr if the node being imported is a document fragment that has a host
@@ -391,9 +384,8 @@ auto dom::nodes::document::open(
         -> dom::nodes::window_proxy*
 {
     // TODO
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_ACCESS_ERR>(
             "cannot open a non-active document",
-            INVALID_ACCESS_ERR,
             [this] {return not helpers::node_internals::is_document_fully_active(const_cast<document*>(this));});
 
     return html::helpers::elements::window_open_steps(this);
@@ -404,14 +396,12 @@ auto dom::nodes::document::close() const
         -> void
 {
     // TODO
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_ACCESS_ERR>(
             "cannot close an xml document",
-            INVALID_STATE_ERR,
             [this] {return m_type == "xml";});
 
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_ACCESS_ERR>(
             "cannot close a document whose dynamic-markup-counter > 0",
-            INVALID_STATE_ERR,
             [this] {return m_throw_on_dynamic_markup_insertion_counter > 0;});
 
     // TODO
@@ -604,9 +594,8 @@ auto dom::nodes::document::get_cookie() const
         return "";
 
     // if the origin is opaque, then throw a security error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
             "document must have a non-opaque origin in order to access the cookies",
-            SECURITY_ERR,
             [this] {return m_origin == "opaque";});
 
     // return the cookie string
@@ -729,10 +718,9 @@ auto dom::nodes::document::set_body(
         -> void
 {
     // if the new val isn't a html_body_element, then throw a hierarchy request error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "body attribute must be a HTMLBodyElement or HTMLFrameSetElement",
-            HIERARCHY_REQUEST_ERR,
-            [val] {return multi_cast<html::elements::html_body_element*, html::elements::html_frame_set_element*>(val);});
+            [val] {return dynamic_cast<html::elements::html_body_element*>(val);});
 
     // return if the new body is the same as the current body element
     if (body == val)
@@ -743,9 +731,8 @@ auto dom::nodes::document::set_body(
         helpers::mutation_algorithms::replace(body, parent_element, val);
 
     // if the new val is null and there is no document element, then throw a hierarchy request error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "setting a null body attribute requires a document element to be present",
-            HIERARCHY_REQUEST_ERR,
             [val, this] {return not val and not document_element;});
 
     // append the new val into the document element
@@ -762,9 +749,8 @@ auto dom::nodes::document::set_cookie(
         return;
 
     // if the origin is opaque, then throw a security error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
             "cannot set the cookie of a document that has an opaque origin",
-            SECURITY_ERR,
             [this] {return m_origin == "opaque";});
 
     // set the cookie's new value

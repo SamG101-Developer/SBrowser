@@ -63,36 +63,31 @@ auto html::elements::html_element::attach_internals()
         -> other::element_internals
 {
     // if the 'is' value is empty, then throw a not supported error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "'is' value must be non-null in order to attach internals",
-            NOT_SUPPORTED_ERR,
             [this] {return m_is.empty();});
 
     // get the custom element definition using the empty 'is' value
     auto* definition = dom::helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, "");
 
     // if the definition is null, then throw a not supported error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "definition must be non-null in order to attach internals",
-            NOT_SUPPORTED_ERR,
             [definition] {return definition != nullptr;});
 
     // if the definition has disable_internals enabled, then throw a not supported error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "definition's disableInternals must be false in order to attach internals",
-            NOT_SUPPORTED_ERR,
             [definition] {return definition->disable_internals;});
 
     // if the element already has internals attached, then throw a not supported error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot have already attached internals when attaching internals",
-            NOT_SUPPORTED_ERR,
             [this] {return m_attached_internals;});
 
     // if the definition is not precustomized or custom, then throw a not supported error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "custom element state must be 'precustomized' or 'custom' in order to attach internals",
-            NOT_SUPPORTED_ERR,
             [this] {return not ext::string_vector{"precustomized", "custom"}.contains(m_custom_element_state);});
 
     // set the attached internals to true, and return a new other::element_internals object with the target set to this
@@ -171,9 +166,8 @@ auto html::elements::html_element::set_outer_text(
         -> void
 {
     // if this node doesn't have a parent, then throw a no modification allowed error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<NO_MODIFICATION_ALLOWED_ERR>(
             "node must have a parent in order to have the outer text set",
-            NO_MODIFICATION_ALLOWED_ERR,
             [this] {return parent == nullptr;});
 
     // get the next and previous siblings, and create a rendered text fragment from the val

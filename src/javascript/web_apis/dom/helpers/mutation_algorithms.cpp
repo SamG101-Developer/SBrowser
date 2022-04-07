@@ -32,40 +32,34 @@ auto dom::helpers::mutation_algorithms::common_checks(
         -> void
 {
     // if the parent is not a document, document fragment or element, then throw a hierarchy request error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "parent must be a document, document_fragment or element node",
-            HIERARCHY_REQUEST_ERR,
             [parent] {return not ::multi_cast<nodes::document*, nodes::document_fragment*, nodes::element*>(parent);});
 
     // if the node is a shadow-including ancestor of the parent, then throw a hierarchy request error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "node can not be a host-including ancestor of parent",
-            HIERARCHY_REQUEST_ERR,
             [node, parent] {return shadows::is_host_including_ancestor(node, parent);});
 
     // if the child has a parent that doesn't equal parent, then throw a not found error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NOT_FOUND_ERR>(
             "child's current parent does not equal parent",
-            NOT_FOUND_ERR,
             [parent, child] {return child and child->parent != parent;});
 
     // if the node is not a document fragment, document, element, text node, processing instruction or comment node, then throw a hierarchy request error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "node must be a document_fragment, document_type, element, text, processing_instruction or comment node",
-            HIERARCHY_REQUEST_ERR,
             [node] {return not ::multi_cast<nodes::document_fragment*, nodes::document_type*, nodes::element*, nodes::text*, nodes::processing_instruction*, nodes::comment*>(
                     node);});
 
     // if the parent is a document and the node is a text node, then throe a hierarchy request error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "document parents can not have a text node child",
-            HIERARCHY_REQUEST_ERR,
             [node, parent] {return dynamic_cast<nodes::document*>(parent) and dynamic_cast<nodes::text*>(node);});
 
     // if the parent is not a document and the node is a document, then throe a hierarchy request error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
             "document_type nodes can not have a non-document parent",
-            HIERARCHY_REQUEST_ERR,
             [node, parent] {return dynamic_cast<nodes::document_type*>(node) and not dynamic_cast<nodes::document*>(parent);});
 }
 
@@ -86,36 +80,31 @@ auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
         if (dynamic_cast<nodes::document_fragment*>(node))
         {
             // if the node contains more than 1 element child, then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_fragment node with a document parent cannot have > 1 element children",
-                    HIERARCHY_REQUEST_ERR,
                     [node] {return node->child_nodes->filter(&trees::is_element_node).length() > 1;});
 
             // if the node contains more than 0 text children, then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_fragment node with a document parent cannot have > 0 text node children",
-                    HIERARCHY_REQUEST_ERR,
                     [node] {return node->child_nodes->filter(&trees::is_text_node).length() > 0;});
 
             // if the document type has one element children
             if (node->child_nodes->filter(&trees::is_element_node).length() == 1)
             {
                 // if the node already has an element sibling (document element), then throw a hierarchy reqeust error
-                exceptions::throw_v8_exception(
+                exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                         "document_fragment node with a document parent and element child can not have an element sibling",
-                        HIERARCHY_REQUEST_ERR,
                         [parent] {return parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
 
                 // if the child is a document type, then throw a hierarchy request error
-                exceptions::throw_v8_exception(
+                exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                         "document_fragment node with a document parent and element child can not be inserted before a document_type node",
-                        HIERARCHY_REQUEST_ERR,
                         [child] {return dynamic_cast<nodes::document_type*>(child);});
 
                 // if there is a document type following the child, then throw a hierarchy request error
-                exceptions::throw_v8_exception(
+                exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                         "document_fragment node with a document parent and element child can not be inserted before a document_type node",
-                        HIERARCHY_REQUEST_ERR,
                         [child] {return child and not trees::all_following<nodes::document_type*>(child).empty();});
             }
         }
@@ -124,21 +113,18 @@ auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
         else if (dynamic_cast<nodes::element*>(node))
         {
             // if the parent already has an element child (document element), then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "element node with a document parent can not have > 0 element children",
-                    HIERARCHY_REQUEST_ERR,
                     [node] {return node->child_nodes->filter(&trees::is_element_node).length() > 0;});
 
             // if the child is a document type, then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "element node with a document parent can not be inserted before a document type node",
-                    HIERARCHY_REQUEST_ERR,
                     [child] {return dynamic_cast<nodes::document_type*>(child);});
 
             // if there is a document type following the child, then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "element node with a document parent can not be inserted before a document type node",
-                    HIERARCHY_REQUEST_ERR,
                     [child] {return child and not trees::all_following<nodes::document_type*>(child).empty();});
         }
 
@@ -146,21 +132,18 @@ auto dom::helpers::mutation_algorithms::ensure_pre_insertion_validity(
         else if (dynamic_cast<nodes::document_type*>(node))
         {
             // if the parent already has a document_type, then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_type node with a document parent can not have document_type siblings",
-                    HIERARCHY_REQUEST_ERR,
                     [parent] {return not parent->child_nodes->filter(&trees::is_document_type_node).empty();});
 
             // if child is non-nullptr and there is an element (document element) preceding the child, then throw a hierarchy request
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_type_node with a document parent can not be inserted after any elements",
-                    HIERARCHY_REQUEST_ERR,
                     [child] {return child and not trees::all_preceding<nodes::element*>(child).empty();});
 
             // if child is nullptr and the parent contains an element (document element), then throw a hierarchy request error
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_type node with a document parent can not have > 0 element children",
-                    HIERARCHY_REQUEST_ERR,
                     [child, parent] {return not child and parent->child_nodes->filter(&trees::is_element_node).length() > 0;});
         }
     }
@@ -191,9 +174,8 @@ auto dom::helpers::mutation_algorithms::pre_remove(
         -> dom::nodes::node*
 {
     // if node's parent doesn't equal the parent, then throw a not found error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NOT_FOUND_ERR>(
             "node's current parent does not equal parent",
-            NOT_FOUND_ERR,
             [node, parent] {return node->parent != parent;});
 
     // remove the node and return  it
@@ -297,40 +279,34 @@ auto dom::helpers::mutation_algorithms::replace(
     // all the checks only apply if the parent is a document
     if (dynamic_cast<nodes::document*>(parent)) {
         if (dynamic_cast<nodes::document_fragment*>(node)) {
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_fragment node with a document parent can not have > 1 element child",
-                    HIERARCHY_REQUEST_ERR,
                     [node] {return node->child_nodes->filter(&trees::is_element_node).length() > 1;});
 
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "document_fragment node with a document parent can not have > 0 text child",
-                    HIERARCHY_REQUEST_ERR,
                     [node] {return node->child_nodes->filter(&trees::is_text_node).length() > 1;});
 
             if (node->child_nodes->filter(&trees::is_element_node).length() == 1) {
 
-                exceptions::throw_v8_exception(
+                exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                         "document_fragment node with a document parent and element child can not have an siblings that != 'child'",
-                        HIERARCHY_REQUEST_ERR,
                         [parent, child] {return not parent->child_nodes->filter(&trees::is_element_node).remove(child).empty();});
 
-                exceptions::throw_v8_exception(
+                exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                         "document_fragment node with a document parent and element child can not have a document_type child following 'child'",
-                        HIERARCHY_REQUEST_ERR,
                         [child] {return not trees::all_following<nodes::document_type*>(child).empty();});
             }
         }
 
         else if (dynamic_cast<nodes::element*>(node)) {
 
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "element node with a document parent can not have an element child that != 'child'",
-                    HIERARCHY_REQUEST_ERR,
                     [node, child] {return not node->child_nodes->filter(&trees::is_element_node).remove(child).empty();});
 
-            exceptions::throw_v8_exception(
+            exceptions::throw_v8_exception<HIERARCHY_REQUEST_ERR>(
                     "element node with a document parent can not be inserted before a document type node",
-                    HIERARCHY_REQUEST_ERR,
                     [child] {return not trees::all_following<nodes::document_type*>(child).empty();});
         }
 

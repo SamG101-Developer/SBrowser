@@ -3,6 +3,7 @@
 #define SBROWSER_LISTLIKE_HPP
 
 #include <ext/property.hpp>
+#include <dom_object.hpp>
 
 
 namespace ext {template <typename T> class vector;}
@@ -10,7 +11,7 @@ namespace ext {template <typename T> class listlike;}
 
 
 template <typename T>
-class ext::listlike
+class ext::listlike : virtual public dom_object
 {
 public friends:
     friend v8pp::convert<ext::listlike<T>>;
@@ -25,8 +26,11 @@ public operators:
 public js_properties:
     ext::property<size_t> length;
 
-private cpp_methods:
+protected cpp_properties:
     ext::vector<T>* m_linked_list;
+
+private cpp_properties:
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private accessors:
     auto get_length() -> size_t;

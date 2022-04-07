@@ -29,7 +29,7 @@ public js_properties:
     ext::html_property<media::text_track*> track;
 
 private accessors:
-    auto set_kind(const ext::string& val) -> void;
+    auto set_parent_node(dom::nodes::node* val) -> void override;
 };
 
 

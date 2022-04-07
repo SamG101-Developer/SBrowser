@@ -50,9 +50,8 @@ auto dom::nodes::event_target::dispatch_event(
         -> bool
 {
     // if the dispatch is already set or the initialized flag isn't set, then throw an invalid state error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "event must be initialized and not dispatched in order be dispatched",
-            INVALID_STATE_ERR,
             [event] {return event->m_dispatch_flag or not event->m_initialized_flag;});
 
     // set the event trusted to false (manual dispatch), and dispatch the event through the tree

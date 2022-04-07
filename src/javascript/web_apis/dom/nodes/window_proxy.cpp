@@ -46,9 +46,8 @@ v8::PropertyDescriptor dom::nodes::window_proxy::get_own_property(v8::Local<v8::
             if (not javascript::helpers::is_platform_object_same_origin(W))
                 return v8::Object::New(v8::Isolate::GetCurrent());
 
-            dom::helpers::exceptions::throw_v8_exception(
-                    "cannot get the own property of a window proxy if there is no value",
-                    dom::helpers::exceptions::exception_type::SECURITY_ERR);
+            dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
+                    "cannot get the own property of a window proxy if there is no value");
         }
 
         return {v8pp::convert<window_proxy*>::to_v8(v8::Isolate::GetCurrent(), value), false};
@@ -81,9 +80,8 @@ dom::nodes::window_proxy::define_property(
                 ? false
                 : javascript::helpers::ordinary_define_own_property(W, P, D);
 
-    dom::helpers::exceptions::throw_v8_exception(
-            "cannot define a property to an object whose platform object is from a different origin",
-            SECURITY_ERR);
+    dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
+            "cannot define a property to an object whose platform object is from a different origin");
 }
 
 
@@ -132,9 +130,8 @@ dom::nodes::window_proxy::delete_(v8::Local<v8::Number> P) {
                 ? v8::Boolean::New(v8::Isolate::GetCurrent(), get_own_property(P).has_value())
                 : javascript::helpers::ordinary_delete(W, P);
 
-    dom::helpers::exceptions::throw_v8_exception(
-            "cannot delete a window proxy whose platform object is from a different origin",
-            SECURITY_ERR);
+    dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
+            "cannot delete a window proxy whose platform object is from a different origin");
 }
 
 

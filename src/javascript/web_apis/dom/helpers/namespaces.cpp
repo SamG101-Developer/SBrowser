@@ -8,9 +8,8 @@ auto dom::helpers::namespaces::validate(
         -> void
 {
     // TODO : https://stackoverflow.com/a/51451972/10862918 for BNF impl
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<INVALID_CHARACTER_ERR>(
             "qualified name doesn't match QName production",
-            INVALID_CHARACTER_ERR,
             [qualified_name] {return xml_names::qualfied_names::match_qname();});
 }
 
@@ -34,27 +33,23 @@ auto dom::helpers::namespaces::validate_and_extract(
     }
 
     // if there is no prefix and no namespace, then throw a namespace error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NAMESPACE_ERR>(
             "prefix and namespace can not both be null",
-            NAMESPACE_ERR,
             [prefix, namespace_] {return not prefix and not namespace_;});
 
     // if there is no prefix and the namespace is the xml namespace
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NAMESPACE_ERR>(
             "prefix and namespace don't match (xml prefix)",
-            NAMESPACE_ERR,
             [prefix, namespace_] {return prefix == "xml" and namespace_ == namespaces::XML;});
 
     // if the prefix or qualified name is xmlns and the namespace isn't xmlns, then throw a namespace error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NAMESPACE_ERR>(
             "prefix / qualified_name and namespace don't match (xmlns prefix / qualified_name)",
-            NAMESPACE_ERR,
             [prefix, namespace_, qualified_name] {return (prefix == "xmlns" or qualified_name == "xmlns") and namespace_ != namespaces::XMLNS;});
 
     // if the prefix and qualified name isn't xmlns and the namespace is xmlns, then throw a namespace error
-    exceptions::throw_v8_exception(
+    exceptions::throw_v8_exception<NAMESPACE_ERR>(
             "prefix / qualified_name and namespace don't match (xmlns prefix / qualified_name)",
-            NAMESPACE_ERR,
             [prefix, namespace_, qualified_name] {return (prefix != "xmlns" and qualified_name != "xmlns") and namespace_ == namespaces::XMLNS;});
 
     // return the namespace, prefix and local name

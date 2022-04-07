@@ -15,6 +15,7 @@ namespace dom::nodes {class element;}
 struct dom::helpers::custom_elements final
 {
     // custom element creation and upgrading
+    template <typename T=dom::nodes::element>
     static auto create_an_element(
             nodes::document* document,
             const ext::string& local_name,
@@ -22,7 +23,7 @@ struct dom::helpers::custom_elements final
             const ext::string& prefix = "",
             const ext::string& is = "",
             bool synchronous_custom_elements_flag = false)
-            -> dom::nodes::element*;
+            -> T*;
 
     static auto upgrade_element(
             internal::custom_element_definition* definition,

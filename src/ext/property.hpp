@@ -4,11 +4,13 @@
 #include <functional>
 #include <type_traits>
 
+#include <ext/casting.hpp>
 #include <ext/cpp_keywords.hpp>
 #include <ext/decorators.hpp>
 #include <ext/any.hpp>
 
 namespace ext {template <typename T> struct property;}
+namespace ext {template <typename ...Args, typename U, typename T> auto property_multi_cast(const ext::property<T>& o) -> bool;}
 namespace ext {template <typename U, typename T> auto property_dynamic_cast(const ext::property<T>& o) -> U;}
 namespace ext {template <typename U, typename T> auto property_static_cast(const ext::property<T>& o) -> U;}
 namespace ext {template <typename U, typename T> auto property_const_cast(const ext::property<T>& o) -> U;}
@@ -35,6 +37,7 @@ public friends:
     // friend auto swap(ext::property<T>& a, ext::property<T>& b) {std::swap(a.m_internal, b.m_internal);}
 
     // casting
+    template <typename ...Args, typename U, typename V> friend auto property_multi_cast(const ext::property<T>& o) -> bool;
     template <typename U, typename V> friend auto property_dynamic_cast(const ext::property<V>& o) -> U;
     template <typename U, typename V> friend auto property_static_cast(const ext::property<V>& o) -> U;
     template <typename U, typename V> friend auto property_const_cast(const ext::property<V>& o) -> U;
@@ -128,8 +131,8 @@ public operators:
 public cpp_properties:
     // custom deleter, getter and setter
     std::function<void()> deleter;
-    std::function<std::remove_extent_t<T>()> getter;
-    std::function<void(std::remove_extent_t<T>)> setter;
+    std::function<T()> getter;
+    std::function<void(T)> setter;
 
 private cpp_properties:
     // internal value being stored
@@ -609,6 +612,14 @@ _FAST _INLINE ext::property<T>::operator bool() const requires (!std::is_same_v<
 {
     // convert any non-property2<bool> property2<T> into a boolean and return the evaluation
     return (bool)m_internal;
+}
+
+
+template <typename ...Args, typename U, typename T>
+auto ext::property_multi_cast(const ext::property<T>& o) -> bool
+{
+    // multi_cast to the types
+    return multi_cast<Args...>(o);
 }
 
 

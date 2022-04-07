@@ -26,15 +26,13 @@ auto html::elements::html_form_element::requestSubmit(
     if (submitter)
     {
         // if the submitter element isn't a button, then throw a javascript type error
-        dom::helpers::exceptions::throw_v8_exception(
+        dom::helpers::exceptions::throw_v8_exception<V8_TYPE_ERROR>(
                 "submitter element must be a HTMLButtonElement",
-                v8::Exception::TypeError,
                 [submitter] {return not dynamic_cast<html_button_element*>(submitter);});
 
         // if the submitter's form owner isn't this form, then throw a not found error
-        dom::helpers::exceptions::throw_v8_exception(
+        dom::helpers::exceptions::throw_v8_exception<NOT_FOUND_ERR>(
                 "submitter's form owner must be this form",
-                NOT_FOUND_ERR,
                 [submitter, this] {return submitter->m_form_owner != this;});
     }
     else

@@ -10,7 +10,8 @@ dom::events::event::event(
         const ext::string& event_type,
         const ext::string_any_map& event_init)
 
-        : type(event_type)
+        : dom_object()
+        , type(event_type)
         , bubbles(event_init.at("bubbles").to<bool>())
         , cancelable(event_init.at("bubbles").to<bool>())
         , composed(event_init.at("composed").to<bool>())

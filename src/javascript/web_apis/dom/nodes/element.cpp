@@ -272,27 +272,23 @@ auto dom::nodes::element::attach_shadow(
         -> dom::nodes::shadow_root
 {
     // if the namespace is not html, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot attach a shadow to a non-html namespaced element",
-            NOT_SUPPORTED_ERR,
             [this] {return namespace_uri != helpers::namespaces::HTML;});
 
     // if the local name is unknown, or not a known custom element, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             local_name + ext::string{" element is incompatible with shadow root attachment"},
-            NOT_SUPPORTED_ERR,
             [this] {return not m_shadow_attachable_local_names.contains(local_name) or not helpers::custom_elements::is_valid_custom_element_name(local_name);});
 
     // if this element is a shadow root, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "cannot attach a shadow root to a shadow root",
-            NOT_SUPPORTED_ERR,
             [this] {return helpers::shadows::is_shadow_root(this);});
 
     // if this node is a custom noe that has shadows disabled, then throw a not supported error
-    helpers::exceptions::throw_v8_exception(
+    helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
             "custom element's definition doesn't allow shadow root attachment",
-            NOT_SUPPORTED_ERR,
             [this] {return helpers::custom_elements::is_valid_custom_element_name(local_name) and helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, m_is)->disable_shadow or m_is;});
 
     // create a new shadow root, and set the owner document to this document

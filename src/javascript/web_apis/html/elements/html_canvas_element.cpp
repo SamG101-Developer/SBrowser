@@ -69,9 +69,8 @@ auto html::elements::html_canvas_element::transfer_control_to_offscreen()
         -> canvasing::offscreen_canvas
 {
     // if the canvas context is none, then throw an invalid state error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "Canvas must have a context mode in order to transfer control to offscreen",
-            INVALID_STATE_ERR,
             [this] {return m_context_mode != context_mode::NONE;});
 
     // create a offscreen canvas with this canvas' size
@@ -90,9 +89,8 @@ auto html::elements::html_canvas_element::to_data_url(
         -> ext::string
 {
     // if the image bitmap doesn't have a clean origin then throw a security error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
             "Canvas' image bitmap must have a clean origin in order to be converted to a data url",
-            SECURITY_ERR,
             [this] {return not m_bitmap->m_origin_clean_flag;});
 
     // return the empty data url if there are no pixels in the image bitmap
@@ -111,9 +109,8 @@ auto html::elements::html_canvas_element::to_blob(
         ext::any* quality)
 {
     // if the image bitmap doesn't have a clean origin then throw a security error
-    dom::helpers::exceptions::throw_v8_exception(
+    dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
             "Canvas' image bitmap must have a clean origin in order to be converted to a data url",
-            SECURITY_ERR,
             [this] {return not m_bitmap->m_origin_clean_flag;});
 
     file::objects::blob blob_object {};

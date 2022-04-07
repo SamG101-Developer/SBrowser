@@ -96,6 +96,9 @@ protected cpp_properties:
     QWidget* m_rendered_widget = nullptr;
     ext::vector<internal::registered_observer*>& m_registered_observer_list;
 
+protected accessors:
+    virtual auto set_parent_node(node* val) -> void;
+
 private accessors:
     auto get_is_connected() const -> bool;
     auto get_base_uri() const -> ext::string;
@@ -104,8 +107,6 @@ private accessors:
     auto get_previous_sibling() const -> node*;
     auto get_next_sibling() const -> node*;
     auto get_parent_element() const -> element*;
-
-    auto set_parent_node(node* val) -> void;
 };
 
 
