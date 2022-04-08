@@ -24,7 +24,6 @@ public js_properties:
     ext::html_property<ext::string> download;
     ext::html_property<ext::string> ping;
     ext::html_property<ext::string> referrerPolicy;
-    ext::html_property<ext::string_vector*> relList;
 
 public cpp_methods:
     auto activation_behaviour(dom::events::event* event) -> void override;

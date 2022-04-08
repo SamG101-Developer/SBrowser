@@ -5,6 +5,7 @@
 #include <dom/helpers/trees.hpp>
 
 #include <html/elements/html_image_element.hpp>
+#include <html/helpers/hyperlinks.hpp>
 
 #include <QtGui/QCursor>
 
@@ -14,9 +15,6 @@ html::elements::html_anchor_element::html_anchor_element()
         , mixins::targetable<html_anchor_element>{}
         , mixins::html_hyperlink_element_utils{}
 {
-    // set the properties
-    relList << new ext::string_vector{};
-
     // set the custom accessors
     text.getter = [this] {return get_text();};
     text.setter = [this](auto && PH1) {set_text(std::forward<decltype(PH1)>(PH1));};
@@ -78,13 +76,12 @@ auto html::elements::html_anchor_element::v8(
             .ctor<>()
             .inherit<html_paragraph_element>()
             .inherit<mixins::targetable<html_anchor_element>>()
-//            .inherit<mixins::html_hyperlink_element_utils>()
+            .inherit<mixins::html_hyperlink_element_utils>()
             .var("download", &html_anchor_element::download)
             .var("ping", &html_anchor_element::ping)
             .var("hreflang", &html_anchor_element::hreflang)
             .var("type", &html_anchor_element::type)
             .var("text", &html_anchor_element::text)
             .var("referrerPolicy", &html_anchor_element::referrer_policy)
-            .var("relList", &html_anchor_element::relList)
             .auto_wrap_objects();
 }

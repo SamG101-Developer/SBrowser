@@ -13,7 +13,7 @@
 html::media::text_track::text_track()
         : abstract_track()
 {
-    // constrain the attribute values
+    // constrain the property values
     kind.constrain_values({"subtitles", "descriptions", "chapters", "metadata"});
     mode.constrain_values({"disabled", "hidden", "showing"});
 

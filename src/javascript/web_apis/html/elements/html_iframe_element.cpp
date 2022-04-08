@@ -11,7 +11,7 @@ html::elements::html_iframe_element::html_iframe_element()
         : html_element{}
         , mixins::lazy_loading{}
 {
-    // constrain the attribute values
+    // constrain the property values
     sandbox.constrain_values({
         "allow-downloads", "allow-forms", "allow-modals", "allow-orientation-lock", "allow-pointer-lock",
         "allow-popups", "allow-popups-to-escape-sandbox", "allow-presentation", "allow-same-origin", "allow-scripts",

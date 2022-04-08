@@ -3,7 +3,8 @@
 #define SBROWSER_HTML_BUTTON_ELEMENT_HPP
 
 #include <html/elements/html_element.hpp>
-#include <html/mixins/validatable>
+#include <html/mixins/form_associated.hpp>
+#include <html/mixins/validatable.hpp>
 
 #include <QtWidgets/QPushButton>
 
@@ -13,7 +14,8 @@ namespace html::elements {class html_form_element;}
 
 class html::elements::html_button_element
         : public html::elements::html_element
-        , public html::mixins::validatable
+        , public html::mixins::validatable<html_button_element>
+        , public html::mixins::form_associated<html_button_element>
 {
 public constructors:
     html_button_element();
@@ -32,9 +34,9 @@ public js_properties:
     ext::html_property<bool, _T> disabled;
 
     ext::html_property<ext::vector<dom::nodes::node*>*> labels;
-    ext::html_property<html::elements::html_form_element*> form;
 
 public cpp_methods:
+    auto activation_behaviour(dom::events::event* event) -> void override;
     auto qt() const -> QPushButton* override;
     auto v8(v8::Isolate *isolate) const -> ext::any override;
 

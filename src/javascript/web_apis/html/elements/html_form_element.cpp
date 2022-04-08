@@ -7,14 +7,35 @@
 // TODO : tidy
 
 
-html::elements::html_form_element::html_form_element() = default;
+html::elements::html_form_element::html_form_element()
+        : html_element()
+        , mixins::targetable<html_form_element>()
+        , mixins::validatable<html_form_element>()
+        , ext::listlike<dom::nodes::element*>(elements)
+{
+    // constrain the property values
+    autocomplete.constrain_values({
+        "on",
+        "off"
+    });
+
+    rel.constrain_values({
+        "noreferrer",
+        "nooopener",
+        "opener"
+    });
+
+    // set the properties
+    acceptCharset << "UTF-8"; // TODO : make operator=(...) case insensitive for it?
+    elements << new ext::vector<html_form_element*>{};
+}
 
 
 auto html::elements::html_form_element::submit()
         -> void
 {
     // submit the form the helper method
-    helpers::form_controls::submit_form(this, this, true);
+    helpers::form_internals::submit_form(this, this, true);
 }
 
 
@@ -40,7 +61,7 @@ auto html::elements::html_form_element::requestSubmit(
         submitter = this;
 
     // submit the form using the helper method
-    helpers::form_controls::submit_form(this, submitter);
+    helpers::form_internals::submit_form(this, submitter);
 }
 
 
@@ -52,7 +73,7 @@ auto html::elements::html_form_element::reset()
 
     // set the m_locked_for_reset flag, reset the form, then unset the m_locked_for_reset flag
     m_locked_for_reset = true;
-    helpers::form_controls::reset_form(this);
+    helpers::form_internals::reset_form(this);
     m_locked_for_reset = false;
 }
 
@@ -65,7 +86,8 @@ auto html::elements::html_form_element::v8(
             .ctor<>()
             .inherit<html_element>()
             .inherit<mixins::targetable<html_form_element>>()
-//            .inherit<mixins::validatable>()
+            .inherit<mixins::validatable<html_form_element>>()
+            .inherit<ext::listlike<dom::nodes::element*>>()
             .function("auto submit", &html_form_element::submit)
             .function("auto reset", &html_form_element::reset)
             .function("auto requestSubmit", &html_form_element::requestSubmit)
@@ -77,7 +99,6 @@ auto html::elements::html_form_element::v8(
             .var("method", &html_form_element::method)
             .var("name", &html_form_element::name)
             .var("noValidate", &html_form_element::noValidate)
-            .var("relList", &html_form_element::relList)
             .var("elements", &html_form_element::elements)
             .auto_wrap_objects();
 }

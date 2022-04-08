@@ -23,6 +23,9 @@ public js_properties:
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
+
+private accessors:
+    auto get_cell_index() -> long;
 };
 
 

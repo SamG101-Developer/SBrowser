@@ -6,6 +6,41 @@
 
 
 template <typename T>
+html::mixins::targetable<T>::targetable()
+        : dom_object()
+{
+    // constrain the property values
+    rel.constrain_values({
+        "alternate",
+        "canonical",
+        "author",
+        "bookmark",
+        "dns-prefetch",
+        "external",
+        "help",
+        "icon",
+        "manifest",
+        "modulepreload",
+        "licence",
+        "next",
+        "nofollow",
+        "noopener",
+        "noreferrer",
+        "opener",
+        "pingback",
+        "preconnect",
+        "prefetch",
+        "preload",
+        "prerender",
+        "prev",
+        "search",
+        "stylesheet",
+        "tag"
+    });
+}
+
+
+template <typename T>
 auto html::mixins::targetable<T>::v8(
         v8::Isolate* isolate) const
         -> ext::any

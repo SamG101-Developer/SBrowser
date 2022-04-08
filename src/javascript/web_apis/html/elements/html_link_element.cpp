@@ -3,13 +3,9 @@
 #include <html/helpers/custom_html_elements.hpp>
 
 
-html::elements::html_link_element::html_link_element() = default;
-
-
-auto html::elements::html_link_element::set_rel(
-        const ext::string& val)
-        -> void
+html::elements::html_link_element::html_link_element()
+        : html_element()
 {
-    if (m_link_types.contains(val))
-        rel << val;
+    // constrain the property values
+    rel.constrain_values({"alternate", "dns-prefetch", "icon", "manifest", "modulepreload", "next", "pingback", "preconnect", "prefetch", "preload", "prerender", "search", "stylesheet", "canonical"});
 }

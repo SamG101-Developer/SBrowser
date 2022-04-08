@@ -8,11 +8,8 @@ html::elements::html_area_element::html_area_element()
         , mixins::targetable<html_area_element>{}
         , mixins::html_hyperlink_element_utils{}
 {
-    // constrain the attribute values
+    // constrain the property values
     shape.constrain_values({"circle", "default", "polygon", "rectangle"});
-
-    // set the properties
-    relList << new ext::string_vector{};
 }
 
 
@@ -49,6 +46,5 @@ auto html::elements::html_area_element::v8(
             .var("download", html_area_element::download)
             .var("ping", html_area_element::ping)
             .var("referrerPolicy", html_area_element::referrerPolicy)
-            .var("relList", html_area_element::relList)
             .auto_wrap_objects();
 }

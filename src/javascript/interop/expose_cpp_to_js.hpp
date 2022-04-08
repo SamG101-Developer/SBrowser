@@ -72,13 +72,13 @@
 #include <html/elements/html_dlist_element.hpp>
 #include <html/elements/html_element.hpp>
 #include <html/elements/html_form_element.hpp>
-#include <html/elements/html_field_set_element.hpp>
 #include <html/elements/html_head_element.hpp>
 #include <html/elements/html_heading_element.hpp>
 #include <html/elements/html_hr_element.hpp>
 #include <html/elements/html_html_element.hpp>
 #include <html/elements/html_iframe_element.hpp>
 #include <html/elements/html_image_element.hpp>
+#include <html/elements/html_label_element.hpp>
 #include <html/elements/html_li_element.hpp>
 #include <html/elements/html_link_element.hpp>
 #include <html/elements/html_map_element.hpp>
@@ -208,13 +208,13 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_dlist_element = object_to_v8<html::elements::html_dlist_element>(isolate);
     auto v8_html_element = object_to_v8<html::elements::html_element>(isolate);
     auto v8_html_form_element = object_to_v8<html::elements::html_form_element>(isolate);
-    auto v8_html_field_set_element = object_to_v8<html::elements::html_field_set_element>(isolate);
     auto v8_html_head_element = object_to_v8<html::elements::html_head_element>(isolate);
     auto v8_html_heading_element = object_to_v8<html::elements::html_heading_element>(isolate);
     auto v8_html_hr_element = object_to_v8<html::elements::html_hr_element>(isolate);
     auto v8_html_html_element = object_to_v8<html::elements::html_html_element>(isolate);
     auto v8_html_iframe_element = object_to_v8<html::elements::html_iframe_element>(isolate);
     auto v8_html_image_element = object_to_v8<html::elements::html_image_element>(isolate);
+    auto v8_html_label_element = object_to_v8<html::elements::html_label_element>(isolate);
     auto v8_html_li_element = object_to_v8<html::elements::html_li_element>(isolate);
     auto v8_html_link_element = object_to_v8<html::elements::html_link_element>(isolate);
     auto v8_html_map_element = object_to_v8<html::elements::html_map_element>(isolate);
@@ -318,7 +318,6 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLDivElement", v8_html_div_element)
                     .class_("HTMLDListElement", v8_html_dlist_element)
                     .class_("HTMLElement", v8_html_element)
-                    .class_("HTMLFieldSetElement", v8_html_field_set_element)
                     .class_("HTMLFormElement", v8_html_form_element)
                     .class_("HTMLHeadElement", v8_html_head_element)
                     .class_("HTMLHeadingElement", v8_html_heading_element)
@@ -326,6 +325,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLHtmlElement", v8_html_html_element)
                     .class_("HTMLIFrameElement", v8_html_iframe_element)
                     .class_("HTMLImageElement", v8_html_image_element)
+                    .class_("HTMLLabelElement", v8_html_label_element)
                     .class_("HTMLLIElement", v8_html_li_element)
                     .class_("HTMLLinkElement", v8_html_link_element)
                     .class_("HTMLMapElement", v8_html_map_element)

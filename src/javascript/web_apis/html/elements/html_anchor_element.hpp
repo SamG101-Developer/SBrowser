@@ -24,7 +24,6 @@ public js_properties:
     ext::html_property<ext::string> type;
     ext::html_property<ext::string> text;
     ext::html_property<ext::string> referrer_policy;
-    ext::html_property<ext::string_vector*> relList;
 
 public cpp_methods:
     auto activation_behaviour(dom::events::event* event) -> void override;

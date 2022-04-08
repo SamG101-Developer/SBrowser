@@ -32,15 +32,6 @@ public js_properties:
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
-
-private cpp_properties:
-    ext::string_vector m_link_types {
-        "alternate", "dns-prefetch", "icon", "manifest", "modulepreload", "next", "pingback", "preconnect", "prefetch",
-        "preload", "prerender", "search", "stylesheet", "canonical"
-    };
-
-private accessors:
-    auto set_rel(const ext::string& val) -> void;
 };
 
 
