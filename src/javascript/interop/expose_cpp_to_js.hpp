@@ -1,6 +1,14 @@
 #ifndef SBROWSER_EXPOSE_CPP_TO_JS_HPP
 #define SBROWSER_EXPOSE_CPP_TO_JS_HPP
 
+
+/*
+ *
+protected cpp_methods:
+    auto insertion_steps() -> void override;
+    auto removal_steps(dom::nodes::node* old_parent) -> void override;
+ * */
+
 #include <javascript/environment/modules.hpp>
 
 #include <dom/aborting/abort_controller.hpp>
@@ -87,10 +95,13 @@
 #include <html/elements/html_menu_element.hpp>
 #include <html/elements/html_mod_element.hpp>
 #include <html/elements/html_olist_element.hpp>
+#include <html/elements/html_opt_group_element.hpp>
+#include <html/elements/html_option_element.hpp>
 #include <html/elements/html_paragraph_element.hpp>
 #include <html/elements/html_picture_element.hpp>
 #include <html/elements/html_pre_element.hpp>
 #include <html/elements/html_quote_element.hpp>
+#include <html/elements/html_select_element.hpp>
 #include <html/elements/html_slot_element.hpp>
 #include <html/elements/html_source_element.hpp>
 #include <html/elements/html_span_element.hpp>
@@ -101,6 +112,7 @@
 #include <html/elements/html_table_element.hpp>
 #include <html/elements/html_table_row_element.hpp>
 #include <html/elements/html_table_section_element.hpp>
+#include <html/elements/html_text_area_element.hpp>
 #include <html/elements/html_title_element.hpp>
 #include <html/elements/html_time_element.hpp>
 #include <html/elements/html_track_element.hpp>
@@ -223,10 +235,13 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_menu_element = object_to_v8<html::elements::html_menu_element>(isolate);
     auto v8_html_mod_element = object_to_v8<html::elements::html_mod_element>(isolate);
     auto v8_html_olist_element = object_to_v8<html::elements::html_olist_element>(isolate);
+    auto v8_html_opt_group_element = object_to_v8<html::elements::html_opt_group_element>(isolate);
+    auto v8_html_option_element = object_to_v8<html::elements::html_option_element>(isolate);
     auto v8_html_paragraph_element = object_to_v8<html::elements::html_paragraph_element>(isolate);
     auto v8_html_pre_element = object_to_v8<html::elements::html_pre_element>(isolate);
     auto v8_html_picture_element = object_to_v8<html::elements::html_picture_element>(isolate);
     auto v8_html_quote_element = object_to_v8<html::elements::html_quote_element>(isolate);
+    auto v8_html_select_element = object_to_v8<html::elements::html_select_element>(isolate);
     auto v8_html_slot_element = object_to_v8<html::elements::html_slot_element>(isolate);
     auto v8_html_source_element = object_to_v8<html::elements::html_source_element>(isolate);
     auto v8_html_span_element = object_to_v8<html::elements::html_span_element>(isolate);
@@ -237,6 +252,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_table_element = object_to_v8<html::elements::html_table_element>(isolate);
     auto v8_html_table_row_element = object_to_v8<html::elements::html_table_row_element>(isolate);
     auto v8_html_table_section_element = object_to_v8<html::elements::html_table_section_element>(isolate);
+    auto v8_html_text_area_element = object_to_v8<html::elements::html_text_area_element>(isolate);
     auto v8_html_title_element = object_to_v8<html::elements::html_title_element>(isolate);
     auto v8_html_track_element = object_to_v8<html::elements::html_track_element>(isolate);
     auto v8_html_time_element = object_to_v8<html::elements::html_time_element>(isolate);
@@ -334,10 +350,13 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLMenuElement", v8_html_menu_element)
                     .class_("HTMLModElement", v8_html_mod_element)
                     .class_("HTMLOListElement", v8_html_olist_element)
+                    .class_("HTMLOptGroupElement", v8_html_opt_group_element)
+                    .class_("HTMLOptionElement", v8_html_option_element)
                     .class_("HTMLPictureElement", v8_html_picture_element)
                     .class_("HTMLParagraphElement", v8_html_paragraph_element)
                     .class_("HTMLPreElement", v8_html_pre_element)
                     .class_("HTMLQuoteElement", v8_html_pre_element)
+                    .class_("HTMLSelectElement", v8_html_select_element)
                     .class_("HTMLSlotElement", v8_html_slot_element)
                     .class_("HTMLSourceElement", v8_html_source_element)
                     .class_("HTMLSpanElement", v8_html_span_element)
@@ -348,6 +367,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLTableElement", v8_html_table_element)
                     .class_("HTMLTableRowElement", v8_html_table_row_element)
                     .class_("HTMLTableSectionElement", v8_html_table_section_element)
+                    .class_("HTMLTextAreaElement", v8_html_text_area_element)
                     .class_("HTMLTitleElement", v8_html_title_element)
                     .class_("HTMLTimeElement", v8_html_time_element)
                     .class_("HTMLTrackElement", v8_html_track_element)

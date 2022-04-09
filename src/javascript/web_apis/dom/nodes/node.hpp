@@ -32,22 +32,22 @@ public constructors:
     ~node() override;
 
 public static_constants:
-    static const unsigned short DOCUMENT_POSITION_DISCONNECTED = 0x01;
-    static const unsigned short DOCUMENT_POSITION_PRECEDING = 0x02;
-    static const unsigned short DOCUMENT_POSITION_FOLLOWING = 0x04;
-    static const unsigned short DOCUMENT_POSITION_CONTAINS = 0x08;
-    static const unsigned short DOCUMENT_POSITION_CONTAINED_BY = 0x10;
-    static const unsigned short DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20;
+    static const ushort DOCUMENT_POSITION_DISCONNECTED = 0x01;
+    static const ushort DOCUMENT_POSITION_PRECEDING = 0x02;
+    static const ushort DOCUMENT_POSITION_FOLLOWING = 0x04;
+    static const ushort DOCUMENT_POSITION_CONTAINS = 0x08;
+    static const ushort DOCUMENT_POSITION_CONTAINED_BY = 0x10;
+    static const ushort DOCUMENT_POSITION_IMPLEMENTATION_SPECIFIC = 0x20;
 
-    static const unsigned short ELEMENT_NODE = 1;
-    static const unsigned short ATTRIBUTE_NODE = 2;
-    static const unsigned short TEXT_NODE = 3;
-    static const unsigned short CDATA_SECTION_NODE = 4;
-    static const unsigned short PROCESSING_INSTRUCTION_NODE = 7;
-    static const unsigned short COMMENT_NODE = 8;
-    static const unsigned short DOCUMENT_NODE = 9;
-    static const unsigned short DOCUMENT_TYPE_NODE = 10;
-    static const unsigned short DOCUMENT_FRAGMENT_NODE = 11;
+    static const ushort ELEMENT_NODE = 1;
+    static const ushort ATTRIBUTE_NODE = 2;
+    static const ushort TEXT_NODE = 3;
+    static const ushort CDATA_SECTION_NODE = 4;
+    static const ushort PROCESSING_INSTRUCTION_NODE = 7;
+    static const ushort COMMENT_NODE = 8;
+    static const ushort DOCUMENT_NODE = 9;
+    static const ushort DOCUMENT_TYPE_NODE = 10;
+    static const ushort DOCUMENT_FRAGMENT_NODE = 11;
 
 public js_methods:
     auto normalize() const -> void;
@@ -57,7 +57,7 @@ public js_methods:
     auto is_default_namespace(const ext::string& namespace_) const -> bool;
     auto lookup_prefix(const ext::string& namespace_) const -> ext::string;
     auto lookup_namespace_uri(const ext::string& prefix) const -> ext::string;
-    auto compare_document_position(node* other) const -> unsigned short;
+    auto compare_document_position(node* other) const -> ushort;
     auto get_root_node(const ext::string_any_map& options) const -> node*;
     auto clone_node(bool deep = false) const -> node*;
     auto insert_before(node* new_node, node* child) -> node*;
@@ -66,7 +66,7 @@ public js_methods:
     auto remove_child(node* old_node) -> node*;
 
 public js_properties:
-    ext::dom_property<unsigned short> node_type;
+    ext::dom_property<ushort> node_type;
     ext::dom_property<ext::string, _T> node_name;
     ext::dom_property<ext::string, _T> node_value;
     ext::dom_property<ext::string, _T> text_content;

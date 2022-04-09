@@ -14,7 +14,7 @@ public constructors:
 
 public js_properties:
     ext::html_property<ext::string, _T> media;
-    ext::html_property<ext::string_vector*> blocking;
+    ext::html_property<ext::string_vector*, _F> blocking;
 };
 
 

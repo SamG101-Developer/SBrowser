@@ -13,8 +13,8 @@ public constructors:
     html_table_cell_element();
 
 public js_properties:
-    ext::html_property<unsigned long, _T> col_span;
-    ext::html_property<unsigned long, _T> row_span;
+    ext::html_property<ulong, _T> col_span;
+    ext::html_property<ulong, _T> row_span;
     ext::html_property<ext::string, _T> headers;
     ext::html_property<long> cell_index;
 
@@ -22,7 +22,7 @@ public js_properties:
     ext::html_property<ext::string, _T> abbr;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:
     auto get_cell_index() -> long;

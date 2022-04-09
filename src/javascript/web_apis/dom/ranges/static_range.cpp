@@ -24,9 +24,9 @@ dom::ranges::static_range::static_range(
 
     // set the start and end containers and offsets from the options map
     start_container = init.at("startContainer").to<nodes::node*>();
-    start_offset = init.at("startOffset").to<unsigned long>();
+    start_offset = init.at("startOffset").to<ulong>();
     end_container = init.at("endContainer").to<nodes::node*>();
-    end_offset = init.at("endOffset").to<unsigned long>();
+    end_offset = init.at("endOffset").to<ulong>();
 }
 
 

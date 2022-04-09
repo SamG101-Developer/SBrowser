@@ -277,7 +277,7 @@ auto dom::nodes::document::create_range()
 
 auto dom::nodes::document::create_node_iterator(
         node* const root,
-        const unsigned long what_to_show,
+        const ulong what_to_show,
         iterators::node_filter* const filter)
         -> dom::iterators::node_iterator
 {
@@ -296,7 +296,7 @@ auto dom::nodes::document::create_node_iterator(
 
 auto dom::nodes::document::create_tree_walker(
         node* const root,
-        const unsigned long what_to_show,
+        const ulong what_to_show,
         iterators::node_filter* const filter)
         -> dom::iterators::tree_walker
 {

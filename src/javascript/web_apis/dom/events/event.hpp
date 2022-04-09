@@ -53,7 +53,7 @@ public js_properties:
     ext::dom_property<nodes::event_target*> current_target = nullptr;
     ext::dom_property<nodes::event_target*> related_target = nullptr;
 
-    ext::dom_property<unsigned short> event_phase;
+    ext::dom_property<ushort> event_phase;
     ext::dom_property<double> time_stamp = performance::time::dom_high_res_timestamp();
     ext::dom_property<bool> is_trusted;
 

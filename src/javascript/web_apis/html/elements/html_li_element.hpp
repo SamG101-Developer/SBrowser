@@ -16,7 +16,7 @@ public js_properties:
     ext::html_property<long, _T> value;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

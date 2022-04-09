@@ -38,7 +38,7 @@ auto dom::helpers::range_internals::partially_contains(
 auto dom::helpers::range_internals::set_start_or_end(
         ranges::range* const range,
         nodes::node* const container,
-        const unsigned long offset,
+        const ulong offset,
         const bool start)
         -> void
 {
@@ -90,9 +90,9 @@ auto dom::helpers::range_internals::set_start_or_end(
 
 auto dom::helpers::range_internals::position_relative(
         nodes::node* const start_container,
-        const unsigned long start_offset,
+        const ulong start_offset,
         nodes::node* const end_container,
-        const unsigned long end_offset)
+        const ulong end_offset)
         -> dom::internal::boundary_point_comparison_position
 {
     // the start and end container hava to be from the same tree, as a range only covers part of one tree
@@ -180,8 +180,8 @@ auto dom::helpers::range_internals::is_textual_based_range_container(
 auto dom::helpers::range_internals::clone_character_data_and_append(
         nodes::node* const node,
         nodes::document_fragment* const fragment,
-        const unsigned long start_offset,
-        const unsigned long end_offset,
+        const ulong start_offset,
+        const ulong end_offset,
         const bool replace)
         -> dom::nodes::document_fragment*
 {
@@ -207,8 +207,8 @@ auto dom::helpers::range_internals::append_to_sub_fragment(
         nodes::document_fragment* const fragment,
         nodes::node* const start_container,
         nodes::node* const end_container,
-        const unsigned long start_offset,
-        const unsigned long end_offset)
+        const ulong start_offset,
+        const ulong end_offset)
         -> dom::nodes::document_fragment*
 {
     // save a clone of the node, and append it to the fragment
@@ -234,8 +234,8 @@ auto dom::helpers::range_internals::append_to_sub_fragment(
 auto dom::helpers::range_internals::create_new_node_and_offset(
         const nodes::node* const start_container,
         const nodes::node* const end_container,
-        const unsigned long start_offset)
-        -> std::tuple<dom::nodes::node*, unsigned long>
+        const ulong start_offset)
+        -> std::tuple<dom::nodes::node*, ulong>
 {
     // get the common ancestor between the start and end nodes
     auto* common_ancestor = helpers::trees::common_ancestor(start_container, end_container);

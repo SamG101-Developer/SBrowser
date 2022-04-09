@@ -23,7 +23,7 @@ public constructors:
 public js_properties:
     ext::dom_property<nodes::node*> root;
     ext::dom_property<node_filter*> filter;
-    ext::dom_property<unsigned long> what_to_show;
+    ext::dom_property<ulong> what_to_show;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

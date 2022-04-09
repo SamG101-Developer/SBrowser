@@ -18,7 +18,7 @@ public constructors:
     text(const ext::string& new_data = "");
 
 public js_methods:
-    auto split_text(unsigned long offset) -> text*;
+    auto split_text(ulong offset) -> text*;
 
 public js_properties:
     ext::dom_property<ext::string> whole_text;

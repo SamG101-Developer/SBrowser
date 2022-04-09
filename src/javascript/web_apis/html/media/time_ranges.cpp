@@ -7,7 +7,7 @@ html::media::time_ranges::time_ranges() = default;
 
 
 auto html::media::time_ranges::start(
-        unsigned long index) const
+        ulong index) const
         -> double
 {
     // if the index is >= the length of the list, throw an index size error
@@ -21,7 +21,7 @@ auto html::media::time_ranges::start(
 
 
 auto html::media::time_ranges::end(
-        unsigned long index) const
+        ulong index) const
         -> double
 {
     // if the index is >= the length of the list, throw an index size error

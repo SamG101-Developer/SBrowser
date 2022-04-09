@@ -31,8 +31,8 @@ public js_methods:
     auto to_blob(blob_callback_t&& callback, const ext::string& type = "image/png", ext::any* quality = nullptr);
 
 public js_properties:
-    ext::html_property<unsigned long, _T> width;
-    ext::html_property<unsigned long, _T> height;
+    ext::html_property<ulong, _T> width;
+    ext::html_property<ulong, _T> height;
 
 public cpp_properties:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

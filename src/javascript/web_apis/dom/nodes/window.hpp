@@ -83,7 +83,7 @@ public: js_properties
 
     // animated types browsing context
     ext::dom_property<ext::any> opener;
-    ext::dom_property<unsigned long> length;
+    ext::dom_property<ulong> length;
     ext::dom_property<element*> frame_element;
     ext::dom_property<window_proxy*> frames;
     ext::dom_property<window_proxy*> top;

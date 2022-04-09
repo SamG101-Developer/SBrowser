@@ -38,16 +38,16 @@ public js_properties:
     ext::html_property<ext::string, _T> decoding;
     ext::html_property<ext::string> current_src;
 
-    ext::html_property<unsigned long, _T> width;
-    ext::html_property<unsigned long, _T> height;
-    ext::html_property<unsigned long> natural_width;
-    ext::html_property<unsigned long> natural_height;
+    ext::html_property<ulong, _T> width;
+    ext::html_property<ulong, _T> height;
+    ext::html_property<ulong, _F> natural_width;
+    ext::html_property<ulong, _F> natural_height;
 
     ext::html_property<bool, _T> is_map;
-    ext::html_property<bool> complete;
+    ext::html_property<bool, _F> complete;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
     auto qt() const -> QLabel* override;
 
 protected cpp_methods:
@@ -55,17 +55,17 @@ protected cpp_methods:
     auto removal_steps(dom::nodes::node* old_parent) -> void override;
 
 private accessors:
-    auto get_width() const -> unsigned long;
-    auto get_height() const -> unsigned long;
-    auto get_natural_width() const -> unsigned long;
-    auto get_natural_height() const -> unsigned long;
+    auto get_width() const -> ulong;
+    auto get_height() const -> ulong;
+    auto get_natural_width() const -> ulong;
+    auto get_natural_height() const -> ulong;
     auto get_complete() -> bool;
     auto get_current_src() -> ext::string;
 
     auto set_alt(const ext::string& val) -> void;
     auto set_src(const ext::string& val) -> void;
-    auto set_width(unsigned long val) -> void;
-    auto set_height(unsigned long val) -> void;
+    auto set_width(ulong val) -> void;
+    auto set_height(ulong val) -> void;
 
 private cpp_properties:
     html_image_element* m_dimension_attribute_src;

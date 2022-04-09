@@ -7,10 +7,10 @@
 
 namespace
 {
-    const unsigned long a = 54059;
-    const unsigned long b = 76963;
-    const unsigned long c = 86969;
-    const unsigned long d = 00037;
+    const ulong a = 54059;
+    const ulong b = 76963;
+    const ulong c = 86969;
+    const ulong d = 00037;
 
     constexpr auto hash(const char* s) -> size_t
     {

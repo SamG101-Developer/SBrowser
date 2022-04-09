@@ -13,10 +13,10 @@ public constructors:
     html_table_col_element();
 
 public js_properties:
-    ext::html_property<unsigned long> span;
+    ext::html_property<ulong> span;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

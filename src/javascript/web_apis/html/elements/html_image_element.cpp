@@ -116,7 +116,7 @@ auto html::elements::html_image_element::decode()
 
 
 auto html::elements::html_image_element::get_width() const
-        -> unsigned long
+        -> ulong
 {
     // return the width of the pixmap
     return qt()->isVisible() ? qt()->pixmap().width() : html::helpers::images::density_corrected_intrinsic_size(this).width;
@@ -124,7 +124,7 @@ auto html::elements::html_image_element::get_width() const
 
 
 auto html::elements::html_image_element::get_height() const
-        -> unsigned long
+        -> ulong
 {
     // return the height of the pixmap
     return qt()->isVisible() ? qt()->pixmap().height() : html::helpers::images::density_corrected_intrinsic_size(this).height;
@@ -132,7 +132,7 @@ auto html::elements::html_image_element::get_height() const
 
 
 auto html::elements::html_image_element::get_natural_width() const
-        -> unsigned long
+        -> ulong
 {
     // return the density-corrected intrinsic width
     return css::css_images::helpers::images::has_instrinsic_dimensions(this) ? html::helpers::images::density_corrected_intrinsic_size(this).width : 0;
@@ -140,7 +140,7 @@ auto html::elements::html_image_element::get_natural_width() const
 
 
 auto html::elements::html_image_element::get_natural_height() const
-        -> unsigned long
+        -> ulong
 {
     // return the density-corrected intrinsic height
     return css::css_images::helpers::images::has_instrinsic_dimensions(this) ? html::helpers::images::density_corrected_intrinsic_size(this).height : 0;
@@ -219,7 +219,7 @@ auto html::elements::html_image_element::set_src(
 
 
 auto html::elements::html_image_element::set_width(
-        const unsigned long val)
+        const ulong val)
         -> void
 {
     // set the width of the image
@@ -229,7 +229,7 @@ auto html::elements::html_image_element::set_width(
 
 
 auto html::elements::html_image_element::set_height(
-        const unsigned long val)
+        const ulong val)
         -> void
 {
     // set the height for the image

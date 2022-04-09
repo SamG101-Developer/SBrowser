@@ -24,14 +24,14 @@ dom::ranges::range::range() : abstract_range()
     // set the properties
     start_container << javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
     end_container << javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
-    start_offset << (unsigned long)0;
-    end_offset << (unsigned long)0;
+    start_offset << (ulong)0;
+    end_offset << (ulong)0;
 }
 
 
 auto dom::ranges::range::set_start(
         nodes::node* const node,
-        const unsigned long offset)
+        const ulong offset)
         -> void
 {
     // if the parent exists, set the start node and offset to (node, offset), using the set_start_or_end helper method
@@ -64,7 +64,7 @@ auto dom::ranges::range::set_start_after(
 
 auto dom::ranges::range::set_end(
         nodes::node* const node,
-        const unsigned long offset)
+        const ulong offset)
         -> void
 {
     // if the parent exists, set the end node and offset to (node, offset), using the set_start_or_end helper method
@@ -108,7 +108,7 @@ auto dom::ranges::range::insert_node(
     nodes::node* reference_node;
     nodes::node* parent;
     nodes::text* const start_container_text_node = ext::property_dynamic_cast<nodes::text*>(start_container);
-    unsigned long new_offset = 0;
+    ulong new_offset = 0;
 
     // if the start node is a text node, then set the reference node to the start node, otherwise the start node's child
     // at start_offset position in the child_nodes list
@@ -178,7 +178,7 @@ auto dom::ranges::range::intersects_node(
 
     // save the parent as the node's parent, and the offset to the index of the node
     nodes::node* const parent = node->parent;
-    const unsigned long offset = helpers::trees::index(node);
+    const ulong offset = helpers::trees::index(node);
 
     // save the parent's node and offset for before and after the parent (parent, offset) and (parent, offset + 1)
     auto* const parent_offset_node_0 = parent;
@@ -230,7 +230,7 @@ auto dom::ranges::range::select_node_contents(
 
 
 auto dom::ranges::range::compare_boundary_points(
-        const unsigned short how,
+        const ushort how,
         ranges::range* const source_range)
         -> short
 {
@@ -247,8 +247,8 @@ auto dom::ranges::range::compare_boundary_points(
     // create variables for the containers and offsets
     nodes::node* that_container;
     nodes::node* this_container;
-    unsigned short that_offset;
-    unsigned short this_offset;
+    ushort that_offset;
+    ushort this_offset;
 
     // determine how the comparison takes place depending on the <how> variable
     switch (how) {
@@ -313,7 +313,7 @@ auto dom::ranges::range::compare_boundary_points(
 
 auto dom::ranges::range::compare_point(
         nodes::node* const node,
-        const unsigned long offset) const
+        const ulong offset) const
         -> short
 {
     // if this range's root isn't the same root as the node's root, then throw a wrong document error
@@ -533,7 +533,7 @@ auto dom::ranges::range::clone_range() const
 
 auto dom::ranges::range::is_point_in_range(
         nodes::node* const node,
-        const unsigned long offset) const
+        const ulong offset) const
         -> bool
 {
     // return false if this range's root isn't the same root as the node's root

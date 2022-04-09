@@ -15,20 +15,20 @@ struct dom::helpers::texts final
     // manipulate text
     static auto replace_data(
             nodes::character_data* text_node,
-            unsigned long offset,
-            unsigned long count,
+            ulong offset,
+            ulong count,
             const ext::string& data)
             -> void;
 
     static auto split(
             nodes::text* text_node,
-            unsigned long offset)
+            ulong offset)
             -> nodes::text*;
 
     static auto substring_data(
             const nodes::character_data* text_node,
-            unsigned long offset,
-            unsigned long count)
+            ulong offset,
+            ulong count)
             -> ext::string;
 };
 

@@ -27,7 +27,7 @@ public js_properties:
 
 public cpp_methods:
     auto activation_behaviour(dom::events::event* event) -> void override;
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:
     auto get_text() const -> ext::string;

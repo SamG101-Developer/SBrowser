@@ -28,16 +28,16 @@ public friends:
 public constructors:
     html_media_element();
 
-    static const unsigned short NETWORK_EMPTY     = 0;
-    static const unsigned short NETWORK_IDLE      = 1;
-    static const unsigned short NETWORK_LOADING   = 2;
-    static const unsigned short NETWORK_NO_SOURCE = 3;
+    static const ushort NETWORK_EMPTY     = 0;
+    static const ushort NETWORK_IDLE      = 1;
+    static const ushort NETWORK_LOADING   = 2;
+    static const ushort NETWORK_NO_SOURCE = 3;
 
-    static const unsigned short HAVE_NOTHING      = 0;
-    static const unsigned short HAVE_METADATA     = 1;
-    static const unsigned short HAVE_CURRENT_DATA = 2;
-    static const unsigned short HAVE_FUTURE_DATA  = 3;
-    static const unsigned short HAVE_ENOUGH_DATA  = 4;
+    static const ushort HAVE_NOTHING      = 0;
+    static const ushort HAVE_METADATA     = 1;
+    static const ushort HAVE_CURRENT_DATA = 2;
+    static const ushort HAVE_FUTURE_DATA  = 3;
+    static const ushort HAVE_ENOUGH_DATA  = 4;
 
 public js_methods:
     auto load() -> void;
@@ -55,11 +55,11 @@ public js_properties:
     ext::html_property<html::media::media_provider*> src_object;
     ext::html_property<ext::string> current_src;
     ext::html_property<ext::string, _T> cross_origin;
-    ext::html_property<unsigned short> network_state;
+    ext::html_property<ushort> network_state;
     ext::html_property<ext::string, _T> preload;
     ext::html_property<html::media::time_ranges*> buffered;
 
-    ext::html_property<unsigned short> ready_state;
+    ext::html_property<ushort> ready_state;
     ext::html_property<bool> seeking;
 
     ext::html_property<double> current_time;
@@ -86,7 +86,7 @@ public js_properties:
     ext::html_property<ext::vector<html::media::text_track*>*> text_tracks;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:
     html::elements::html_media_element* m_media_provider_resource;
@@ -117,7 +117,7 @@ private accessors:
     auto get_current_time() const -> double;
     auto get_effective_media_volume() const -> double;
 
-    auto set_ready_state(unsigned short val) -> void;
+    auto set_ready_state(ushort val) -> void;
     auto set_current_time(double val) -> void;
 };
 

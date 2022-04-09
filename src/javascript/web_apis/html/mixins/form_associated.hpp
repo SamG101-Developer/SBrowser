@@ -15,11 +15,15 @@ ext::string_vector form_associated_elements {"button", "output", "select", "text
 template <typename T>
 class html::mixins::form_associated : virtual public dom_object
 {
+public constructors:
+    form_associated();
+
 public js_properties:
-    ext::html_property<elements::html_form_element*> form;
+    ext::html_property<elements::html_form_element*, _F> form;
+    ext::html_property<bool, _T> disabled;
 
 public js_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:
     elements::html_form_element* m_form_owner = nullptr;

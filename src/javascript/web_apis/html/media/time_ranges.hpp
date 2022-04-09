@@ -16,8 +16,8 @@ public constructors:
     time_ranges();
 
 public js_methods:
-    auto start(unsigned long index) const -> double;
-    auto end(unsigned long index) const -> double;
+    auto start(ulong index) const -> double;
+    auto end(ulong index) const -> double;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

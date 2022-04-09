@@ -350,8 +350,9 @@ template <typename T>
 template <typename U, typename F>
 auto ext::vector<T>::transform(const F& function) const -> ext::vector<U>
 {
-    // create a duplicate of the veque, transform all the items in it, and return a reference to it
-    vector<U> copy{*this};
+    // create a duplicate of the veque, transform all the items in it, and return it
+    vector<U> copy{};
+    copy.reserve(this->length());
     std::ranges::transform(this->begin(), this->end(), copy.begin(), function);
     return copy;
 }

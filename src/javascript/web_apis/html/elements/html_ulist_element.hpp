@@ -13,7 +13,7 @@ public constructors:
     html_ulist_element();
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

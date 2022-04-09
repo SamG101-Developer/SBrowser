@@ -25,8 +25,8 @@ dom::nodes::character_data::character_data()
 
 
 auto dom::nodes::character_data::substring_data(
-        const unsigned long offset,
-        const unsigned long count) const
+        const ulong offset,
+        const ulong count) const
         -> ext::string
 {
     // return the substring_data helper method output
@@ -44,7 +44,7 @@ auto dom::nodes::character_data::append_data(
 
 
 auto dom::nodes::character_data::insert_data(
-        const unsigned long offset,
+        const ulong offset,
         const ext::string& new_data)
         -> void
 {
@@ -54,8 +54,8 @@ auto dom::nodes::character_data::insert_data(
 
 
 auto dom::nodes::character_data::delete_data(
-        const unsigned long offset,
-        const unsigned long count)
+        const ulong offset,
+        const ulong count)
         -> void
 {
     // return the delete_data helper method output by replacing count characters after offset with nothing
@@ -64,8 +64,8 @@ auto dom::nodes::character_data::delete_data(
 
 
 auto dom::nodes::character_data::replace_data(
-        const unsigned long offset,
-        const unsigned long count,
+        const ulong offset,
+        const ulong count,
         const ext::string& new_data)
         -> void
 {
@@ -91,7 +91,7 @@ auto dom::nodes::character_data::get_text_content() const
 
 
 auto dom::nodes::character_data::get_length() const
-        -> unsigned long
+        -> ulong
 {
     // the length is the length of the data
     return data->length();

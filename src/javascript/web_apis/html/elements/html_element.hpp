@@ -34,7 +34,7 @@ public:
     ext::html_property<ext::string, _T> translate;
     ext::html_property<ext::string, _T> dir;
 
-    ext::html_property<ext::string> access_key_label;
+    ext::html_property<ext::string, _F> access_key_label;
     ext::html_property<ext::string, _T> access_key;
     ext::html_property<ext::string, _T> autocapitalize;
     ext::html_property<ext::string, _T> inner_text;
@@ -46,11 +46,11 @@ public:
     ext::html_property<bool, _T> spellcheck;
 
     // cssom-view
-    ext::html_property<element*> offset_parent;
-    ext::html_property<long> offset_top;
-    ext::html_property<long> offset_left;
-    ext::html_property<long> offset_width;
-    ext::html_property<long> offset_height;
+    ext::html_property<element*, _F> offset_parent;
+    ext::html_property<long, _F> offset_top;
+    ext::html_property<long, _F> offset_left;
+    ext::html_property<long, _F> offset_width;
+    ext::html_property<long, _F> offset_height;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

@@ -17,7 +17,7 @@ public js_properties:
 
 public cpp_methods:
     auto qt() const -> QWidget* override;
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

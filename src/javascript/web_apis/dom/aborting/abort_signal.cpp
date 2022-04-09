@@ -38,7 +38,7 @@ auto dom::aborting::abort_signal::throw_if_aborted(
 
 
 auto dom::aborting::abort_signal::timeout(
-        const unsigned long long milliseconds)
+        const ulong long milliseconds)
         -> dom::aborting::abort_signal
 {
     abort_signal signal{};

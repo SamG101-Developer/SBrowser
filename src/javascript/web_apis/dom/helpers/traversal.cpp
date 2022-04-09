@@ -13,14 +13,14 @@
 auto dom::helpers::traversal::filter(
         const nodes::node* const node,
         iterators::abstract_iterator* const iterator)
-        -> unsigned short
+        -> ushort
 {
     exceptions::throw_v8_exception<INVALID_STATE_ERR>(
             "an iterator must be inactive in order to be filtered",
             [iterator] {return iterator->m_active_flag;});
 
-    unsigned short n = node->node_type - (unsigned short)1;
-    if (iterator->what_to_show &~ (unsigned long)(2 << n))
+    ushort n = node->node_type - (ushort)1;
+    if (iterator->what_to_show &~ (ulong)(2 << n))
         return iterators::node_filter::FILTER_SKIP;
 
     iterator->m_active_flag = true;

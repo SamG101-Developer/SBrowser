@@ -28,7 +28,7 @@ public js_properties:
     ext::html_property<ext::string> origin;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
     auto set_the_url() -> void;
     auto reinitialize_url() -> void;

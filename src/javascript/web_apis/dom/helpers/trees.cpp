@@ -103,7 +103,7 @@ auto dom::helpers::trees::is_following(
 
 auto dom::helpers::trees::index(
         const nodes::node* const node_a)
-        -> unsigned long
+        -> ulong
 {
     // return the index of the node in the descendants of the tree root
     return descendants(root(node_a)).find(const_cast<nodes::node*>(node_a));
@@ -112,7 +112,7 @@ auto dom::helpers::trees::index(
 
 auto dom::helpers::trees::length(
         const nodes::node* const node_a)
-        -> unsigned long
+        -> ulong
 {
     // return 0 if the node is an attribute or document type (no way to determine a length)
     if (multi_cast<const nodes::attr*, const nodes::document_type*>(node_a))

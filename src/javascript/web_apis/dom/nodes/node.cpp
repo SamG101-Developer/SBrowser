@@ -207,7 +207,7 @@ auto dom::nodes::node::lookup_namespace_uri(
 
 auto dom::nodes::node::compare_document_position(
         node* other) const
-        -> unsigned short
+        -> ushort
 {
     // if the nodes are the same then return 0 ie there is no comparison to be done
     if (this == other) return 0;

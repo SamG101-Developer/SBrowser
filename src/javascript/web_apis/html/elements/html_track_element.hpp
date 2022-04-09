@@ -14,10 +14,10 @@ public constructors:
     html_track_element();
 
 public static_constants:
-    static const unsigned short NONE = 0;
-    static const unsigned short LOADING = 1;
-    static const unsigned short LOADED = 2;
-    static const unsigned short ERROR = 3;
+    static const ushort NONE = 0;
+    static const ushort LOADING = 1;
+    static const ushort LOADED = 2;
+    static const ushort ERROR = 3;
 
 public js_properties:
     ext::html_property<ext::string, _T> kind;
@@ -25,8 +25,8 @@ public js_properties:
     ext::html_property<ext::string, _T> srclang;
     ext::html_property<ext::string, _T> label;
     ext::html_property<bool, _T> default_;
-    ext::html_property<unsigned short> ready_state;
-    ext::html_property<media::text_track*> track;
+    ext::html_property<ushort, _F> ready_state;
+    ext::html_property<media::text_track*, _F> track;
 
 private accessors:
     auto set_parent_node(dom::nodes::node* val) -> void override;

@@ -18,8 +18,8 @@ public js_properties:
     ext::html_property<ext::string, _T> srcset;
     ext::html_property<ext::string, _T> sizes;
     ext::html_property<ext::string, _T> media;
-    ext::html_property<unsigned long, _T> width;
-    ext::html_property<unsigned long, _T> height;
+    ext::html_property<ulong, _T> width;
+    ext::html_property<ulong, _T> height;
 
 protected cpp_methods:
     auto insertion_steps() -> void override;

@@ -11,7 +11,7 @@ html::elements::html_table_section_element::html_table_section_element() = defau
 
 
 auto html::elements::html_table_section_element::insert_row(
-        unsigned long index)
+        ulong index)
         -> html::elements::html_table_row_element
 {
     // if the index is outside -1 and the number of rows, throw an index error
@@ -33,7 +33,7 @@ auto html::elements::html_table_section_element::insert_row(
 
 
 auto html::elements::html_table_section_element::delete_row(
-        unsigned long index)
+        ulong index)
         -> void*
 {
     // if the index is outside -1 and the number of rows, throw an index error

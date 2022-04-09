@@ -14,14 +14,14 @@ public constructors:
     html_table_section_element();
 
 public js_methods:
-    auto insert_row(unsigned long index = -1) -> html::elements::html_table_row_element;
-    auto delete_row(unsigned long index = -1) -> void;
+    auto insert_row(ulong index = -1) -> html::elements::html_table_row_element;
+    auto delete_row(ulong index = -1) -> void;
 
 public js_properties:
     ext::html_property<ext::vector<html_table_row_element*>*> rows;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

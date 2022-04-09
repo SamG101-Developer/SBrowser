@@ -53,11 +53,11 @@ struct dom::helpers::trees final
     // indexing and length of nodes
     static auto index(
             const nodes::node* node_a)
-            -> unsigned long;
+            -> ulong;
 
     static auto length(
             const nodes::node* node_a)
-            -> unsigned long;
+            -> ulong;
 
     // lists of nodes preceding or following another node
     template <typename T=nodes::node*>

@@ -24,7 +24,7 @@ public js_methods:
     template <typename ...nodes_t> void assign(nodes_t... nodes);
 
 public js_properties:
-    ext::html_property<ext::string> name;
+    ext::html_property<ext::string, _F> name;
 
 private cpp_properties:
     ext::vector<dom::nodes::node*>* m_manually_assigned_nodes;

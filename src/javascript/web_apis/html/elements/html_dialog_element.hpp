@@ -25,7 +25,7 @@ public js_properties:
 
 public cpp_methods:
     auto qt() const -> QDialog* override;
-    auto v8(v8::Isolate *isolate) const -> ext::any override
+    auto v8(v8::Isolate* isolate) const -> ext::any override
 
 protected cpp_properties:
     dom::nodes::element* m_previously_focused_element = nullptr;

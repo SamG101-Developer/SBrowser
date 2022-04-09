@@ -29,7 +29,7 @@ public js_methods:
     auto remove_cue(text_track_cue* cue) -> void;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:
     std::function<void()> rules_for_updating_text_tracks;

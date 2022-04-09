@@ -19,7 +19,7 @@ public js_properties:
     ext::html_property<ext::string, _T> media;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private cpp_properties:
     ext::string m_pragma_set_default_language;

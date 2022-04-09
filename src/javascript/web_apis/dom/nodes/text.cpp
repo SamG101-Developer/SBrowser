@@ -20,7 +20,7 @@ dom::nodes::text::text(const ext::string& new_data)
 
 
 auto dom::nodes::text::split_text(
-        unsigned long offset)
+        ulong offset)
         -> text*
 {
     // return the split helper method output by splitting this text node at offset position

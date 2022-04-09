@@ -12,6 +12,7 @@
 html::elements::html_button_element::html_button_element()
         : html_element{}
         , mixins::validatable<html_button_element>{}
+        , mixins::labelable<html_button_element>()
         , mixins::form_associated<html_button_element>{}
 {
     // constrain the property values
@@ -27,7 +28,6 @@ html::elements::html_button_element::html_button_element()
 
     // attach the qt functions
     value.attach_qt_updater(&QPushButton::setText, widget);
-    disabled.attach_qt_updater(&QPushButton::setDisabled, widget);
 }
 
 
@@ -95,6 +95,7 @@ auto html::elements::html_button_element::v8(
             .ctor<>()
             .inherit<html_element>()
             .inherit<mixins::validatable<html_button_element>>()
+            .inherit<mixins::labelable<html_button_element>>()
             .inherit<mixins::form_associated<html_button_element>>()
             .var("form_action", &html_button_element::form_action)
             .var("form_enctype", &html_button_element::form_enctype)
@@ -105,6 +106,5 @@ auto html::elements::html_button_element::v8(
             .var("value", &html_button_element::value)
             .var("form_no_validate", &html_button_element::form_no_validate)
             .var("disabled", &html_button_element::disabled)
-            .var("labels", &html_button_element::labels)
             .auto_wrap_objects();
 }

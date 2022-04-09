@@ -12,8 +12,9 @@ class html::elements::html_base_element : public html_element
 public constructors:
     html_base_element();
 
-    ext::html_property<ext::string> href;
-    ext::html_property<ext::string> target;
+public js_properties:
+    ext::html_property<ext::string, _F> href;
+    ext::html_property<ext::string, _F> target;
 
 private accessors:
     auto get_href() const -> ext::string;

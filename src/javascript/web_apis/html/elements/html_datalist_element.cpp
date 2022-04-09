@@ -8,6 +8,9 @@
 html::elements::html_datalist_element::html_datalist_element()
         : html_element()
 {
+    // set the properties
+    options = new ext::vector<html_option_element*>{};
+
     // create the widget representation
     auto widget = QPointer<QPushButton>{};
     widget->setMenu(new QMenu{});

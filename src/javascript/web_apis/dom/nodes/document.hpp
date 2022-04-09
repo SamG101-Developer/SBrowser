@@ -99,8 +99,8 @@ public js_methods:
     new_obj auto create_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name) const -> attr;
 
     new_obj auto create_range() -> ranges::range;
-    new_obj auto create_node_iterator(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator;
-    new_obj auto create_tree_walker(node* root, unsigned long what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::tree_walker;
+    new_obj auto create_node_iterator(node* root, ulong what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator;
+    new_obj auto create_tree_walker(node* root, ulong what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::tree_walker;
 
     same_obj auto import_node(node* new_node, bool deep = false) -> node*;
     same_obj auto adopt_node(node* new_node) -> node*;
@@ -196,7 +196,7 @@ private cpp_properties:
     bool m_is_initial = false;
     bool m_will_declaratively_refresh = false;
     ext::string m_navigation_id = "";
-    unsigned short m_sandboxing_flag = 0;
+    ushort m_sandboxing_flag = 0;
 
     ext::set<element*> m_render_blocking_elements {};
 

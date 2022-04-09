@@ -17,7 +17,7 @@ public js_properties:
     ext::html_property<ext::vector<dom::nodes::element*>*> areas;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

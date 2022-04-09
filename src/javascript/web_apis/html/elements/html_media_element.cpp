@@ -129,10 +129,10 @@ auto html::elements::html_media_element::add_text_track(
 
 
 auto html::elements::html_media_element::set_ready_state(
-        unsigned short val)
+        ushort val)
         -> void
 {
-    unsigned short previous_ready_state;
+    ushort previous_ready_state;
     ready_state >> previous_ready_state;
     ready_state << val;
 

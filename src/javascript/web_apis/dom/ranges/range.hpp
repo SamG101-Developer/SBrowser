@@ -30,11 +30,11 @@ public static_constants:
 
 public js_methods:
     // dom
-    auto set_start(nodes::node* node, unsigned long offset) -> void;
+    auto set_start(nodes::node* node, ulong offset) -> void;
     auto set_start_before(nodes::node* node) -> void;
     auto set_start_after(nodes::node* node) -> void;
 
-    auto set_end(nodes::node* node, unsigned long offset) -> void;
+    auto set_end(nodes::node* node, ulong offset) -> void;
     auto set_end_before(nodes::node* node) -> void;
     auto set_end_after(nodes::node* node) -> void;
 
@@ -43,8 +43,8 @@ public js_methods:
     auto select_node(const nodes::node* node) -> void;
     auto select_node_contents(nodes::node* node) -> void;
 
-    auto compare_boundary_points(unsigned short how, ranges::range* source_range) -> short;
-    auto compare_point(nodes::node* node, unsigned long offset) const -> short;
+    auto compare_boundary_points(ushort how, ranges::range* source_range) -> short;
+    auto compare_point(nodes::node* node, ulong offset) const -> short;
 
     new_obj auto extract_contents() -> nodes::document_fragment;
     new_obj auto clone_contents() -> nodes::document_fragment;
@@ -53,7 +53,7 @@ public js_methods:
 
     auto collapse(bool to_start = false) -> void;
     new_obj auto clone_range() const -> ranges::range;
-    auto is_point_in_range(nodes::node* node, unsigned long offset) const -> bool;
+    auto is_point_in_range(nodes::node* node, ulong offset) const -> bool;
 
     auto to_json() const -> ext::string;
 

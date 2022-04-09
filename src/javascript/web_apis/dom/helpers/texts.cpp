@@ -16,8 +16,8 @@
 
 auto dom::helpers::texts::replace_data(
         nodes::character_data* const text_node,
-        const unsigned long offset,
-        unsigned long count,
+        const ulong offset,
+        ulong count,
         const ext::string& data)
         -> void
 {
@@ -72,7 +72,7 @@ auto dom::helpers::texts::replace_data(
 
 auto dom::helpers::texts::split(
         nodes::text* const text_node,
-        const unsigned long offset)
+        const ulong offset)
         -> dom::nodes::text*
 {
     const auto length = trees::length(text_node);
@@ -118,8 +118,8 @@ auto dom::helpers::texts::split(
 
 auto dom::helpers::texts::substring_data(
         const nodes::character_data* const text_node,
-        const unsigned long offset,
-        unsigned long count) -> ext::string
+        const ulong offset,
+        ulong count) -> ext::string
 {
     const auto length = trees::length(text_node);
     exceptions::throw_v8_exception<INDEX_SIZE_ERR>(

@@ -23,7 +23,7 @@ public: constructors
     xpath_expression();
 
 public: js_methods
-    auto evaluate(nodes::node* context_node, unsigned short type = 0, xpath_result* result = nullptr) -> xpath_result*;
+    auto evaluate(nodes::node* context_node, ushort type = 0, xpath_result* result = nullptr) -> xpath_result*;
 
 public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;

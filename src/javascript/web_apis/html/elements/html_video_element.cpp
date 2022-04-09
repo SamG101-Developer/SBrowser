@@ -21,7 +21,7 @@ auto html::elements::html_video_element::qt() const
 
 
 auto html::elements::html_video_element::get_video_width() const
-        -> unsigned long
+        -> ulong
 {
     // get the width of the video
     return ready_state == HAVE_NOTHING ? 0 : qt()->width();
@@ -29,7 +29,7 @@ auto html::elements::html_video_element::get_video_width() const
 
 
 auto html::elements::html_video_element::get_video_height() const
-        -> unsigned long
+        -> ulong
 {
     // get the height of the video
     return ready_state == HAVE_NOTHING ? 0 : qt()->height();

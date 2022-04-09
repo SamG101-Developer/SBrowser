@@ -20,7 +20,7 @@ struct dom::helpers::traversal final
     static auto filter(
             const nodes::node* node,
             iterators::abstract_iterator* iterator)
-            -> unsigned short;
+            -> ushort;
 
     // traversal
     static auto traverse(

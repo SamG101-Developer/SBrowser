@@ -7,6 +7,7 @@
 #include <QtWidgets/QPushButton>
 
 namespace html::elements {class html_datalist_element;}
+namespace html::elements {class html_option_element;}
 
 
 class html::elements::html_datalist_element : public html_element
@@ -15,7 +16,7 @@ public constructors:
     html_datalist_element();
 
 public js_properties:
-    ext::html_property<ext::vector<dom::nodes::element*>*> options;
+    ext::html_property<ext::vector<html_option_element*>*, _F> options;
 
 public cpp_methods:
     auto qt() const -> QPushButton* override;

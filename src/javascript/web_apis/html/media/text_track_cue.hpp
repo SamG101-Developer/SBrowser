@@ -22,7 +22,7 @@ public js_properties:
     ext::html_property<bool> pause_on_exit;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 public cpp_properties:
     bool m_active_flag;

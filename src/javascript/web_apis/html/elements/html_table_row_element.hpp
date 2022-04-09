@@ -23,7 +23,7 @@ public js_properties:
     ext::html_property<ext::vector<html_table_cell_element*>*> cells;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:
     auto get_row_index() const -> long;

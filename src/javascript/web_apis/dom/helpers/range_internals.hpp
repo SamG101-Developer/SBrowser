@@ -30,15 +30,15 @@ struct dom::helpers::range_internals final
     static auto set_start_or_end(
             ranges::range* range,
             nodes::node* container,
-            unsigned long offset,
+            ulong offset,
             bool start)
             -> void;
 
     static auto position_relative(
             nodes::node* start_container,
-            unsigned long start_offset,
+            ulong start_offset,
             nodes::node* end_container,
-            unsigned long end_offset)
+            ulong end_offset)
             -> internal::boundary_point_comparison_position;
 
     // other general helper methods for ranges
@@ -59,8 +59,8 @@ struct dom::helpers::range_internals final
     static auto clone_character_data_and_append(
             nodes::node* node,
             nodes::document_fragment* fragment,
-            unsigned long start_offset,
-            unsigned long end_offset,
+            ulong start_offset,
+            ulong end_offset,
             bool replace)
             -> nodes::document_fragment*;
 
@@ -69,15 +69,15 @@ struct dom::helpers::range_internals final
             nodes::document_fragment* fragment,
             nodes::node* start_container,
             nodes::node* end_container,
-            unsigned long start_offset,
-            unsigned long end_offset)
+            ulong start_offset,
+            ulong end_offset)
             -> nodes::document_fragment*;
 
     static auto create_new_node_and_offset(
             const nodes::node* start_container,
             const nodes::node* end_container,
-            unsigned long start_offset)
-            -> std::tuple<nodes::node*, unsigned long>;
+            ulong start_offset)
+            -> std::tuple<nodes::node*, ulong>;
 };
 
 

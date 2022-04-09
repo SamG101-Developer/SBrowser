@@ -22,7 +22,7 @@ public js_properties:
     ext::html_property<html_form_element*> form;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:
     auto set_html_for(const ext::string& val) -> void;

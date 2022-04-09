@@ -9,7 +9,7 @@ namespace ext {template <typename T, bool ce_reactions> struct html_property;}
 
 // TODO : constraints -> allow for example "tag_a tag_b" to match "tag_a" and "tag_b" so split on " " and test (maybe template specializations for ext::string)
 
-template <typename T, bool ce_reactions=_F>
+template <typename T, bool ce_reactions>
 struct ext::html_property : public dom_property<T, ce_reactions>
 {
 public aliases:

@@ -18,7 +18,7 @@ public js_properties:
     ext::dom_property<media::abstract_track*> track;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

@@ -208,11 +208,11 @@ auto dom::helpers::mutation_algorithms::insert(
         const auto live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>>("live_ranges");
         live_ranges
                 .filter([child, parent](auto* range) {return range->start_container == parent and range->start_offset > trees::index(child);})
-                .for_each([count](auto* range) {range->start_offset += (const unsigned long)count;});
+                .for_each([count](auto* range) {range->start_offset += (const ulong)count;});
 
         live_ranges
                 .filter([child, parent](auto* range) {return range->end_container == parent and range->end_offset > trees::index(child);})
-                .for_each([count](auto* range) {range->end_offset += (const unsigned long)count;});
+                .for_each([count](auto* range) {range->end_offset += (const ulong)count;});
     }
 
     // determine the previous sibling (mutation records) and insert the node

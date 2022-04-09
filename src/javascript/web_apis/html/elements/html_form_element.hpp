@@ -37,7 +37,7 @@ public js_properties:
     ext::html_property<ext::vector<html_form_element*>*> elements;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private cpp_properties:
     bool m_locked_for_reset = false;

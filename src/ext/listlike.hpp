@@ -26,11 +26,11 @@ public operators:
 public js_properties:
     ext::property<size_t> length;
 
+public cpp_methods:
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
+
 protected cpp_properties:
     ext::vector<T>* m_linked_list;
-
-private cpp_properties:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private accessors:
     auto get_length() -> size_t;

@@ -237,7 +237,7 @@ auto dom::helpers::node_internals::string_replace_all(
     if (not string.empty())
     {
         // create a new text node, set the data to the new string, and set the owner document to the parent's document
-        auto* const text_node = std::unique_ptr<nodes::text>{}.get();
+        auto* const text_node = new nodes::text{};
         text_node->data = string;
         text_node->owner_document = parent->owner_document;
 
