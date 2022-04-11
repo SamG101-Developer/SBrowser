@@ -6,6 +6,7 @@
 
 namespace file::objects {class blob;}
 namespace html::elements {class html_canvas_element;}
+namespace html::canvasing {class abstract_rendering_context;}
 namespace html::canvasing {class canvas_rendering_context_2d;}
 namespace html::canvasing {class image_bitmap_rendering_context;}
 namespace html::canvasing {class offscreen_canvas;}
@@ -16,7 +17,6 @@ class html::elements::html_canvas_element : public html::elements::html_element
 {
 public aliases:
     using blob_callback_t = std::function<void(file::objects::blob*)>;
-    using rendering_context_t = std::variant<canvasing::canvas_rendering_context_2d, canvasing::image_bitmap_rendering_context>;
 
 public enums:
     enum class context_mode {PLACE_HOLDER, _2D, BITMAPRENDERER, WEBGL, WEBGL2, WEBGPU, NONE};
@@ -25,7 +25,7 @@ public constructors:
     html_canvas_element();
 
 public js_methods:
-    new_obj auto get_context(const ext::string& context_id, ext::any* options = nullptr) -> rendering_context_t;
+    new_obj auto get_context(const ext::string& context_id, ext::any* options = nullptr) -> canvasing::abstract_rendering_context*;
     new_obj auto transfer_control_to_offscreen() -> canvasing::offscreen_canvas;
     auto to_data_url(const ext::string& type = "image/png", ext::any* quality = nullptr) -> ext::string;
     auto to_blob(blob_callback_t&& callback, const ext::string& type = "image/png", ext::any* quality = nullptr);
@@ -40,6 +40,10 @@ public cpp_properties:
 protected cpp_properties:
     context_mode m_context_mode = context_mode::NONE;
     images::image_bitmap* m_bitmap = nullptr;
+
+private accessors:
+    auto set_width(ulong val) -> void;
+    auto set_height(ulong val) -> void;
 };
 
 

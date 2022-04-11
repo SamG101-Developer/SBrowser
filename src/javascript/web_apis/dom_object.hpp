@@ -4,7 +4,7 @@
 #include <ext/any.hpp>
 #include <ext/casting.hpp>
 #include <ext/decorators.hpp>
-#include <ext/dom_property.hpp>
+#include <ext/html_property.hpp>
 #include <ext/type_traits.hpp>
 
 #include <javascript/interop/attribute_descriptors.hpp>
