@@ -9,6 +9,7 @@ namespace dom::nodes {class document;}
 namespace dom::nodes {class document_fragment;}
 namespace dom::nodes {class node;}
 namespace dom::nodes {class text;}
+namespace html::elements {class html_details_element;}
 namespace html::elements {class html_dlist_element;}
 namespace html::elements {class html_element;}
 namespace html::elements {class html_olist_element;}
@@ -17,6 +18,14 @@ namespace html::helpers {struct html_element_internals;}
 namespace html::internal {enum class direction_mode;}
 namespace html::internal {enum class translation_mode;}
 namespace html::mixins {template <typename T> class targetable;}
+
+namespace
+{
+    const ext::string_vector LISTED_ELEMENTS {"button", "output", "select", "textarea"};
+    const ext::string_vector SUBMITTABLE_ELEMENTS {"button", "select", "textarea"};
+    const ext::string_vector RESETTABLE_ELEMENTS {"output", "select", "textarea"};
+    const ext::string_vector AUTOCAPITALIZE_INHERITING_ELEMENTS {"button", "output", "select", "textarea"};
+}
 
 
 struct html::helpers::html_element_internals
@@ -33,7 +42,7 @@ struct html::helpers::html_element_internals
             dom::nodes::node* node)
             -> ext::string;
 
-    new_obj static auto rendered_text_fragment(
+    static auto rendered_text_fragment(
             const ext::string& input,
             dom::nodes::document* document)
             -> dom::nodes::document_fragment*;
@@ -64,6 +73,34 @@ struct html::helpers::html_element_internals
             ext::string_string_map& current,
             bool& seen_dd)
             -> void;
+
+    static auto is_listed_element(
+            elements::html_element* element)
+            -> bool;
+
+    static auto is_submittable_element(
+            elements::html_element* element)
+            -> bool;
+
+    static auto is_resettable_element(
+            elements::html_element* element)
+            -> bool;
+
+    static auto is_autocapitalize_inheriting_element(
+            elements::html_element* element)
+            -> bool;
+
+    static auto details_notification_task_steps(
+            elements::html_details_element* details_element)
+            -> void;
+
+    static auto ancestor_details_revealing_algorithm(
+            elements::html_details_element* details_element)
+            -> void;
+
+    static auto is_summary_for_parent_details(
+            elements::html_element* summary_element)
+            -> bool;
 };
 
 

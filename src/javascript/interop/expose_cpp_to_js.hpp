@@ -87,19 +87,23 @@ protected cpp_methods:
 #include <html/elements/html_iframe_element.hpp>
 #include <html/elements/html_image_element.hpp>
 #include <html/elements/html_label_element.hpp>
+#include <html/elements/html_legend_element.hpp>
 #include <html/elements/html_li_element.hpp>
 #include <html/elements/html_link_element.hpp>
 #include <html/elements/html_map_element.hpp>
 #include <html/elements/html_media_element.hpp>
 #include <html/elements/html_meta_element.hpp>
 #include <html/elements/html_menu_element.hpp>
+#include <html/elements/html_meter_element.hpp>
 #include <html/elements/html_mod_element.hpp>
 #include <html/elements/html_olist_element.hpp>
 #include <html/elements/html_opt_group_element.hpp>
 #include <html/elements/html_option_element.hpp>
+#include <html/elements/html_output_element.hpp>
 #include <html/elements/html_paragraph_element.hpp>
 #include <html/elements/html_picture_element.hpp>
 #include <html/elements/html_pre_element.hpp>
+#include <html/elements/html_progress_element.hpp>
 #include <html/elements/html_quote_element.hpp>
 #include <html/elements/html_select_element.hpp>
 #include <html/elements/html_slot_element.hpp>
@@ -120,6 +124,8 @@ protected cpp_methods:
 #include <html/elements/html_unknown_element.hpp>
 #include <html/elements/html_video_element.hpp>
 
+#include <html/events/form_data_event.hpp>
+#include <html/events/submit_event.hpp>
 #include <html/events/track_event.hpp>
 
 #include <html/media/audio_track.hpp>
@@ -227,18 +233,22 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_iframe_element = object_to_v8<html::elements::html_iframe_element>(isolate);
     auto v8_html_image_element = object_to_v8<html::elements::html_image_element>(isolate);
     auto v8_html_label_element = object_to_v8<html::elements::html_label_element>(isolate);
+    auto v8_html_legend_element = object_to_v8<html::elements::html_legend_element>(isolate);
     auto v8_html_li_element = object_to_v8<html::elements::html_li_element>(isolate);
     auto v8_html_link_element = object_to_v8<html::elements::html_link_element>(isolate);
     auto v8_html_map_element = object_to_v8<html::elements::html_map_element>(isolate);
     auto v8_html_media_element = object_to_v8<html::elements::html_media_element>(isolate);
     auto v8_html_meta_element = object_to_v8<html::elements::html_meta_element>(isolate);
     auto v8_html_menu_element = object_to_v8<html::elements::html_menu_element>(isolate);
+    auto v8_html_meter_element = object_to_v8<html::elements::html_meter_element>(isolate);
     auto v8_html_mod_element = object_to_v8<html::elements::html_mod_element>(isolate);
     auto v8_html_olist_element = object_to_v8<html::elements::html_olist_element>(isolate);
     auto v8_html_opt_group_element = object_to_v8<html::elements::html_opt_group_element>(isolate);
     auto v8_html_option_element = object_to_v8<html::elements::html_option_element>(isolate);
+    auto v8_html_output_element = object_to_v8<html::elements::html_output_element>(isolate);
     auto v8_html_paragraph_element = object_to_v8<html::elements::html_paragraph_element>(isolate);
     auto v8_html_pre_element = object_to_v8<html::elements::html_pre_element>(isolate);
+    auto v8_html_progress_element = object_to_v8<html::elements::html_progress_element>(isolate);
     auto v8_html_picture_element = object_to_v8<html::elements::html_picture_element>(isolate);
     auto v8_html_quote_element = object_to_v8<html::elements::html_quote_element>(isolate);
     auto v8_html_select_element = object_to_v8<html::elements::html_select_element>(isolate);
@@ -260,6 +270,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_unknown_element = object_to_v8<html::elements::html_unknown_element>(isolate);
     auto v8_html_video_element = object_to_v8<html::elements::html_video_element>(isolate);
 
+    auto v8_html_form_data_event = object_to_v8<html::events::form_data_event>(isolate);
+    auto v8_html_submit_event = object_to_v8<html::events::submit_event>(isolate);
     auto v8_html_track_event = object_to_v8<html::events::track_event>(isolate);
 
     auto v8_html_audio_track = object_to_v8<html::media::audio_track>(isolate);
@@ -342,19 +354,23 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLIFrameElement", v8_html_iframe_element)
                     .class_("HTMLImageElement", v8_html_image_element)
                     .class_("HTMLLabelElement", v8_html_label_element)
+                    .class_("HTMLLegendElement", v8_html_legend_element)
                     .class_("HTMLLIElement", v8_html_li_element)
                     .class_("HTMLLinkElement", v8_html_link_element)
                     .class_("HTMLMapElement", v8_html_map_element)
                     .class_("HTMLMediaElement", v8_html_media_element)
                     .class_("HTMLMetaElement", v8_html_meta_element)
                     .class_("HTMLMenuElement", v8_html_menu_element)
+                    .class_("HTMLMeterElement", v8_html_meter_element)
                     .class_("HTMLModElement", v8_html_mod_element)
                     .class_("HTMLOListElement", v8_html_olist_element)
                     .class_("HTMLOptGroupElement", v8_html_opt_group_element)
                     .class_("HTMLOptionElement", v8_html_option_element)
+                    .class_("HTMLOutputElement", v8_html_output_element)
                     .class_("HTMLPictureElement", v8_html_picture_element)
                     .class_("HTMLParagraphElement", v8_html_paragraph_element)
                     .class_("HTMLPreElement", v8_html_pre_element)
+                    .class_("HTMLProgressElement", v8_html_progress_element)
                     .class_("HTMLQuoteElement", v8_html_pre_element)
                     .class_("HTMLSelectElement", v8_html_select_element)
                     .class_("HTMLSlotElement", v8_html_slot_element)
@@ -375,6 +391,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLUnknownElement", v8_html_unknown_element)
                     .class_("HTMLVideoElement", v8_html_video_element)
 
+                    .class_("FormDataEvent", v8_html_form_data_event)
+                    .class_("SubmitEvent", v8_html_submit_event)
                     .class_("TrackEvent", v8_html_track_event)
 
                     .class_("AudioTrack", v8_html_audio_track)

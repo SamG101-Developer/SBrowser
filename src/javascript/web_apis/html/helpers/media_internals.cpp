@@ -23,7 +23,7 @@ auto html::helpers::media_internals::is_eligible_for_autoplay(
     return element->m_can_autoplay_flag
             and element->paused
             and element->autoplay // TODO : ?
-            and ~(element->owner_document->m_sandboxing_flag & internal::sandboxing_flags::SANDBOXED_AUTOMATIC_FEAUTURES_BROWSING_CONTEXT_FLAG)
+            and ~(element->owner_document->m_sandboxing_flag & internal::sandboxing_flags::SANDBOXED_AUTOMATIC_FEAUTURES)
             // TODO and element->owner_document is allowed to use the autoplay feature
 }
 

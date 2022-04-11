@@ -5,6 +5,7 @@
 #include <html/elements/html_output_element.hpp>
 #include <html/elements/html_select_element.hpp>
 #include <html/elements/html_text_area_element.hpp>
+#include <html/helpers/form_internals.hpp>
 #include <html/other/element_internals.hpp>
 
 
@@ -33,7 +34,7 @@ template<typename T>
 auto html::mixins::validatable<T>::check_validity()
         -> bool
 {
-    return helpers::validation_internals::statically_validate(static_cast<T*>(this));
+    // TODO
 }
 
 
@@ -41,7 +42,16 @@ template<typename T>
 auto html::mixins::validatable<T>::report_validity()
         -> bool
 {
-    return helpers::validation_internals::interactively_validate(static_cast<T*>(this));
+    // TODO
+}
+
+
+template<typename T>
+auto html::mixins::validatable<T>::set_custom_validity(
+        const ext::string& error)
+        -> void
+{
+
 }
 
 

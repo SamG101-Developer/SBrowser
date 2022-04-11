@@ -53,6 +53,7 @@ public:
     ext::html_property<long, _F> offset_height;
 
 public cpp_methods:
+    auto activation_behaviour(dom::events::event* event) -> void override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_methods:

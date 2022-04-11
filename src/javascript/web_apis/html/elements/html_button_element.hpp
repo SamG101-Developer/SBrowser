@@ -28,10 +28,6 @@ public js_properties:
     ext::html_property<ext::string, _T> form_method;
     ext::html_property<ext::string, _T> form_target;
 
-    ext::html_property<ext::string, _T> name;
-    ext::html_property<ext::string, _T> type;
-    ext::html_property<ext::string, _T> value;
-
     ext::html_property<bool, _T> form_no_validate;
 
 public cpp_methods:

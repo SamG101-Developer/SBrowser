@@ -2,6 +2,8 @@
 #ifndef SBROWSER_HTML_TEXT_AREA_ELEMENT_HPP
 #define SBROWSER_HTML_TEXT_AREA_ELEMENT_HPP
 
+#include <optional>
+
 #include <html/elements/html_element.hpp>
 #include <html/mixins/form_associated.hpp>
 #include <html/mixins/labelable.hpp>
@@ -22,19 +24,16 @@ public constructors:
     html_text_area_element();
 
 public js_methods:
-    void select();
-    void set_range_text(const ext::string& replacement, ulong start = 0, ulong end = 0, const ext::string& selection_mode = "");
-    void set_selection_range(ulong start, ulong end, const ext::string& direction = "");
+    auto select() -> void;
+    auto set_selection_range(ulong start, ulong end, const ext::string& direction = "none") -> void;
+    auto set_range_text(const ext::string& replacement, std::optional<ulong> start, std::optional<ulong> end, const ext::string& selection_mode = "preserve") -> void;
 
 public js_properties:
     ext::html_property<ext::string, _T> autocomplete;
     ext::html_property<ext::string, _T> dir_name;
-    ext::html_property<ext::string, _T> name;
     ext::html_property<ext::string, _T> placeholder;
     ext::html_property<ext::string, _T> wrap;
-    ext::html_property<ext::string, _T> default_Value;
-    ext::html_property<ext::string, _F> type;
-    ext::html_property<ext::string, _F> value;
+    ext::html_property<ext::string, _T> default_value;
 
     ext::html_property<bool, _T> read_only;
     ext::html_property<bool, _T> required;
@@ -51,12 +50,25 @@ public js_properties:
     ext::html_property<ext::string, _T> selection_direction;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
     auto qt() const -> QPlainTextEdit* override;
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private cpp_properties:
+    ext::string m_api_value;
+    ext::string m_relevant_value;
     ext::string m_raw_value;
     bool m_dirty_flag;
+    ulong m_selection;
+    ulong m_text_entry_cursor_position;
+
+private accessors:
+    auto get_selection_start() -> ulong;
+    auto get_selection_end() -> ulong;
+    auto get_selection_direction() -> ext::string;
+
+    auto set_selection_start(ulong val) -> void;
+    auto set_selection_end(ulong val) -> void;
+    auto set_selection_direction(const ext::string& val) -> void;
 };
 
 

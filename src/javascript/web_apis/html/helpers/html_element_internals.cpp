@@ -1,5 +1,6 @@
 #include "html_element_internals.hpp"
 
+#include <dom/helpers/event_dispatching.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
 #include <dom/helpers/texts.hpp>
 #include <dom/helpers/trees.hpp>
@@ -7,6 +8,7 @@
 #include <dom/nodes/text.hpp>
 
 #include <html/elements/html_base_element.hpp>
+#include <html/elements/html_details_element.hpp>
 #include <html/elements/html_dlist_element.hpp>
 #include <html/elements/html_element.hpp>
 #include <html/elements/html_div_element.hpp>
@@ -175,4 +177,51 @@ auto html::helpers::html_element_internals::process_dt_or_dd(
         // TODO : modify 'current'
         seen_dd = true;
     }
+}
+
+
+auto html::helpers::html_element_internals::details_notification_task_steps(
+        elements::html_details_element* details_element)
+        -> void
+{
+    // TODO : check if already queued
+
+    dom::helpers::event_dispatching::fire_event<>("toggle", details_element);
+}
+
+
+auto html::helpers::html_element_internals::ancestor_details_revealing_algorithm(
+        elements::html_details_element* details_element)
+        -> void
+{
+    auto flat_tree = dom::helpers::trees::descendants(dom::helpers::trees::root(details_element));
+
+    while (flat_tree.contains(details_element->parent))
+    {
+        // TODO
+    }
+}
+
+
+auto html::helpers::html_element_internals::is_summary_for_parent_details(
+        elements::html_element* summary_element)
+        -> bool
+{
+    // return false if the summary element has no parent
+    if (not summary_element->parent)
+        return false;
+
+    // get the parent element as a HTMLDetailsElement element
+    auto* details_parent_element = dynamic_cast<elements::html_details_element*>(summary_element);
+
+    // return false if the parent isn't a HTMLDetailsElement
+    if (not details_parent_element)
+        return false;
+
+    // return false if the parent's first summary element child isn't summary_element
+    if (details_parent_element->children->filter([](dom::nodes::element* element) {return element->local_name == "summary";}).front() != summary_element)
+        return false;
+
+    // return true if all of the other conditions have passed
+    return true;
 }

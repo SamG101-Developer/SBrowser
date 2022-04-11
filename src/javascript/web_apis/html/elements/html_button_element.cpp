@@ -1,4 +1,5 @@
 #include "html_button_element.hpp"
+#include "html_form_element.hpp"
 
 #include <ext/string_switch.hpp>
 
@@ -17,6 +18,7 @@ html::elements::html_button_element::html_button_element()
 {
     // constrain the property values
     type.constrain_values({"submit", "reset", "button"});
+    // TODO form_enctype.constrain_values({})
 
     // set the custom accessors
     type.setter = [this](auto && PH1) {set_type(std::forward<decltype(PH1)>(PH1));};

@@ -17,15 +17,18 @@ public constructors:
 public js_methods:
     auto check_validity() -> bool;
     auto report_validity() -> bool;
-    auto set_custom_validity() -> void;
+    auto set_custom_validity(const ext::string& error) -> void;
 
 public js_properties:
-    ext::html_property<bool> will_validate;
-    ext::html_property<ext::string> validation_message;
-    ext::html_property<ext::string> validity;
+    ext::html_property<bool, _F> will_validate;
+    ext::html_property<ext::string, _F> validation_message;
+    ext::html_property<ext::string, _F> validity;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
+
+private cpp_properties:
+    ext::string m_custom_validation_message;
 };
 
 

@@ -6,10 +6,13 @@
 #include <dom/helpers/mutation_algorithms.hpp>
 #include <dom/helpers/namespaces.hpp>
 #include <dom/helpers/trees.hpp>
+
 #include <dom/nodes/document_fragment.hpp>
 #include <dom/nodes/text.hpp>
 
+#include <html/elements/html_details_element.hpp>
 #include <html/elements/html_form_element.hpp>
+
 #include <html/helpers/custom_html_elements.hpp>
 #include <html/helpers/html_element_internals.hpp>
 
@@ -207,6 +210,26 @@ auto html::elements::html_element::removal_steps(dom::nodes::node* old_parent)
         -> void
 {
     // TODO : form stuff
+}
+
+
+auto html::elements::html_element::activation_behaviour(
+        dom::events::event* event)
+        -> void
+{
+    // handle activation behaviour for summary elements
+    if (local_name == "summary")
+    {
+        // return if this summary element isn't for a parent HTMLDetailsElement
+        if (not helpers::html_element_internals::is_summary_for_parent_details(this))
+            return;
+
+        // get the parent as a HTMLDetailsElement, and if the details element is open, then set the open attribute to
+        // false TODO : check this is correct?
+        auto* details_parent_element = ext::property_dynamic_cast<html_details_element*>(parent_element);
+        if (details_parent_element and details_parent_element->open)
+            details_parent_element->open = false;
+    }
 }
 
 

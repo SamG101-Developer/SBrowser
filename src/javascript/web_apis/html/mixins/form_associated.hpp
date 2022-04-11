@@ -19,14 +19,19 @@ public constructors:
     form_associated();
 
 public js_properties:
+    ext::html_property<ext::string, _T> name;
+    ext::html_property<ext::string, _F> type;
+    ext::html_property<ext::string, _F> value;
     ext::html_property<elements::html_form_element*, _F> form;
     ext::html_property<bool, _T> disabled;
 
 public js_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
+protected cpp_methods:
+    // TODO : reset_algorithm() etc? ...
+
 protected cpp_properties:
-    elements::html_form_element* m_form_owner = nullptr;
     bool m_parser_inserted_flag = false;
 };
 

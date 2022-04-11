@@ -6,7 +6,7 @@
 html::elements::html_table_cell_element::html_table_cell_element()
         : html_element()
 {
-    // constrain the property values
+    1
     scope.constrain_values({"row", "col", "rowgroup", "colgroup", "auto"});
     col_span.clamp_values(1, 1000);
     row_span.clamp_values(0, 65534);

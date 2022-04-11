@@ -24,9 +24,6 @@ public constructors:
 
 public js_properties:
     ext::html_property<ext::string, _T> autocomplete;
-    ext::html_property<ext::string, _T> name;
-    ext::html_property<ext::string, _F> type;
-    ext::html_property<ext::string, _F> value;
 
     ext::html_property<bool, _T> disabled;
     ext::html_property<bool, _T> multiple; // TODO

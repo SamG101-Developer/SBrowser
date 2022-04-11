@@ -1,8 +1,10 @@
 #include "html_form_element.hpp"
 
 #include <dom/helpers/exceptions.hpp>
+
 #include <html/elements/html_button_element.hpp>
 #include <html/helpers/custom_html_elements.hpp>
+#include <html/helpers/form_internals.hpp>
 
 // TODO : tidy
 
@@ -14,19 +16,13 @@ html::elements::html_form_element::html_form_element()
         , ext::listlike<dom::nodes::element*>(elements)
 {
     // constrain the property values
-    autocomplete.constrain_values({
-        "on",
-        "off"
-    });
+    autocomplete.constrain_values({"on", "off"});
+    rel.constrain_values({"noreferrer", "nooopener", "opener"});
+    enctype.constrain_values({"application/x-www-form-urlencoded", "multipart/form-data", "text/plain"});
 
-    rel.constrain_values({
-        "noreferrer",
-        "nooopener",
-        "opener"
-    });
 
     // set the properties
-    acceptCharset << "UTF-8"; // TODO : make operator=(...) case insensitive for it?
+    accept_charset << "UTF-8"; // TODO : make operator=(...) case insensitive for it?
     elements << new ext::vector<html_form_element*>{};
 }
 
@@ -35,7 +31,7 @@ auto html::elements::html_form_element::submit()
         -> void
 {
     // submit the form the helper method
-    helpers::form_internals::submit_form(this, this, true);
+    helpers::form_internals::submit(this, this, true);
 }
 
 
@@ -54,7 +50,7 @@ auto html::elements::html_form_element::requestSubmit(
         // if the submitter's form owner isn't this form, then throw a not found error
         dom::helpers::exceptions::throw_v8_exception<NOT_FOUND_ERR>(
                 "submitter's form owner must be this form",
-                [submitter, this] {return submitter->m_form_owner != this;});
+                [submitter, this] {return dynamic_cast<mixins::form_associated<decltype(submitter)>>(submitter)->form != this;});
     }
     else
         // set the submitter to this if it is empty
@@ -91,7 +87,7 @@ auto html::elements::html_form_element::v8(
             .function("auto submit", &html_form_element::submit)
             .function("auto reset", &html_form_element::reset)
             .function("auto requestSubmit", &html_form_element::requestSubmit)
-            .var("acceptCharset", &html_form_element::acceptCharset)
+            .var("acceptCharset", &html_form_element::accept_charset)
             .var("action", &html_form_element::action)
             .var("autocomplete", &html_form_element::autocomplete)
             .var("enctype", &html_form_element::enctype)

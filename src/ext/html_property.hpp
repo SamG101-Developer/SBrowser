@@ -21,7 +21,7 @@ public constructors:
 public cpp_methods:
     template <typename F, typename U> auto attach_qt_updater(F method, U pointer) -> void;
     auto constrain_values(const std::initializer_list<T>& constrain_to) -> void;
-    auto clamp_values(T&& low, T&& high) -> void requires std::is_arithmetic_v<T>;
+    auto clamp_values(const T& low, const T& high) -> void requires std::is_arithmetic_v<T>;
 
 public operators:
     auto operator=(const T& o) -> html_property<T, ce_reactions>& override;
@@ -62,7 +62,7 @@ auto ext::html_property<T, ce_reactions>::constrain_values(const std::initialize
 
 
 template <typename T, bool ce_reactions>
-auto ext::html_property<T, ce_reactions>::clamp_values(T&& low, T&& high) -> void requires std::is_arithmetic_v<T>
+auto ext::html_property<T, ce_reactions>::clamp_values(const T& low, const T& high) -> void requires std::is_arithmetic_v<T>
 {
     // clamp the value into a range ie the value set is forced into the range
     m_clamped  = false;

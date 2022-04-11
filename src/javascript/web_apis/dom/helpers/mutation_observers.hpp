@@ -14,6 +14,7 @@ namespace dom::internal {struct transient_registered_observer;}
 namespace dom::mutations {class mutation_observer;}
 namespace dom::nodes {class event_target;}
 namespace dom::nodes {class node;}
+namespace html::elements {class html_element;}
 namespace html::elements {class html_media_element;}
 
 
@@ -59,7 +60,9 @@ public:
     static auto queue_global_task(/* TODO */)
             -> void;
 
-    static auto queue_element_task(/* TODO */)
+    static auto queue_element_task(
+            html::elements::html_element* element,
+            steps_t&& steps)
             -> void;
 
     static auto queue_media_element_task(
