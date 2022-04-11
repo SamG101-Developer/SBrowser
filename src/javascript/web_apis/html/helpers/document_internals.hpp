@@ -77,6 +77,10 @@ struct html::helpers::document_internals {
             dom::nodes::document* document,
             const ext::string& feature) // TODO : type
             -> bool;
+
+    static auto appropriate_template_contents_owner_document(
+            dom::nodes::document* document)
+            -> dom::nodes::document*;
 };
 
 

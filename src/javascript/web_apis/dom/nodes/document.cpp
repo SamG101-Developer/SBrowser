@@ -673,7 +673,7 @@ auto dom::nodes::document::set_title(
     if (dynamic_cast<svg::elements::svg_element*>(document_element))
     {
         // the title element is the first child of the document that is a svg title element
-        auto* title_element = document_element->child_nodes->cast_all<svg::nodes::svg_title_element*>().front();
+        auto* title_element = document_element->child_nodes->cast_all<svg::elements::svg_title_element*>().front();
 
         // if there is no title element, then create an element and insert it as the document element's children's first
         // child
@@ -808,10 +808,10 @@ auto dom::nodes::document::v8(
             .function("importNode", &document::import_node)
             .function("adoptNode", &document::adopt_node)
             .function("getElementsByName", &document::get_elements_by_name)
-            // .function("open", &document::open)
+//             .function("open", &document::open)
             .function("close", &document::close)
-            // .function("write", &document::write)
-            // .function("writeln", &document::writeln)
+            .function("write", &document::write<>)
+            .function("writeln", &document::writeln<>)
             .function("hasFocus", &document::has_focus)
             .function("execCommand", &document::exec_command)
             .function("queryCommandEnabled", &document::query_command_enabled)

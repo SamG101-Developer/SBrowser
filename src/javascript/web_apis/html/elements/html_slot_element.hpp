@@ -4,8 +4,11 @@
 
 #include <html/elements/html_element.hpp>
 
+namespace dom::helpers {struct mutation_algorithms;}
 namespace dom::helpers {struct shadows;}
 namespace dom::nodes {class node;}
+namespace dom::nodes {class element;}
+namespace dom::nodes {class text;}
 namespace html::elements {class html_slot_element;}
 
 
@@ -19,12 +22,15 @@ public constructors:
     html_slot_element();
 
 public js_methods:
-    ext::vector<dom::nodes::node*> assigned_nodes(const ext::string_any_map& options = {});
-    ext::vector<dom::nodes::element*> assigned_elements(const ext::string_any_map& options = {});
-    template <typename ...nodes_t> void assign(nodes_t... nodes);
+    auto assigned_nodes(const ext::string_any_map& options = {}) -> ext::vector<dom::nodes::node*>*;
+    auto assigned_elements(const ext::string_any_map& options = {}) -> ext::vector<dom::nodes::element*>*;
+    template <typename ...Args> auto assign(Args... nodes) -> void;
 
 public js_properties:
     ext::html_property<ext::string, _F> name;
+
+public cpp_methods:
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
 
 private cpp_properties:
     ext::vector<dom::nodes::node*>* m_manually_assigned_nodes;

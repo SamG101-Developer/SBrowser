@@ -16,6 +16,7 @@ class dom::mixins::slottable : virtual public dom_object
 {
 public friends:
     friend struct helpers::shadows;
+    friend class html::elements::html_slot_element;
 
 public constructors:
     slottable();

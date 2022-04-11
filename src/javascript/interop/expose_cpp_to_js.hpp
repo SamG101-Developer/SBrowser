@@ -105,6 +105,7 @@ protected cpp_methods:
 #include <html/elements/html_pre_element.hpp>
 #include <html/elements/html_progress_element.hpp>
 #include <html/elements/html_quote_element.hpp>
+#include <html/elements/html_script_element.hpp>
 #include <html/elements/html_select_element.hpp>
 #include <html/elements/html_slot_element.hpp>
 #include <html/elements/html_source_element.hpp>
@@ -116,6 +117,7 @@ protected cpp_methods:
 #include <html/elements/html_table_element.hpp>
 #include <html/elements/html_table_row_element.hpp>
 #include <html/elements/html_table_section_element.hpp>
+#include <html/elements/html_template_element.hpp>
 #include <html/elements/html_text_area_element.hpp>
 #include <html/elements/html_title_element.hpp>
 #include <html/elements/html_time_element.hpp>
@@ -251,6 +253,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_progress_element = object_to_v8<html::elements::html_progress_element>(isolate);
     auto v8_html_picture_element = object_to_v8<html::elements::html_picture_element>(isolate);
     auto v8_html_quote_element = object_to_v8<html::elements::html_quote_element>(isolate);
+    auto v8_html_script_element = object_to_v8<html::elements::html_script_element>(isolate);
     auto v8_html_select_element = object_to_v8<html::elements::html_select_element>(isolate);
     auto v8_html_slot_element = object_to_v8<html::elements::html_slot_element>(isolate);
     auto v8_html_source_element = object_to_v8<html::elements::html_source_element>(isolate);
@@ -262,6 +265,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_html_table_element = object_to_v8<html::elements::html_table_element>(isolate);
     auto v8_html_table_row_element = object_to_v8<html::elements::html_table_row_element>(isolate);
     auto v8_html_table_section_element = object_to_v8<html::elements::html_table_section_element>(isolate);
+    auto v8_html_template_element = object_to_v8<html::elements::html_template_element>(isolate);
     auto v8_html_text_area_element = object_to_v8<html::elements::html_text_area_element>(isolate);
     auto v8_html_title_element = object_to_v8<html::elements::html_title_element>(isolate);
     auto v8_html_track_element = object_to_v8<html::elements::html_track_element>(isolate);
@@ -372,6 +376,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLPreElement", v8_html_pre_element)
                     .class_("HTMLProgressElement", v8_html_progress_element)
                     .class_("HTMLQuoteElement", v8_html_pre_element)
+                    .class_("HTMLScriptElement", v8_html_script_element)
                     .class_("HTMLSelectElement", v8_html_select_element)
                     .class_("HTMLSlotElement", v8_html_slot_element)
                     .class_("HTMLSourceElement", v8_html_source_element)
@@ -383,6 +388,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("HTMLTableElement", v8_html_table_element)
                     .class_("HTMLTableRowElement", v8_html_table_row_element)
                     .class_("HTMLTableSectionElement", v8_html_table_section_element)
+                    .class_("HTMLTemplateElement", v8_html_template_element)
                     .class_("HTMLTextAreaElement", v8_html_text_area_element)
                     .class_("HTMLTitleElement", v8_html_title_element)
                     .class_("HTMLTimeElement", v8_html_time_element)

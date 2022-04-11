@@ -39,3 +39,25 @@ auto html::elements::html_script_element::set_text(
     // replace all the child text content with the new script
     dom::helpers::node_internals::string_replace_all(val, this);
 }
+
+
+auto html::elements::html_script_element::v8(
+        v8::Isolate* isolate) const
+        -> ext::any
+{
+    return v8pp::class_<html_script_element>{isolate}
+            .ctor<>()
+            .inherit<html_element>()
+            .function("supports", &html_script_element::supports) // TODO : static
+            .var("src", &html_script_element::src)
+            .var("type", &html_script_element::type)
+            .var("cross_origin", &html_script_element::cross_origin)
+            .var("text", &html_script_element::text)
+            .var("integrity", &html_script_element::integrity)
+            .var("referrer_policy", &html_script_element::referrer_policy)
+            .var("no_module", &html_script_element::no_module)
+            .var("async", &html_script_element::async)
+            .var("defer", &html_script_element::defer)
+            .var("blocking", &html_script_element::blocking)
+            .auto_wrap_objects();
+}
