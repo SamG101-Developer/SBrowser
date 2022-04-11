@@ -45,6 +45,10 @@ struct html::helpers::document_internals {
             const dom::nodes::document* document)
             -> bool;
 
+    static auto is_render_blocking(
+            dom::nodes::element* element)
+            -> bool;
+
     static auto block_rendering(
             dom::nodes::document* document,
             dom::nodes::element* element)

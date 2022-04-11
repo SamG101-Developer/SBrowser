@@ -48,6 +48,7 @@ namespace html::elements {class html_link_element;}
 namespace html::elements {class html_script_element;}
 namespace html::elements {class html_title_element;}
 namespace html::helpers {struct document_internals;}
+namespace html::helpers {struct script_internals;}
 namespace html::internal {struct policy_container;}
 namespace html::internal {struct permissions_policy;}
 namespace html::internal {struct module_map;}
@@ -77,6 +78,7 @@ public friends:
     friend class html::elements::html_base_element;
     friend class html::elements::html_image_element;
     friend struct html::helpers::document_internals;
+    friend struct html::helpers::script_internals;
 
 public constructors:
     document();
@@ -209,8 +211,12 @@ private cpp_properties:
     int m_throw_on_dynamic_markup_insertion_counter = 0;
     int m_ignore_destructive_writes_counter = 0;
 
-    bool iframe_load_in_progress_flag = false;
-    bool mute_iframe_load_flag = false;
+    bool m_iframe_load_in_progress_flag = false;
+    bool m_mute_iframe_load_flag = false;
+
+    ext::vector<html::elements::html_script_element*> m_list_of_scripts_that_will_execute_post_parsing;
+    ext::vector<html::elements::html_script_element*> m_list_of_scripts_that_will_execute_soon_as_possible;
+    html::elements::html_script_element* m_pending_parsing_blocking_script;
 
 private accessors:
     // dom

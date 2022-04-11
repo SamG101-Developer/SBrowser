@@ -3,7 +3,6 @@
 
 #include <any>
 
-#include <ext/string.hpp>
 #include <ext/decorators.hpp>
 
 
@@ -65,7 +64,8 @@ auto ext::any::contains_pointer() const -> bool
 {
     // return if the internal object wrapped is a pointer type
     // TODO : this implementation makes me feel sick (list of pointers may fail -> endswith __ptr64?)
-    return ext::string{type().name()}.contains("* __ptr64");
+    // TODO : messy (can't use ext::string)
+    return std::string{type().name()}.find(std::string{"* __ptr64"}) != std::string::npos;
 }
 
 

@@ -21,14 +21,14 @@ public js_methods:
 
 public js_properties:
     ext::html_property<bool, _T> open;
-    ext::html_property<ext::string> return_value;
+    ext::html_property<ext::string, _F> return_value;
 
 public cpp_methods:
     auto qt() const -> QDialog* override;
-    auto v8(v8::Isolate* isolate) const -> ext::any override
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected cpp_properties:
-    dom::nodes::element* m_previously_focused_element = nullptr;
+    dom::nodes::element* m_previously_focused_element = nullptr; // TODO : when set?
     bool m_modal_flag = false;
 };
 

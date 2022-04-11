@@ -10,6 +10,7 @@
 #include <utility>
 
 #include <ext/decorators.hpp>
+#include <ext/property.hpp>
 #include <ext/vector.hpp>
 
 #include <QtCore/QString>
@@ -36,20 +37,22 @@ public: constructors
     string() = default;
     string(const string&) = default;
     string(const char* const other) {m_iterable = other;}
-    string(const std::string_view other) {m_iterable = other;}
-    string(const QString& other) {m_iterable = other.toStdString();}
-    string(const v8::Local<v8::String> other) {m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});}
+    explicit string(const std::string_view other) {m_iterable = other;}
+    explicit string(const QString& other) {m_iterable = other.toStdString();}
+    explicit string(const v8::Local<v8::String> other) {m_iterable = *(v8::String::Utf8Value{v8::Isolate::GetCurrent(), other});}
 
-    auto operator=(const string&) -> string& = default;
-    auto operator=(const char* other) -> string&;
-    auto operator=(std::string_view other) -> string&;
-    auto operator=(const QString& other) -> string&;
-    auto operator=(v8::Local<v8::String> other) -> string&;
+    auto operator=(const string&) -> string& = default; // copy ext::string
+    auto operator=(const char* other) -> string&; // copy const char*
+    auto operator=(std::string_view other) -> string&; // copy std::string
+    auto operator=(const QString& other) -> string&; // copy qt string
+    auto operator=(v8::Local<v8::String> other) -> string&; // copy v8 string
 
-    auto operator=(string&&) noexcept -> string& = default;
-    auto operator=(char&& other) -> string&;
-    auto operator=(std::string&& other) -> string&;
-    auto operator=(QString&& other) -> string&;
+    auto operator=(string&&) noexcept -> string& = default; // move ext::string
+    auto operator=(char&& other) -> string&; // move char
+    auto operator=(std::string&& other) -> string&; // move std::string
+    auto operator=(QString&& other) -> string&; // move qt string
+
+    auto operator=(const ext::property<ext::string>& property) -> string& {m_iterable = (ext::string)property; return *this;}
 
 public: cpp_methods
     // algorithms
@@ -67,19 +70,17 @@ public: cpp_methods
     auto is_numeric() -> bool;
 
 public: operators
-    operator std::string() const;
-    operator QString() const;
-    operator v8::Local<v8::String>() const;
+    explicit operator std::string() const;
+    explicit operator QString() const;
+    explicit operator v8::Local<v8::String>() const;
 
     auto operator+(const string& other) const -> string;
     auto operator+(const char* const other) const -> string;
     auto operator+=(const string& other) -> string&;
-    auto operator+=(char other) -> string&;
 
     auto operator!() const -> bool override;
     auto operator<=>(const string& other) const -> signed char;
     auto operator==(const char* const other) const -> bool;
-    auto operator==(const string& other) const -> bool;
 
     operator bool() const;
 };

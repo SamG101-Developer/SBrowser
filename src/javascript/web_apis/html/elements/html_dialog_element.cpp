@@ -1,10 +1,13 @@
 #include "html_dialog_element.hpp"
 
+#include <dom/helpers/event_dispatching.hpp>
 #include <dom/helpers/exceptions.hpp>
 #include <dom/helpers/mutation_observers.hpp>
 #include <dom/helpers/shadows.hpp>
 
 #include <html/helpers/custom_html_elements.hpp>
+
+#include <QtWidgets/QApplication>
 
 
 html::elements::html_dialog_element::html_dialog_element()
@@ -24,14 +27,15 @@ auto html::elements::html_dialog_element::show()
         -> void
 {
     // return if the dialog is already open
-    if (open) return;
+    if (open)
+        return;
 
     // reset the open property and focus on the previously_focused_element (focus ordering)
     open = false;
     m_previously_focused_element->qt()->setFocus();
 
     // focus on the dialog
-    html::helpers::focusing::dialog_focusing_steps(this);
+    html::helpers::dialog_internals::dialog_focusing_steps(this);
 }
 
 
@@ -52,14 +56,14 @@ auto html::elements::html_dialog_element::show_modal()
     open = false;
     m_modal_flag = true;
 
-    helpers::dialogs::block_document_by_modal_dialog(owner_document, this);
+    helpers::html_element_internals::block_document_by_modal_dialog(owner_document, this);
     // TODO -> top layer stuff (fullscreen API) ie show the dialog
 
     // focus on the previously_focused_element (focus ordering)
     m_previously_focused_element->qt()->setFocus();
 
     // focus on the dialog
-    html::helpers::focusing::dialog_focusing_steps(this);
+    html::helpers::dialog_internals::dialog_focusing_steps(this);
 }
 
 
@@ -68,11 +72,11 @@ auto html::elements::html_dialog_element::close(
         -> void {
 
     // if this dialog is already closed, then return early
-    if (not open) return;
+    if (not open)
+        return;
     open = false;
-
-    return_value = result ? result : return_value;
     m_modal_flag = false;
+    return_value = result ? result : return_value;
 
     // TODO -> top layer stuff (fullscreen API) ie close the dialog
 
@@ -80,10 +84,10 @@ auto html::elements::html_dialog_element::close(
     {
         auto element = dom::nodes::element{*m_previously_focused_element};
         m_previously_focused_element = nullptr;
-        html::helpers::focusing::focus_steps(element);
+        html::helpers::dialog_internals::focus_steps(element); // TODO : no scrolling to focus element
     }
 
-    dom::helpers::mutation_observers::queue_element_task(); // TODO : arguments
+    dom::helpers::mutation_observers::queue_element_task(this, [this] {dom::helpers::event_dispatching::fire_event<>("close", this);}); // TODO : arguments
 }
 
 

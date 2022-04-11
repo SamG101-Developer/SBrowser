@@ -6,27 +6,37 @@
 #include <v8.h>
 #include <v8pp/convert.hpp>
 
+
+// agent -> isolate
+// realm -> context
+// global object, settings object contained in realm
+
+
 namespace javascript::realms
 {
     class realm;
+    class global_object_t;
+    class settings_object_t;
 
-    realm relevant_agent();
-    realm surrounding_agent();
-    realm current_agent();
-
-    realm current_global_object();
-    realm relevant_global_object();
+    realm relevant_realm(dom::nodes::node* node);
+    realm surrounding_realm(dom::nodes::node* node);
+    realm current_realm(dom::nodes::node* node);
 }
 
 
 class javascript::realms::realm {
-public:
+public constructors:
     explicit realm(const v8::Local<v8::Context> context): m_context(context) {};
 
+public cpp_methods:
     template <typename T> auto get(ext::string&& attribute_name) const -> T;
     template <typename T> auto set(ext::string&& attribute_name, T new_value) -> void;
 
-private:
+public cpp_properties:
+    global_object_t global_object;
+    settings_object_t settings_object;
+
+private cpp_properties:
     v8::Local<v8::Context> m_context;
 };
 
@@ -50,12 +60,6 @@ auto javascript::realms::realm::set(ext::string&& attribute_name, T new_value) -
 
     // update the value in javascript
     m_context->Global()->Set(m_context, attribute_name, v8_value);
-}
-
-
-javascript::realms::realm javascript::realms::relevant_agent()
-{
-    return realm{v8::Isolate::GetCurrent()->GetCurrentContext()};
 }
 
 

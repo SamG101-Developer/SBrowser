@@ -51,7 +51,7 @@ auto html::elements::html_option_element::get_text() const
         -> ext::string
 {
     // the text is the concatenation of the descendant text content, stripped and collapsed
-    return infra::strip_and_collapse_whitespace(dom::helpers::trees::descendant_text_content(this));
+    return infra::helpers::strings::strip_and_collapse_whitespace(dom::helpers::trees::descendant_text_content(this));
 }
 
 
