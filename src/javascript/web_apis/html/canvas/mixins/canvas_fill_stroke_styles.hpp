@@ -2,6 +2,7 @@
 #ifndef SBROWSER_CANVAS_FILL_STROKE_STYLES_HPP
 #define SBROWSER_CANVAS_FILL_STROKE_STYLES_HPP
 
+#include <variant>
 #include <dom_object.hpp>
 
 namespace html::canvasing::mixins {template <typename T> class canvas_fill_stroke_styles;}
@@ -12,11 +13,14 @@ namespace html::elements {class html_element;}
 
 
 template <typename T>
-class html::canvasing::mixins::canvas_fill_stroke_styles : public virtual dom_object
+class html::canvasing::mixins::canvas_fill_stroke_styles : virtual public dom_object
 {
+public constructors:
+    canvas_fill_stroke_styles();
+
 public js_properties:
-    ext::html_property<paint::abstract_paint_object*, _F> stroke_style;
-    ext::html_property<paint::abstract_paint_object*, _F> fill_style;
+    ext::html_property<std::variant<ext::string, paint::abstract_paint_object*>, _F> stroke_style;
+    ext::html_property<std::variant<ext::string, paint::abstract_paint_object*>, _F> fill_style;
 
 public js_methods:
     auto create_linear_gradient(double x0, double y0, double x1, double y1) -> paint::canvas_gradient*;

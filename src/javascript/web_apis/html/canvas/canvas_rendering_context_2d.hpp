@@ -32,6 +32,7 @@ class html::canvasing::canvas_rendering_context_2d
         , public mixins::canvas_transform<canvas_rendering_context_2d>
         , public mixins::canvas_compositing<canvas_rendering_context_2d>
         , public mixins::canvas_image_smoothing<canvas_rendering_context_2d>
+        , public mixins::canvas_fill_stroke_styles<canvas_rendering_context_2d>
 {
 public js_methods:
     ext::string_any_map get_context_attributes() const;
