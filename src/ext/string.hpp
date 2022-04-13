@@ -10,7 +10,6 @@
 #include <utility>
 
 #include <ext/decorators.hpp>
-#include <ext/property.hpp>
 #include <ext/vector.hpp>
 
 #include <QtCore/QString>
@@ -52,7 +51,7 @@ public: constructors
     auto operator=(std::string&& other) -> string&; // move std::string
     auto operator=(QString&& other) -> string&; // move qt string
 
-    auto operator=(const ext::property<ext::string>& property) -> string& {m_iterable = (ext::string)property; return *this;}
+//    auto operator=(const ext::property<ext::string>& property) -> string& {m_iterable = (ext::string)property; return *this;}
 
 public: cpp_methods
     // algorithms

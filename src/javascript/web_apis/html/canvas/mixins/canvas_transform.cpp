@@ -1,10 +1,10 @@
 #include "canvas_transform.hpp"
 
-#include <html/canvasing/canvas_rendering_context_2d.hpp>
+#include <html/canvas/canvas_rendering_context_2d.hpp>
 
 
 template <typename T>
-auto html::canvasing::mixins::canvas_transform<T>::v8(
+auto html::canvas::mixins::canvas_transform<T>::v8(
         v8::Isolate* isolate) const
         -> ext::any
 {
@@ -21,4 +21,4 @@ auto html::canvasing::mixins::canvas_transform<T>::v8(
 }
 
 
-template class html::canvasing::mixins::canvas_transform<html::canvasing::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_transform<html::canvas::canvas_rendering_context_2d>;

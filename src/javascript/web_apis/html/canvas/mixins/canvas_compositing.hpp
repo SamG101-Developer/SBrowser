@@ -5,11 +5,11 @@
 #include <ext/string.hpp>
 #include <dom_object.hpp>
 
-namespace html::canvasing::mixins {template <typename T> class canvas_compositing;}
+namespace html::canvas::mixins {template <typename T> class canvas_compositing;}
 
 
 template<typename T>
-class html::canvasing::mixins::canvas_compositing : public virtual dom_object
+class html::canvas::mixins::canvas_compositing : public virtual dom_object
 {
 public constructors:
     canvas_compositing();

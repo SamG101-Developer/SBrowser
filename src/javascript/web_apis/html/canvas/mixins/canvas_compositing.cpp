@@ -1,10 +1,10 @@
 #include "canvas_compositing.hpp"
 
-#include <html/canvasing/canvas_rendering_context_2d.hpp>
+#include <html/canvas/canvas_rendering_context_2d.hpp>
 
 
 template<typename T>
-html::canvasing::mixins::canvas_compositing<T>::canvas_compositing()
+html::canvas::mixins::canvas_compositing<T>::canvas_compositing()
 {
     // set the properties
     global_alpha << 1.0;
@@ -13,7 +13,7 @@ html::canvasing::mixins::canvas_compositing<T>::canvas_compositing()
 
 
 template<typename T>
-auto html::canvasing::mixins::canvas_compositing<T>::v8(
+auto html::canvas::mixins::canvas_compositing<T>::v8(
         v8::Isolate* isolate) const
         -> ext::any
 {
@@ -24,4 +24,4 @@ auto html::canvasing::mixins::canvas_compositing<T>::v8(
 }
 
 
-template class html::canvasing::mixins::canvas_compositing<html::canvasing::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_compositing<html::canvas::canvas_rendering_context_2d>;

@@ -13,8 +13,16 @@ public constructors:
     html_style_element();
 
 public js_properties:
+    ext::html_property<bool, _F> disabled;
     ext::html_property<ext::string, _T> media;
     ext::html_property<ext::string_vector*, _F> blocking;
+
+public cpp_methods:
+    auto v8(v8::Isolate *isolate) const -> ext::any override;
+
+private accessors:
+    auto get_disabled() const -> bool;
+    auto set_disabled(bool val) -> void;
 };
 
 

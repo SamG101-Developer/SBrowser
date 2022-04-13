@@ -4,11 +4,11 @@
 
 #include <dom_object.hpp>
 
-namespace html::canvasing::mixins {template <typename T> class canvas_state;}
+namespace html::canvas::mixins {template <typename T> class canvas_state;}
 
 
 template<typename T>
-class html::canvasing::mixins::canvas_state : public virtual dom_object
+class html::canvas::mixins::canvas_state : public virtual dom_object
 {
 public js_methods:
     auto save() -> void;

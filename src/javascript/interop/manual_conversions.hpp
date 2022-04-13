@@ -189,8 +189,8 @@ struct v8pp::convert<ext::vector<T>>
         v8::EscapableHandleScope escapable_handle_scope{isolate};
 
         to_type v8_value_as_array = v8::Array::New(isolate, cpp_value.length());
-        for (size_t i = 0; i < cpp_value.length(); ++i)
-            v8_value_as_array->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value.at(i)));
+        for (auto i = cpp_value.begin(); i != cpp_value.end(); ++i)
+            v8_value_as_array->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, *i));
 
         return escapable_handle_scope.template Escape(v8_value_as_array);
     }
@@ -233,8 +233,8 @@ struct v8pp::convert<ext::set<T>>
         v8::EscapableHandleScope escapable_handle_scope {isolate};
 
         to_type v8_value_as_set = v8::Set::New(isolate);
-        for (size_t i = 0; i < cpp_value.length(); ++i)
-            v8_value_as_set->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value.at(i)));
+        for (auto i = cpp_value.begin(); i != cpp_value.end(); ++i)
+            v8_value_as_set->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, *i));
 
         return escapable_handle_scope.template Escape(v8_value_as_set);
     }

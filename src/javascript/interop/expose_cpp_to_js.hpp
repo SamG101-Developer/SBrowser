@@ -2,13 +2,6 @@
 #define SBROWSER_EXPOSE_CPP_TO_JS_HPP
 
 
-/*
- *
-protected cpp_methods:
-    auto insertion_steps() -> void override;
-    auto removal_steps(dom::nodes::node* old_parent) -> void override;
- * */
-
 #include <javascript/environment/modules.hpp>
 
 #include <dom/aborting/abort_controller.hpp>
@@ -63,6 +56,9 @@ protected cpp_methods:
 #include <dom/xpath/xpath_expression.hpp>
 #include <dom/xpath/xpath_result.hpp>
 
+
+#include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/paint/canvas_filter.hpp>
 
 #include <html/elements/html_anchor_element.hpp>
 #include <html/elements/html_area_element.hpp>
@@ -212,6 +208,9 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_xpath_expression = object_to_v8<dom::xpath::xpath_expression>(isolate);
     auto v8_xpath_result = object_to_v8<dom::xpath::xpath_result>(isolate);
 
+    auto v8_canvas_rendering_context_2d = object_to_v8<html::canvas::canvas_rendering_context_2d>(isolate);
+    auto v8_canvas_filter = object_to_v8<html::canvas::paint::canvas_filter>(isolate);
+
     auto v8_html_anchor_element = object_to_v8<html::elements::html_anchor_element>(isolate);
     auto v8_html_area_element = object_to_v8<html::elements::html_area_element>(isolate);
     auto v8_html_audio_element = object_to_v8<html::elements::html_audio_element>(isolate);
@@ -290,7 +289,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
 
     // expose certain classes depending on the module type (window, worker, etc)
     switch(module_type) {
-        case javascript::environment::modules::module_type::window:
+        case javascript::environment::modules::module_type::WINDOW:
         {
             v8_module
                     .class_("AbortController", v8_abort_controller)
@@ -334,6 +333,9 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("XPathEvaluator", v8_xpath_evaluator)
                     .class_("XPathExpression", v8_xpath_expression)
                     .class_("XPathResult", v8_xpath_result)
+
+                    .class_("CanvasRenderingContext2D", v8_canvas_rendering_context_2d)
+                    .class_("CanvasFilter", v8_canvas_filter)
 
                     .class_("HTMLAnchorElement", v8_html_anchor_element)
                     .class_("HTMLAreaElement", v8_html_area_element)
@@ -411,19 +413,21 @@ auto javascript::interop::expose_cpp_to_js::expose(
             module_name = v8::String::NewFromUtf8(isolate, "Window").ToLocalChecked();
         }
 
-        case javascript::environment::modules::module_type::worker:
+        case javascript::environment::modules::module_type::WORKER:
         {
             v8_module
                     .class_("CustomEvent", v8_custom_event)
                     .class_("Event", v8_event)
                     .class_("EventTarget", v8_event_target)
                     .class_("DomException", v8_dom_exception)
+
+                    .class_("CanvasFilter", v8_canvas_filter)
                     ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();
         }
 
-        case javascript::environment::modules::module_type::audio_worklet:
+        case javascript::environment::modules::module_type::AUDIO_WORKLET:
         {
             v8_module
                     .class_("Event", v8_event)
@@ -431,6 +435,13 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     ;
 
             module_name = v8::String::NewFromUtf8(isolate, "AudioWorklet").ToLocalChecked();
+        }
+
+        case javascript::environment::modules::module_type::PAINT_WORKLET:
+        {
+            v8_module
+                    .class_("CanvasFilter", v8_canvas_filter)
+                    ;
         }
     }
 

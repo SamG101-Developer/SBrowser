@@ -1,9 +1,12 @@
 #ifndef SBROWSER_DECORATORS_HPP
 #define SBROWSER_DECORATORS_HPP
 
+#define enforce_range
+
+
 #define friends \
 /*
- * friend classes or methods for a c++ class
+ * friend classes, structs, methods or subroutines for a c++ class
  * JavaScript exposed: N/A
  * */
 
@@ -76,7 +79,7 @@
 #define operators \
 /*
  * overridden operators
- * javascript exposed: YES (through +, -, *, / operators etc)
+ * javascript exposed: YES (through +, -, *, / operators etc) (but not overridable / explicitly callable)
  */
  
 #endif //SBROWSER_DECORATORS_HPP

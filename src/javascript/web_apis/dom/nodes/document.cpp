@@ -32,7 +32,6 @@
 #include <dom/ranges/range.hpp>
 
 #include <html/elements/html_body_element.hpp>
-#include <html/elements/html_frame_set_element.hpp>
 #include <html/elements/html_head_element.hpp>
 #include <html/elements/html_html_element.hpp>
 
@@ -100,7 +99,7 @@ dom::nodes::document::document()
 auto dom::nodes::document::create_element(
         const ext::string& local_name,
         const ext::string_any_map& options) const
-        -> dom::nodes::element
+        -> element
 {
     // get the <is> option as a string
     auto is = options.at("is").to<ext::string>();
@@ -124,7 +123,7 @@ auto dom::nodes::document::create_element_ns(
         const ext::string& namespace_,
         const ext::string& qualified_name,
         const ext::string_any_map& options) const
-        -> dom::nodes::element
+        -> element
 {
     // get the <is> option as a string
     auto is = options.at("is").to<ext::string>();
@@ -138,7 +137,7 @@ auto dom::nodes::document::create_element_ns(
 
 
 auto dom::nodes::document::create_document_fragment() const
-        -> dom::nodes::document_fragment
+        -> document_fragment
 {
     // create a new document fragment, and set the owner document to this document
     document_fragment document_fragment_node{};
@@ -150,7 +149,7 @@ auto dom::nodes::document::create_document_fragment() const
 
 
 auto dom::nodes::document::create_text_node(const ext::string& data) const
-        -> dom::nodes::text
+        -> text
 {
     // create a new text node, set the text to data, and set the owner document to this document
     text text_node{};
@@ -164,7 +163,7 @@ auto dom::nodes::document::create_text_node(const ext::string& data) const
 
 auto dom::nodes::document::create_cdata_section_node(
         const ext::string& data) const
-        -> dom::nodes::cdata_section
+        -> cdata_section
 {
     // if the document type is html, then throw a not supported error
     helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
@@ -188,7 +187,7 @@ auto dom::nodes::document::create_cdata_section_node(
 
 auto dom::nodes::document::create_comment(
         const ext::string& data) const
-        -> dom::nodes::comment
+        -> comment
 {
     // create a new comment node, and set the owner document to this document
     comment comment_node{};
@@ -203,7 +202,7 @@ auto dom::nodes::document::create_comment(
 auto dom::nodes::document::create_processing_instruction(
         const ext::string& target,
         const ext::string& data) const
-        -> dom::nodes::processing_instruction
+        -> processing_instruction
 {
     // if '?>' is in the data, then throw an invalid character error
     helpers::exceptions::throw_v8_exception<INVALID_CHARACTER_ERR>(
@@ -223,7 +222,7 @@ auto dom::nodes::document::create_processing_instruction(
 
 auto dom::nodes::document::create_attribute(
         const ext::string& local_name) const
-        -> dom::nodes::attr
+        -> attr
 {
     // if the document type is html then set the local name to lowercase
     const ext::string html_qualified_namespace = m_type == "html"
@@ -243,7 +242,7 @@ auto dom::nodes::document::create_attribute(
 auto dom::nodes::document::create_attribute_ns(
         const ext::string& namespace_,
         const ext::string& qualified_name) const
-        -> dom::nodes::attr
+        -> attr
 {
     // extract the namespace, prefix and local name from the namespace and qualified name
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
@@ -261,7 +260,7 @@ auto dom::nodes::document::create_attribute_ns(
 
 
 auto dom::nodes::document::create_range()
-        -> dom::ranges::range
+        -> ranges::range
 {
     // create a new range, and set the starting and ending nodes to this node, with the offsets at 0
     ranges::range range{};
@@ -279,7 +278,7 @@ auto dom::nodes::document::create_node_iterator(
         node* const root,
         const ulong what_to_show,
         iterators::node_filter* const filter)
-        -> dom::iterators::node_iterator
+        -> iterators::node_iterator
 {
     // create a new node iterator
     iterators::node_iterator iterator{};
@@ -298,7 +297,7 @@ auto dom::nodes::document::create_tree_walker(
         node* const root,
         const ulong what_to_show,
         iterators::node_filter* const filter)
-        -> dom::iterators::tree_walker
+        -> iterators::tree_walker
 {
     // create a new tree walker
     iterators::tree_walker walker{};
@@ -315,7 +314,7 @@ auto dom::nodes::document::create_tree_walker(
 auto dom::nodes::document::import_node(
         node* const node,
         const bool deep)
-        -> dom::nodes::node*
+        -> node*
 {
     // if the node being imported is a document, then throw a not supported error
     helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
@@ -334,7 +333,7 @@ auto dom::nodes::document::import_node(
 
 auto dom::nodes::document::adopt_node(
         node* const node)
-        -> dom::nodes::node*
+        -> node*
 {
     // if the node being adopted is a document, then throw a not supported error
     helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
@@ -358,7 +357,7 @@ auto dom::nodes::document::adopt_node(
 
 auto dom::nodes::document::get_elements_by_name(
         const ext::string& element_name) const
-        -> ext::vector<dom::nodes::node*>
+        -> ext::vector<node*>
 {
     // filter the element descendants, by matching the elements with the same qualified name as element name, and
     // convert them back into nodes before returning the list
@@ -370,7 +369,7 @@ auto dom::nodes::document::get_elements_by_name(
 
 
 auto dom::nodes::document::open() const
-        -> dom::nodes::document*
+        -> document*
 {
     // TODO
     return html::helpers::elements::document_open_steps(this);
@@ -381,7 +380,7 @@ auto dom::nodes::document::open(
         const ext::string& url,
         const ext::string& name,
         const ext::string& features) const
-        -> dom::nodes::window_proxy*
+        -> window_proxy*
 {
     // TODO
     helpers::exceptions::throw_v8_exception<INVALID_ACCESS_ERR>(
@@ -440,7 +439,7 @@ auto dom::nodes::document::has_focus() const
 auto dom::nodes::document::element_from_point(
         const double x,
         const double y) const
-        -> dom::nodes::element*
+        -> element*
 {
     // TODO
     return elements_from_point(x, y).front(); // TODO at first found doesn't happen currently
@@ -450,7 +449,7 @@ auto dom::nodes::document::element_from_point(
 auto dom::nodes::document::elements_from_point(
         const double x,
         const double y) const
-        -> ext::vector<dom::nodes::element*>
+        -> ext::vector<element*>
 {
     if (x < 0 or y < 0)
         return ext::vector<element*>{nullptr};
@@ -487,7 +486,7 @@ auto dom::nodes::document::caret_position_from_point(
 
 auto dom::nodes::document::get_the_parent(
         events::event* event)
-        -> dom::nodes::event_target*
+        -> event_target*
 {
     return event->type == "load" or not m_browsing_context ? nullptr : &javascript::realms::relevant_global_object();
 }
@@ -542,7 +541,7 @@ auto dom::nodes::document::get_character_set() const
 
 
 auto dom::nodes::document::get_doctype() const
-        -> dom::nodes::document_type*
+        -> document_type*
 {
     // the doctype is the first child of this document that is a doctype node
     return child_nodes->cast_all<document_type*>().front();
@@ -550,7 +549,7 @@ auto dom::nodes::document::get_doctype() const
 
 
 auto dom::nodes::document::get_document_element() const
-        -> dom::nodes::element*
+        -> element*
 {
     // the document element is the first child of this document that is an element
     return child_nodes->cast_all<element*>().front();
@@ -808,7 +807,8 @@ auto dom::nodes::document::v8(
             .function("importNode", &document::import_node)
             .function("adoptNode", &document::adopt_node)
             .function("getElementsByName", &document::get_elements_by_name)
-//             .function("open", &document::open)
+            .function<document*(document::*)() const>("open", &document::open)
+            .function<window_proxy*(document::*)(const ext::string&, const ext::string&, const ext::string&) const>("open", &document::open)
             .function("close", &document::close)
             .function("write", &document::write<>)
             .function("writeln", &document::writeln<>)

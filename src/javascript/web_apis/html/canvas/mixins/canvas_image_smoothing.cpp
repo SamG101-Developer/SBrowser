@@ -2,7 +2,7 @@
 
 
 template<typename T>
-html::canvasing::mixins::canvas_image_smoothing<T>::canvas_image_smoothing()
+html::canvas::mixins::canvas_image_smoothing<T>::canvas_image_smoothing()
 {
     // constrain the property values
     image_smoothing_quality.constrain_values({"low", "medium", "high"});
@@ -14,7 +14,7 @@ html::canvasing::mixins::canvas_image_smoothing<T>::canvas_image_smoothing()
 
 
 template<typename T>
-auto html::canvasing::mixins::canvas_image_smoothing<T>::v8(
+auto html::canvas::mixins::canvas_image_smoothing<T>::v8(
         v8::Isolate* isolate) const
         -> ext::any
 {

@@ -4,10 +4,10 @@
 
 #include <dom_object.hpp>
 
-namespace html::canvasing {class abstract_rendering_context;}
+namespace html::canvas {class abstract_rendering_context;}
 
 
-class html::canvasing::abstract_rendering_context : virtual public dom_object
+class html::canvas::abstract_rendering_context : virtual public dom_object
 {};
 
 

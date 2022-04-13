@@ -5,15 +5,15 @@
 #include <variant>
 #include <dom_object.hpp>
 
-namespace html::canvasing::mixins {template <typename T> class canvas_fill_stroke_styles;}
-namespace html::canvasing::paint {class abstract_paint_object;}
-namespace html::canvasing::paint {class canvas_gradient;}
-namespace html::canvasing::paint {class canvas_pattern;}
+namespace html::canvas::mixins {template <typename T> class canvas_fill_stroke_styles;}
+namespace html::canvas::paint {class abstract_paint_object;}
+namespace html::canvas::paint {class canvas_gradient;}
+namespace html::canvas::paint {class canvas_pattern;}
 namespace html::elements {class html_element;}
 
 
 template <typename T>
-class html::canvasing::mixins::canvas_fill_stroke_styles : virtual public dom_object
+class html::canvas::mixins::canvas_fill_stroke_styles : virtual public dom_object
 {
 public constructors:
     canvas_fill_stroke_styles();

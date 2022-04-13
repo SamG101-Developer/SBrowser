@@ -188,7 +188,7 @@ web_sockets       : https://datatracker.ietf.org/doc/html/rfc6455
                   : https://html.spec.whatwg.org/
 webdriver         : https://www.w3.org/TR/webdriver1/
 webdriver_bidi    : https://w3c.github.io/webdriver-bidi/
-window_controls   : https://wicg.github.io/window-controls-overlay/ (0)
+window_controls   : https://wicg.github.io/WINDOW-controls-overlay/ (0)
 
 xml_http_requests: https://xhr.spec.whatwg.org/ (1)
 

@@ -5,7 +5,9 @@
 #include <ext/casting.hpp>
 #include <ext/decorators.hpp>
 #include <ext/html_property.hpp>
+#include <ext/string.hpp>
 #include <ext/type_traits.hpp>
+#include <ext/vector.hpp>
 
 #include <javascript/interop/attribute_descriptors.hpp>
 

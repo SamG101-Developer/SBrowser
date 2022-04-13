@@ -6,10 +6,10 @@
 
 namespace file::objects {class blob;}
 namespace html::elements {class html_canvas_element;}
-namespace html::canvasing {class abstract_rendering_context;}
-namespace html::canvasing {class canvas_rendering_context_2d;}
-namespace html::canvasing {class image_bitmap_rendering_context;}
-namespace html::canvasing {class offscreen_canvas;}
+namespace html::canvas {class abstract_rendering_context;}
+namespace html::canvas {class canvas_rendering_context_2d;}
+namespace html::canvas {class image_bitmap_rendering_context;}
+namespace html::canvas {class offscreen_canvas;}
 namespace html::images {class image_bitmap;}
 
 

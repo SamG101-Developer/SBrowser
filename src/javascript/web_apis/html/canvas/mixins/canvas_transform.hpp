@@ -5,12 +5,12 @@
 #include <dom_object.hpp>
 #include <ext/map.hpp>
 
-namespace html::canvasing::mixins {template <typename T> class canvas_transform;}
+namespace html::canvas::mixins {template <typename T> class canvas_transform;}
 namespace geometry::abstract {class dom_matrix;}
 
 
 template<typename T>
-class html::canvasing::mixins::canvas_transform : public virtual dom_object
+class html::canvas::mixins::canvas_transform : public virtual dom_object
 {
 public js_methods:
     auto scale(double x, double y) -> void;

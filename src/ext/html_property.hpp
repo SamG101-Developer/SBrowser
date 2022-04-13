@@ -2,6 +2,7 @@
 #define SBROWSER_HTML_PROPERTY_HPP
 
 #include <ext/dom_property.hpp>
+#include <ext/vector.hpp>
 
 #include <QtCore/QPointer>
 
@@ -75,7 +76,7 @@ auto ext::html_property<T, ce_reactions>::operator=(const T& o) -> html_property
 {
     // clamp the value if clamps are defined
     if (m_clamped)
-        o = std::max(std::min(o, m_clamp_to.second), m_clamp_to.first);
+        o = std::clamp(0, m_clamp_to.first, m_clamp_to.second);
 
     // only continue if the constraints are empty or contain the new value
     if (not m_constrained or m_constrain_to.contains(o))
@@ -90,17 +91,7 @@ auto ext::html_property<T, ce_reactions>::operator=(const T& o) -> html_property
 template <typename T, bool ce_reactions>
 auto ext::html_property<T, ce_reactions>::operator=(T&& o) noexcept -> html_property<T, ce_reactions>&
 {
-    // clamp the value if clamps are defined
-    if (m_clamped)
-        o = std::max(std::min(o, m_clamp_to.second), m_clamp_to.first);
-
-    // only continue if the constraints are empty or contain the new value
-    if (not m_constrained or m_constrain_to.contains(o))
-    {
-        // execute the updater if there is one, and perform default setting operations (for movable)
-        if (m_qt_updater_attached) m_qt_updater();
-        dom_property<T, ce_reactions>::operator=(std::move(o));
-    }
+    operator=(std::forward<const T&>(o));
 }
 
 

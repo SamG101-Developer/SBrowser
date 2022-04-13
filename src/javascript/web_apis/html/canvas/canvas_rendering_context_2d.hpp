@@ -4,41 +4,51 @@
 
 #include <ext/map.hpp>
 
-#include <html/canvasing/abstract_rendering_context.hpp>
-#include <html/canvasing/mixins/canvas_state.hpp>
-#include <html/canvasing/mixins/canvas_transform.hpp>
-#include <html/canvasing/mixins/canvas_compositing.hpp>
-#include <html/canvasing/mixins/canvas_image_smoothing.hpp>
-#include <html/canvasing/mixins/canvas_fill_stroke_styles.hpp>
-#include <html/canvasing/mixins/canvas_shadow_styles.hpp>
-#include <html/canvasing/mixins/canvas_filters.hpp>
-#include <html/canvasing/mixins/canvas_rect.hpp>
-#include <html/canvasing/mixins/canvas_draw_path.hpp>
-#include <html/canvasing/mixins/canvas_user_interface.hpp>
-#include <html/canvasing/mixins/canvas_text.hpp>
-#include <html/canvasing/mixins/canvas_draw_image.hpp>
-#include <html/canvasing/mixins/canvas_image_data.hpp>
-#include <html/canvasing/mixins/canvas_path_drawing_styles.hpp>
-#include <html/canvasing/mixins/canvas_text_drawing_styles.hpp>
-#include <html/canvasing/mixins/canvas_path.hpp>
+#include <html/canvas/abstract_rendering_context.hpp>
+#include <html/canvas/mixins/canvas_state.hpp>
+#include <html/canvas/mixins/canvas_transform.hpp>
+#include <html/canvas/mixins/canvas_compositing.hpp>
+#include <html/canvas/mixins/canvas_image_smoothing.hpp>
+#include <html/canvas/mixins/canvas_fill_stroke_styles.hpp>
+#include <html/canvas/mixins/canvas_shadow_styles.hpp>
+#include <html/canvas/mixins/canvas_filters.hpp>
+#include <html/canvas/mixins/canvas_rect.hpp>
+#include <html/canvas/mixins/canvas_draw_path.hpp>
+#include <html/canvas/mixins/canvas_user_interface.hpp>
+#include <html/canvas/mixins/canvas_text.hpp>
+#include <html/canvas/mixins/canvas_draw_image.hpp>
+#include <html/canvas/mixins/canvas_image_data.hpp>
+#include <html/canvas/mixins/canvas_path_drawing_styles.hpp>
+#include <html/canvas/mixins/canvas_text_drawing_styles.hpp>
+#include <html/canvas/mixins/canvas_path.hpp>
 
-namespace html::canvasing {class canvas_rendering_context_2d;}
+namespace html::canvas {class canvas_rendering_context_2d;}
 namespace html::elements {class html_canvas_element;}
 
 
-class html::canvasing::canvas_rendering_context_2d
+class html::canvas::canvas_rendering_context_2d
         : public abstract_rendering_context
         , public mixins::canvas_state<canvas_rendering_context_2d>
         , public mixins::canvas_transform<canvas_rendering_context_2d>
         , public mixins::canvas_compositing<canvas_rendering_context_2d>
         , public mixins::canvas_image_smoothing<canvas_rendering_context_2d>
         , public mixins::canvas_fill_stroke_styles<canvas_rendering_context_2d>
+        , public mixins::canvas_shadow_styles<canvas_rendering_context_2d>
+        , public mixins::canvas_filters<canvas_rendering_context_2d>
+        , public mixins::canvas_rect<canvas_rendering_context_2d>
+        , public mixins::canvas_draw_path<canvas_rendering_context_2d>
+        , public mixins::canvas_user_interface<canvas_rendering_context_2d>
+        , public mixins::canvas_text<canvas_rendering_context_2d>
+        , public mixins::canvas_draw_image<canvas_rendering_context_2d>
 {
 public js_methods:
     ext::string_any_map get_context_attributes() const;
 
 public js_properties:
     ext::dom_property<elements::html_canvas_element*, _F> canvas;
+
+public cpp_methods:
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 
