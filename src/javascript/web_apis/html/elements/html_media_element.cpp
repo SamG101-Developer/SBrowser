@@ -16,16 +16,16 @@
 html::elements::html_media_element::html_media_element()
         : html_element()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     current_time.getter = [this] {return get_current_time();};
 
     current_time.setter = [this](auto&& PH1) {set_current_time(std::forward<decltype(PH1)>(PH1));};
     ready_state.setter = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
 
-    // set the properties
+    // set the property values
     text_tracks << new ext::vector<html::media::text_track*>{};
 
-    // set the attributes
+    // set the attribute values
     m_current_playback_position = 0.0;
     m_official_playback_position = 0.0;
     m_default_playback_start_position = 0.0;

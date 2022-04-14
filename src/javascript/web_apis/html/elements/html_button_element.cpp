@@ -20,7 +20,7 @@ html::elements::html_button_element::html_button_element()
     type.constrain_values({"submit", "reset", "button"});
     // TODO form_enctype.constrain_values({})
 
-    // set the custom accessors
+    // set the custom accessor methods
     type.setter = [this](auto && PH1) {set_type(std::forward<decltype(PH1)>(PH1));};
 
     // create the widget representation

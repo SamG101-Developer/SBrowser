@@ -7,7 +7,7 @@ html::elements::html_label_element::html_label_element()
         : html_element{}
         , mixins::form_associated<html_label_element>{}
 {
-    // set the custom accessors
+    // set the custom accessor methods
     form.getter     = [this] {return get_form();};
     html_for.setter = [this](auto && PH1) {set_html_for(std::forward<decltype(PH1)>(PH1));};
 }

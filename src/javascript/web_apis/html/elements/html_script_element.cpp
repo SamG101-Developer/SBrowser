@@ -6,11 +6,11 @@
 
 html::elements::html_script_element::html_script_element()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     text.getter = [this] {return get_text();};
     text.setter = [this](auto&& PH1) {set_text(std::forward<decltype(PH1)>(PH1));};
 
-    // set the attributes
+    // set the attribute values
     m_parser_document = nullptr;
 }
 

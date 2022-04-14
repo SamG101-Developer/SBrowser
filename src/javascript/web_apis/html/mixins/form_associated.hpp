@@ -13,7 +13,7 @@ ext::string_vector form_associated_elements {"button", "output", "select", "text
 
 
 template <typename T>
-class html::mixins::form_associated : virtual public dom_object
+class html::mixins::form_associated : public virtual dom_object
 {
 public constructors:
     form_associated();

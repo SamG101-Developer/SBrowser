@@ -15,7 +15,7 @@ namespace dom::helpers {struct event_listening;}
 namespace dom::nodes {class event_target;}
 
 
-class dom::nodes::event_target : virtual public dom_object
+class dom::nodes::event_target : public virtual dom_object
 {
 public friends:
     friend struct helpers::event_dispatching;

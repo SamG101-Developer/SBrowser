@@ -21,7 +21,7 @@ html::elements::html_element::html_element()
         : dom::nodes::element{}
         , mixins::html_or_svg_element<html_element>{}
 {
-    // set the custom accessors
+    // set the custom accessor methods
     inner_text.getter = [this] {return get_inner_text();};
     outer_text.getter = [this] {return get_outer_text();};
     lang.getter = [this] {return get_lang();};

@@ -21,7 +21,7 @@ html::elements::html_form_element::html_form_element()
     enctype.constrain_values({"application/x-www-form-urlencoded", "multipart/form-data", "text/plain"});
 
 
-    // set the properties
+    // set the property values
     accept_charset << "UTF-8"; // TODO : make operator=(...) case insensitive for it?
     elements << new ext::vector<html_form_element*>{};
 }

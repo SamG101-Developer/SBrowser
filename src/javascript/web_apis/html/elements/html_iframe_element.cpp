@@ -18,7 +18,7 @@ html::elements::html_iframe_element::html_iframe_element()
         "allow-top-navigation", "allow-top-navigation-by-user-activation", "allow-top-navigation-to-custom-protocols"
     });
 
-    // set the custom accessors
+    // set the custom accessor methods
     content_window.getter   = [this] {return get_content_window();};
 
     sandbox.setter = [this](auto&& PH1) {set_sandbox(std::forward<decltype(PH1)>(PH1));};

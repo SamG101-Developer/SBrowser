@@ -10,7 +10,7 @@ namespace html::mixins {template <typename T> class targetable;}
 
 
 template <typename T>
-class html::mixins::targetable : virtual public dom_object
+class html::mixins::targetable : public virtual dom_object
 {
 public constructors:
     targetable();

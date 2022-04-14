@@ -7,7 +7,7 @@
 namespace geometry::shapes {class dom_rect_readonly;}
 
 
-class geometry::shapes::dom_rect_readonly : virtual public dom_object {
+class geometry::shapes::dom_rect_readonly : public virtual dom_object {
 public: constructors
     dom_rect_readonly(double x = 0, double y = 0, double width = 0, double height = 0);
 

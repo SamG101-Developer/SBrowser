@@ -9,7 +9,7 @@ namespace html::media {class time_ranges;}
 
 
 class html::media::time_ranges
-        : virtual public dom_object
+        : public virtual dom_object
         , public ext::listlike<std::pair<int, int>>
 {
 public constructors:

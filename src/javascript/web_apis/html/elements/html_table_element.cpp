@@ -12,7 +12,7 @@
 
 html::elements::html_table_element::html_table_element() : html_element()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     caption.getter = [this] {return get_caption();};
     t_head.getter = [this] {return get_t_head();};
     t_foot.getter = [this] {return get_t_foot();};

@@ -3,7 +3,7 @@
 
 html::elements::html_olist_element::html_olist_element()
 {
-    // set the properties
+    // set the property values
     start << 1l;
 }
 

@@ -59,6 +59,11 @@
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
 #include <html/canvas/paint/canvas_filter.hpp>
+#include <html/canvas/paint/canvas_gradient.hpp>
+#include <html/canvas/paint/canvas_pattern.hpp>
+#include <html/canvas/paint/text_metrics.hpp>
+#include <html/canvas/paint/image_data.hpp>
+#include <html/canvas/paint/path_2d.hpp>
 
 #include <html/elements/html_anchor_element.hpp>
 #include <html/elements/html_area_element.hpp>
@@ -188,7 +193,7 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_document_type = object_to_v8<dom::nodes::document_type>(isolate);
     auto v8_element = object_to_v8<dom::nodes::element>(isolate);
     auto v8_event_target = object_to_v8<dom::nodes::event_target>(isolate);
-    auto v8_node = object_to_v8<dom::nodes::node>(isolate);
+//    auto v8_node = object_to_v8<dom::nodes::node>(isolate);
     auto v8_processing_instruction = object_to_v8<dom::nodes::processing_instruction>(isolate);
     auto v8_shadow_root = object_to_v8<dom::nodes::shadow_root>(isolate);
     auto v8_text = object_to_v8<dom::nodes::text>(isolate);
@@ -210,6 +215,11 @@ auto javascript::interop::expose_cpp_to_js::expose(
 
     auto v8_canvas_rendering_context_2d = object_to_v8<html::canvas::canvas_rendering_context_2d>(isolate);
     auto v8_canvas_filter = object_to_v8<html::canvas::paint::canvas_filter>(isolate);
+    auto v8_canvas_gradient = object_to_v8<html::canvas::paint::canvas_gradient>(isolate);
+    auto v8_canvas_pattern = object_to_v8<html::canvas::paint::canvas_pattern>(isolate);
+    auto v8_text_metrics = object_to_v8<html::canvas::paint::text_metrics>(isolate);
+    auto v8_image_data = object_to_v8<html::canvas::paint::image_data>(isolate);
+    auto v8_path_2d = object_to_v8<html::canvas::paint::path_2d>(isolate);
 
     auto v8_html_anchor_element = object_to_v8<html::elements::html_anchor_element>(isolate);
     auto v8_html_area_element = object_to_v8<html::elements::html_area_element>(isolate);
@@ -336,6 +346,11 @@ auto javascript::interop::expose_cpp_to_js::expose(
 
                     .class_("CanvasRenderingContext2D", v8_canvas_rendering_context_2d)
                     .class_("CanvasFilter", v8_canvas_filter)
+                    .class_("CanvasGradient", v8_canvas_gradient)
+                    .class_("CanvasPattern", v8_canvas_pattern)
+                    .class_("TextMetrics", v8_text_metrics)
+                    .class_("ImageData", v8_image_data)
+                    .class_("Path2D", v8_path_2d)
 
                     .class_("HTMLAnchorElement", v8_html_anchor_element)
                     .class_("HTMLAreaElement", v8_html_area_element)
@@ -422,6 +437,11 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("DomException", v8_dom_exception)
 
                     .class_("CanvasFilter", v8_canvas_filter)
+                    .class_("CanvasGradient", v8_canvas_gradient)
+                    .class_("CanvasPattern", v8_canvas_pattern)
+                    .class_("TextMetrics", v8_text_metrics)
+                    .class_("ImageData", v8_image_data)
+                    .class_("Path2D", v8_path_2d)
                     ;
 
             module_name = v8::String::NewFromUtf8(isolate, "Worker").ToLocalChecked();

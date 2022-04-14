@@ -1,7 +1,7 @@
 #ifndef SBROWSER_DECORATORS_HPP
 #define SBROWSER_DECORATORS_HPP
 
-#define enforce_range
+#define enforce_range /* throw an error if the number is out of range */
 
 
 #define friends \

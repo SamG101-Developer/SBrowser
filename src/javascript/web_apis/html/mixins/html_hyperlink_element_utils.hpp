@@ -9,7 +9,7 @@
 namespace html::mixins {class html_hyperlink_element_utils;}
 
 
-class html::mixins::html_hyperlink_element_utils : virtual public dom_object
+class html::mixins::html_hyperlink_element_utils : public virtual dom_object
 {
 public constructors:
     html_hyperlink_element_utils();

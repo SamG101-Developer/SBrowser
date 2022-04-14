@@ -6,7 +6,7 @@
 template <typename T>
 html::mixins::form_associated<T>::form_associated()
 {
-    // set the properties
+    // set the property values
     form << nullptr;
 
     // attach the qt functions

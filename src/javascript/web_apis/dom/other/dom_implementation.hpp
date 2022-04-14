@@ -12,7 +12,7 @@ namespace dom::nodes {class document;}
 namespace dom::nodes {class xml_document;}
 
 
-class dom::other::dom_implementation : virtual public dom_object
+class dom::other::dom_implementation : public virtual dom_object
 {
 public: constructors
     dom_implementation();

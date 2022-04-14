@@ -53,7 +53,7 @@ dom::nodes::document::document()
         , xpath::xpath_evaluator()
         , ext::listlike<node*>()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     compat_mode.getter      = [this] {return get_compat_mode();};
     character_set.getter    = [this] {return get_character_set();};
     doctype.getter          = [this] {return get_doctype();};
@@ -75,7 +75,7 @@ dom::nodes::document::document()
     cookie.setter      = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
     ready_state.setter = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
 
-    // set the properties
+    // set the property values
     node_type      << DOCUMENT_NODE;
     node_name      << "#document";
     url            << "about:blank";
@@ -83,7 +83,7 @@ dom::nodes::document::document()
     implementation << new other::dom_implementation{};
     ready_state    << "complete";
 
-    // set the attributes
+    // set the attribute values
     m_origin = javascript::realms::surrounding_agent().get<const ext::string&>("origin");
 
     // create the widget representation

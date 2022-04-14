@@ -13,7 +13,7 @@ namespace html::mixins {template <typename T> class html_or_svg_element;}
 
 
 template <typename T>
-class html::mixins::html_or_svg_element : virtual public dom_object
+class html::mixins::html_or_svg_element : public virtual dom_object
 {
 public js_methods:
     auto blur() -> void;

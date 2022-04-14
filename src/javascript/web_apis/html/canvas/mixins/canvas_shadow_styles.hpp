@@ -9,7 +9,7 @@ namespace html::canvas::mixins {template<typename T> class canvas_shadow_styles;
 
 
 template <typename T>
-class html::canvas::mixins::canvas_shadow_styles : virtual public dom_object
+class html::canvas::mixins::canvas_shadow_styles : public virtual dom_object
 {
 public constructors:
     canvas_shadow_styles();

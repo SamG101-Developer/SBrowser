@@ -17,7 +17,7 @@ namespace dom::internal {struct event_path_struct;}
 namespace dom::nodes {class event_target;}
 
 
-class dom::events::event : virtual public dom_object
+class dom::events::event : public virtual dom_object
 {
 public friends:
     friend class dom::nodes::event_target;
@@ -31,10 +31,10 @@ public constructors:
     ~event() override;
 
 public static_constants:
-    static constexpr unsigned char NONE = 0;
-    static constexpr unsigned char CAPTURING_PHASE = 1;
-    static constexpr unsigned char AT_TARGET = 2;
-    static constexpr unsigned char BUBBLING_PHASE = 3;
+    static constexpr unsigned short NONE = 0;
+    static constexpr unsigned short CAPTURING_PHASE = 1;
+    static constexpr unsigned short AT_TARGET = 2;
+    static constexpr unsigned short BUBBLING_PHASE = 3;
 
 public js_methods:
     auto stop_propagation() -> void;
@@ -49,9 +49,9 @@ public js_properties:
     ext::dom_property<bool> cancelable;
     ext::dom_property<bool> composed;
 
-    ext::dom_property<nodes::event_target*> target = nullptr;
-    ext::dom_property<nodes::event_target*> current_target = nullptr;
-    ext::dom_property<nodes::event_target*> related_target = nullptr;
+    ext::dom_property<nodes::event_target*> target;
+    ext::dom_property<nodes::event_target*> current_target;
+    ext::dom_property<nodes::event_target*> related_target;
 
     ext::dom_property<ushort> event_phase;
     ext::dom_property<double> time_stamp = performance::time::dom_high_res_timestamp();

@@ -9,7 +9,7 @@ namespace html::media {class abstract_track;}
 
 
 class html::media::abstract_track
-        : virtual public dom_object
+        : public virtual dom_object
 {
 public constructors:
     abstract_track();

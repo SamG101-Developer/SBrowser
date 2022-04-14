@@ -19,7 +19,7 @@ namespace dom
 }
 
 
-class dom::xpath::xpath_evaluator : virtual public dom_object
+class dom::xpath::xpath_evaluator : public virtual dom_object
 {
     struct xpath_ns_resolver {ext::string lookup_namespace_uri(const ext::string& prefix = "");};
 

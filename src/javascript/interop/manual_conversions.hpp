@@ -167,8 +167,8 @@ struct v8pp::convert<ext::vector<T>>
 
     static bool is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value)
     {
-        // verify that the value is a non-empty array
-        return not value.IsEmpty() and value->IsArray();
+        // verify that the value is a non-empty array (NOTE: doesn't check value->IsArray() as value can auto-box into vector)
+        return not value.IsEmpty();
     }
 
     static auto from_v8(v8::Isolate* isolate, to_type v8_value) -> from_type
@@ -179,6 +179,12 @@ struct v8pp::convert<ext::vector<T>>
 
         // create the handle_scope and return the c++ vector object
         v8::HandleScope handle_scope{isolate};
+
+        // if the value is type T, auto-box it into a vector
+        if (v8_value.template As<v8::Array>().IsEmpty())
+            return ext::vector<T>{v8pp::convert<T>::from_v8(v8_value)};
+
+        // otherwise, construct the vector and return it
         auto cpp_value = v8pp::convert<std::vector<T>>::from_v8(isolate, v8_value.template As<v8::Array>());
         return from_type{cpp_value};
     }
@@ -189,8 +195,9 @@ struct v8pp::convert<ext::vector<T>>
         v8::EscapableHandleScope escapable_handle_scope{isolate};
 
         to_type v8_value_as_array = v8::Array::New(isolate, cpp_value.length());
-        for (auto i = cpp_value.begin(); i != cpp_value.end(); ++i)
-            v8_value_as_array->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, *i));
+        int index = 0;
+        for (auto i = cpp_value.begin(); i != cpp_value.end(); ++i, ++index)
+            v8_value_as_array->Set(isolate->GetCurrentContext(), index, v8pp::convert<T>::to_v8(isolate, *i));
 
         return escapable_handle_scope.template Escape(v8_value_as_array);
     }

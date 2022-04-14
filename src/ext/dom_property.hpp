@@ -14,10 +14,14 @@ struct ext::dom_property : public property<T>
 {
 public constructors:
     dom_property() = default;
-    dom_property(const T& val) {this->m_internal = val;}
-    dom_property(T&& val) {this->m_internal = std::forward<T&>(val);}
-    dom_property(const dom_property<T, ce_reactions>&) = default;
+    dom_property(const dom_property&) = default;
+    dom_property(dom_property&&) noexcept = default;
+    auto operator=(const dom_property&) -> dom_property& = default;
+    auto operator=(dom_property&&) noexcept -> dom_property& = default;
     ~dom_property() override;
+
+    dom_property(const T& val): property<T>() {this->m_internal = val;}
+    dom_property(T&& val): dom_property(std::forward<T&>(val)) {}
 
 public operators:
     operator T() const override;

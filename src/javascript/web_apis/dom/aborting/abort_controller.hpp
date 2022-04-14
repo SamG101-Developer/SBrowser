@@ -10,7 +10,7 @@ namespace dom::aborting {class abort_controller;}
 namespace dom::aborting {class abort_signal;}
 
 
-class dom::aborting::abort_controller final : virtual public dom_object
+class dom::aborting::abort_controller final : public virtual dom_object
 {
 public constructors:
     abort_controller();

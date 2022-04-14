@@ -11,7 +11,7 @@ namespace ext {template <typename T> class listlike;}
 
 
 template <typename T>
-class ext::listlike : virtual public dom_object
+class ext::listlike : public virtual dom_object
 {
 public friends:
     friend v8pp::convert<ext::listlike<T>>;
@@ -40,7 +40,7 @@ private accessors:
 template <typename T>
 ext::listlike<T>::listlike(ext::vector<T>* linked_list) : m_linked_list(linked_list)
 {
-    // set the custom accessors
+    // set the custom accessor methods
     length.getter = [this] {return get_length();};
 }
 

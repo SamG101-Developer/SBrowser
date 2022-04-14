@@ -11,7 +11,7 @@ html::elements::html_option_element::html_option_element()
         : html_element()
         , mixins::form_associated<html_option_element>()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     disabled.getter = [this] {return get_disabled();};
     label.getter = [this] {return get_label();};
     text.getter = [this] {return get_text();};

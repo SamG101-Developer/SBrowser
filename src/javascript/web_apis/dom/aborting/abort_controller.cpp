@@ -8,7 +8,7 @@ dom::aborting::abort_controller::abort_controller() : dom_object()
 {
     // Creates a new AbortController object instance.
     // Returns an AbortSignal object instance, which can be used to communicate with, or to abort, a DOM request.
-    signal = std::make_unique<abort_signal>().get();
+    signal = new abort_signal{};
 }
 
 

@@ -6,7 +6,7 @@
 template<typename T>
 html::canvas::mixins::canvas_fill_stroke_styles<T>::canvas_fill_stroke_styles()
 {
-    // set the properties
+    // set the property values
     stroke_style << "black";
     fill_style << "black";
 }

@@ -18,12 +18,12 @@ public constructors:
     html_anchor_element();
 
 public js_properties:
-    ext::html_property<ext::string> download;
-    ext::html_property<ext::string> ping;
-    ext::html_property<ext::string> hreflang;
-    ext::html_property<ext::string> type;
-    ext::html_property<ext::string> text;
-    ext::html_property<ext::string> referrer_policy;
+    ext::html_property<ext::string, _F> download;
+    ext::html_property<ext::string, _F> ping;
+    ext::html_property<ext::string, _F> hreflang;
+    ext::html_property<ext::string, _F> type;
+    ext::html_property<ext::string, _F> text;
+    ext::html_property<ext::string, _F> referrer_policy;
 
 public cpp_methods:
     auto activation_behaviour(dom::events::event* event) -> void override;

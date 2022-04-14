@@ -16,10 +16,10 @@ html::elements::html_image_element::html_image_element()
         : html_element{}
         , mixins::lazy_loading{}
 {
-    // set the attributes
+    // set the attribute values
     m_dimension_attribute_src = this;
 
-    // set the custom accessors
+    // set the custom accessor methods
     width.getter = [this] {return get_width();};
     height.getter = [this] {return get_height();};
     natural_width.getter = [this] {return get_natural_width();};

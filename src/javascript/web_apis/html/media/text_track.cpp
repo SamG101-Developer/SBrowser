@@ -17,10 +17,10 @@ html::media::text_track::text_track()
     kind.constrain_values({"subtitles", "descriptions", "chapters", "metadata"});
     mode.constrain_values({"disabled", "hidden", "showing"});
 
-    // set the custom accessors
+    // set the custom accessor methods
     mode.setter = [this](auto&& PH1) {set_mode(std::forward<decltype(PH1)>(PH1));};
 
-    // set the attributes
+    // set the attribute values
     m_readiness_state = helpers::media_internals::track_readiness_state::NOT_LOADED;
 }
 

@@ -11,7 +11,7 @@ namespace dom::nodes {class document_fragment;}
 namespace dom::nodes {class node;}
 
 
-class dom::other::xslt_processor : virtual public dom_object
+class dom::other::xslt_processor : public virtual dom_object
 {
 public: constructors
     xslt_processor();

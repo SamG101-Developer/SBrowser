@@ -13,7 +13,7 @@
 html::elements::html_table_row_element::html_table_row_element()
         : html_element()
 {
-    // set the properties
+    // set the property values
     cells = new ext::vector<html_table_cell_element*>{};
 }
 

@@ -8,7 +8,7 @@
 
 namespace html::mixins {class lazy_loading;}
 
-class html::mixins::lazy_loading : virtual public dom_object
+class html::mixins::lazy_loading : public virtual dom_object
 {
 public enums:
     enum class lazy_loading_attribute_type {LAZY, EAGER};

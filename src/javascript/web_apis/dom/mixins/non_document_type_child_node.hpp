@@ -10,7 +10,7 @@ namespace dom::nodes {class element;}
 
 
 template <typename T>
-class dom::mixins::non_document_type_child_node : virtual public dom_object
+class dom::mixins::non_document_type_child_node : public virtual dom_object
 {
 public constructors:
     non_document_type_child_node();

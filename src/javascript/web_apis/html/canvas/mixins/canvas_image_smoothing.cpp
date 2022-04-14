@@ -7,7 +7,7 @@ html::canvas::mixins::canvas_image_smoothing<T>::canvas_image_smoothing()
     // constrain the property values
     image_smoothing_quality.constrain_values({"low", "medium", "high"});
 
-    // set the properties
+    // set the property values
     image_smoothing_enabled << true;
     image_smoothing_quality << "low";
 }

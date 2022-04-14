@@ -9,7 +9,7 @@ namespace html::canvas::paint {class canvas_image_source;}
 
 
 template<typename T>
-class html::canvas::mixins::canvas_draw_image : virtual public dom_object
+class html::canvas::mixins::canvas_draw_image : public virtual dom_object
 {
 public js_methods:
     auto draw_image(paint::canvas_image_source* image, double dx, double dy, double dw = 0, double dh = 0);

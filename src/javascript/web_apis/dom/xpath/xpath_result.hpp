@@ -13,7 +13,7 @@ namespace dom
 }
 
 
-class dom::xpath::xpath_result : virtual public dom_object
+class dom::xpath::xpath_result : public virtual dom_object
 {
 public: constructors
     xpath_result();

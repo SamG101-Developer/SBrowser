@@ -6,7 +6,7 @@
 template <typename T>
 html::canvas::mixins::canvas_shadow_styles<T>::canvas_shadow_styles()
 {
-    // set the properties
+    // set the property values
     shadow_offset_x << 0.0;
     shadow_offset_y << 0.0;
     shadow_blur << 0.0;

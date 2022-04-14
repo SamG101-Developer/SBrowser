@@ -47,10 +47,10 @@ public friends:
 
 public constructors:
     property();
-    property(const property<T>&) = default;
-    property(property<T>&&) noexcept = default;
-    auto operator=(const property<T>& o) -> property<T>&;
-    auto operator=(property<T>&& o) noexcept -> property<T>&;
+    property(const property&) = default;
+    property(property&&) noexcept = default;
+    auto operator=(const property& o) -> property<T>& = default;
+    auto operator=(property&& o) noexcept -> property<T>& = default;
     virtual ~property();
 
 public operators:
@@ -134,7 +134,7 @@ public cpp_properties:
     std::function<T()> getter;
     std::function<void(T)> setter;
 
-private cpp_properties:
+protected cpp_properties:
     // internal value being stored
     T m_internal;
 };
@@ -144,27 +144,9 @@ template <typename T>
 ext::property<T>::property()
 {
     // set the deleter, getter and setter functions to the defaults
-    deleter = [this]()      {if (std::is_pointer_v<T>) {delete m_internal; m_internal = nullptr;}};
+    deleter = [this]()      {if constexpr(std::is_pointer_v<T>) {delete m_internal; m_internal = nullptr;}};
     getter  = [this]()      {return m_internal;};
     setter  = [this](T val) {m_internal = val;};
-}
-
-
-template <typename T>
-_FAST _INLINE auto ext::property<T>::operator=(const property<T>& o) -> ext::property<T>&
-{
-    // copy another property into this - only transfers the value across, not the accessors
-    m_internal = o.m_internal;
-    return *this;
-}
-
-
-template <typename T>
-_FAST _INLINE auto ext::property<T>::operator=(property<T>&& o) noexcept -> ext::property<T>&
-{
-    // move another property into this - only transfers the value across, not the accessors
-    m_internal = o.m_internal;
-    return *this;
 }
 
 

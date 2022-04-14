@@ -3,7 +3,7 @@
 
 dom::iterators::node_filter::node_filter()
 {
-    // set the properties
+    // set the property values
     accept_node = [](const nodes::node* node) {return FILTER_ACCEPT;};
 }
 

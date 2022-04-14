@@ -9,7 +9,7 @@
 template <typename T>
 dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     previous_element_sibling.getter = [this] {return get_previous_element_sibling();};
     next_element_sibling.getter = [this] {return get_next_element_sibling();};
 }

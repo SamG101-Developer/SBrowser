@@ -11,10 +11,10 @@ html::elements::html_table_cell_element::html_table_cell_element()
     col_span.clamp_values(1, 1000);
     row_span.clamp_values(0, 65534);
 
-    // set the custom accessors
+    // set the custom accessor methods
     cell_index.getter = [this] {return get_cell_index();};
 
-    // set the properties
+    // set the property values
     col_span << 1UL;
     row_span << 1UL;
 }

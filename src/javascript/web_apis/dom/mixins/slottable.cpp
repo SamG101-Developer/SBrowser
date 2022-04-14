@@ -9,7 +9,7 @@
 template <typename T>
 dom::mixins::slottable<T>::slottable()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     assigned_slot.getter = [this] {return get_assigned_slot();};
 }
 

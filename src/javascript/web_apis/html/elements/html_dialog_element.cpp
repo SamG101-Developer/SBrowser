@@ -13,7 +13,7 @@
 html::elements::html_dialog_element::html_dialog_element()
         : html_element{}
 {
-    // set the properties
+    // set the property values
     return_value << "";
 
     // create the widget representation

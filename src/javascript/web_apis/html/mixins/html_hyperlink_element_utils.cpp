@@ -4,7 +4,7 @@
 html::mixins::html_hyperlink_element_utils::html_hyperlink_element_utils()
         : dom_object{}
 {
-    // set the custom accessors
+    // set the custom accessor methods
     href.getter = std::bind(&html_hyperlink_element_utils::get_href, this);
 
     href.setter = [this](auto && PH1) {set_href(std::forward<decltype(PH1)>(PH1));};

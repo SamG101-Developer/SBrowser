@@ -6,7 +6,7 @@
 html::elements::html_base_element::html_base_element()
         : html_element()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     href.getter = [this] {return get_href();};
 }
 

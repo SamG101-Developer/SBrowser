@@ -5,7 +5,7 @@
 
 dom::nodes::attr::attr() : node()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     node_value.getter       = [this] {return get_node_value(); };
     text_content.getter     = [this] {return get_text_content(); };
     m_qualified_name.getter = [this] {return get_m_qualified_name(); };
@@ -14,7 +14,7 @@ dom::nodes::attr::attr() : node()
     node_value.setter   = [this](auto&& PH1) {set_node_value(std::forward<decltype(PH1)>(PH1));};
     text_content.setter = [this](auto&& PH1) {set_text_content(std::forward<decltype(PH1)>(PH1));};
 
-    // set the properties
+    // set the property values
     node_type << ATTRIBUTE_NODE;
 }
 

@@ -16,6 +16,21 @@
 namespace ext {template <typename T> class vector;}
 namespace ext {template <typename T> using cvector = const vector<T>;}
 namespace ext {class string;}
+namespace ext
+{
+    using int8_array = ext::vector<char>;
+    using int16_array = ext::vector<short>;
+    using int32_array = ext::vector<int>;
+    using int_64_array = ext::vector<long long>;
+
+    using uint8_array = ext::vector<unsigned char>;
+    using uint16_array = ext::vector<unsigned short>;
+    using uint32_array = ext::vector<unsigned int>;
+    using uint_64_array = ext::vector<unsigned long long>;
+
+    using float_32_array = ext::vector<float>;
+    using float_64_array = ext::vector<double>;
+}
 
 
 namespace {template <typename T, class = void> struct is_iterator : std::false_type {};}

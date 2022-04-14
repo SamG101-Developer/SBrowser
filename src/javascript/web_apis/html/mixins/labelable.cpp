@@ -5,7 +5,7 @@ template <typename T>
 html::mixins::labelable<T>::labelable()
         : dom_object()
 {
-    // set the properties
+    // set the property values
     labels = new ext::string_vector{};
 }
 

@@ -10,7 +10,7 @@ namespace dom::nodes {class node;}
 namespace dom::ranges {class abstract_range;}
 
 
-class dom::ranges::abstract_range : virtual public dom_object
+class dom::ranges::abstract_range : public virtual dom_object
 {
 public constructors:
     abstract_range();

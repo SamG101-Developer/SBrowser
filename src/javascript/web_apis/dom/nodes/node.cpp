@@ -29,7 +29,7 @@
 
 dom::nodes::node::node() : event_target()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     base_uri.getter         = [this] {return get_base_uri();};
     is_connected.getter     = [this] {return get_is_connected();};
     first_child.getter      = [this] {return get_first_child();};
@@ -39,7 +39,7 @@ dom::nodes::node::node() : event_target()
 
     parent.setter = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
 
-    // set the properties
+    // set the property values
     parent      << nullptr;
     child_nodes << new ext::vector<node*>{};
 

@@ -18,7 +18,7 @@ html::elements::html_text_area_element::html_text_area_element()
     // attach the qt functions
     read_only.attach_qt_updater(&QPlainTextEdit::setReadOnly, this);
 
-    // set the custom accessors
+    // set the custom accessor methods
     selection_start.getter = [this] {return get_selection_start();};
     selection_end.getter = [this] {return get_selection_end();};
     selection_direction.getter = [this] {return get_selection_direction();};
@@ -27,7 +27,7 @@ html::elements::html_text_area_element::html_text_area_element()
     selection_end.setter = [this](auto&& PH1) {set_selection_end(std::forward<decltype(PH1)>(PH1));};
     selection_direction.setter = [this](auto&& PH1) {set_selection_direction(std::forward<decltype(PH1)>(PH1));};
 
-    // set the attributes
+    // set the attribute values
     m_raw_value = "";
 
     // create the widget representation

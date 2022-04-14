@@ -17,7 +17,7 @@ namespace dom::mutations {struct mutation_record;}
 namespace dom::nodes {class node;}
 
 
-class dom::mutations::mutation_observer final : virtual public dom_object
+class dom::mutations::mutation_observer final : public virtual dom_object
 {
 public friends:
     friend struct helpers::mutation_observers;

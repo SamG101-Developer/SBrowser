@@ -10,7 +10,7 @@ html::elements::html_template_element::html_template_element()
     // create the widget representation
     m_rendered_widget = nullptr;
 
-    // set the properties
+    // set the property values
     content = new dom::nodes::document_fragment{};
     content->owner_document = helpers::document_internals::appropriate_template_contents_owner_document(owner_document);
 }

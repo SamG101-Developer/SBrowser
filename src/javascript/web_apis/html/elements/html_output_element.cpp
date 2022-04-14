@@ -6,14 +6,14 @@
 
 html::elements::html_output_element::html_output_element()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     default_value.getter = [this] {return get_default_value();};
     value.getter = [this] {return get_value();};
 
     default_value.setter = [this](auto&& PH1) {set_default_value(std::forward<decltype(PH1)>(PH1));};
     value.setter = [this](auto&& PH1) {set_value(std::forward<decltype(PH1)>(PH1));};
 
-    // set the properties
+    // set the property values
     type << "output";
 }
 

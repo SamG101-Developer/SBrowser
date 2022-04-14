@@ -11,7 +11,7 @@
 template<typename T>
 dom::mixins::parent_node<T>::parent_node()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     children.getter = [this] {return get_children();};
     first_element_child.getter = [this] {return get_first_element_child();};
     last_element_child.getter = [this] {return get_last_element_child();};

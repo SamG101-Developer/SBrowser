@@ -12,7 +12,7 @@ namespace html::elements{class html_slot_element;}
 
 
 template <typename T>
-class dom::mixins::slottable : virtual public dom_object
+class dom::mixins::slottable : public virtual dom_object
 {
 public friends:
     friend struct helpers::shadows;

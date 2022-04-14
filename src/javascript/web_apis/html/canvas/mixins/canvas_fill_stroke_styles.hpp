@@ -13,7 +13,7 @@ namespace html::elements {class html_element;}
 
 
 template <typename T>
-class html::canvas::mixins::canvas_fill_stroke_styles : virtual public dom_object
+class html::canvas::mixins::canvas_fill_stroke_styles : public virtual dom_object
 {
 public constructors:
     canvas_fill_stroke_styles();

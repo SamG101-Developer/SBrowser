@@ -29,20 +29,20 @@ dom::nodes::element::element()
         // , css::cssom_view::mixins::scrollable<element>()
         // , css::cssom_view::mixins::geometry_utils<element>()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     tag_name.getter         = [this] {return get_tag_name();};
     shadow_root_node.getter = [this] {return get_shadow_root();};
 
     m_qualified_name.getter         = [this] {return get_m_qualified_name();};
     m_html_uppercase_qualified_name = [this] {return get_m_html_qualified_uppercase_name();};
 
-    // set the properties
+    // set the property values
     node_type        << ELEMENT_NODE;
     shadow_root_node << nullptr;
     attributes       << new ext::vector<attr*>{};
     class_list       << new ext::string_vector{};
 
-    // set the attributes
+    // set the attribute values
     m_custom_element_reaction_queue = {};
 
     // create the widget representation

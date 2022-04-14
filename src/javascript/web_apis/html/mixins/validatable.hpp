@@ -9,7 +9,7 @@ namespace html::mixins {template <typename T> class validatable;}
 
 
 template <typename T>
-class html::mixins::validatable : virtual public dom_object
+class html::mixins::validatable : public virtual dom_object
 {
 public constructors:
     validatable();

@@ -8,7 +8,7 @@ html::elements::html_progress_element::html_progress_element()
     // constrain the property values
     value.clamp_values(0, max);
 
-    // set the properties
+    // set the property values
     max << ext::infinity<double>{};
 
     // attach the qt functions

@@ -16,10 +16,14 @@ dom::events::event::event(
         , cancelable(event_init.at("bubbles").to<bool>())
         , composed(event_init.at("composed").to<bool>())
 {
-    // set the properties
-    event_phase = NONE;
-    touch_targets = new ext::vector<nodes::event_target*>{};
-    path = new ext::vector<internal::event_path_struct*>{};
+    // set the property values
+    event_phase << NONE;
+    touch_targets << new ext::vector<nodes::event_target*>{};
+    path << new ext::vector<internal::event_path_struct*>{};
+
+    target << nullptr;
+    current_target << nullptr;
+    related_target << nullptr;
 }
 
 

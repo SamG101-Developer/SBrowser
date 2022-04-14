@@ -12,7 +12,7 @@ namespace dom::iterators {struct node_filter;}
 namespace dom::nodes {class node;}
 
 
-class dom::iterators::abstract_iterator : virtual public dom_object
+class dom::iterators::abstract_iterator : public virtual dom_object
 {
 public friends:
     friend struct dom::helpers::traversal;

@@ -9,7 +9,7 @@ dom::nodes::document_fragment::document_fragment()
         , mixins::non_element_parent_node<document_fragment>()
         , mixins::parent_node<document_fragment>() {
 
-    // set the properties
+    // set the property values
     host      << nullptr;
     node_type << DOCUMENT_FRAGMENT_NODE;
     node_name << "#document-fragment";

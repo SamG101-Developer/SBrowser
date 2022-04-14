@@ -4,7 +4,7 @@
 html::elements::html_opt_group_element::html_opt_group_element()
         : html_element()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     disabled.setter = [this](auto && PH1) {set_disabled(std::forward<decltype(PH1)>(PH1));};
 }
 

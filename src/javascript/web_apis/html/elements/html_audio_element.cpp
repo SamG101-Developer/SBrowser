@@ -4,7 +4,7 @@
 html::elements::html_audio_element::html_audio_element()
         : html_media_element{}
 {
-    // set the attributes
+    // set the attribute values
     m_rendered_widget = nullptr;
 }
 

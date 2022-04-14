@@ -26,7 +26,7 @@ enum v8_primitive_error_t
 };
 
 
-class dom::other::dom_exception : virtual public dom_object
+class dom::other::dom_exception : public virtual dom_object
 {
 public: constructors
     dom_exception() = default;

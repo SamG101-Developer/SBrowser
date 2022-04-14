@@ -40,6 +40,10 @@ class html::canvas::canvas_rendering_context_2d
         , public mixins::canvas_user_interface<canvas_rendering_context_2d>
         , public mixins::canvas_text<canvas_rendering_context_2d>
         , public mixins::canvas_draw_image<canvas_rendering_context_2d>
+        , public mixins::canvas_image_data<canvas_rendering_context_2d>
+        , public mixins::canvas_path_drawing_styles<canvas_rendering_context_2d>
+        , public mixins::canvas_text_drawing_styles<canvas_rendering_context_2d>
+        , public mixins::canvas_path<canvas_rendering_context_2d>
 {
 public js_methods:
     ext::string_any_map get_context_attributes() const;

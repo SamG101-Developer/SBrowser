@@ -17,7 +17,7 @@ dom::mutations::mutation_observer::mutation_observer(
         : dom_object()
         , m_callback(std::move(callback))
 {
-    // set the attributes
+    // set the attribute values
     m_node_list = new ext::vector<nodes::node*>{};
     m_record_queue = new std::queue<mutation_record*>{};
 

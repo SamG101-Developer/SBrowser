@@ -15,7 +15,7 @@ html::elements::html_anchor_element::html_anchor_element()
         , mixins::targetable<html_anchor_element>{}
         , mixins::html_hyperlink_element_utils{}
 {
-    // set the custom accessors
+    // set the custom accessor methods
     text.getter = [this] {return get_text();};
     text.setter = [this](auto && PH1) {set_text(std::forward<decltype(PH1)>(PH1));};
 }

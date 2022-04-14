@@ -6,7 +6,7 @@
 template<typename T>
 html::canvas::mixins::canvas_compositing<T>::canvas_compositing()
 {
-    // set the properties
+    // set the property values
     global_alpha << 1.0;
     global_compositing_operation << "source-over";
 }

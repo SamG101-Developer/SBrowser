@@ -12,7 +12,7 @@ dom::nodes::character_data::character_data()
         , mixins::child_node<dom::nodes::character_data>()
         , mixins::non_document_type_child_node<dom::nodes::character_data>()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     length.getter = [this] {return get_length();};
 
     // create the widget representation

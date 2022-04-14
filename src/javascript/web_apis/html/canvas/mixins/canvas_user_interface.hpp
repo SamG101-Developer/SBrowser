@@ -10,7 +10,7 @@ namespace html::canvas::paint {class path_2d;}
 
 
 template<typename T>
-class html::canvas::mixins::canvas_user_interface : virtual public dom_object
+class html::canvas::mixins::canvas_user_interface : public virtual dom_object
 {
 public js_methods:
     auto draw_focus_if_needed(dom::nodes::element* element) -> void;

@@ -18,6 +18,10 @@ public aliases:
 
 public constructors:
     html_property() = default;
+    html_property(const html_property&) = default;
+    html_property(html_property&&) noexcept = default;
+    auto operator=(const html_property&) -> html_property& = default;
+    auto operator=(html_property&&) noexcept -> html_property& = default;
 
 public cpp_methods:
     template <typename F, typename U> auto attach_qt_updater(F method, U pointer) -> void;

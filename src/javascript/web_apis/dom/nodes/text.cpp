@@ -8,12 +8,12 @@ dom::nodes::text::text(const ext::string& new_data)
         : character_data()
         , mixins::slottable<text>()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     whole_text.getter = [this] {return get_whole_text();};
 
     data.setter = [this](auto&& PH1) {set_data(std::forward<decltype(PH1)>(PH1));};
 
-    // set the properties
+    // set the property values
     data      << new_data;
     node_type << TEXT_NODE;
 }

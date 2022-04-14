@@ -27,7 +27,8 @@ public constructors:
 
 public js_methods:
     auto insert(const K& key, const V& value) -> ext::map<K, V>&;
-    auto at(const K& key) const -> V&;
+    auto at(const K& key) const -> const V&;
+    auto at(K& key) -> V&;
     auto has_key(const K& key) const -> bool;
 
     template <typename U> auto cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
@@ -57,7 +58,15 @@ auto ext::map<K, V>::insert(const K& key, const V& value) -> ext::map<K, V>&
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::at(const K& key) const -> V&
+auto ext::map<K, V>::at(const K& key) const -> const V&
+{
+    // return the item in the middle of the map
+    return this->m_iterable.at(key);
+}
+
+
+template <typename K, typename V>
+auto ext::map<K, V>::at(K& key) -> V&
 {
     // return the item in the middle of the map
     return this->m_iterable.at(key);

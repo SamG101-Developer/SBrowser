@@ -7,7 +7,7 @@
 namespace html::canvas {class abstract_rendering_context;}
 
 
-class html::canvas::abstract_rendering_context : virtual public dom_object
+class html::canvas::abstract_rendering_context : public virtual dom_object
 {};
 
 

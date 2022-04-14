@@ -18,10 +18,10 @@
 
 dom::ranges::range::range() : abstract_range()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     common_ancestor_container.getter = [this] {return get_common_ancestor_container();};
 
-    // set the properties
+    // set the property values
     start_container << javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
     end_container << javascript::realms::relevant_agent().get<nodes::document*>("associated_document");
     start_offset << (ulong)0;
