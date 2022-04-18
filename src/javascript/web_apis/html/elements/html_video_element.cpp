@@ -5,8 +5,8 @@ html::elements::html_video_element::html_video_element()
         : html_media_element()
 {
     // attach the qt functions
-    width.attach_qt_updater(&QWidget::setFixedWidth, this);
-    height.attach_qt_updater(&QWidget::setFixedHeight, this);
+    width.template attach_qt_updater(&QWidget::setFixedWidth, m_rendered_widget);
+    height.template attach_qt_updater(&QWidget::setFixedHeight, m_rendered_widget);
 
     // create the widget representation
     m_rendered_widget = QPointer<QVideoWidget>{};

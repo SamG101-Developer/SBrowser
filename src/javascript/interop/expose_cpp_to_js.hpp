@@ -153,7 +153,8 @@ template <typename T>
 auto javascript::interop::expose_cpp_to_js::object_to_v8(v8::Isolate* isolate) requires std::is_base_of_v<dom_object, T>
 {
     // create a temporary instance of the object, return the v8 conversion, and map it to the correct type. an instance
-    // has to be made, as the conversion method is virtual and therefore can not be static
+    // has to be made, as the conversion method is virtual and therefore can not be static - the c++ instance is
+    // automatically discarded as a temporary
     return T{}.v8(isolate).template to<v8pp::class_<T>>();
 }
 

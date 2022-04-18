@@ -1,5 +1,21 @@
 #include "image_data.hpp"
 
+#include <dom/helpers/exceptions.hpp>
+#include <html/helpers/image_internals.hpp>
+
+
+html::canvas::paint::image_data::image_data(
+        const unsigned long sw,
+        const unsigned long sh,
+        const ext::string_any_map& settings)
+{
+    dom::helpers::exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
+            "width or height can not be 0",
+            [sw, sh] {return sw == 0 or sh == 0;});
+
+    helpers::image_internals::initialize_image(this, sw, sh, settings);
+}
+
 
 auto html::canvas::paint::image_data::v8(
         v8::Isolate* isolate) const

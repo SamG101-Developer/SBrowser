@@ -10,7 +10,7 @@ html::mixins::form_associated<T>::form_associated()
     form << nullptr;
 
     // attach the qt functions
-    disabled.attach_qt_updater(&QWidget::setDisabled, static_cast<T*>(this));
+    disabled.template attach_qt_updater(&QWidget::setDisabled, static_cast<T*>(this));
 }
 
 

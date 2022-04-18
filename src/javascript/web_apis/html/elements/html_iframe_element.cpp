@@ -24,8 +24,8 @@ html::elements::html_iframe_element::html_iframe_element()
     sandbox.setter = [this](auto&& PH1) {set_sandbox(std::forward<decltype(PH1)>(PH1));};
 
     // attach the qt functions
-    width.attach_qt_updater(&QWidget::setFixedWidth, this);
-    height.attach_qt_updater(&QWidget::setFixedHeight, this);
+    width.template attach_qt_updater(&QWidget::setFixedWidth, m_rendered_widget);
+    height.template attach_qt_updater(&QWidget::setFixedHeight, m_rendered_widget);
 }
 
 

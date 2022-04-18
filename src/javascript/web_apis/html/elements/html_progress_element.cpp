@@ -11,12 +11,13 @@ html::elements::html_progress_element::html_progress_element()
     // set the property values
     max << ext::infinity<double>{};
 
-    // attach the qt functions
-    max.attach_qt_updater(&QProgressBar::setMaximum, this);
-    value.attach_qt_updater(&QProgressBar::setValue, this);
-
     // create the widget representation
-    m_rendered_widget = QPointer<QProgressBar>{};
+    auto widget = QPointer<QProgressBar>{};
+    m_rendered_widget = widget;
+
+    // attach the qt functions
+    max.template attach_qt_updater(&QProgressBar::setMaximum, widget);
+    value.template attach_qt_updater(&QProgressBar::setValue, render());
 }
 
 

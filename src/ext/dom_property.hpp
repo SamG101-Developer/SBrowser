@@ -31,7 +31,7 @@ public operators:
 
 
 template <typename T, bool ce_reactions>
-_FAST _INLINE ext::dom_property<T, ce_reactions>::~dom_property()
+ext::dom_property<T, ce_reactions>::~dom_property()
 {
     // handle any custom element reactions, and perform default deletion operations
     if constexpr(ce_reactions) handle_ce_reactions(*this);
@@ -39,7 +39,7 @@ _FAST _INLINE ext::dom_property<T, ce_reactions>::~dom_property()
 
 
 template <typename T, bool ce_reactions>
-_FAST _INLINE ext::dom_property<T, ce_reactions>::operator T() const
+ext::dom_property<T, ce_reactions>::operator T() const
 {
     // handle any custom element reactions, and perform default getting operations
     if constexpr(ce_reactions) handle_ce_reactions(*this);
@@ -48,7 +48,7 @@ _FAST _INLINE ext::dom_property<T, ce_reactions>::operator T() const
 
 
 template <typename T, bool ce_reactions>
-_FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(
+auto ext::dom_property<T, ce_reactions>::operator=(
         const T& o)
         -> dom_property<T, ce_reactions>&
 {
@@ -60,7 +60,7 @@ _FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(
 
 
 template <typename T, bool ce_reactions>
-_FAST _INLINE auto ext::dom_property<T, ce_reactions>::operator=(
+auto ext::dom_property<T, ce_reactions>::operator=(
         T&& o) noexcept
         -> dom_property<T, ce_reactions>&
 {

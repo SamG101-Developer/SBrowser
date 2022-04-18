@@ -3,7 +3,7 @@
 
 #include <exception>
 
-#define INVALID_ARGUMENT(argument) std::invalid_argument{"Invalid value in the <> argument"}
-#define INVALID_ENUM(argument) std::runtime_error{"IInvalid enum value (impossible)"}
+#define INVALID_ENUM(argument) std::runtime_error{"Invalid enum value (impossible)"}
+#define INVALID_SWITCH(argument) std::runtime_error{"Invalid switch value (impossible)"}
 
 #endif //SBROWSER_EXCEPTION_HPP

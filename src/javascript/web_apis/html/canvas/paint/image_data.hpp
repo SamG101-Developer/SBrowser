@@ -5,6 +5,8 @@
 #include <ext/map.hpp>
 #include <dom_object.hpp>
 
+#include <QtGui/QImage>
+
 namespace html::canvas::paint {class image_data;}
 
 
@@ -17,11 +19,14 @@ public constructors:
 public js_properties:
     ext::html_property<unsigned long, _F> width;
     ext::html_property<unsigned long, _F> height;
-    ext::html_property<ext::uint8_array, _F> data;
+    ext::html_property<ext::uint8_array*, _F> data;
     ext::html_property<ext::string, _F> color_space;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
+
+private cpp_properties:
+    QImage m_image;
 };
 
 

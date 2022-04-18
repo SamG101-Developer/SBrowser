@@ -29,7 +29,7 @@ html::elements::html_button_element::html_button_element()
     m_rendered_widget = widget;
 
     // attach the qt functions
-    value.attach_qt_updater(&QPushButton::setText, widget);
+    value.template attach_qt_updater(&QPushButton::setText, widget);
 }
 
 

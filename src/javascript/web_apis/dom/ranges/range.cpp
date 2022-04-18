@@ -286,7 +286,7 @@ auto dom::ranges::range::compare_boundary_points(
         }
 
         default:
-            throw INVALID_ARGUMENT(how);
+            throw INVALID_SWITCH(how);
     }
 
     // determine the comparison value depending on the output of the position_relative helper method

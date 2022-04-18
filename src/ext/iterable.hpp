@@ -385,7 +385,7 @@ template <typename T, typename C>
 auto ext::iterable<T, C>::contains(const T& item) const -> bool
 {
     // check if the iterable contains an item by comparing its iterator location to the end iterator
-    return begin() + find(item) != end();
+    return std::find(begin(), end(), item) != end();
 }
 
 

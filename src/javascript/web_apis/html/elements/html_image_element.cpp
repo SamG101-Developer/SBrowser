@@ -9,7 +9,7 @@
 
 #include <html/helpers/custom_html_elements.hpp>
 #include <html/helpers/document_internals.hpp>
-#include <html/helpers/images.hpp>
+#include <html/helpers/image_internals.hpp>
 
 
 html::elements::html_image_element::html_image_element()
@@ -32,15 +32,13 @@ html::elements::html_image_element::html_image_element()
     width.setter = [this](auto&& PH1) {set_width(std::forward<decltype(PH1)>(PH1));};
     height.setter = [this](auto&& PH1) {set_height(std::forward<decltype(PH1)>(PH1));};
 
-    // attach the qt functions
-    alt.attach_qt_updater(&QLabel::setText, this);
-
     // create the widget representation
     auto widget = QPointer<QLabel>{};
     widget->setPixmap(QPixmap{});
     m_rendered_widget = widget;
 
-
+    // attach the qt functions
+    alt.template attach_qt_updater(&QLabel::setText, widget);
 }
 
 
@@ -81,7 +79,7 @@ auto html::elements::html_image_element::decode()
                     if (m_current_request->state == internal::image_request_state::COMPLETELY_AVAILABLE)
                     {
                         // get the result from decoding the image and switch on the result
-                        auto result = helpers::images::decode_image(this);
+                        auto result = helpers::image_internals::decode_image(this);
                         switch(result)
                         {
                             // resolve the promise if the image is already decoded (so skip)
@@ -119,7 +117,7 @@ auto html::elements::html_image_element::get_width() const
         -> ulong
 {
     // return the width of the pixmap
-    return qt()->isVisible() ? qt()->pixmap().width() : html::helpers::images::density_corrected_intrinsic_size(this).width;
+    return qt()->isVisible() ? qt()->pixmap().width() : html::helpers::image_internals::density_corrected_intrinsic_size(this).width;
 }
 
 
@@ -127,7 +125,7 @@ auto html::elements::html_image_element::get_height() const
         -> ulong
 {
     // return the height of the pixmap
-    return qt()->isVisible() ? qt()->pixmap().height() : html::helpers::images::density_corrected_intrinsic_size(this).height;
+    return qt()->isVisible() ? qt()->pixmap().height() : html::helpers::image_internals::density_corrected_intrinsic_size(this).height;
 }
 
 
@@ -135,7 +133,7 @@ auto html::elements::html_image_element::get_natural_width() const
         -> ulong
 {
     // return the density-corrected intrinsic width
-    return css::css_images::helpers::images::has_instrinsic_dimensions(this) ? html::helpers::images::density_corrected_intrinsic_size(this).width : 0;
+    return css::css_images::helpers::images::has_instrinsic_dimensions(this) ? html::helpers::image_internals::density_corrected_intrinsic_size(this).width : 0;
 }
 
 
@@ -143,7 +141,7 @@ auto html::elements::html_image_element::get_natural_height() const
         -> ulong
 {
     // return the density-corrected intrinsic height
-    return css::css_images::helpers::images::has_instrinsic_dimensions(this) ? html::helpers::images::density_corrected_intrinsic_size(this).height : 0;
+    return css::css_images::helpers::images::has_instrinsic_dimensions(this) ? html::helpers::image_internals::density_corrected_intrinsic_size(this).height : 0;
 }
 
 

@@ -10,10 +10,18 @@ html::canvas::mixins::canvas_text_drawing_styles<T>::canvas_text_drawing_styles(
     direction.constrain_values({"ltr", "rtl", "inherit"});
     text_align.constrain_values({"start", "end", "left", "right", "center"});
     text_baseline.constrain_values({"top", "hanging", "middle", "alphabetical", "ideographic", "bottom"});
-    text_rendering.constrain_values({"auto", "optimizeSpeed", "optimizeLegibility", "geometricPrecision"});
-    font_kerning.constrain_values({"auto", "normal", "none"});
-    font_stretch.constrain_values({"ultra-condensed", "extra-condensed", "condensed", "semi-condensed", "normal", "semi-expanded", "expanded", "extra-expanded", "ultra-expanded"});
-    font_variant_caps.constrain_values({"normal", "small-caps", "all-small-caps", "petite-caps", "all-petite-caps", "unicase", "titling-caps"});
+    text_rendering.constrain_values(m_font.translate_text_rendering.keys());
+    font_kerning.constrain_values(m_font.translate_kerning.keys());
+    font_stretch.constrain_values(m_font.translate_stretch.keys());
+    font_variant_caps.constrain_values(m_font.translate_variant_caps.keys());
+
+    // attach the qt functions
+    letter_spacing.template attach_qt_updater(&render::painting::font::set_letter_spacing, m_font);
+    word_spacing.template attach_qt_updater(&render::painting::font::set_word_spacing, m_font);
+    text_rendering.template attach_qt_updater(&render::painting::font::set_text_rendering, m_font);
+    font_kerning.template attach_qt_updater(&render::painting::font::set_kerning, m_font);
+    font_stretch.template attach_qt_updater(&render::painting::font::set_stretch, m_font);
+    font_variant_caps.template attach_qt_updater(&render::painting::font::set_variant_caps, m_font);
 }
 
 

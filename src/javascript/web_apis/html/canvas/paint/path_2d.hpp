@@ -11,7 +11,7 @@ namespace html::canvas::paint {class path_2d;}
 class html::canvas::paint::path_2d : public mixins::canvas_path<path_2d>
 {
 public constructors:
-    path_2d(path_2d* path);
+    path_2d(path_2d* path = nullptr);
     path_2d(const ext::string& path);
 
 public js_methods:

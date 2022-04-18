@@ -6,6 +6,11 @@
 namespace ext {template <template <typename> typename T, typename U> struct is_mixin_base_of;}
 namespace ext {template <template <typename> typename T, typename U> inline constexpr bool is_mixin_base_of_v = is_mixin_base_of<T, U>::value;}
 
+using uchar = unsigned char;
+using ushort = unsigned short;
+using ulong = unsigned long;
+using ulonglong = unsigned long long;
+
 
 template <template<typename> typename T, typename U>
 struct ext::is_mixin_base_of

@@ -3,9 +3,11 @@
 #define SBROWSER_MAP_HPP
 
 #include <map>
+#include <ranges>
 
 #include <ext/any.hpp>
 #include <ext/iterable.hpp>
+#include <ext/string.hpp>
 
 
 namespace ext {template <typename K, typename V> class map;}
@@ -17,13 +19,17 @@ namespace ext {using string_string_map = map<string, string>;}
 template <typename K, typename V>
 class ext::map final: public ext::iterable<V, std::map<K, V>>
 {
+public aliases:
+    using pair_t = std::pair<K, V>;
+
 public constructors:
     map() = default;
     map(const map<K, V>&) = default;
     map(map<K, V>&&) noexcept = default;
-    map(const std::initializer_list<std::pair<K, V>>& o);
     map<K, V>& operator=(const map<K, V>&) = default;
     map<K, V>& operator=(map<K, V>&&) noexcept = default;
+
+    map<K, V>& operator=(std::initializer_list<pair_t>&& o);
 
 public js_methods:
     auto insert(const K& key, const V& value) -> ext::map<K, V>&;
@@ -31,9 +37,10 @@ public js_methods:
     auto at(K& key) -> V&;
     auto has_key(const K& key) const -> bool;
 
+    auto keys() -> ext::vector<K>;
+    auto values() -> ext::vector<V>;
+
     template <typename U> auto cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
-    template <typename F> auto filter_keys(const F& function) -> ext::vector<K>;
-    template <typename F> auto filter_values(const F& function) -> ext::vector<V>;
 
 public operators:
     auto operator==(ext::cmap<K, V>& o) -> bool;
@@ -41,10 +48,11 @@ public operators:
 
 
 template <typename K, typename V>
-ext::map<K, V>::map(const std::initializer_list<std::pair<K, V>>& o)
+ext::map<K, V>& ext::map<K, V>::operator=(std::initializer_list<pair_t>&& o)
 {
-    // add each key-value pair sequentially to the map
-    for (const auto& [key, value]: o) insert(key, value);
+    // append the moved args (std::pair<K, V>)
+    for (const pair_t& pair: o)
+        this->insert(pair.first, pair.second);
 }
 
 
@@ -82,6 +90,24 @@ auto ext::map<K, V>::has_key(const K& key) const -> bool
 
 
 template <typename K, typename V>
+auto ext::map<K, V>::keys() -> ext::vector<K>
+{
+    // return a vector of the keys
+    auto keys = std::views::keys(this->m_iterable);
+    return ext::vector<K>{keys.begin(), keys.end()};
+}
+
+
+template <typename K, typename V>
+auto ext::map<K, V>::values() -> ext::vector<V>
+{
+    // return a vector of the values
+    auto values = std::views::values(this->m_iterable);
+    return ext::vector<V>{values.begin(), values.end()};
+}
+
+
+template <typename K, typename V>
 template <typename U>
 auto ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext::any>
 {
@@ -94,42 +120,6 @@ auto ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext
 
     // return the cast map
     return copy;
-}
-
-
-template <typename K, typename V>
-template <typename F>
-auto ext::map<K, V>::filter_keys(const F& function) -> ext::vector<K>
-{
-    // create the empty keys list
-    ext::vector<K> filtered_keys;
-
-    // filter the keys into a list
-    for (auto [key, val]: this->m_iterable)
-    {
-        if (function(key)) filtered_keys.append(key);
-    }
-
-    // return the filtered keys
-    return filtered_keys;
-}
-
-
-template <typename K, typename V>
-template <typename F>
-auto ext::map<K, V>::filter_values(const F& function) -> ext::vector<V>
-{
-    // create the empty values list
-    ext::vector<V> filtered_values;
-
-    // filter the values into a list
-    for (auto [key, val]: this->m_iterable)
-    {
-        if (function) filtered_values.append(val);
-    }
-
-    // return the filtered keys
-    return filtered_values;
 }
 
 

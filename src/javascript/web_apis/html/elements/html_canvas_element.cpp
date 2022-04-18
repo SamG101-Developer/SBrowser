@@ -3,14 +3,15 @@
 #include <dom/helpers/exceptions.hpp>
 
 #include <html/helpers/custom_html_elements.hpp>
+#include <html/helpers/canvas_internals.hpp>
 
 
 html::elements::html_canvas_element::html_canvas_element()
         : html_element()
 {
     // attach the qt functions
-    width.attach_qt_updater(&QWidget::setFixedWidth, this);
-    height.attach_qt_updater(&QWidget::setFixedHeight, this);
+    width.template attach_qt_updater(&QWidget::setFixedWidth, m_rendered_widget);
+    height.template attach_qt_updater(&QWidget::setFixedHeight, m_rendered_widget);
 
     // set the property values
     width << 300UL;
@@ -21,9 +22,9 @@ html::elements::html_canvas_element::html_canvas_element()
 auto html::elements::html_canvas_element::get_context(
         const ext::string& context_id,
         ext::any* options)
-        -> canvasing::abstract_rendering_context*
+        -> canvas::abstract_rendering_context*
 {
-    // convert the any option into a type (int, string etc), to be usd in methods that are templates ie T mapped_options
+    // convert the 'any' option into a type (int, string etc), to be usd in methods that are templates ie T mapped_options
     auto mapped_options = webidl::converting::convert_any(options);
     switch (m_context_mode)
     {
@@ -70,7 +71,7 @@ auto html::elements::html_canvas_element::get_context(
 
 
 auto html::elements::html_canvas_element::transfer_control_to_offscreen()
-        -> canvasing::offscreen_canvas
+        -> canvas::offscreen_canvas
 {
     // if the canvas context is none, then throw an invalid state error
     dom::helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
@@ -78,7 +79,7 @@ auto html::elements::html_canvas_element::transfer_control_to_offscreen()
             [this] {return m_context_mode != context_mode::NONE;});
 
     // create a offscreen canvas with this canvas' size
-    canvasing::offscreen_canvas offscreen_canvas {width, height};
+    canvas::offscreen_canvas offscreen_canvas {width, height};
     offscreen_canvas.m_placeholder_canvas = this;
 
     // set this canvas context to a placeholder, and return the offscreen canvas

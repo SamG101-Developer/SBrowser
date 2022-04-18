@@ -66,6 +66,9 @@ public: cpp_methods
     auto contains(const char* item) const -> bool;
     constexpr auto c_str() const -> const char*;
 
+    auto remove_prefix(const char* prefix) const -> ext::string;
+    auto remove_postfix(const char* prefix) const -> ext::string;
+
     auto is_numeric() -> bool;
 
 public: operators

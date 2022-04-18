@@ -14,7 +14,6 @@
 #define LIVE_MUTABLE /* Fire changes to attached live filters */
 
 namespace ext {template <typename T> class vector;}
-namespace ext {template <typename T> using cvector = const vector<T>;}
 namespace ext {class string;}
 namespace ext
 {
@@ -55,7 +54,7 @@ public constructors:
     vector(vector&&) noexcept = default;
     template <typename iterable_t> vector(const iterable_t& iterable_object) requires is_iterable_v<iterable_t>;
     template <typename iterator_t> vector(iterator_t begin, iterator_t end) requires is_iterator_v<iterator_t>;
-    template <typename ...args> vector(args&&... items);
+    template <typename ...args> vector(args... items);
 
     auto operator=(const vector&) -> vector<T>& = default;
     auto operator=(vector&&) noexcept -> vector<T>& = default;
@@ -85,7 +84,7 @@ public js_methods:
     template <typename F> auto all_of(const F& function) const -> bool;
     template <typename F> auto any_of(const F& function) const -> bool;
     template <typename F> auto for_each(const F& function) -> vector<T>&;
-    template <typename F> auto for_each(const F& function) const -> cvector<T>&;
+    template <typename F> auto for_each(const F& function) const -> const vector<T>&;
     template <typename F> auto filter(const F& function) const -> vector<T>;
     template <typename U=T, typename F> auto transform(const F& function) const -> vector<U>;
     template <typename U=T> auto cast_all() const -> vector<U>;
@@ -104,6 +103,7 @@ private js_properties:
 
 public operators:
     auto operator*(size_t n) const -> ext::vector<T>;
+    operator std::initializer_list<T>() const;
 };
 
 
@@ -126,7 +126,7 @@ ext::vector<T>::vector(iterator_t begin, iterator_t end) requires is_iterator_v<
 
 
 template <typename T>
-template <typename ...args> ext::vector<T>::vector(args&&... items)
+template <typename ...args> ext::vector<T>::vector(args... items)
 {
     // set the iterable to a veque defined by a variable number of arguments
     this->m_iterable = veque::veque<T>{std::initializer_list<T>{items...}};
@@ -262,7 +262,7 @@ template <typename T>
 auto ext::vector<T>::extend(const vector<T>& other, size_t index) -> ext::vector<T>&
 {
     // reverse the other list so that it can be inserted in the correct order ie 3 then 2 then 1 so {1, 2, 3} is added
-    auto reversed_other = other.reversed();
+    auto reversed_other = static_cast<ext::vector<T>>(other.reversed());
     reversed_other.for_each([this, other, index = index % this->length()](const T& item) {insert(item, index);});
 
     // return a reference to the veque
@@ -344,7 +344,7 @@ auto ext::vector<T>::for_each(const F& function) -> ext::vector<T>&
 
 template <typename T>
 template <typename F>
-auto ext::vector<T>::for_each(const F& function) const -> ext::cvector<T>&
+auto ext::vector<T>::for_each(const F& function) const -> const ext::vector<T>&
 {
     // apply a const function to each item in this veque, and return a reference to it (for all_of, any_of etc...)
     for (const T item: this->m_iterable) function(item);
@@ -445,6 +445,13 @@ auto ext::vector<T>::operator*(size_t n) const -> ext::vector<T>
     // append flattened original to the output n times, and return it
     for (size_t i = 0; i < n; ++i) output.extend(original);
     return output;
+}
+
+
+template <typename T>
+ext::vector<T>::operator std::initializer_list<T>() const
+{
+    return std::initializer_list<T>{this->begin(), this->end()};
 }
 
 

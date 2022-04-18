@@ -9,7 +9,7 @@
 #include <QtWidgets/QLabel>
 
 namespace html::elements {class html_image_element;}
-namespace html::helpers {struct images;}
+namespace html::helpers {struct image_internals;}
 namespace html::internal {struct image_dimensions;}
 namespace html::internal {struct image_request;}
 
@@ -19,7 +19,7 @@ class html::elements::html_image_element
         , public mixins::lazy_loading
 {
 public friends:
-    friend struct helpers::images;
+    friend struct helpers::image_internals;
 
 public constructors:
     html_image_element();

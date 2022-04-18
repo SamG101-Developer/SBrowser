@@ -9,13 +9,14 @@ html::elements::html_meter_element::html_meter_element()
     optimum.clamp_values(min, max);
     high.clamp_values(low, max);
 
-    // attach the qt functions
-    value.attach_qt_updater(&QProgressBar::setValue, this);
-    min.attach_qt_updater(&QProgressBar::setMinimum, this);
-    max.attach_qt_updater(&QProgressBar::setMaximum, this);
-
     // create the widget representation
-    m_rendered_widget = QPointer<QProgressBar>{};
+    auto widget = QPointer<QProgressBar>{};
+    m_rendered_widget = widget;
+
+    // attach the qt functions
+    value.template attach_qt_updater(&QProgressBar::setValue, widget);
+    min.template attach_qt_updater(&QProgressBar::setMinimum, widget);
+    max.template attach_qt_updater(&QProgressBar::setMaximum, widget);
 }
 
 

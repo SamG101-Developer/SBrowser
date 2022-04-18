@@ -2,6 +2,7 @@
 #define SBROWSER_HTML_PROPERTY_HPP
 
 #include <ext/dom_property.hpp>
+#include <ext/map.hpp>
 #include <ext/vector.hpp>
 
 #include <QtCore/QPointer>
@@ -53,7 +54,7 @@ auto ext::html_property<T, ce_reactions>::attach_qt_updater(
 {
     // set the attached attribute to true and attach the update
     m_qt_updater_attached = true;
-    m_qt_updater = std::bind(method, pointer->qt());
+    m_qt_updater = std::bind(std::mem_fn(method), pointer, std::placeholders::_1);
 }
 
 
@@ -70,7 +71,7 @@ template <typename T, bool ce_reactions>
 auto ext::html_property<T, ce_reactions>::clamp_values(const T& low, const T& high) -> void requires std::is_arithmetic_v<T>
 {
     // clamp the value into a range ie the value set is forced into the range
-    m_clamped  = false;
+    m_clamped  = true;
     m_clamp_to = {low, high};
 }
 
@@ -80,13 +81,15 @@ auto ext::html_property<T, ce_reactions>::operator=(const T& o) -> html_property
 {
     // clamp the value if clamps are defined
     if (m_clamped)
-        o = std::clamp(0, m_clamp_to.first, m_clamp_to.second);
+        o = const_cast<T&>(std::clamp(const_cast<T&>(o), m_clamp_to.first, m_clamp_to.second));
 
     // only continue if the constraints are empty or contain the new value
     if (not m_constrained or m_constrain_to.contains(o))
     {
         // execute the updater if there is one, and perform default setting operations (for const reference)
-        if (m_qt_updater_attached) m_qt_updater();
+        if (m_qt_updater_attached)
+            m_qt_updater(o);
+
         dom_property<T, ce_reactions>::operator=(o);
     }
 }

@@ -1,6 +1,13 @@
 #include "path_2d.hpp"
 
 
+html::canvas::paint::path_2d::path_2d(
+        path_2d* path)
+{
+    if (path) m_path = path->m_path;
+}
+
+
 auto html::canvas::paint::path_2d::v8(
         v8::Isolate* isolate) const
         -> ext::any

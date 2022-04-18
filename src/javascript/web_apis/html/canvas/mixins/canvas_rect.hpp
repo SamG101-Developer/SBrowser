@@ -5,6 +5,8 @@
 #include <dom_object.hpp>
 
 namespace html::canvas::mixins {template <typename T> class canvas_rect;}
+namespace html::canvas::paint {class canvas_gradient;}
+namespace html::canvas::paint {class canvas_pattern;}
 
 
 template<typename T>

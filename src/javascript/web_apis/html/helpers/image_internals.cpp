@@ -1,16 +1,17 @@
-#include "images.hpp"
+#include "image_internals.hpp"
 
 #include <thread>
 
 #include <dom/helpers/mutation_observers.hpp>
 
+#include <html/canvas/paint/image_data.hpp>
 #include <html/elements/html_image_element.hpp>
 #include <html/elements/html_picture_element.hpp>
 
 #include <html/helpers/document_internals.hpp>
 
 
-auto html::helpers::images::is_image_available(
+auto html::helpers::image_internals::is_image_available(
         const internal::image_request* request)
         -> bool
 {
@@ -20,7 +21,7 @@ auto html::helpers::images::is_image_available(
 }
 
 
-auto html::helpers::images::is_image_fully_decodable(
+auto html::helpers::image_internals::is_image_fully_decodable(
         const internal::image_request* request)
         -> bool
 {
@@ -29,7 +30,7 @@ auto html::helpers::images::is_image_fully_decodable(
 }
 
 
-auto html::helpers::images::density_corrected_intrinsic_size(
+auto html::helpers::image_internals::density_corrected_intrinsic_size(
         elements::html_image_element* element)
         -> internal::image_dimensions*
 {
@@ -43,7 +44,7 @@ auto html::helpers::images::density_corrected_intrinsic_size(
 }
 
 
-auto html::helpers::images::update_image_data(
+auto html::helpers::image_internals::update_image_data(
         elements::html_image_element* element,
         const bool restart_animations_flag)
         -> void
@@ -69,7 +70,7 @@ auto html::helpers::images::update_image_data(
 }
 
 
-auto html::helpers::images::uses_srcset_or_picture(
+auto html::helpers::image_internals::uses_srcset_or_picture(
         elements::html_image_element* element)
         -> bool
 {
@@ -78,7 +79,7 @@ auto html::helpers::images::uses_srcset_or_picture(
 }
 
 
-auto html::helpers::images::abort_image_request(
+auto html::helpers::image_internals::abort_image_request(
         internal::image_request* request)
         -> void
 {
@@ -87,10 +88,34 @@ auto html::helpers::images::abort_image_request(
 }
 
 
-auto html::helpers::images::upgrade_pending_request_to_current_request(
+auto html::helpers::image_internals::upgrade_pending_request_to_current_request(
         elements::html_image_element* element)
         -> void
 {
     element->m_current_request = element->m_pending_request;
     element->m_pending_request = nullptr;
+}
+
+
+auto html::helpers::image_internals::initialize_image(
+        html::canvas::paint::image_data* image_data,
+        const ulong width,
+        const ulong height,
+        const ext::string_any_map& settings,
+        ext::uint8_array* source,
+        const ext::string& default_color_space)
+        -> void
+{
+    image_data->data = source->empty() ? new ext::uint8_array{} : source;
+    image_data->data->reserve(width * height);
+
+    image_data->width = width;
+    image_data->height = height;
+
+    if (not settings.empty() and settings.has_key("colorSpace"))
+        image_data->color_space = settings.at("colorSpace");
+    else if (not default_color_space.empty())
+        image_data->color_space = default_color_space;
+    else
+        image_data->color_space = "srgb";
 }

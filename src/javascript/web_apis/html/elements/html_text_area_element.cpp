@@ -15,9 +15,6 @@ html::elements::html_text_area_element::html_text_area_element()
     // constrain the property values
     wrap.constrain_values({"soft", "hard"});
 
-    // attach the qt functions
-    read_only.attach_qt_updater(&QPlainTextEdit::setReadOnly, this);
-
     // set the custom accessor methods
     selection_start.getter = [this] {return get_selection_start();};
     selection_end.getter = [this] {return get_selection_end();};
@@ -31,7 +28,11 @@ html::elements::html_text_area_element::html_text_area_element()
     m_raw_value = "";
 
     // create the widget representation
-    m_rendered_widget = QPointer<QPlainTextEdit>{};
+    auto widget = QPointer<QPlainTextEdit>{};
+    m_rendered_widget = widget;
+
+    // attach the qt functions
+    read_only.template attach_qt_updater(&QPlainTextEdit::setReadOnly, widget);
 }
 
 

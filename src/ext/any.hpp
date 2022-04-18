@@ -2,6 +2,7 @@
 #define SBROWSER_ANY_HPP
 
 #include <any>
+#include <string>
 
 #include <ext/decorators.hpp>
 
@@ -24,8 +25,8 @@ public constructors:
     auto operator=(const any&) -> any& = default;
     auto operator=(any&&) noexcept -> any& = default;
 
-    template <typename T> any(const T& other) {m_value = other;};
-    template <typename T> any(T&& other) {m_value = std::forward<const T&>(other);};
+    template <typename T> any(const T& other): m_value(other) {};
+    template <typename T> any(T&& other): any(std::forward<const T&>(other)) {};
     template <typename T> auto operator=(const T& other) -> any& {m_value = other; return *this;}
     template <typename T> auto operator=(T&& other) noexcept -> any& {m_value = std::forward<T&>(other); return *this;}
 

@@ -3,6 +3,7 @@
 #define SBROWSER_CANVAS_PATH_DRAWING_STYLES_HPP
 
 #include <dom_object.hpp>
+#include <render/painting/pen.hpp>
 
 namespace html::canvas::mixins {template <typename T> class canvas_path_drawing_styles;}
 
@@ -14,7 +15,7 @@ public constructors:
     canvas_path_drawing_styles();
 
 public js_methods:
-    auto get_line_dash() -> ext::vector<double>;
+    new_obj auto get_line_dash() -> ext::vector<double>;
     auto set_line_dash(const ext::vector<double>& segments) -> void;
 
 public js_properties:
@@ -26,6 +27,10 @@ public js_properties:
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
+
+private cpp_properties:
+    render::painting::pen m_pen;
+    ext::vector<double> m_dash_list;
 };
 
 

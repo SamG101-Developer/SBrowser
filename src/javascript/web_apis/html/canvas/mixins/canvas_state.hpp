@@ -2,9 +2,11 @@
 #ifndef SBROWSER_CANVAS_STATE_HPP
 #define SBROWSER_CANVAS_STATE_HPP
 
+#include <stack>
 #include <dom_object.hpp>
 
 namespace html::canvas::mixins {template <typename T> class canvas_state;}
+namespace html::internal {struct drawing_state;}
 
 
 template<typename T>
@@ -18,6 +20,11 @@ public js_methods:
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;
+
+private cpp_properties:
+    internal::drawing_state* m_current_state;
+    std::stack<internal::drawing_state*> m_drawing_states;
+    bool m_context_lost = false;
 };
 
 

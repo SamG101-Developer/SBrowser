@@ -23,7 +23,7 @@ public js_methods:
     new_obj auto get_transform() const -> geometry::abstract::dom_matrix;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 
