@@ -5,6 +5,8 @@
 #include <dom/helpers/exceptions.hpp>
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
+
 #include <html/canvas/paint/path_2d.hpp>
 #include <html/helpers/canvas_internals.hpp>
 
@@ -58,7 +60,7 @@ auto html::canvas::mixins::canvas_path<T>::line_to(
     else
     {
         // otherwise, append a new mock point to the last subpath, and paint the line
-        m_path.back().qt_painter_subpath.lineTo(mock_point);
+        m_path.back().qt_painter_subpath.line_to(mock_point);
         m_path.back().segments.append(mock_point);
     }
 }
@@ -80,7 +82,7 @@ auto html::canvas::mixins::canvas_path<T>::quadratic_curve_to(
 
     // ensure there is a subpath for the control point, append the point, and paint the curve
     helpers::canvas_internals::ensure_there_is_subpath(mock_control_point, this);
-    m_path.back().qt_painter_subpath.quadTo(mock_control_point, mock_point);
+    m_path.back().qt_painter_subpath.quad_to(mock_control_point, mock_point);
     m_path.back().segments.append(mock_point);
 }
 
@@ -104,7 +106,7 @@ auto html::canvas::mixins::canvas_path<T>::bezier_curve_to(
 
     // ensure there is a subpath for the first control point, append the point, and paint the curve
     helpers::canvas_internals::ensure_there_is_subpath(mock_control_point_1, this);
-    m_path.back().qt_painter_subpath.cubicTo(mock_control_point_1, mock_control_point_2, mock_point);
+    m_path.back().qt_painter_subpath.cubic_to(mock_control_point_1, mock_control_point_2, mock_point);
     m_path.back().segments.append(mock_point);
 }
 
@@ -134,7 +136,7 @@ auto html::canvas::mixins::canvas_path<T>::arc_to(
     // point, and paint the line between the previous point and the first mock point
     if (mock_point_0 == mock_point_1 or mock_point_1 == mock_point_2 or radius == 0)
     {
-        m_path.back().qt_painter_subpath.lineTo(mock_point_1);
+        m_path.back().qt_painter_subpath.line_to(mock_point_1);
         m_path.back().segments.append(mock_point_1);
     }
 
@@ -142,7 +144,7 @@ auto html::canvas::mixins::canvas_path<T>::arc_to(
     // between the previous point and the first mock point
     else if (helpers::canvas_internals::are_collinear(mock_point_0, mock_point_1, mock_point_2))
     {
-        m_path.back().qt_painter_subpath.lineTo(mock_point_1);
+        m_path.back().qt_painter_subpath.line_to(mock_point_1);
         m_path.back().segments.append(mock_point_1);
     }
 
@@ -170,12 +172,12 @@ auto html::canvas::mixins::canvas_path<T>::rect(
         .is_subpath_closed = true
     };
 
-    // append the subpath, and paint the rectangle
-    m_path.append(rectangle);
-    m_path.back().qt_painter_subpath.addRect(x, y, w, h);
-
-    // create the mock point and add it to a new subpath
+    // create the mock point, append the subpath, and paint the rectangle
     point_t mock_point{.x=x, .y=y};
+    m_path.append(rectangle);
+    m_path.back().qt_painter_subpath.add_rect(mock_point, {w, h});
+
+    // add it to a new subpath
     m_path.append(sub_path_t{mock_point});
 }
 
@@ -219,7 +221,7 @@ html::canvas::mixins::canvas_path<T>::ellipse(
     point_t mock_point{x, y};
 
     if (not m_path.empty())
-        m_path.back().qt_painter_subpath.lineTo(mock_point); // TODO : check
+        m_path.back().qt_painter_subpath.line_to(mock_point); // TODO : check
 
     // TODO
 }
@@ -247,4 +249,5 @@ auto html::canvas::mixins::canvas_path<T>::v8(
 
 
 template class html::canvas::mixins::canvas_path<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_path<html::canvas::offscreen_canvas_rendering_context_2d>;
 template class html::canvas::mixins::canvas_path<html::canvas::paint::path_2d>;

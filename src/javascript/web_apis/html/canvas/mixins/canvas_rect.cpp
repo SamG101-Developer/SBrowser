@@ -3,6 +3,7 @@
 #include <ext/infinity.hpp>
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 
 
 template <typename T>
@@ -15,7 +16,7 @@ auto html::canvas::mixins::canvas_rect<T>::clear_rect(
 {
     if (ext::infinity<double>::is_inf_or_nan(x, y, w, h)) return;
 
-    static_cast<T*>(this)->m_painter.eraseRect(x, y, w, h);
+    static_cast<T*>(this)->m_painter.erase_rect({x, y}, {w, h});
 }
 
 
@@ -30,7 +31,7 @@ auto html::canvas::mixins::canvas_rect<T>::fill_rect(
     if (ext::infinity<double>::is_inf_or_nan(x, y, w, h)) return;
 
     auto fill_style = static_cast<T*>(this)->fill_style;
-    static_cast<T*>(this)->m_painter.fill_rect(x, y, w, h, fill_style);
+    static_cast<T*>(this)->m_painter.fill_rect({x, y}, {w, h}, fill_style);
 }
 
 
@@ -49,3 +50,4 @@ auto html::canvas::mixins::canvas_rect<T>::v8(
 
 
 template class html::canvas::mixins::canvas_rect<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_rect<html::canvas::offscreen_canvas_rendering_context_2d>;

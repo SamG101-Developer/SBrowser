@@ -1,6 +1,7 @@
 #include "canvas_state.hpp"
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 #include <html/helpers/canvas_internals.hpp>
 
 
@@ -61,3 +62,4 @@ auto html::canvas::mixins::canvas_state<T>::v8(
 
 
 template class html::canvas::mixins::canvas_state<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_state<html::canvas::offscreen_canvas_rendering_context_2d>;

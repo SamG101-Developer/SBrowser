@@ -78,6 +78,7 @@ public js_methods:
     auto extend(const vector<T>& other, size_t index = -1) -> vector<T>&;
     auto pop(size_t index = -1) -> T&;
     auto clear() -> vector<T>& override;
+
     auto max_element() const -> T&;
     auto min_element() const -> T&;
 
@@ -413,7 +414,7 @@ template <typename T>
 template <typename U>
 auto ext::vector<T>::flatten() -> ext::vector<U>
 {
-    /* TODO */
+    /* TODO -> maybe use fold expression? */
 }
 
 
@@ -445,13 +446,6 @@ auto ext::vector<T>::operator*(size_t n) const -> ext::vector<T>
     // append flattened original to the output n times, and return it
     for (size_t i = 0; i < n; ++i) output.extend(original);
     return output;
-}
-
-
-template <typename T>
-ext::vector<T>::operator std::initializer_list<T>() const
-{
-    return std::initializer_list<T>{this->begin(), this->end()};
 }
 
 

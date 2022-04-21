@@ -26,7 +26,7 @@ public constructors:
 
 public cpp_methods:
     template <typename F, typename U> auto attach_qt_updater(F method, U pointer) -> void;
-    auto constrain_values(const std::initializer_list<T>& constrain_to) -> void;
+    auto constrain_values(const ext::vector<T>& constrain_to) -> void;
     auto clamp_values(const T& low, const T& high) -> void requires std::is_arithmetic_v<T>;
 
 public operators:
@@ -38,10 +38,10 @@ private:
     qt_updater_t m_qt_updater;
 
     bool m_constrained = false;
-    ext::vector<T> m_constrain_to = {};
+    ext::vector<T> m_constrain_to;
 
     bool m_clamped = false;
-    std::pair<T, T> m_clamp_to = {};
+    std::pair<T, T> m_clamp_to;
 };
 
 
@@ -59,11 +59,11 @@ auto ext::html_property<T, ce_reactions>::attach_qt_updater(
 
 
 template <typename T, bool ce_reactions>
-auto ext::html_property<T, ce_reactions>::constrain_values(const std::initializer_list<T>& constrain_to) -> void
+auto ext::html_property<T, ce_reactions>::constrain_values(const ext::vector<T>& constrain_to) -> void
 {
     // set the value constraints to a vector of values ie value must be in the vector
     m_constrained  = true;
-    m_constrain_to = {constrain_to};
+    m_constrain_to = constrain_to;
 }
 
 
@@ -80,8 +80,8 @@ template <typename T, bool ce_reactions>
 auto ext::html_property<T, ce_reactions>::operator=(const T& o) -> html_property<T, ce_reactions>&
 {
     // clamp the value if clamps are defined
-    if (m_clamped)
-        o = const_cast<T&>(std::clamp(const_cast<T&>(o), m_clamp_to.first, m_clamp_to.second));
+//    if (m_clamped)
+//        o = const_cast<T&>(std::clamp(const_cast<T&>(o), m_clamp_to.first, m_clamp_to.second));
 
     // only continue if the constraints are empty or contain the new value
     if (not m_constrained or m_constrain_to.contains(o))

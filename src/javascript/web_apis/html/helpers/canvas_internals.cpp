@@ -1,6 +1,8 @@
 #include "canvas_internals.hpp"
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/image_bitmap_rendering_context.hpp>
+
 #include <html/elements/html_canvas_element.hpp>
 
 
@@ -72,4 +74,22 @@ auto html::helpers::canvas_internals::are_collinear(
             p3.x * (p1.y - p2.y);
 
     return area == 0;
+}
+
+
+auto html::helpers::canvas_internals::set_image_bitmap_rendering_contexts_output_bitmap(
+        canvas::image_bitmap_rendering_context* context,
+        canvas::paint::image_bitmap* bitmap) -> void
+{
+    context->m_bitmap_mode = false;
+    auto canvas = context->canvas;
+
+    // context->m_output_bitmap TODO : set to transparent black
+    context->m_output_bitmap.m_origin_clean_flag = true;
+
+    if (bitmap)
+    {
+        context->m_bitmap_mode = true;
+        context->m_output_bitmap.bitmap = bitmap;
+    }
 }

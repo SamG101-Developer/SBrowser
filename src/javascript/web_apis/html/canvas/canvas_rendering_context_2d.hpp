@@ -22,8 +22,6 @@
 #include <html/canvas/mixins/canvas_text_drawing_styles.hpp>
 #include <html/canvas/mixins/canvas_path.hpp>
 
-#include <render/painting/painter.hpp>
-
 namespace html::canvas {class canvas_rendering_context_2d;}
 namespace html::helpers {struct canvas_internals;}
 
@@ -47,26 +45,16 @@ class html::canvas::canvas_rendering_context_2d
         , public mixins::canvas_text_drawing_styles<canvas_rendering_context_2d>
         , public mixins::canvas_path<canvas_rendering_context_2d>
 {
-public friends:
-    friend struct helpers::canvas_internals;
-    template <typename T> friend class mixins::canvas_rect;
-    template <typename T> friend class mixins::canvas_text;
-
 public js_methods:
     auto get_context_attributes() const -> const ext::string_any_map;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
-protected cpp_properties:
-    render::painting::painter m_painter;
-
 private cpp_properties:
-    struct {bool m_origin_clear_flag = true;} m_output_bitmap;
     bool m_alpha;
     bool m_desynchronized;
     bool m_will_read_frequently;
-    ext::string m_color_space;
 };
 
 

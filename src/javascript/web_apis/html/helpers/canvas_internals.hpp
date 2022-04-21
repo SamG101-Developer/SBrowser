@@ -6,14 +6,18 @@
 #include <ext/map.hpp>
 #include <ext/type_traits.hpp>
 
+#include <render/painting/painter_path.hpp>
+
 #include <QtCore/QPointF>
 #include <QtGui/QPainterPath>
 
 namespace html::canvas {class canvas_rendering_context_2d;}
+namespace html::canvas {class image_bitmap_rendering_context;}
 namespace html::canvas::mixins {template <typename T> class canvas_text_drawing_styles;}
 namespace html::canvas::mixins {template <typename T> class canvas_path;}
 namespace html::canvas::mixins {template <typename T> class canvas_draw_path;}
 namespace html::canvas::paint {class path_2d;}
+namespace html::canvas::paint {class image_bitmap;}
 namespace html::elements {class html_canvas_element;}
 namespace html::helpers {struct canvas_internals;}
 namespace html::internal {struct drawing_state;}
@@ -30,6 +34,10 @@ struct html::helpers::canvas_internals
             elements::html_canvas_element* canvas_element,
             const ext::string_any_map& options)
             -> canvas::canvas_rendering_context_2d*;
+
+    static auto offscreen_2d_context_creation_algorithm(
+            // TODO
+            )
 
     static auto set_bitmap_dimensions(
             elements::html_canvas_element* canvas_element,
@@ -58,6 +66,11 @@ struct html::helpers::canvas_internals
             const internal::point& p2,
             const internal::point& p3)
             -> bool;
+
+    static auto set_image_bitmap_rendering_contexts_output_bitmap(
+            canvas::image_bitmap_rendering_context* context,
+            canvas::paint::image_bitmap* bitmap = nullptr)
+            -> void;
 };
 
 
@@ -68,7 +81,7 @@ struct html::internal::point
     double x;
     double y;
 
-    operator QPointF() const {return QPointF(x, y);}
+    operator QPointF() const {return {x, y};}
     auto operator==(const point& other) const {return x == other.x and y == other.y;}
 };
 
@@ -77,7 +90,7 @@ struct html::internal::subpath
 {
     ext::vector<point> segments;
     bool is_subpath_closed = false;
-    QPainterPath qt_painter_subpath;
+    render::painting::painter_path qt_painter_subpath;
 };
 
 

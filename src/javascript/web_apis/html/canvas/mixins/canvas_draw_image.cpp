@@ -1,5 +1,8 @@
 #include "canvas_draw_image.hpp"
 
+#include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
+
 
 template <typename T>
 auto html::canvas::mixins::canvas_draw_image<T>::v8(
@@ -17,3 +20,7 @@ auto html::canvas::mixins::canvas_draw_image<T>::v8(
     #undef func_t_1
     #undef func_t_2
 }
+
+
+template class html::canvas::mixins::canvas_draw_image<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_draw_image<html::canvas::offscreen_canvas_rendering_context_2d>;

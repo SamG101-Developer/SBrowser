@@ -1,6 +1,8 @@
 #include "canvas_draw_path.hpp"
 
 #include <html/canvas/paint/path_2d.hpp>
+#include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 
 #include <html/helpers/canvas_internals.hpp>
 
@@ -32,7 +34,7 @@ auto html::canvas::mixins::canvas_draw_path<T>::fill(
 {
     // run the fill steps with the path
     auto* object = static_cast<T*>(this);
-    path->m_path.template for_each([&object](const sub_path_t& sub_path) {object->m_painter.fill_path(sub_path.qt_painter_subpath, object->m_fill_style);});
+    path->m_path.template for_each([&object](const sub_path_t& sub_path) {object->m_painter.fill_path(sub_path.qt_painter_subpath, object->fill_style);});
 }
 
 
@@ -52,7 +54,7 @@ auto html::canvas::mixins::canvas_draw_path<T>::stroke(
 {
     // run the stroke steps with the path
     auto* object = static_cast<T*>(this);
-    path->m_path.template for_each([&object](const sub_path_t& sub_path) {object->m_painter.stroke_path(sub_path.qt_painter_subpath, object->m_stroke_style);});
+    path->m_path.template for_each([&object](const sub_path_t& sub_path) {object->m_painter.stroke_path(sub_path.qt_painter_subpath, object->stroke_style);});
 }
 
 
@@ -127,7 +129,7 @@ template <typename T>
 auto html::canvas::mixins::canvas_draw_path<T>::v8(
         v8::Isolate* isolate) const
         -> ext::any
-{
+{ // TODO -> types for overloads
     return v8pp::class_<canvas_draw_path<T>>{isolate}
             .template inherit<dom_object>()
             .template function("begin_path", &canvas_draw_path<T>::begin_path)
@@ -138,3 +140,7 @@ auto html::canvas::mixins::canvas_draw_path<T>::v8(
             .template function("is_point_in_stroke", &canvas_draw_path<T>::is_point_in_stroke)
             .auto_wrap_objects();
 }
+
+
+template class html::canvas::mixins::canvas_draw_path<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_draw_path<html::canvas::offscreen_canvas_rendering_context_2d>;

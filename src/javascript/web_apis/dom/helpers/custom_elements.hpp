@@ -74,7 +74,8 @@ struct dom::helpers::custom_elements final
 
 struct dom::internal::custom_element_definition
 {
-    using lifecycle_callback = std::function<void()>;
+    using lifecycle_callback_t = std::function<void()>;
+    using html_element_constructor_t = std::function<nodes::element()>;
 
     bool form_associated;
     bool disable_internals;
@@ -85,9 +86,24 @@ struct dom::internal::custom_element_definition
 
     ext::string_vector observed_attributes;
     ext::vector<nodes::element*> construction_stack;
-    nodes::element* constructor;
+    html_element_constructor_t constructor;
 
-    ext::map<ext::string, lifecycle_callback*> lifecycle_callbacks;
+    ext::map<ext::string, lifecycle_callback_t*> lifecycle_callbacks;
+
+    custom_element_definition()
+    {
+        lifecycle_callbacks =
+                {
+                        {"connectedCallback", nullptr},
+                        {"disconnectedCallback", nullptr},
+                        {"adoptedCallback", nullptr},
+                        {"attributeChangedCallback", nullptr},
+                        {"formAssociatedCallback", nullptr},
+                        {"formDisabledCallback", nullptr},
+                        {"formResetCallback", nullptr},
+                        {"formStateRestoreCallback", nullptr},
+                };
+    }
 };
 
 

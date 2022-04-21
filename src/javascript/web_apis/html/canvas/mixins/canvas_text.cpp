@@ -3,10 +3,11 @@
 #include <ext/infinity.hpp>
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 #include <html/canvas/paint/text_metrics.hpp>
 #include <html/helpers/canvas_internals.hpp>
 
-#include <QtGui/QPainterPath>
+#include <render/painting/painter_path.hpp>
 
 
 template <typename T>
@@ -18,11 +19,11 @@ auto html::canvas::mixins::canvas_text<T>::fill_text(
 {
     if (ext::infinity<double>::is_inf_or_nan(x, y, max_width.has_value() ? max_width.value() : 0)) return;
 
-    QPainterPath text_path;
+    render::painting::painter_path text_path;
     auto glyphs = helpers::canvas_internals::text_preparation_algorithm(text, static_cast<T*>(this), max_width);
     glyphs.template for_each([x, y](internal::glyph& glyph) {glyph.x += x; glyph.y += y;});
-    glyphs.template for_each([this, &text_path](internal::glyph& glyph) {text_path.addText(glyph.x, glyph.y, static_cast<T*>(this)->m_font, (QString)glyph.text);}); // TODO : transformation
-    static_cast<T*>(this)->m_painter.fillPath(text_path, static_cast<T*>(this)->m_fill_style);
+    glyphs.template for_each([this, &text_path](internal::glyph& glyph) {text_path.add_text({glyph.x, glyph.y}, static_cast<T*>(this)->m_font, (QString)glyph.text);}); // TODO : transformation
+    static_cast<T*>(this)->m_painter.fill_path(text_path, static_cast<T*>(this)->fill_style);
 }
 
 
@@ -64,3 +65,4 @@ auto html::canvas::mixins::canvas_text<T>::v8(
 
 
 template class html::canvas::mixins::canvas_text<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_text<html::canvas::offscreen_canvas_rendering_context_2d>;

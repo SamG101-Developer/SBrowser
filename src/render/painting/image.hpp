@@ -12,9 +12,14 @@ class render::painting::image
 {
 public:
     auto reset() -> void;
+    auto set_width(int width) -> void;
+    auto set_height(int height) -> void;
+
+public operators:
+    explicit operator QImage() const;
 
 private cpp_properties:
-    QImage* m_image;
+    QImage m_image;
 };
 
 

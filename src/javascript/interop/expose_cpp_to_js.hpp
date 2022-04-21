@@ -58,6 +58,8 @@
 
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/image_bitmap_rendering_context.hpp>
+
 #include <html/canvas/paint/canvas_filter.hpp>
 #include <html/canvas/paint/canvas_gradient.hpp>
 #include <html/canvas/paint/canvas_pattern.hpp>
@@ -215,6 +217,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
     auto v8_xpath_result = object_to_v8<dom::xpath::xpath_result>(isolate);
 
     auto v8_canvas_rendering_context_2d = object_to_v8<html::canvas::canvas_rendering_context_2d>(isolate);
+    auto v8_image_bitmap_rendering_context = object_to_v8<html::canvas::image_bitmap_rendering_context>(isolate);
+
     auto v8_canvas_filter = object_to_v8<html::canvas::paint::canvas_filter>(isolate);
     auto v8_canvas_gradient = object_to_v8<html::canvas::paint::canvas_gradient>(isolate);
     auto v8_canvas_pattern = object_to_v8<html::canvas::paint::canvas_pattern>(isolate);
@@ -346,6 +350,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("XPathResult", v8_xpath_result)
 
                     .class_("CanvasRenderingContext2D", v8_canvas_rendering_context_2d)
+                    .class_("ImageBitmapRenderingContext", v8_image_bitmap_rendering_context)
+
                     .class_("CanvasFilter", v8_canvas_filter)
                     .class_("CanvasGradient", v8_canvas_gradient)
                     .class_("CanvasPattern", v8_canvas_pattern)
@@ -436,6 +442,8 @@ auto javascript::interop::expose_cpp_to_js::expose(
                     .class_("Event", v8_event)
                     .class_("EventTarget", v8_event_target)
                     .class_("DomException", v8_dom_exception)
+
+                    .class_("ImageBitmapRenderingContext", v8_image_bitmap_rendering_context)
 
                     .class_("CanvasFilter", v8_canvas_filter)
                     .class_("CanvasGradient", v8_canvas_gradient)

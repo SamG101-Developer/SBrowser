@@ -5,7 +5,7 @@
 #include <ext/map.hpp>
 #include <dom_object.hpp>
 
-#include <QtGui/QImage>
+#include <render/painting/image.hpp>
 
 namespace html::canvas::paint {class image_data;}
 
@@ -26,7 +26,7 @@ public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private cpp_properties:
-    QImage m_image;
+    render::painting::image m_image;
 };
 
 

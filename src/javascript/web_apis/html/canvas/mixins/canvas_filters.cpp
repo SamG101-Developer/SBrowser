@@ -1,5 +1,8 @@
 #include "canvas_filters.hpp"
 
+#include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
+
 
 template <typename T>
 html::canvas::mixins::canvas_filters<T>::canvas_filters()
@@ -19,3 +22,7 @@ auto html::canvas::mixins::canvas_filters<T>::v8(
             .template var("filter", &canvas_filters<T>::filter)
             .auto_wrap_objects();
 }
+
+
+template class html::canvas::mixins::canvas_filters<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_filters<html::canvas::offscreen_canvas_rendering_context_2d>;

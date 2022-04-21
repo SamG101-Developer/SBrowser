@@ -1,6 +1,7 @@
 #include "canvas_fill_stroke_styles.hpp"
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 #include <html/canvas/paint/canvas_gradient.hpp>
 #include <html/canvas/paint/canvas_pattern.hpp>
 
@@ -12,8 +13,8 @@ template<typename T>
 html::canvas::mixins::canvas_fill_stroke_styles<T>::canvas_fill_stroke_styles()
 {
     // set the property values
-    stroke_style << "black";
-    fill_style << "black";
+    stroke_style = "black";
+    fill_style = "black";
 }
 
 
@@ -104,3 +105,4 @@ auto html::canvas::mixins::canvas_fill_stroke_styles<T>::v8(
 
 
 template class html::canvas::mixins::canvas_fill_stroke_styles<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_fill_stroke_styles<html::canvas::offscreen_canvas_rendering_context_2d>;

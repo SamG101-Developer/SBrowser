@@ -1,6 +1,7 @@
 #include "canvas_text_drawing_styles.hpp"
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 
 
 template <typename T>
@@ -47,3 +48,4 @@ auto html::canvas::mixins::canvas_text_drawing_styles<T>::v8(
 
 
 template class html::canvas::mixins::canvas_text_drawing_styles<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_text_drawing_styles<html::canvas::offscreen_canvas_rendering_context_2d>;

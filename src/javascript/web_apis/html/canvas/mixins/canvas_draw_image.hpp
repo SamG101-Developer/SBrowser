@@ -12,8 +12,8 @@ template<typename T>
 class html::canvas::mixins::canvas_draw_image : public virtual dom_object
 {
 public js_methods:
-    auto draw_image(paint::canvas_image_source* image, double dx, double dy, double dw = 0, double dh = 0);
-    auto draw_image(paint::canvas_image_source* image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh);
+    auto draw_image(paint::canvas_image_source* image, double dx, double dy, double dw = 0, double dh = 0) -> void;
+    auto draw_image(paint::canvas_image_source* image, double sx, double sy, double sw, double sh, double dx, double dy, double dw, double dh) -> void;
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;

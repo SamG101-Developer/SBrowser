@@ -2,7 +2,9 @@
 
 #include <ext/infinity.hpp>
 #include <ext/string_switch.hpp>
+
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 
 
 template <typename T>
@@ -12,17 +14,17 @@ html::canvas::mixins::canvas_path_drawing_styles<T>::canvas_path_drawing_styles(
     line_cap.constrain_values(m_pen.translate_cap_style.keys());
     line_join.constrain_values(m_pen.translate_join_style.keys());
 
-    // set the property values
-    line_width << 1.0;
-    miter_limit << 10.0;
-    line_cap = "butt";
-    line_join = "miter";
-
     // attach the qt functions
     line_width.template attach_qt_updater(&render::painting::pen::set_pen_width, m_pen);
     miter_limit.template attach_qt_updater(&render::painting::pen::set_miter_limit, m_pen);
     line_cap.template attach_qt_updater(&render::painting::pen::set_cap_style, m_pen);
     line_join.template attach_qt_updater(&render::painting::pen::set_join_style, m_pen);
+
+    // set the property values
+    line_width = 1.0;
+    miter_limit = 10.0;
+    line_cap = "butt";
+    line_join = "miter";
 }
 
 
@@ -70,3 +72,4 @@ auto html::canvas::mixins::canvas_path_drawing_styles<T>::v8(
 
 
 template class html::canvas::mixins::canvas_path_drawing_styles<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_path_drawing_styles<html::canvas::offscreen_canvas_rendering_context_2d>;

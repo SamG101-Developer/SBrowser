@@ -1,6 +1,55 @@
 #include "canvas_image_data.hpp"
 
+#include <dom/helpers/exceptions.hpp>
+
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
+#include <html/canvas/paint/image_data.hpp>
+
+
+template <typename T>
+auto html::canvas::mixins::canvas_image_data<T>::get_image_data(
+        const long sx,
+        const long sy,
+        const long sw,
+        const long sh,
+        const ext::string_any_map& settings)
+        -> paint::image_data
+{
+    dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
+            "rendering context's origin clean flag must be set",
+            [this] {return not static_cast<T*>(this)->m_output_bitmap.m_origin_clean_flag;});
+
+    paint::image_data new_image{static_cast<ulong>(sw), static_cast<ulong>(sh), settings};
+    new_image.color_space = static_cast<T*>(this)->m_color_space;
+
+    // TODO
+
+}
+
+
+template <typename T>
+auto html::canvas::mixins::canvas_image_data<T>::create_image_data(
+        const long sw,
+        const long sh,
+        const ext::string_any_map& settings)
+        -> paint::image_data
+{
+    paint::image_data new_image{static_cast<ulong>(sw), static_cast<ulong>(sh), settings};
+    new_image.color_space = static_cast<T*>(this)->m_color_space;
+    return new_image;
+}
+
+
+template <typename T>
+auto html::canvas::mixins::canvas_image_data<T>::create_image_data(
+        paint::image_data* image_data)
+        -> paint::image_data
+{
+    paint::image_data new_image{image_data->width, image_data->height};
+    new_image.color_space = static_cast<T*>(this)->m_color_space;
+    return new_image;
+}
 
 
 template <typename T>
@@ -30,3 +79,4 @@ auto html::canvas::mixins::canvas_image_data<T>::v8(
 
 
 template class html::canvas::mixins::canvas_image_data<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_image_data<html::canvas::offscreen_canvas_rendering_context_2d>;

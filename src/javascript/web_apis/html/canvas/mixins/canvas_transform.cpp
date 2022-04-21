@@ -1,6 +1,7 @@
 #include "canvas_transform.hpp"
 
 #include <html/canvas/canvas_rendering_context_2d.hpp>
+#include <html/canvas/offscreen_canvas_rendering_context_2d.hpp>
 
 
 template <typename T>
@@ -22,3 +23,4 @@ auto html::canvas::mixins::canvas_transform<T>::v8(
 
 
 template class html::canvas::mixins::canvas_transform<html::canvas::canvas_rendering_context_2d>;
+template class html::canvas::mixins::canvas_transform<html::canvas::offscreen_canvas_rendering_context_2d>;
