@@ -8,12 +8,24 @@
 
 namespace dom::helpers {struct custom_elements;}
 namespace dom::internal {struct custom_element_definition;}
+namespace dom::internal {struct reaction;}
+namespace dom::internal {struct callback_reaction;}
+namespace dom::internal {struct upgrade_reaction;}
 namespace dom::nodes {class document;}
 namespace dom::nodes {class element;}
 
 
 struct dom::helpers::custom_elements final
 {
+    // queue and stack types
+    using custom_element_reactions_stack_t = struct
+    {
+        std::queue<nodes::element*> backup_element_queue;
+        std::queue<nodes::element*> current_element_queue; // TODO -> point to queue's first element
+        std::stack<std::queue<nodes::element*>> queues;
+        bool processing_backup_element_queue_flag;
+    };
+
     // custom element creation and upgrading
     template <typename T=dom::nodes::element>
     static auto create_an_element(
@@ -46,14 +58,15 @@ struct dom::helpers::custom_elements final
             const nodes::element* element)
             -> void;
 
+    template <typename ...Args>
     static auto enqueue_custom_element_callback_reaction(
-            const nodes::element* element,
+            nodes::element* element,
             const ext::string& callback_name,
-            ext::string_vector&& args)
+            const Args... args)
             -> void;
 
     static auto enqueue_custom_element_upgrade_reaction(
-            const nodes::element* element,
+            nodes::element* element,
             const internal::custom_element_definition* definition)
             -> void;
 
@@ -69,13 +82,18 @@ struct dom::helpers::custom_elements final
     static auto is_custom_node(
             const nodes::element* element)
             -> bool;
+
+    // other custom element methods
+    static auto invoke_custom_elements_reactions(
+            std::queue<nodes::element*>& queue)
+            -> void;
 };
 
 
 struct dom::internal::custom_element_definition
 {
     using lifecycle_callback_t = std::function<void()>;
-    using html_element_constructor_t = std::function<nodes::element()>;
+    using html_element_constructor_t = std::function<nodes::element*()>; // TODO : ptr type?
 
     bool form_associated;
     bool disable_internals;
@@ -105,6 +123,22 @@ struct dom::internal::custom_element_definition
                 };
     }
 };
+
+
+struct dom::internal::reaction
+{
+    virtual ~reaction();
+
+    template <typename ...Args>
+    auto call(std::function<void(Args&&...)>&& callback, Args&&... args) -> void
+    {
+        callback(std::forward<Args>(args)...);
+    }
+};
+
+struct dom::internal::upgrade_reaction : public reaction {};
+
+struct dom::internal::callback_reaction : public reaction {};
 
 
 #endif //SBROWSER_CUSTOM_ELEMENTS_HPP

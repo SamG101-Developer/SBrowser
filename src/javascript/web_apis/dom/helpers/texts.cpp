@@ -67,6 +67,9 @@ auto dom::helpers::texts::replace_data(
             .filter([text_node](ranges::range* range) {return range->end_container == text_node;})
             .filter([count, offset](ranges::range* range) {return range->end_offset > offset + count;})
             .for_each([count, data](ranges::range* range) {range->end_offset += data.length() - count;});
+
+    if (text_node->parent)
+        text_node->parent->m_behaviour.children_changed_steps();
 }
 
 

@@ -17,6 +17,7 @@ namespace dom::helpers {struct attributes;}
 namespace dom::helpers {struct custom_elements;}
 namespace dom::helpers {struct node_internals;}
 namespace dom::internal {struct custom_element_definition;}
+namespace dom::internal {struct reaction;}
 namespace dom::nodes {class attr;}
 namespace dom::nodes {class element;}
 namespace dom::nodes {class shadow_root;}
@@ -129,7 +130,7 @@ private cpp_properties:
     ext::property<ext::string> m_html_uppercase_qualified_name;
 
     internal::custom_element_definition* m_custom_element_definition = nullptr;
-    std::queue<std::function<void(element*)>> m_custom_element_reaction_queue;
+    std::queue<dom::internal::reaction*> m_custom_element_reaction_queue;
 
 private accessors:
     // dom

@@ -19,8 +19,8 @@ public constructors:
     promise();
 
 public cpp_methods:
-    auto resolve(dom::nodes::event_target* value = nullptr) -> void;
-    auto reject(const dom::other::dom_exception& value) -> void;
+    auto resolve(dom::nodes::event_target* value = nullptr) -> promise<T>&;
+    auto reject(const dom::other::dom_exception& value) -> promise<T>&;
     auto is_fulfilled() -> bool;
 
 public operators:
@@ -43,16 +43,18 @@ webidl::types::promise<T>::promise()
 
 
 template <typename T>
-auto webidl::types::promise<T>::resolve(dom::nodes::event_target* value) -> void
+auto webidl::types::promise<T>::resolve(dom::nodes::event_target* value) -> promise<T>&
 {
     m_fulfilled = m_promise->Resolve(m_context, v8pp::convert<decltype(value)>::to_v8(m_isolate, value)).ToChecked();
+    return *this;
 }
 
 
 template <typename T>
-auto webidl::types::promise<T>::reject(const dom::other::dom_exception& value) -> void
+auto webidl::types::promise<T>::reject(const dom::other::dom_exception& value) -> promise<T>&
 {
     m_fulfilled = not m_promise->Reject(m_context, v8pp::convert<decltype(value)>::to_v8(m_isolate,value)).ToChecked();
+    return *this;
 }
 
 

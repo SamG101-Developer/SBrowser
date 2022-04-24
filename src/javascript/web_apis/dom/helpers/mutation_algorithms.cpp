@@ -188,8 +188,8 @@ auto dom::helpers::mutation_algorithms::insert(
         const nodes::node* const parent,
         const nodes::node* const child,
         const bool suppress_observers_flag)
-        -> dom::nodes::node* {
-
+        -> dom::nodes::node*
+{
     // collect descendant nodes to insert as-well (as children of the node being inserted), empty doc_frag not inserted
     // if the node is a document fragment, then
     const auto added_nodes = dynamic_cast<nodes::document_fragment*>(node) ? *node->child_nodes : ext::vector<nodes::node*>{node};
@@ -245,12 +245,22 @@ auto dom::helpers::mutation_algorithms::insert(
         // assign the slottables for the tree of the node's root
         shadows::assign_slottables_for_tree(trees::root(node));
 
-        // TODO : shadow including descendants stuff here
+        for (nodes::element* inclusive_descendant: helpers::shadows::shadow_including_descendants(node).cast_all<nodes::element*>())
+        {
+            inclusive_descendant->m_behaviour.insertion_steps();
+
+            if (helpers::shadows::is_connected(inclusive_descendant))
+                helpers::custom_elements::is_custom_node(inclusive_descendant)
+                        ? helpers::custom_elements::enqueue_custom_element_callback_reaction(inclusive_descendant, "connectedCallback", {})
+                        : helpers::custom_elements::try_to_upgrade_element(inclusive_descendant);
+        }
     }
 
     // if the observers aren't being suppressed, then queue a tree mutation record
     if (not suppress_observers_flag)
         mutation_observers::queue_tree_mutation_record(parent, added_nodes, {}, previous_sibling, child);
+
+    parent->m_behaviour.children_changed_steps();
 
     // return the node
     return node;
@@ -337,7 +347,7 @@ auto dom::helpers::mutation_algorithms::remove(
 {
     if (not node->parent) return node;
 
-    const nodes::node* const parent = node->parent;
+    nodes::node* parent = node->parent;
     const auto node_index = trees::index(node);
 
     const auto& live_ranges = javascript::realms::current_global_object().get<ext::vector<ranges::range*>&>("live_ranges");
@@ -357,6 +367,8 @@ auto dom::helpers::mutation_algorithms::remove(
             .filter([parent, node_index](auto* range) {return range->end_container == parent and range->end_offset > node_index;})
             .for_each([](auto* range) {range->end_offset -= 1;});
 
+    // TODO : node_iterator's pre_removing_steps()
+
     const nodes::node* const old_previous_sibling = node->previous_sibling;
     const nodes::node* const old_next_sibling = node->next_sibling;
     parent->child_nodes->remove(node);
@@ -367,36 +379,46 @@ auto dom::helpers::mutation_algorithms::remove(
     if (shadows::is_root_shadow_root(parent) and shadows::is_slot(parent) and dynamic_cast<const html::elements::html_slot_element*>(parent)->m_assigned_nodes->empty())
         shadows::signal_slot_change(parent);
 
-    if (not trees::descendants(node).filter([](const nodes::node* const child) {return shadows::is_slot(child);}).empty()) {
+    if (not trees::descendants(node).filter([](const nodes::node* const child) {return shadows::is_slot(child);}).empty())
+    {
         shadows::assign_slottables_for_tree(trees::root(parent));
         shadows::assign_slottables_for_tree(node);
     }
 
+    node->m_behaviour.removal_steps(parent);
+
     const auto* const element = dynamic_cast<nodes::element*>(node);
-    if (element and custom_elements::is_custom_node(element) and shadows::is_connected(parent))
-    {
+    const bool is_parent_connected = shadows::is_connected(parent);
+    if (element and custom_elements::is_custom_node(element) and is_parent_connected)
         custom_elements::enqueue_custom_element_callback_reaction(element, "disconnectCallback", {});
+
+    for (nodes::element* inclusive_descendant: shadows::shadow_including_descendants(node).cast_all<nodes::element*>())
+    {
+        inclusive_descendant->m_behaviour.removal_steps(nullptr);
+        if (custom_elements::is_custom_node(inclusive_descendant) and is_parent_connected)
+            custom_elements::enqueue_custom_element_callback_reaction(inclusive_descendant, "disconnectCallback", {});
     }
 
-    /* TODO : shadow including ancestors */
-
-    for (const auto* const ancestor: trees::ancestors(parent))
+    for (const nodes::node* const ancestor: trees::ancestors(parent))
     {
-        for (auto* const registered: *ancestor->m_registered_observer_list)
+        for (internal::registered_observer* const registered: ancestor
+                ->m_registered_observer_list
+                .filter([](internal::registered_observer* const registered) {return registered->options.at("subtree").to<bool>();}))
         {
             auto* const transient_registered_observer = new internal::transient_registered_observer{};
 
             transient_registered_observer->observer = registered->observer;
-            transient_registered_observer->options = registered->options;
-            transient_registered_observer->source = registered;
-
-            if (registered->options.at("subtree").to<bool>())
-                node->m_registered_observer_list->append(transient_registered_observer);
+            transient_registered_observer->options  = registered->options;
+            transient_registered_observer->source   = registered;
+            node->m_registered_observer_list.append(transient_registered_observer);
         }
     }
 
     if (not suppress_observers_flag)
         mutation_observers::queue_tree_mutation_record(parent, {}, {node}, old_previous_sibling, old_next_sibling);
+
+    parent->m_behaviour.children_changed_steps();
+
     return node;
 }
 

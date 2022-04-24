@@ -11,6 +11,10 @@ using ushort = unsigned short;
 using ulong = unsigned long;
 using ulonglong = unsigned long long;
 
+#define return_if(condition) \
+if( ## condition ## )        \
+    return
+
 
 template <template<typename> typename T, typename U>
 struct ext::is_mixin_base_of

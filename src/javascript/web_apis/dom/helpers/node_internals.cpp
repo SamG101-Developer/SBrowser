@@ -4,8 +4,10 @@
 
 #include <dom/helpers/custom_elements.hpp>
 #include <dom/helpers/mutation_algorithms.hpp>
+#include <dom/helpers/mutation_observers.hpp>
 #include <dom/helpers/namespaces.hpp>
 #include <dom/helpers/ordered_sets.hpp>
+#include <dom/helpers/shadows.hpp>
 #include <dom/helpers/trees.hpp>
 
 #include <dom/nodes/attr.hpp>
@@ -17,6 +19,7 @@
 
 #include <html/elements/html_element.hpp>
 #include <html/helpers/document_internals.hpp>
+#include <html/helpers/custom_html_elements.hpp>
 
 
 template <typename T>
@@ -48,6 +51,8 @@ auto dom::helpers::node_internals::clone(
     else
         document = cloned_node;
 
+    cloned_node->m_behaviour.cloning_steps(node, document, deep);
+
     // if deep is set, then clone each child recursively, with the deep flag set
     if (deep)
         node->child_nodes->for_each([document](auto* child) {helpers::mutation_algorithms::append(clone(child, document, true));});
@@ -71,7 +76,22 @@ auto dom::helpers::node_internals::adopt(
 
     // if the two documents are different, the handle shadow options
     if (document != old_document)
-        return; /* TODO show inclusive descendants */
+    {
+        for (nodes::node* inclusive_descendant: shadows::shadow_including_descendants(node))
+        {
+            inclusive_descendant->owner_document = document;
+            if (auto* element = dynamic_cast<nodes::element*>(inclusive_descendant))
+                element->attributes->for_each([document](nodes::attr* attribute) {attribute->owner_document = document;});
+        }
+
+        for (nodes::element* inclusive_descendant: shadows::shadow_including_descendants(node)
+                .cast_all<nodes::element*>()
+                .filter([](nodes::element* node) {return dom::helpers::custom_elements::is_custom_node(node);}))
+            dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(inclusive_descendant, "adoptedCallback", {old_document, document});
+
+        for (nodes::node* inclusive_descendant: shadows::shadow_including_descendants(node))
+            inclusive_descendant->m_behaviour.adopting_steps();
+    }
 }
 
 

@@ -44,6 +44,10 @@ struct dom::helpers::shadows final
             const nodes::node* node_a)
             -> bool;
 
+    static auto shadow_including_descendants(
+            const nodes::node* node_a)
+            -> ext::vector<nodes::node*>;
+
     static auto is_shadow_including_descendant(
             const nodes::node* node_a,
             const nodes::node* node_b)

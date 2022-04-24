@@ -125,7 +125,7 @@ auto dom::helpers::event_listening::dispatch(
         ext::vector<nodes::event_target*> touch_targets = event->touch_targets->transform([event_target](const nodes::event_target* const touch) {return shadows::retarget(touch, event_target);});
 
         auto* const node = dynamic_cast<const nodes::node* const>(event_target);
-        activation_target = is_activation_event and event_target->has_activation_behaviour() ? event_target : nullptr;
+        activation_target = is_activation_event and event_target->m_behaviour.has_activation_behaviour() ? event_target : nullptr;
         auto* slottable = shadows::is_slottable(node) and shadows::is_assigned(node) ? event_target : nullptr;
         auto* parent = event_target->get_the_parent(event);
         auto* const parent_node = dynamic_cast<const nodes::node* const>(parent);
@@ -158,7 +158,7 @@ auto dom::helpers::event_listening::dispatch(
             {
                 // set the activation target if there is an activation event, no current activation target, and the
                 // event will bubble
-                activation_target = is_activation_event and not activation_target and event->bubbles and parent->has_activation_behaviour()
+                activation_target = is_activation_event and not activation_target and event->bubbles and parent->m_behaviour.has_activation_behaviour()
                         ? event_target
                         : activation_target;
 
@@ -177,7 +177,7 @@ auto dom::helpers::event_listening::dispatch(
                 event_target = parent;
 
                 // set the activation target if there is an activation event, no current activation target
-                activation_target = is_activation_event and not activation_target and event_target->has_activation_behaviour()
+                activation_target = is_activation_event and not activation_target and event_target->m_behaviour.has_activation_behaviour()
                         ? event_target
                         : activation_target;
 
@@ -232,7 +232,7 @@ auto dom::helpers::event_listening::dispatch(
     }
 
     if (activation_target and not event->m_canceled_flag)
-        activation_target->activation_behaviour(event);
+        activation_target->m_behaviour.activation_behaviour(event);
 
     // return if the event hasn't been cancelled
     return not event->m_canceled_flag;

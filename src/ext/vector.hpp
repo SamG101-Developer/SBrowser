@@ -218,7 +218,7 @@ template <typename T>
 auto ext::vector<T>::reserve(size_t count) -> vector<T>&
 {
     // reserve count amount of object space in the veque for quicker insertion, and return a reference to it
-    this->m_iterable.reserve();
+    this->m_iterable.reserve(count);
     return *this;
 }
 
@@ -379,13 +379,14 @@ template <typename U>
 auto ext::vector<T>::cast_all() const -> ext::vector<U>
 {
     // create a duplicate empty veque, and cast all the items from T to U
-    vector<U> copy;
-    copy = std::is_pointer_v<T>
-            ? transform<U>([](const T* item) {return dynamic_cast<U>(item);})
-            : transform<U>([](const T& item) {return static_cast <U>(item);});
+    vector<U> copy = std::is_pointer_v<T>
+            ? transform<U>([](T& item) {return dynamic_cast<U>(item);})
+            : transform<U>([](T& item) {return static_cast <U>(item);});
 
-    // remove all empty elements from the copied list, and return a  reference to it
-    if (std::is_pointer_v<T>) copy.clean(nullptr, true);
+    // remove all empty elements from the copied list, and return a reference to it
+    if (std::is_pointer_v<T>)
+        copy.clean(nullptr, true);
+
     return copy;
 }
 
@@ -405,7 +406,7 @@ auto ext::vector<T>::join(char&& delimiter) const -> const char*
     std::string joined;
     for_each([&joined, delimiter](const T item) {joined += delimiter + item;});
 
-    // return teh const char( representation of the string
+    // return the const char( representation of the string
     return joined.c_str();
 }
 

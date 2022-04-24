@@ -77,6 +77,16 @@ auto dom::helpers::shadows::is_shadow_host(
 }
 
 
+auto dom::helpers::shadows::shadow_including_descendants(
+        const nodes::node* node_a)
+        -> ext::vector<nodes::node*>
+{
+    auto descendants = trees::descendants(node_a);
+    // TODO : ?
+    return descendants;
+}
+
+
 auto dom::helpers::shadows::is_shadow_including_descendant(
         const nodes::node* const node_a,
         const nodes::node* node_b)

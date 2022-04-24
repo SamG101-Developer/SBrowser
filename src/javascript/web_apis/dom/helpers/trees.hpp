@@ -2,6 +2,7 @@
 #ifndef SBROWSER_TREES_HPP
 #define SBROWSER_TREES_HPP
 
+#include <ext/type_traits.hpp>
 #include <ext/vector.hpp>
 
 namespace dom::helpers {struct trees;}

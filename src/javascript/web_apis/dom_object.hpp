@@ -15,6 +15,7 @@
 #include <v8pp/class.hpp>
 
 namespace dom::events {class event;}
+namespace dom::nodes {class document;}
 namespace dom::nodes {class node;}
 
 
@@ -32,16 +33,15 @@ public cpp_methods:
     virtual auto v8(v8::Isolate* isolate) const -> ext::any = 0;
 
 protected cpp_methods:
-    struct {
+    struct { // TODO : annotate parameters
         std::function<bool()> has_activation_behaviour;
         std::function<void(dom::events::event*)> activation_behaviour;
         std::function<void()> adopting_steps;
-        std::function<void()> attribute_change_steps;
+        std::function<void(const ext::string&, const ext::string&, const ext::string&, const ext::string&)> attribute_change_steps;
         std::function<void()> children_changed_steps;
-        std::function<void()> cloning_steps;
-        std::function<void()> serialize_steps;
+        std::function<void(dom::nodes::node*, dom::nodes::document*, bool)> cloning_steps;
         std::function<void()> insertion_steps;
-        std::function<void(dom::nodes::node*)> removal_steps;
+        std::function<void(dom::nodes::node* /* old_parent */)> removal_steps;
     } m_behaviour;
 };
 

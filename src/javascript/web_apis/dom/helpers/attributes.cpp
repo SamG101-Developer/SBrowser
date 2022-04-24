@@ -25,6 +25,8 @@ auto dom::helpers::attributes::handle_attributes_changes(
     // if the element is custom, queue a custom element reaction
     if (owner_element->m_custom_element_state == "custom")
         custom_elements::enqueue_custom_element_callback_reaction(owner_element, "attributeCallbackChanged", ext::string_vector{attribute->local_name, old_value, new_value, attribute->namespace_uri});
+
+    owner_element->m_behaviour.attribute_change_steps(attribute->local_name, old_value, new_value, attribute->namespace_uri);
 }
 
 

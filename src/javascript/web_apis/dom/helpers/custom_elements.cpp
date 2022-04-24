@@ -3,8 +3,10 @@
 #include <cassert>
 
 #include <ext/string.hpp>
+#include <javascript/environment/realms.hpp>
 
 #include <dom/helpers/exceptions.hpp>
+#include <dom/helpers/mutation_observers.hpp>
 #include <dom/helpers/namespaces.hpp>
 #include <dom/helpers/shadows.hpp>
 
@@ -12,8 +14,13 @@
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/element.hpp>
 
+#include <html/elements/html_form_element.hpp>
 #include <html/elements/html_unknown_element.hpp>
+
+#include <html/mixins/form_associated.hpp>
+
 #include <html/helpers/custom_html_elements.hpp>
+#include <html/helpers/form_internals.hpp>
 
 
 template <typename T>
@@ -79,7 +86,7 @@ auto dom::helpers::custom_elements::create_an_element(
             const v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
 
             // set the result to the definition's constructor
-            result = definition->constructor;
+            result = definition->constructor();
 
             // assert that the custom element state and custom element definition are both non-nullptr, and the
             // namespace is the HTML namespace
@@ -181,33 +188,38 @@ auto dom::helpers::custom_elements::upgrade_element(
 
     // iterate over the attributes in the element's attribute list, and enqueue a custom element reaction for each
     // attribute for attributeChangedCallback
-    for (auto* const attribute: *element->attributes)
-        enqueue_custom_element_callback_reaction(element, "attributeChangedCallback", ext::string_vector{attribute->local_name, "", attribute->value, attribute->namespace_uri});
+    for (nodes::attr* const attribute: *element->attributes)
+        enqueue_custom_element_callback_reaction(element, "attributeChangedCallback", ext::vector<ext::string>{attribute->local_name, "", attribute->value, attribute->namespace_uri});
 
     // if the element is connected, then enqueue a custom element reaction for the connectedCallback function
     if (shadows::is_connected(element))
-        enqueue_custom_element_callback_reaction(element, "connectedCallback", {});
+        enqueue_custom_element_callback_reaction(element, "connectedCallback");
 
     // append the element to the construction stack of the definition, and map the type of the element to <c>
     definition->construction_stack.append(element);
-    using c = decltype(definition->constructor);
+    auto c = definition->constructor;
 
     // create a try-catch instance to catch any exceptions caused from the element upgrade
     v8::TryCatch exception_handler{v8::Isolate::GetCurrent()};
 
-    // if the definition has shadows disabled, and the element has a shadow root, then throw a not supported error
-    exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
-            "if the definition has shadows disabled, the element cannot have a shadow root",
-            [definition, element] {return definition->disable_shadow and element->shadow_root_node;});
+    {
+        // if the definition has shadows disabled, and the element has a shadow root, then throw a not supported error
+        exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
+                "if the definition has shadows disabled, the element cannot have a shadow root",
+                [definition, element] {return definition->disable_shadow and element->shadow_root_node;});
 
-    // set the custom element state to "precustomized", as the element is being upgraded, but hasn't been upgraded yet
-    element->m_custom_element_state = "precustomized";
+        // set the custom element state to "precustomized", as the element is being upgraded, but hasn't been upgraded yet
+        element->m_custom_element_state = "precustomized";
 
-    // create a new instance of the upgraded element
-    auto* const construction_result = new c{};
+        // create a new instance of the upgraded element
+        auto* const construction_result = c();
 
-    // TODO : javascript::helpers::same_value(...)
-    definition->construction_stack.pop();
+        dom::helpers::exceptions::throw_v8_exception<V8_TYPE_ERROR>(
+                "result of construction must not equal element",
+                [construction_result, element] {return construction_result == element;});
+
+        definition->construction_stack.pop();
+    }
 
     // if there was a javascript exception thrown, set the custom element definition to nullptr, empty the custom
     // element reaction queue, and rethrow the error
@@ -218,7 +230,14 @@ auto dom::helpers::custom_elements::upgrade_element(
         exception_handler.ReThrow();
     }
 
-    // TODO : form association
+    if (element->m_custom_element_definition->form_associated)
+    {
+        auto* form_associated_element = dynamic_cast<html::mixins::form_associated<html::elements::html_element>*>(element);
+        html::helpers::form_internals::reset_form_owner(form_associated_element);
+        enqueue_custom_element_callback_reaction(element, "formAssociatedCallback", form_associated_element->form);
+        if (form_associated_element->disabled)
+            enqueue_custom_element_callback_reaction(element, "formDisabledCallback", true);
+    }
 
     // at this point, no errors can be active ie they have been rethrown, so the element has been upgraded and is
     // therefore fully customized is "custom"
@@ -266,17 +285,33 @@ auto dom::helpers::custom_elements::lookup_custom_element_definition(
 
 
 auto dom::helpers::custom_elements::enqueue_element_on_appropriate_element_queue(
-        const nodes::element* const element)
+        const nodes::element* element)
         -> void
 {
-    // TODO
+    auto reactions_stack = javascript::realms::relevant_realm((nodes::node*)element).get<custom_element_reactions_stack_t&>("customElementsReactionStack");
+    if (reactions_stack.queues.empty())
+    {
+        reactions_stack.backup_element_queue.emplace(element);
+        if (reactions_stack.processing_backup_element_queue_flag)
+            return;
+
+        reactions_stack.processing_backup_element_queue_flag = true;
+        mutation_observers::queue_microtask([&reactions_stack] {
+            invoke_custom_elements_reactions(reactions_stack.backup_element_queue);
+            reactions_stack.processing_backup_element_queue_flag = false;
+        });
+    }
+
+    else
+        reactions_stack.current_element_queue.emplace(element);
 }
 
 
+template <typename ...Args>
 auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
-        const nodes::element* const element,
+        nodes::element* const element,
         const ext::string& callback_name,
-        ext::string_vector&& args)
+        const Args... args)
         -> void
 {
     // get the definition from the element, and the callback from it
@@ -291,19 +326,28 @@ auto dom::helpers::custom_elements::enqueue_custom_element_callback_reaction(
     {
         // get the attribute name and return if there is no observed attributes on the definition containing the
         // attribute name
-        const ext::string attribute_name = args.front();
-        if (not definition->observed_attributes.contains(attribute_name))
-            return;
+        const ext::string attribute_name = ext::string_vector{args...}.front();
+        if (not definition->observed_attributes.contains(attribute_name)) return;
     }
+
+    auto* callback_reaction = new internal::callback_reaction{};
+    callback_reaction->template call(definition->lifecycle_callbacks.at(callback_name), args...); // TODO : needs to be called later, but func set from here
+    element->m_custom_element_reaction_queue.template emplace(callback_reaction);
+
+    enqueue_element_on_appropriate_element_queue(element);
 }
 
 
 auto dom::helpers::custom_elements::enqueue_custom_element_upgrade_reaction(
-        const nodes::element* const element,
+        nodes::element* const element,
         const internal::custom_element_definition* const definition)
         -> void
 {
-    // TODO
+    auto* upgrade_reaction = new internal::upgrade_reaction{};
+    upgrade_reaction->template call(&upgrade_element, element);
+    element->m_custom_element_reaction_queue.template emplace(upgrade_reaction); // TODO : same as above method
+
+    enqueue_element_on_appropriate_element_queue(element);
 }
 
 
@@ -332,3 +376,28 @@ auto dom::helpers::custom_elements::is_custom_node(
 }
 
 
+auto dom::helpers::custom_elements::invoke_custom_elements_reactions(
+        std::queue<nodes::element*>& queue)
+        -> void
+{
+    while (not queue.empty())
+    {
+        auto* element = queue.front(); // TODO : .front() or .back()? think its .front()
+        queue.pop();
+
+        auto reactions = element->m_custom_element_reaction_queue;
+
+        while (not reactions.empty())
+        {
+            auto reaction = reactions.front();
+            reactions.pop();
+
+            if (dynamic_cast<internal::upgrade_reaction*>(reaction))
+                ; // TODO : call
+            else if (dynamic_cast<internal::callback_reaction*>(reaction))
+                ; // TODO : call
+
+            // TODO : catch and report exceptions from here
+        }
+    }
+}
