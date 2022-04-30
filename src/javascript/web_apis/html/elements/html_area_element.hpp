@@ -18,15 +18,14 @@ public constructors:
     html_area_element();
 
 public js_properties:
-    ext::html_property<ext::string> alt;
-    ext::html_property<ext::string> coords;
-    ext::html_property<ext::string> shape;
-    ext::html_property<ext::string> download;
-    ext::html_property<ext::string> ping;
-    ext::html_property<ext::string> referrerPolicy;
+    ext::html_property<ext::string, _F> alt;
+    ext::html_property<ext::string, _F> coords;
+    ext::html_property<ext::string, _F> shape;
+    ext::html_property<ext::string, _F> download;
+    ext::html_property<ext::string, _F> ping;
+    ext::html_property<ext::string, _F> referrerPolicy;
 
 public cpp_methods:
-    auto activation_behaviour(dom::events::event* event) -> void override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 

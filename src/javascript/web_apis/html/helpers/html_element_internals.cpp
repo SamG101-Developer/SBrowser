@@ -8,6 +8,7 @@
 #include <dom/nodes/text.hpp>
 
 #include <html/elements/html_base_element.hpp>
+#include <html/elements/html_button_element.hpp>
 #include <html/elements/html_details_element.hpp>
 #include <html/elements/html_dlist_element.hpp>
 #include <html/elements/html_element.hpp>
@@ -15,6 +16,10 @@
 #include <html/elements/html_li_element.hpp>
 #include <html/elements/html_menu_element.hpp>
 #include <html/elements/html_olist_element.hpp>
+#include <html/elements/html_opt_group_element.hpp>
+#include <html/elements/html_option_element.hpp>
+#include <html/elements/html_select_element.hpp>
+#include <html/elements/html_text_area_element.hpp>
 #include <html/elements/html_ulist_element.hpp>
 
 
@@ -31,7 +36,7 @@ auto html::helpers::html_element_internals::directionality(
     if (element->dir == "rtl")
         return internal::direction_mode::RTL;
 
-    if (element->dir == "auto" and (auto* text_area_element = dynamic_cast<elements::html_text_area_element*>(element)))
+    if (auto* text_area_element = dynamic_cast<elements::html_text_area_element*>(element); element->dir == "auto")
     {
         if (/* TODO */ false)
             return internal::direction_mode::RTL;
@@ -222,6 +227,51 @@ auto html::helpers::html_element_internals::is_summary_for_parent_details(
     if (details_parent_element->children->filter([](dom::nodes::element* element) {return element->local_name == "summary";}).front() != summary_element)
         return false;
 
-    // return true if all of the other conditions have passed
+    // return true if all the other conditions have passed
     return true;
+}
+
+
+auto html::helpers::html_element_internals::is_actually_disabled(
+        elements::html_element* element)
+        -> bool
+{
+    if (auto* button = dynamic_cast<elements::html_button_element*>(element))
+        return button->disabled;
+
+    if (auto* select = dynamic_cast<elements::html_select_element*>(element))
+        return select->disabled;
+
+    if (auto* textarea = dynamic_cast<elements::html_text_area_element*>(element))
+        return textarea->disabled;
+
+    if (auto* optgroup = dynamic_cast<elements::html_opt_group_element*>(element))
+        return optgroup->disabled;
+
+    if (auto* option = dynamic_cast<elements::html_option_element*>(element))
+        return option->disabled;
+
+    if (auto* form_associated = dynamic_cast<mixins::form_associated<elements::html_element>*>(element))
+        return form_associated->disabled;
+}
+
+
+auto html::helpers::html_element_internals::ancestor_hidden_until_found_revealing_algorithm(
+        elements::html_element* element)
+        -> void
+{
+    do
+    {
+        if (element->hidden)
+        {
+            dom::helpers::event_dispatching::fire_event<>("beforematch", element);
+
+            JS_BLOCK_START
+            auto v8_isolate = v8::Isolate::GetCurrent();
+            auto v8_attribute = v8pp::convert<ext::string>::to_v8(v8_isolate, "hidden");
+            auto v8_object = v8pp::convert<elements::html_element*>::to_v8(v8_isolate, element);
+            v8_object->Delete(v8_isolate->GetCurrentContext(), v8_attribute);
+            JS_BLOCK_END
+        }
+    } while ((element = element->parent));
 }

@@ -20,13 +20,16 @@ public js_methods:
     auto focus(const ext::string_any_map& options) -> void;
 
 public js_properties:
-    ext::html_property<ext::string_string_map> data_set;
-    ext::html_property<ext::string> nonce;
+    ext::html_property<ext::string_string_map, _F> data_set;
+    ext::html_property<ext::string, _F> nonce;
     ext::html_property<bool, _T> autofocus;
     ext::html_property<long, _T> tab_index;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
+
+private cpp_properties:
+    bool m_locked_for_focus;
 };
 
 

@@ -101,6 +101,14 @@ struct html::helpers::html_element_internals
     static auto is_summary_for_parent_details(
             elements::html_element* summary_element)
             -> bool;
+
+    static auto is_actually_disabled(
+            elements::html_element* element)
+            -> bool;
+
+    static auto ancestor_hidden_until_found_revealing_algorithm(
+            elements::html_element* element)
+            -> void;
 };
 
 

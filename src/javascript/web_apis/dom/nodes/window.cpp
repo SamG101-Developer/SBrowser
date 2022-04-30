@@ -1,9 +1,17 @@
 #include "window.hpp"
 
+#include <javascript/environment/realms.hpp>
+
+#include <dom/helpers/mutation_observers.hpp>
 #include <dom/helpers/shadows.hpp>
 
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/document.hpp>
+
+#include <html/helpers/browsing_context_internals.hpp>
+#include <html/helpers/document_internals.hpp>
+#include <html/helpers/focus_internals.hpp>
+#include <html/helpers/windows_internals.hpp>
 
 #include <QtWidgets/QScrollArea>
 #include <QtWidgets/QMessageBox>
@@ -16,6 +24,49 @@ dom::nodes::window::window()
 //        , css::cssom_view::mixins::scrollable()
         , ext::listlike<ext::string>()
 {
+    // set the custom accessors
+    // TODO
+}
+
+
+auto dom::nodes::window::close()
+        -> void
+{
+    auto* current = document->m_browsing_context;
+    if (not current or current->is_closing)
+        return;
+
+    if (html::helpers::browsing_context_internals::is_script_closable(current)
+            and html::helpers::browsing_context_internals::is_familiar_with(javascript::realms::incumbent_realm().global_object->document->m_browsing_contex, current)
+            and html::helpers::browsing_context_internals::is_allowed_to_navigate(javascript::realms::incumbent_realm().global_object->document->m_browsing_contex, current))
+    {
+        current->is_closing = true;
+        helpers::mutation_observers::queue_task([current] {html::helpers::browsing_context_internals::close_browsing_context(current);});
+    }
+}
+
+
+auto dom::nodes::window::focus()
+        -> void
+{
+    auto* current = document->m_browsing_context;
+    if (not current)
+        return;
+
+    html::helpers::focus_internals::focusing_steps(current);
+    if (current->is_top_level_context())
+        ; // TODO
+}
+
+
+auto dom::nodes::window::open(
+        const ext::string& url,
+        const ext::string& target,
+        const ext::string& features)
+        -> window_proxy*
+{
+    html::helpers::windows_internals::window_open_steps(url, target, features);
+    // TODO : ret?
 }
 
 
@@ -149,6 +200,67 @@ auto dom::nodes::window::resize_by(
     document->qt()->resize(
             width - document->qt()->width(),
             height - document->qt()->height());
+}
+
+
+auto dom::nodes::window::get_name() const
+        -> ext::string
+{
+    return document->m_browsing_context
+            ? document->m_browsing_context->name
+            : "";
+}
+
+
+auto dom::nodes::window::get_closed() const
+        -> bool
+{
+    return (not document->m_browsing_context) or document->m_browsing_context->is_closing;
+}
+
+
+auto dom::nodes::window::get_opener() const
+-> ext::any
+{
+    auto* current = document->m_browsing_context;
+
+    return not current or not current->opener_browsing_context or current->disowned
+           ? (ext::any)std::nullopt
+           : (ext::any)current->window_proxy;
+}
+
+
+auto dom::nodes::window::get_top() const
+        -> window_proxy*
+{
+    return not document->m_browsing_context
+            ? nullptr
+            : document->m_browsing_context->top_level_browsing_context()->window_proxy;
+}
+
+
+auto dom::nodes::window::get_parent() const
+        -> window_proxy*
+{
+    auto* current = document->m_browsing_context;
+    if (not current)
+        return;
+
+    if (current->parent_browsing_context)
+        return current->parent_browsing_context->window_proxy;
+
+    assert(current->is_top_level_context())
+    return current->window_proxy;
+}
+
+
+auto dom::nodes::window::set_name(
+        const ext::string& val)
+        -> void
+{
+    if (not document->m_browsing_context)
+        return;
+    document->m_browsing_context->name = val;
 }
 
 

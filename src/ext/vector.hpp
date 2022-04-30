@@ -364,7 +364,7 @@ auto ext::vector<T>::filter(const F& function) const -> ext::vector<T>
 
 template <typename T>
 template <typename U, typename F>
-auto ext::vector<T>::transform(const F& function) const -> ext::vector<U>
+auto ext::vector<T>::transform(const F& function) const -> ext::vector<U> // TODO : ext::vector<U>&& ret type?
 {
     // create a duplicate of the veque, transform all the items in it, and return it
     vector<U> copy{};
@@ -384,8 +384,8 @@ auto ext::vector<T>::cast_all() const -> ext::vector<U>
             : transform<U>([](T& item) {return static_cast <U>(item);});
 
     // remove all empty elements from the copied list, and return a reference to it
-    if (std::is_pointer_v<T>)
-        copy.clean(nullptr, true);
+    if constexpr(std::is_pointer_v<T>)
+        copy.remove(nullptr, true);
 
     return copy;
 }

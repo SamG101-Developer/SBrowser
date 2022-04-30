@@ -29,6 +29,7 @@ public constructors:
     map<K, V>& operator=(const map<K, V>&) = default;
     map<K, V>& operator=(map<K, V>&&) noexcept = default;
 
+    map(const std::initializer_list<pair_t>&& o);
     map<K, V>& operator=(std::initializer_list<pair_t>&& o);
 
 public js_methods:

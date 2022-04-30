@@ -218,6 +218,15 @@ private cpp_properties:
     ext::vector<html::elements::html_script_element*> m_list_of_scripts_that_will_execute_soon_as_possible;
     html::elements::html_script_element* m_pending_parsing_blocking_script;
 
+    element* m_focused_area;
+    element* m_sequential_focus_navigation_starting_point;
+    ext::vector<element*> m_sequential_focus_navigation_order;
+
+    ext::vector<element*> m_autofocus_candidates;
+    bool m_autofocus_processed_flag;
+
+    bool m_design_mode_enabled = false;
+
 private accessors:
     // dom
     auto get_compat_mode() const -> ext::string;
@@ -227,6 +236,8 @@ private accessors:
 
     // html
     auto get_dir() const -> ext::string;
+    auto get_design_mode() const -> ext::string;
+    auto get_default_view() const -> window_proxy*;
     auto get_last_modified() const -> ext::string;
     auto get_cookie() const -> ext::string;
     same_obj auto get_body() const -> html::elements::html_body_element*;
@@ -238,6 +249,7 @@ private accessors:
     new_obj auto get_forms() -> ext::vector<html::elements::html_form_element*>;
     new_obj auto get_scripts() -> ext::vector<html::elements::html_script_element*>;
 
+    auto set_design_mode(const ext::string& val) -> void;
     auto set_title(const ext::string& val) -> void;
     auto set_body(html::elements::html_body_element* val) -> void;
     auto set_cookie(const ext::string& val) -> void;

@@ -1,7 +1,9 @@
 #ifndef SBROWSER_TYPE_TRAITS_HPP
 #define SBROWSER_TYPE_TRAITS_HPP
 
+#include <optional>
 #include <type_traits>
+
 
 namespace ext {template <template <typename> typename T, typename U> struct is_mixin_base_of;}
 namespace ext {template <template <typename> typename T, typename U> inline constexpr bool is_mixin_base_of_v = is_mixin_base_of<T, U>::value;}
@@ -11,9 +13,7 @@ using ushort = unsigned short;
 using ulong = unsigned long;
 using ulonglong = unsigned long long;
 
-#define return_if(condition) \
-if( ## condition ## )        \
-    return
+inline constexpr std::nullopt_t null {std::nullopt_t::_Tag{}};
 
 
 template <template<typename> typename T, typename U>

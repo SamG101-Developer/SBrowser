@@ -17,7 +17,7 @@
 
 #include <ext/string.hpp>
 
-namespace dom::nodes {class element;}}
+namespace dom::nodes {class element;}
 namespace html::elements {class html_element;}
 namespace html::helpers {struct custom_html_elements;}
 

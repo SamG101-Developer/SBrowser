@@ -6,6 +6,7 @@
 #include <ext/map.hpp>
 
 #include <dom/nodes/element.hpp>
+#include <html/mixins/element_content_editable.hpp>
 #include <html/mixins/html_or_svg_element.hpp>
 
 
@@ -16,8 +17,8 @@ namespace html::internal {enum class translation_mode;}
 
 class html::elements::html_element
         : public dom::nodes::element
+        , public mixins::element_content_editable<html_element>
         , public mixins::html_or_svg_element<html_element>
-        // , mixins::element_content_editable
 {
 
 public constructors:
@@ -53,12 +54,7 @@ public:
     ext::html_property<long, _F> offset_height;
 
 public cpp_methods:
-    auto activation_behaviour(dom::events::event* event) -> void override;
     auto v8(v8::Isolate* isolate) const -> ext::any override;
-
-protected cpp_methods:
-    auto insertion_steps() -> void override;
-    auto removal_steps(dom::nodes::node* old_parent) -> void override;
 
 protected constructors:
     explicit html_element(int) {/* NO_HTML_CONSTRUCTOR */}
@@ -72,6 +68,7 @@ private cpp_properties:
 
 private accessors:
     // html
+    auto get_autocapitalize() const -> ext::string;
     auto get_inner_text() const -> ext::string;
     auto get_outer_text() const -> ext::string;
     auto get_lang() const -> ext::string;

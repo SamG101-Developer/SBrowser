@@ -36,7 +36,7 @@ public js_properties:
     ext::html_property<ext::string, _T> use_map;
     ext::html_property<ext::string, _T> referrer_policy;
     ext::html_property<ext::string, _T> decoding;
-    ext::html_property<ext::string> current_src;
+    ext::html_property<ext::string, _F> current_src; // TODO _F?
 
     ext::html_property<ulong, _T> width;
     ext::html_property<ulong, _T> height;
@@ -50,9 +50,9 @@ public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
     auto qt() const -> QLabel* override;
 
-protected cpp_methods:
-    auto insertion_steps() -> void override;
-    auto removal_steps(dom::nodes::node* old_parent) -> void override;
+//protected cpp_methods:
+//    auto insertion_steps() -> void override;
+//    auto removal_steps(dom::nodes::node* old_parent) -> void override;
 
 private accessors:
     auto get_width() const -> ulong;

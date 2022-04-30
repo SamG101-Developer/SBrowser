@@ -18,6 +18,7 @@
 #include <dom/nodes/text.hpp>
 
 #include <html/elements/html_element.hpp>
+#include <html/helpers/browsing_context_internals.hpp>
 #include <html/helpers/document_internals.hpp>
 #include <html/helpers/custom_html_elements.hpp>
 
@@ -274,8 +275,8 @@ auto dom::helpers::node_internals::is_document_fully_active(
     // return true if the documents browsing context exists, the document is the active document, and [the container
     // document is active or there is no parent browsing context - auto enables document]
     return document->m_browsing_context
-            and document->m_browsing_context->active_document == document
-            and (is_document_fully_active(document->m_browsing_context->container_document) or not document->m_browsing_context->parent_browsing_context);
+            and document->m_browsing_context->active_document() == document
+            and (is_document_fully_active(document->m_browsing_context->container_document()) or not document->m_browsing_context->is_top_level_context());
 }
 
 

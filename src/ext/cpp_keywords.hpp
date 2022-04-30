@@ -7,7 +7,7 @@
 #define _F false
 
 #define TRY try {
-#define CATCH } catch (...) {
+#define CATCH } catch (...&) {
 #define END_TRY }
 
 #define EMPTY_CHAR '\0'

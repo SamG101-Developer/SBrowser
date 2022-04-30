@@ -2,11 +2,17 @@
 
 #include <functional>
 
+#include <javascript/environment/realms.hpp>
+
 #include <dom/events/event.hpp>
 #include <dom/helpers/event_listening.hpp>
 #include <dom/helpers/shadows.hpp>
+#include <dom/nodes/element.hpp>
 #include <dom/nodes/node.hpp>
 #include <dom/nodes/shadow_root.hpp>
+
+#include <html/helpers/dragging_internals.hpp>
+#include <html/dragging/data_transfer.hpp>
 
 #include <QtGui/QGuiApplication>
 
@@ -120,11 +126,11 @@ auto dom::helpers::event_dispatching::fire_event(
         const ext::string& e,
         nodes::event_target* target,
         const ext::string_any_map& init)
-        -> bool
+        -> bool // TODO : concept
 {
     // create a new event of type T and dispatch it through the event paths
-    auto* event = std::unique_ptr<T>{e, init}.get();
-    event_listening::dispatch(event, target);
+    auto* event = new T{e, init};
+    return event_listening::dispatch(event, target);
 }
 
 
@@ -145,4 +151,49 @@ auto dom::helpers::event_dispatching::fire_synthetic_pointer_event(
 
 //    return event_listening::dispatch(event, target);
     return true; // TODO
+}
+
+
+auto dom::helpers::event_dispatching::fire_drag_and_drop_event(
+        const ext::string& e,
+        nodes::element* target,
+        html::internal::drag_data_store* drag_data_store,
+        nodes::event_target* related_target) -> bool
+{
+    auto data_drag_store_was_changed = false;
+
+    auto window = javascript::realms::relevant_realm(target->owner_document);
+    if (e == "dragstart")
+    {
+        drag_data_store->drag_data_store_mode = html::helpers::dragging_internals::drag_data_store_mode_t::READ_WRITE;
+        data_drag_store_was_changed = true;
+    }
+    else if (e == "drop")
+        drag_data_store->drag_data_store_mode = html::helpers::dragging_internals::drag_data_store_mode_t::READ_ONLY;
+
+    auto* data_transfer = new html::dragging::data_transfer{};
+    data_transfer->m_drag_data_store = drag_data_store;
+    data_transfer->effect_allowed = drag_data_store->drag_data_store_allowed_effects_state;
+
+    if (ext::string_vector{"dragstart", "drag", "dragleave"}.contains(e))
+        data_transfer->drop_effect = "none";
+    else if (ext::string_vector{"drop", "dragend"}.contains(e))
+        data_transfer->drop_effect = data_transfer->m_current_drag_operation;
+    else
+        data_transfer->drop_effect = data_transfer->effect_allowed; // TODO : map value
+
+    auto* event = new html::events::drag_event{e, {
+        {"bubbles", true},
+        {"view", window},
+        {"relatedTarget", related_target},
+        {"dataTransfer", data_transfer},
+        {"cancelable", not ext::sting_vector{"dragleave", "dragend"}.contains(e)}}};
+
+    // TODO : mouse and key attributes (in map above)
+
+    auto result = event_listening::dispatch(event, target);
+    drag_data_store->drag_data_store_allowed_effects_state = data_transfer->effect_allowed;
+    if (data_drag_store_was_changed)
+        drag_data_store->drag_data_store_mode = html::helpers::dragging_internals::drag_data_store_mode_t::PROTECTED;
+    data_transfer->m_drag_data_store = nullptr;
 }

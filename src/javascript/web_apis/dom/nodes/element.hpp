@@ -21,6 +21,7 @@ namespace dom::internal {struct reaction;}
 namespace dom::nodes {class attr;}
 namespace dom::nodes {class element;}
 namespace dom::nodes {class shadow_root;}
+namespace html::internal {struct browsing_context;}
 namespace geometry::shapes{class dom_rect;}
 
 
@@ -131,6 +132,8 @@ private cpp_properties:
 
     internal::custom_element_definition* m_custom_element_definition = nullptr;
     std::queue<dom::internal::reaction*> m_custom_element_reaction_queue;
+
+    html::internal::browsing_context* m_nested_browsing_context;
 
 private accessors:
     // dom

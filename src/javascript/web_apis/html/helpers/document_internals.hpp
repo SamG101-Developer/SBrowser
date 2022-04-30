@@ -81,6 +81,19 @@ struct html::helpers::document_internals {
     static auto appropriate_template_contents_owner_document(
             dom::nodes::document* document)
             -> dom::nodes::document*;
+
+    static auto update_visibility_state(
+            dom::nodes::document* document,
+            const ext::string& visibility_state)
+            -> void;
+
+    static auto activation_notification(
+            internal::browsing_context* browsing_context)
+            -> void;
+
+    static auto discard_document(
+            dom::nodes::document* document)
+            -> void;
 };
 
 
@@ -100,29 +113,6 @@ struct html::internal::document_unload_timing_information
 {
     performance::time::dom_high_res_timestamp unload_event_start_time = 0;
     performance::time::dom_high_res_timestamp unload_event_end_time = 0;
-};
-
-
-struct html::internal::browsing_context {
-    dom::nodes::window_proxy* window_proxy;
-
-    browsing_context* opener_browsing_context;
-    browsing_context* nested_browsing_context;
-    browsing_context* parent_browsing_context;
-
-    bool disowned;
-    bool is_closing;
-    bool system_focus;
-
-    ext::vector<dom::nodes::document*> session_history;
-
-    auto container_document() const -> dom::nodes::document*;
-    auto active_document() const -> dom::nodes::document*;
-    auto active_window() const -> dom::nodes::window*;
-
-    int virtual_browsing_context_group_id;
-    ext::string initial_url;
-    ext::string opener_origin_at_creation;
 };
 
 

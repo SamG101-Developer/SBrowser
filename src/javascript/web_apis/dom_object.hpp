@@ -42,6 +42,8 @@ protected cpp_methods:
         std::function<void(dom::nodes::node*, dom::nodes::document*, bool)> cloning_steps;
         std::function<void()> insertion_steps;
         std::function<void(dom::nodes::node* /* old_parent */)> removal_steps;
+
+        std::function<void(const ext::string&)> page_visibility_steps;
     } m_behaviour;
 };
 

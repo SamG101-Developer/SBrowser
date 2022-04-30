@@ -6,11 +6,11 @@
 template <typename T>
 html::mixins::form_associated<T>::form_associated()
 {
-    // set the property values
-    form << nullptr;
-
     // attach the qt functions
     disabled.template attach_qt_updater(&QWidget::setDisabled, static_cast<T*>(this));
+
+    // set the property values
+    form = nullptr;
 }
 
 

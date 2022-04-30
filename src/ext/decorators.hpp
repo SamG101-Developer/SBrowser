@@ -3,6 +3,9 @@
 
 #define enforce_range /* throw an error if the number is out of range */
 
+#define JS_BLOCK_START {
+#define JS_BLOCK_END }
+
 
 #define friends \
 /*
@@ -81,5 +84,7 @@
  * overridden operators
  * javascript exposed: YES (through +, -, *, / operators etc) (but not overridable / explicitly callable)
  */
+
+#define cpp_static_methods
  
 #endif //SBROWSER_DECORATORS_HPP

@@ -35,6 +35,7 @@ public js_methods:
     auto close() -> void;
     auto stop() -> void;
     auto focus() -> void;
+    auto blur() -> void;
 
     auto open(const ext::string& url = "", const ext::string& target = "", const ext::string& features="") -> window_proxy*;
 
@@ -70,7 +71,6 @@ public: js_properties
     ext::dom_property<html::custom_elements::custom_element_registry*> custom_elements;
 
     ext::dom_property<window_proxy*> window_;
-    ext::dom_property<window_proxy*> self;
     ext::dom_property<document*> document;
 
     // bar prop elements
@@ -85,7 +85,6 @@ public: js_properties
     ext::dom_property<ext::any> opener;
     ext::dom_property<ulong> length;
     ext::dom_property<element*> frame_element;
-    ext::dom_property<window_proxy*> frames;
     ext::dom_property<window_proxy*> top;
     ext::dom_property<window_proxy*> parent;
 
@@ -93,7 +92,8 @@ public: js_properties
     ext::dom_property<bool> origin_agent_cluster;
     ext::dom_property<html::other::navigator*> navigator;
 
-public: js_properties
+    // CSSOM
+
     // viewport
     ext::dom_property<long> inner_width;
     ext::dom_property<long> inner_height;
@@ -119,15 +119,27 @@ public: cpp_methods
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private: accessors
-    auto get_inner_width() -> long;
-    auto get_inner_height() -> long;
-    auto get_outer_width() -> long;
-    auto get_outer_height() -> long;
+    auto get_name() const -> ext::string;
+    auto get_closed() const -> bool;
+
+    auto get_opener() const -> ext::any;
+    auto get_length() const -> ulong;
+    auto get_frame_element() const -> element*;
+    auto get_top() const -> window_proxy*;
+    auto get_parent() const -> window_proxy*;
+
+    auto get_inner_width() const -> long;
+    auto get_inner_height() const -> long;
+    auto get_outer_width() const -> long;
+    auto get_outer_height() const -> long;
 
     auto get_scroll_x() -> double;
     auto get_scroll_y() -> double;
     auto get_page_x_offset() -> double;
     auto get_page_y_offset() -> double;
+
+    auto set_name(const ext::string& val) -> void;
+    auto set_opener(const ext::any& val) -> void;
 };
 
 

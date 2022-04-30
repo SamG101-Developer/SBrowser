@@ -13,19 +13,43 @@
 #include <html/elements/html_details_element.hpp>
 #include <html/elements/html_form_element.hpp>
 
+#include <html/helpers/content_editing_internals.hpp>
 #include <html/helpers/custom_html_elements.hpp>
+#include <html/helpers/form_internals.hpp>
 #include <html/helpers/html_element_internals.hpp>
+
+#include <html/other/element_internals.hpp>
 
 
 html::elements::html_element::html_element()
         : dom::nodes::element{}
         , mixins::html_or_svg_element<html_element>{}
 {
+    // modify behaviours
+    m_behaviour.activation_behaviour = [this](dom::events::event* event)
+    {
+        // handle activation behaviour for summary elements
+        if (local_name == "summary")
+        {
+            // return if this summary element isn't for a parent HTMLDetailsElement
+            if (not helpers::html_element_internals::is_summary_for_parent_details(this))
+                return;
+
+            // get the parent as a HTMLDetailsElement, and modify the open attribute depending on the element's state
+            auto* details_parent_element = ext::property_dynamic_cast<html_details_element*>(parent_element);
+            if (details_parent_element and details_parent_element->open) details_parent_element->open = false;
+        }
+    };
+
+    // attach the qt functions
+    hidden.attach_qt_updater(&QWidget::setHidden, m_rendered_widget);
+
     // set the custom accessor methods
-    inner_text.getter = [this] {return get_inner_text();};
-    outer_text.getter = [this] {return get_outer_text();};
-    lang.getter = [this] {return get_lang();};
-    translate.getter = [this] {return get_translate();};
+    autocapitalize.getter = [this] {return get_autocapitalize();};
+    inner_text.getter     = [this] {return get_inner_text();};
+    outer_text.getter     = [this] {return get_outer_text();};
+    lang.getter           = [this] {return get_lang();};
+    translate.getter      = [this] {return get_translate();};
 
     inner_text.setter = [this](auto&& PH1) {set_inner_text(std::forward<decltype(PH1)>(PH1));};
     outer_text.setter = [this](auto&& PH1) {set_outer_text(std::forward<decltype(PH1)>(PH1));};
@@ -39,8 +63,6 @@ html::elements::html_element::html_element()
     offset_left.setter   = [this](auto&& PH1) { set_offset_left(std::forward<decltype(PH1)>(PH1));};
     offset_width.setter  = [this](auto&& PH1) { set_offset_width(std::forward<decltype(PH1)>(PH1));};
     offset_height.setter = [this](auto&& PH1) { set_offset_height(std::forward<decltype(PH1)>(PH1));};
-
-
 }
 
 
@@ -48,7 +70,7 @@ auto html::elements::html_element::click()
         -> void
 {
     // do not allow clicks on disabled forms
-    if (auto* form_control = ext::property_dynamic_cast<html_form_element*>(parent_element) and helpers::form_controls::is_disabled(form_control))
+    if (helpers::html_element_internals::is_actually_disabled(this))
         return;
 
     // cannot click during another click (asynchronous processing)
@@ -98,6 +120,14 @@ auto html::elements::html_element::attach_internals()
     other::element_internals internals{};
     internals.target = this;
     return internals;
+}
+
+
+auto html::elements::html_element::get_autocapitalize() const
+        -> ext::string
+{
+    auto state = helpers::content_editing_internals::compute_autocapitalization_hint(this);
+    return state == "default" ? "" : state;
 }
 
 
@@ -196,40 +226,6 @@ auto html::elements::html_element::set_outer_text(
     // merge the previous node if it is a text node
     if (auto* text_node = dynamic_cast<dom::nodes::text*>(prev))
         helpers::html_element_internals::merge_with_next_text_node(text_node);
-}
-
-
-auto html::elements::html_element::insertion_steps()
-        -> void
-{
-    // TODO : form stuff
-}
-
-
-auto html::elements::html_element::removal_steps(dom::nodes::node* old_parent)
-        -> void
-{
-    // TODO : form stuff
-}
-
-
-auto html::elements::html_element::activation_behaviour(
-        dom::events::event* event)
-        -> void
-{
-    // handle activation behaviour for summary elements
-    if (local_name == "summary")
-    {
-        // return if this summary element isn't for a parent HTMLDetailsElement
-        if (not helpers::html_element_internals::is_summary_for_parent_details(this))
-            return;
-
-        // get the parent as a HTMLDetailsElement, and if the details element is open, then set the open attribute to
-        // false TODO : check this is correct?
-        auto* details_parent_element = ext::property_dynamic_cast<html_details_element*>(parent_element);
-        if (details_parent_element and details_parent_element->open)
-            details_parent_element->open = false;
-    }
 }
 
 

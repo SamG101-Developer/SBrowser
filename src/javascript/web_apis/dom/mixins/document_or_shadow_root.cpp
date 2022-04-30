@@ -1,7 +1,42 @@
 #include "document_or_shadow_root.hpp"
 
+#include <dom/helpers/shadows.hpp>
+#include <dom/helpers/trees.hpp>
+
+#include <dom/nodes/element.hpp>
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/shadow_root.hpp>
+
+
+template <typename T>
+dom::mixins::document_or_shadow_root<T>::document_or_shadow_root()
+{
+    // set the custom accessors
+    active_element.getter = [this] {return get_active_element();};
+}
+
+
+template <typename T>
+auto dom::mixins::document_or_shadow_root<T>::get_active_element() const
+        -> nodes::element*
+{
+    nodes::element* candidate = nullptr; // TODO : from html::helpers::focus_internals
+    dom::helpers::shadows::retarget(candidate, static_cast<const T*>(this));
+
+    if (dom::helpers::trees::root(candidate) != static_cast<const T*>(this))
+        return nullptr;
+
+    if (not dynamic_cast<nodes::document*>(candidate))
+        return candidate;
+
+    if (nodes::element* body = dynamic_cast<nodes::document*>(candidate)->body)
+        return body;
+
+    if (nodes::element* document_element = dynamic_cast<nodes::document*>(candidate)->document_element)
+        return document_element;
+
+    return nullptr;
+}
 
 
 template <typename T>

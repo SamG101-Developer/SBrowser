@@ -1,7 +1,13 @@
 #include "document_internals.hpp"
 
+#include <dom/helpers/event_dispatching.hpp>
 #include <dom/nodes/document.hpp>
+#include <dom/nodes/window.hpp>
+#include <dom/nodes/window_proxy.hpp>
+
 #include <html/elements/html_element.hpp>
+#include <html/helpers/browsing_context_internals.hpp>
+
 #include <url/url.hpp>
 
 
@@ -170,4 +176,18 @@ auto html::helpers::document_internals::allowed_to_use(
 
     // default to returning false
     return false;
+}
+
+
+auto html::helpers::document_internals::update_visibility_state(
+        dom::nodes::document* document,
+        const ext::string& visibility_state)
+        -> void
+{
+    if (document->visibility_state == visibility_state) return;
+
+    document->visibility_state = visibility_state;
+    document->m_behaviour.page_visibility_steps(visibility_state);
+
+    dom::helpers::event_dispatching::fire_event<>("visibilitychange", document, ext::string_any_map{{"bubbles", true}});
 }

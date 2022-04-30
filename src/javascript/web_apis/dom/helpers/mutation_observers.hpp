@@ -54,7 +54,8 @@ public:
     static auto queue_mutation_observers_microtask()
             -> void;
 
-    static auto queue_task(/* TODO */)
+    static auto queue_task(
+            steps_t&& steps)
             -> void;
 
     static auto queue_global_task(/* TODO */)

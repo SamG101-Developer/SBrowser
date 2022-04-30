@@ -5,12 +5,12 @@
 #include <ext/map.hpp>
 #include <ext/any.hpp>
 
-#include <veque.hpp>
-
 namespace dom::events {class event;}
 namespace dom::helpers {struct event_dispatching;}
 namespace dom::internal {struct event_path_struct;}
 namespace dom::nodes {class event_target;}
+namespace dom::nodes {class element;}
+namespace html::internal {struct drag_data_store;}
 
 
 struct dom::helpers::event_dispatching final
@@ -50,6 +50,13 @@ struct dom::helpers::event_dispatching final
             const ext::string& e,
             const nodes::event_target* target,
             bool not_trusted_flag = false)
+            -> bool;
+
+    static auto fire_drag_and_drop_event(
+            const ext::string& e,
+            nodes::element* target,
+            html::internal::drag_data_store* drag_data_store,
+            nodes::event_target* related_target)
             -> bool;
 };
 

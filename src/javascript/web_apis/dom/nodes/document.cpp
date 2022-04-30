@@ -36,6 +36,7 @@
 #include <html/elements/html_html_element.hpp>
 
 #include <html/helpers/document_internals.hpp>
+#include <html/helpers/focus_internals.hpp>
 
 #include <web_idl/types/date.hpp>
 
@@ -60,6 +61,7 @@ dom::nodes::document::document()
     document_element.getter = [this] {return get_document_element();};
 
     dir.getter           = [this] {return get_compat_mode();};
+    design_mode.getter   = [this] {return get_design_mode();};
     last_modified.getter = [this] {return get_last_modified();};
     cookie.getter        = [this] {return get_cookie();};
     body.getter          = [this] {return get_body();};
@@ -70,6 +72,7 @@ dom::nodes::document::document()
     forms.getter         = [this] {return get_forms();};
     scripts.getter       = [this] {return get_scripts();};
 
+    design_mode.setter = [this](auto&& PH1) {set_design_mode(std::forward<decltype(PH1)>(PH1));};
     title.setter       = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
     body.setter        = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
     cookie.setter      = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
@@ -431,8 +434,7 @@ auto dom::nodes::document::writeln(strings... text) const
 auto dom::nodes::document::has_focus() const
         -> bool
 {
-    //TODO
-    return html::helpers::elements::has_focus_steps(this);
+    return html::helpers::focus_internals::has_focus_steps(this);
 }
 
 
@@ -456,7 +458,7 @@ auto dom::nodes::document::elements_from_point(
 
     return helpers::trees::descendants(this)
             .cast_all<element*>()
-            .filter([x, y](element* node) {node->qt()->geometry().contains(x, y);});
+            .filter([x, y](element* node) {return node->qt()->geometry().contains(x, y);});
 }
 
 
@@ -561,6 +563,15 @@ auto dom::nodes::document::get_dir() const
 {
     // the dir is a wrapper for the html element's dir attribute
     return get_m_html_element()->dir;
+}
+
+
+auto dom::nodes::document::get_default_view() const
+        -> window_proxy*
+{
+    return not m_browsing_context
+            ? nullptr
+            : m_browsing_context->window_proxy;
 }
 
 
