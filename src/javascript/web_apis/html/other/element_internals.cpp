@@ -13,7 +13,7 @@
 
 html::other::element_internals::element_internals()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     shadow_root_node.getter = [this] {return get_shadow_root();};
 }
 

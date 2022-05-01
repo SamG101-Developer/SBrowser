@@ -4,6 +4,10 @@
 
 namespace html::helpers {struct browsing_context_internals;}
 namespace html::internal {struct browsing_context;}
+namespace html::internal {struct sandboxing_flags;}
+namespace html::internal {struct embedder_policy;}
+namespace html::internal {struct policy_container;}
+namespace html::internal {struct session_history_entry;}
 
 #include <ext/set.hpp>
 #include <ext/string.hpp>
@@ -13,7 +17,7 @@ namespace dom::nodes {class element;}
 namespace dom::nodes {class window;}
 namespace dom::nodes {class window_proxy;}
 
-namespace html::internal {struct sandboxing_flags;}
+namespace html::other {class history;}
 
 
 struct html::helpers::browsing_context_internals
@@ -84,6 +88,16 @@ struct html::helpers::browsing_context_internals
     static auto discard_browsing_context(
             internal::browsing_context* context)
             -> void;
+
+    static auto parse_sandboxing_directive(
+            const ext::string& input,
+            internal::sandboxing_flags& output)
+            -> void;
+
+    static auto determine_creation_sandboxing_flags(
+            internal::browsing_context* browsing_context,
+            dom::nodes::element* embedder = nullptr)
+            -> internal::sandboxing_flags&;
 };
 
 
@@ -125,8 +139,63 @@ struct html::internal::browsing_context {
     helpers::browsing_context_internals::browsing_context_group_t group;
 
     ext::string name;
-
     ext::string cross_origin_isolation_mode = "none";
+    sandboxing_flags& popup_sandboxing_flags_set;
+
+    ext::vector<session_history_entry*> joint_session_history;
+    session_history_entry* current_entry_joint_session_history;
+};
+
+
+struct html::internal::sandboxing_flags
+{
+    bool sandboxed_navigation_browsing_context_flag;
+    bool sandboxed_auxiliary_navigation_browsing_context_flag;
+    bool sandboxed_top_level_navigation_without_user_activation_browsing_context_flag;
+    bool sandboxed_top_level_navigation_with_user_activation_browsing_context_flag;
+    bool sandboxed_plugins_browsing_context_flag;
+    bool sandboxed_origin_browsing_context_flag;
+    bool sandboxed_forms_browsing_context_flag;
+    bool sandboxed_pointer_lock_browsing_context_flag;
+    bool sandboxed_scripts_browsing_context_flag;
+    bool sandboxed_automatic_features_browsing_context_flag;
+    bool sandboxed_document_domain_browsing_context_flag;
+    bool sandbox_propagates_to_auxiliary_browsing_contexts_flag;
+    bool sandboxed_modals_flag;
+    bool sandboxed_orientation_lock_browsing_context_flag;
+    bool sandboxed_presentation_browsing_context_flag;
+    bool sandboxed_downloads_browsing_context_flag;
+    bool sandboxed_custom_protocols_navigation_browsing_context_flag;
+};
+
+
+struct html::internal::embedder_policy
+{
+    ext::string value = "unsafe-none";
+    ext::string reporting_endpoint = "";
+    ext::string report_only_value = "unsafe-none";
+    ext::string report_only_reporting_endpoint = "";
+};
+
+
+struct html::internal::policy_container
+{
+    // TODO : csp list
+    embedder_policy* embedder_policy_object = new embedder_policy{};
+    ext::string referrer_policy = "default";
+};
+
+
+struct html::internal::session_history_entry
+{
+    url::url& url_record;
+    dom::nodes::document* document;
+    ext::string serialized_state;
+    policy_container* policy_container_obj;
+    ext::string scroll_restoration_mode = "auto";
+    ext::string scroll_position_data; // TODO : check type
+    ext::string browsing_context_name;
+    ext::string persisted_user_state;
 };
 
 

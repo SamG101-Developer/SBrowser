@@ -11,7 +11,7 @@
 template <typename T>
 dom::mixins::document_or_shadow_root<T>::document_or_shadow_root()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     active_element.getter = [this] {return get_active_element();};
 }
 

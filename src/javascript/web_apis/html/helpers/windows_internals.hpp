@@ -2,10 +2,12 @@
 #ifndef SBROWSER_WINDOWS_INTERNALS_HPP
 #define SBROWSER_WINDOWS_INTERNALS_HPP
 
-namespace html::helpers {struct windows_internals;}
-
 #include <ext/string.hpp>
 #include <ext/map.hpp>
+
+namespace html::helpers {struct windows_internals;}
+
+namespace javascript::realms {class realm;}
 
 
 struct html::helpers::windows_internals
@@ -35,6 +37,14 @@ struct html::helpers::windows_internals
     static auto parse_boolean_feature(
             const ext::string& value)
             -> bool;
+
+    static auto setup_window_environment_settings_object(
+            const url::url& creation_url,
+            javascript::realms::realm& realm,
+            const ext::string& reserved_environment,
+            const url::url& top_level_creation_url,
+            const ext::string& top_level_origin)
+            -> void;
 };
 
 

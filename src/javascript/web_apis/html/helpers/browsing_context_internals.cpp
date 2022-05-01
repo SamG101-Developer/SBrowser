@@ -116,6 +116,67 @@ auto html::helpers::browsing_context_internals::is_familiar_with(
 }
 
 
+auto html::helpers::browsing_context_internals::parse_sandboxing_directive(
+        const ext::string& input,
+        internal::sandboxing_flags& output)
+        -> void
+{
+    auto tokens = input.split_all(' ');
+
+    output.sandboxed_navigation_browsing_context_flag = true;
+
+    output.sandboxed_auxiliary_navigation_browsing_context_flag = not tokens.contains("allow-popups");
+
+    output.sandboxed_top_level_navigation_without_user_activation_browsing_context_flag = not tokens.contains("allow-top-navigation");
+
+    output.sandboxed_top_level_navigation_with_user_activation_browsing_context_flag = output.sandboxed_top_level_navigation_without_user_activation_browsing_context_flag
+            or not tokens.contains("allow-top-navigation-by-user-interaction");
+
+    output.sandboxed_plugins_browsing_context_flag = true;
+
+    output.sandboxed_origin_browsing_context_flag = not tokens.contains("allow-same-origin");
+
+    output.sandboxed_forms_browsing_context_flag = not tokens.contains("allow-forms");
+
+    output.sandboxed_pointer_lock_browsing_context_flag = not tokens.contains("allow-pointer-lock");
+
+    output.sandboxed_scripts_browsing_context_flag = not tokens.contains("allow-scripts");
+
+    output.sandboxed_automatic_features_browsing_context_flag = output.sandboxed_scripts_browsing_context_flag;
+
+    output.sandboxed_document_domain_browsing_context_flag = true;
+
+    output.sandbox_propagates_to_auxiliary_browsing_contexts_flag = not tokens.contains("allow-popups-to-escape-sandbox");
+
+    output.sandboxed_modals_flag = not tokens.contains("allow-modals");
+
+    output.sandboxed_orientation_lock_browsing_context_flag = not tokens.contains("allow-orientation-lock");
+
+    output.sandboxed_presentation_browsing_context_flag = not tokens.contains("allow-presentation");
+
+    output.sandboxed_downloads_browsing_context_flag = not tokens.contains("allow-downloads");
+
+    output.sandboxed_custom_protocols_navigation_browsing_context_flag =
+            output.sandboxed_top_level_navigation_without_user_activation_browsing_context_flag
+            or not output.sandboxed_auxiliary_navigation_browsing_context_flag
+            or not tokens.contains("allow-top-navigation-to-custom-protocols");
+}
+
+
+auto html::helpers::browsing_context_internals::determine_creation_sandboxing_flags(
+        internal::browsing_context* browsing_context,
+        dom::nodes::element* embedder)
+        -> internal::sandboxing_flags&
+{
+    return not embedder
+            ? browsing_context->popup_sandboxing_flags_set
+            : embedder->owner_document->m_active_document_flags_set;
+}
+
+
+////
+
+
 auto html::internal::browsing_context::active_document() const
         -> dom::nodes::document*
 {

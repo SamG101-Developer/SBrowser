@@ -35,6 +35,7 @@
 #include <html/elements/html_head_element.hpp>
 #include <html/elements/html_html_element.hpp>
 
+#include <html/helpers/browsing_context_internals.hpp>
 #include <html/helpers/document_internals.hpp>
 #include <html/helpers/focus_internals.hpp>
 
@@ -88,6 +89,7 @@ dom::nodes::document::document()
 
     // set the attribute values
     m_origin = javascript::realms::surrounding_agent().get<const ext::string&>("origin");
+    m_active_document_flags_set = html::internal::sandboxing_flags{};
 
     // create the widget representation
     auto rendered_widget = QPointer<QScrollArea>{};

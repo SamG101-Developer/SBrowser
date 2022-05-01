@@ -10,7 +10,7 @@ html::mixins::element_content_editable<T>::element_content_editable()
     // constrain the property values
     content_editable.constrain_values({"true", "false", "inherited"});
 
-    // set the custom accessors
+    // set the custom accessor methods
     is_content_editable.getter = [this] {return get_is_content_editable();};
 }
 

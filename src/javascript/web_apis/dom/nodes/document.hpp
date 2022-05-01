@@ -49,6 +49,7 @@ namespace html::elements {class html_script_element;}
 namespace html::elements {class html_title_element;}
 namespace html::helpers {struct document_internals;}
 namespace html::helpers {struct script_internals;}
+namespace html::helpers {struct browsing_context_internals;}
 namespace html::internal {struct policy_container;}
 namespace html::internal {struct permissions_policy;}
 namespace html::internal {struct module_map;}
@@ -77,6 +78,7 @@ public friends:
     friend class dom::other::dom_implementation;
     friend class html::elements::html_base_element;
     friend class html::elements::html_image_element;
+    friend struct html::helpers::browsing_context_internals;
     friend struct html::helpers::document_internals;
     friend struct html::helpers::script_internals;
 
@@ -198,7 +200,6 @@ private cpp_properties:
     bool m_is_initial = false;
     bool m_will_declaratively_refresh = false;
     ext::string m_navigation_id = "";
-    ushort m_sandboxing_flag = 0;
 
     ext::set<element*> m_render_blocking_elements {};
 
@@ -226,6 +227,8 @@ private cpp_properties:
     bool m_autofocus_processed_flag;
 
     bool m_design_mode_enabled = false;
+
+    html::internal::sandboxing_flags& m_active_document_flags_set;
 
 private accessors:
     // dom

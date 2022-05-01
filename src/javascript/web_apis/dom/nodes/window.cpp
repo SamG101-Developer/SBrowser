@@ -24,7 +24,7 @@ dom::nodes::window::window()
 //        , css::cssom_view::mixins::scrollable()
         , ext::listlike<ext::string>()
 {
-    // set the custom accessors
+    // set the custom accessor methods
     // TODO
 }
 

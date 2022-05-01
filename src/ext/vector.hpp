@@ -79,6 +79,9 @@ public js_methods:
     auto pop(size_t index = -1) -> T&;
     auto clear() -> vector<T>& override;
 
+    auto remove_all_after(const T& item) -> vector<T>&;
+    auto remove_all_before(const T& item) -> vector<T>&;
+
     auto max_element() const -> T&;
     auto min_element() const -> T&;
 

@@ -63,6 +63,7 @@ public: cpp_methods
     auto substring(const_iterator begin_iter, const_iterator end_iter) const -> string;
     auto replace(size_t offset, size_t count, const string& replacement) -> string;
     auto split(char delimiter, size_t max_delimiters = 1) const -> ext::vector<string>;
+    auto split_all(char delimiter) const -> ext::vector<string>;
     auto contains(const char* item) const -> bool;
     constexpr auto c_str() const -> const char*;
 
@@ -232,6 +233,12 @@ auto ext::string::split(const char delimiter, size_t max_delimiters) const -> ex
             break;
         ++delimiter_count;
     }
+}
+
+
+auto ext::string::split_all(char delimiter) const -> ext::vector<string>
+{
+    return split(delimiter, count(delimiter));
 }
 
 
