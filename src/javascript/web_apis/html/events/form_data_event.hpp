@@ -18,7 +18,7 @@ public js_properties:
     ext::dom_property<xhr::form_data*, _F> form_data;
 
 public cpp_methods:
-    auto v8(v8::Isolate *isolate) const -> ext::any override;
+    auto v8(v8::Isolate* isolate) const -> ext::any override;
 };
 
 

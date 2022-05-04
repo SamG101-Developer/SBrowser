@@ -22,8 +22,6 @@
 
 
 html::elements::html_element::html_element()
-        : dom::nodes::element{}
-        , mixins::html_or_svg_element<html_element>{}
 {
     // modify behaviours
     m_behaviour.activation_behaviour = [this](dom::events::event* event)
@@ -37,7 +35,8 @@ html::elements::html_element::html_element()
 
             // get the parent as a HTMLDetailsElement, and modify the open attribute depending on the element's state
             auto* details_parent_element = ext::property_dynamic_cast<html_details_element*>(parent_element);
-            if (details_parent_element and details_parent_element->open) details_parent_element->open = false;
+            if (details_parent_element and details_parent_element->open)
+                details_parent_element->open = false;
         }
     };
 
@@ -93,7 +92,11 @@ auto html::elements::html_element::attach_internals()
             [this] {return m_is.empty();});
 
     // get the custom element definition using the empty 'is' value
-    auto* definition = dom::helpers::custom_elements::lookup_custom_element_definition(owner_document, namespace_uri, local_name, "");
+    auto* definition = dom::helpers::custom_elements::lookup_custom_element_definition(
+            owner_document,
+            namespace_uri,
+            local_name,
+            "");
 
     // if the definition is null, then throw a not supported error
     dom::helpers::exceptions::throw_v8_exception<NOT_SUPPORTED_ERR>(
@@ -180,7 +183,7 @@ auto html::elements::html_element::get_translate() const
         -> ext::string
 {
     // map the translation mode to a "yes" / "no" value
-    return m_translation_mode == internal::translation_mode::TRANSLATE_ENABLED ? "yes" : "no"; // TODO : 'inherit' state
+    return m_translation_mode == internal::translation_mode_t::TRANSLATE_ENABLED ? "yes" : "no"; // TODO : 'inherit' state
 }
 
 

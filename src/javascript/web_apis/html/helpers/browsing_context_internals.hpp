@@ -114,8 +114,6 @@ struct html::internal::browsing_context {
     bool is_closing;
     bool is_popup;
 
-    ext::vector<dom::nodes::document*> session_history;
-
     auto active_document   () const -> dom::nodes::document*;
     auto container_document() const -> dom::nodes::document*;
     auto content_document  () const -> dom::nodes::document*;
@@ -144,6 +142,9 @@ struct html::internal::browsing_context {
 
     ext::vector<session_history_entry*> joint_session_history;
     session_history_entry* current_entry_joint_session_history;
+
+    ext::vector<session_history_entry*> session_history;
+    session_history_entry* current_entry;
 };
 
 

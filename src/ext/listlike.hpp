@@ -2,32 +2,31 @@
 #ifndef SBROWSER_LISTLIKE_HPP
 #define SBROWSER_LISTLIKE_HPP
 
-#include <ext/property.hpp>
 #include <dom_object.hpp>
 
+namespace ext {template <typename T> class listlike;}
 
 namespace ext {template <typename T> class vector;}
-namespace ext {template <typename T> class listlike;}
 
 
 template <typename T>
 class ext::listlike : public virtual dom_object
 {
 public friends:
-    friend v8pp::convert<ext::listlike<T>>;
+    friend struct v8pp::convert<ext::listlike<T>>;
 
 public constructors:
-    explicit listlike(ext::vector<T>* linked_list = {});
-
-public operators:
-    virtual auto operator[] (size_t index) -> T&;
-    virtual auto operator[] (const ext::string& index) -> T&;
+    explicit listlike(ext::vector<T>* linked_list);
 
 public js_properties:
     ext::property<size_t> length;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
+
+public operators:
+    virtual auto operator[](size_t index) -> T&;
+    virtual auto operator[](const ext::string& index) -> T&;
 
 protected cpp_properties:
     ext::vector<T>* m_linked_list;

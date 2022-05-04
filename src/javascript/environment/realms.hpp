@@ -3,8 +3,7 @@
 
 #include <ext/string.hpp>
 
-namespace dom::nodes {class window;}
-
+#include <dom_object.hpp>
 #include <v8.h>
 #include <v8pp/convert.hpp>
 
@@ -13,26 +12,32 @@ namespace dom::nodes {class window;}
 // realm -> context
 // global object, settings object contained in realm
 
+
+class dom_object;
 namespace dom::nodes {class node;}
+namespace dom::nodes {class window;}
+
+namespace url {class url;}
 
 
 namespace javascript::realms
 {
     class realm;
+    struct settings_object_t {};
     using global_object_t = dom::nodes::window;
-    class settings_object_t;
 
-    realm relevant_realm(dom::nodes::node* node);
-    realm surrounding_realm(dom::nodes::node* node);
-    realm current_realm(dom::nodes::node* node);
-    realm entry_realm();
-    realm incumbent_realm();
+    auto relevant_realm(dom_object* node) -> realm;
+    auto surrounding_realm(dom_object* node) -> realm;
+    auto current_realm(dom_object* node) -> realm;
+    auto entry_realm() -> realm;
+    auto incumbent_realm() -> realm;
 }
 
 
-class javascript::realms::realm {
+class javascript::realms::realm
+{
 public constructors:
-    explicit realm(const v8::Local<v8::Context> context): m_context(context) {};
+    explicit realm(const v8::Local<v8::Context> context) : m_context(context) {};
 
 public cpp_methods:
     template <typename T> auto get(ext::string&& attribute_name) const -> T;

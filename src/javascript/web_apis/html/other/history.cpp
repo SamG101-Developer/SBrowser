@@ -57,6 +57,26 @@ auto html::other::history::forward()
 }
 
 
+auto html::other::history::push_state(
+        const ext::any& data,
+        const ext::string& unused,
+        const ext::string& url)
+        -> void
+{
+    helpers::history_internals::shared_history_push_replace_state_steps(this, data, url, true);
+}
+
+
+auto html::other::history::replace_state(
+        const ext::any& data,
+        const ext::string& unused,
+        const ext::string& url)
+        -> void
+{
+    helpers::history_internals::shared_history_push_replace_state_steps(this, data, url, false);
+}
+
+
 auto html::other::history::get_length()
         -> ulong
 {
@@ -64,7 +84,7 @@ auto html::other::history::get_length()
             "document must be fully active",
             [this] {return not helpers::document_internals::is_active_document(m_document);});
 
-    return m_document->m_browsing_context->joint_session_history.size();
+    return m_document->m_browsing_context->joint_session_history.length();
 }
 
 

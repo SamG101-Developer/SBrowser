@@ -44,7 +44,7 @@ struct dom::helpers::event_listening final
 
     // event dispatching
     static auto dispatch(
-            events::event* node,
+            events::event* event,
             nodes::event_target* event_target)
             -> bool;
 };

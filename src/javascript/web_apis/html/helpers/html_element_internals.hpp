@@ -16,7 +16,7 @@ namespace html::elements {class html_olist_element;}
 namespace html::elements {class html_li_element;}
 namespace html::helpers {struct html_element_internals;}
 namespace html::internal {enum class direction_mode;}
-namespace html::internal {enum class translation_mode;}
+namespace html::internal {enum class translation_mode_t;}
 namespace html::mixins {template <typename T> class targetable;}
 
 namespace
@@ -120,7 +120,7 @@ enum class html::internal::direction_mode
 };
 
 
-enum class html::internal::translation_mode
+enum class html::internal::translation_mode_t
 {
     TRANSLATE_ENABLED,
     NO_TRANSLATE

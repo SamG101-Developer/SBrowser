@@ -1,6 +1,10 @@
 #include "document_internals.hpp"
 
+#include <javascript/environment/realms.hpp>
+
+#include <dom/events/event.hpp>
 #include <dom/helpers/event_dispatching.hpp>
+#include <dom/helpers/event_listening.hpp>
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/window.hpp>
 #include <dom/nodes/window_proxy.hpp>
@@ -190,4 +194,70 @@ auto html::helpers::document_internals::update_visibility_state(
     document->m_behaviour.page_visibility_steps(visibility_state);
 
     dom::helpers::event_dispatching::fire_event<>("visibilitychange", document, ext::string_any_map{{"bubbles", true}});
+}
+
+
+auto html::helpers::document_internals::prompt_to_unload(
+        dom::nodes::document* document,
+        const bool recursive_flag)
+        -> ext::string
+{
+    document->m_unload_counter += 1;
+
+    auto* event = new dom::events::event{"beforeunload", {{"cancelable", true}}};
+    dom::helpers::event_listening::dispatch(event, javascript::realms::relevant_realm(document).global_object);
+
+    ext::string result = "no-prompt";
+
+    if (not recursive_flag)
+    {
+        ext::vector<internal::browsing_context*> descendants; // TODO = browsing_context_internals::
+        for (auto* descendant: descendants)
+        {
+            auto internal_result = prompt_to_unload(descendant->active_document(), true);
+            if (internal_result == "refuse") return internal_result;
+            if (internal_result == "confirm") result = internal_result;
+        }
+    }
+
+    document->m_unload_counter -= 1;
+    return result;
+}
+
+
+auto html::helpers::document_internals::unload(
+        dom::nodes::document* new_document,
+        const bool recursive_flag,
+        internal::document_unload_timing_information* unload_timing_info)
+        -> void
+{
+    new_document->m_unload_counter += 1;
+    if (new_document->m_page_showing_flag)
+    {
+        new_document->m_page_showing_flag = false;
+        dom::helpers::event_dispatching::fire_page_transition_event("pagehide", javascript::realms::relevant_realm(new_document).global_object);
+        update_visibility_state(new_document, "hidden");
+    }
+
+    if (unload_timing_info)
+    {
+        // TODO
+    }
+
+    if (not new_document->m_salvageable)
+        dom::helpers::event_dispatching::fire_event("unload", javascript::realms::relevant_realm(new_document).global_object);
+
+    if (not recursive_flag)
+    {
+        ext::vector<internal::browsing_context*> descendants; // TODO = browsing_context_internals::
+        for (auto* descendant: descendants)
+        {
+            unload(descendant->active_document());
+            if (not descendant->active_document()->m_salvageable) new_document->m_salvageable = false;
+        }
+        if (new_document->m_salvageable)
+            discard_document(new_document);
+    }
+
+    new_document->m_unload_counter -= 1;
 }

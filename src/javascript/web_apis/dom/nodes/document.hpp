@@ -2,14 +2,6 @@
 #ifndef SBROWSER_DOCUMENT_HPP
 #define SBROWSER_DOCUMENT_HPP
 
-#include <variant>
-
-#include <ext/map.hpp>
-#include <ext/set.hpp>
-#include <ext/listlike.hpp>
-
-#include <javascript/interop/attribute_descriptors.hpp>
-
 #include <dom/nodes/node.hpp>
 #include <dom/mixins/document_or_element_node.hpp>
 #include <dom/mixins/document_or_shadow_root.hpp>
@@ -17,10 +9,22 @@
 #include <dom/mixins/parent_node.hpp>
 #include <dom/xpath/xpath_evaluator.hpp>
 
+namespace dom::nodes {class document;}
+
+#include <variant>
+#include <ext/map.hpp>
+#include <ext/set.hpp>
+#include <ext/listlike.hpp>
+
+#include <javascript/interop/attribute_descriptors.hpp>
+
+#include <performance/time/dom_high_res_timestamp.hpp>
+
 #include <QtWidgets/QScrollArea>
 
 namespace css::cssom_view::other {class caret_position;}
 namespace css::css_regions::elements {class named_flow;}
+
 namespace dom::helpers {struct custom_elements;}
 namespace dom::helpers {struct node_internals;}
 namespace dom::iterators {class node_filter;}
@@ -29,7 +33,6 @@ namespace dom::iterators {class tree_walker;}
 namespace dom::nodes {class attr;}
 namespace dom::nodes {class cdata_section;}
 namespace dom::nodes {class comment;}
-namespace dom::nodes {class document;}
 namespace dom::nodes {class document_fragment;}
 namespace dom::nodes {class document_type;}
 namespace dom::nodes {class processing_instruction;}
@@ -37,7 +40,9 @@ namespace dom::nodes {class text;}
 namespace dom::nodes {class window_proxy;}
 namespace dom::ranges {class range;}
 namespace dom::other {class dom_implementation;}
+
 namespace encoding {class encoding;}
+
 namespace html::elements {class html_base_element;}
 namespace html::elements {class html_body_element;}
 namespace html::elements {class html_head_element;}
@@ -58,8 +63,11 @@ namespace html::internal {struct document_load_timing_information;}
 namespace html::internal {struct document_unload_timing_information;}
 namespace html::internal {struct browsing_context;}
 namespace html::internal {struct sandboxing_flags;}
+namespace html::internal {struct session_history_entry;}
 namespace html::other {class location;}
+
 namespace svg::elements {class svg_script_element;}
+
 namespace url {class url;}
 
 
@@ -76,6 +84,7 @@ public friends:
     friend struct dom::helpers::custom_elements;
     friend struct dom::helpers::node_internals;
     friend class dom::other::dom_implementation;
+
     friend class html::elements::html_base_element;
     friend class html::elements::html_image_element;
     friend struct html::helpers::browsing_context_internals;
@@ -177,10 +186,10 @@ protected cpp_methods:
     auto get_the_parent(events::event* event) -> event_target* override;
 
 private cpp_methods:
-    html::elements::html_html_element* get_m_html_element() const;
-    html::elements::html_head_element* get_m_head_element() const;
-    html::elements::html_title_element* get_m_title_element() const;
-    html::elements::html_body_element* get_m_body_element() const;
+    [[nodiscard]] auto get_m_html_element() const -> html::elements::html_html_element*;
+    [[nodiscard]] auto get_m_head_element() const -> html::elements::html_head_element*;
+    [[nodiscard]] auto get_m_title_element() const -> html::elements::html_title_element*;
+    [[nodiscard]] auto get_m_body_element() const -> html::elements::html_body_element*;
 
 private cpp_properties:
     // dom
@@ -229,28 +238,40 @@ private cpp_properties:
     bool m_design_mode_enabled = false;
 
     html::internal::sandboxing_flags& m_active_document_flags_set;
+    html::internal::session_history_entry* m_latest_entry;
+
+    element* m_target_element;
+
+    int m_completely_loaded_time;
+    bool m_completely_loaded;
+
+    bool m_salvageable = true;
+    bool m_page_showing_flag = false;
+    performance::time::dom_high_res_timestamp m_suspension_time;
+    ext::vector<performance::time::dom_high_res_timestamp> suspended_timer_handles;
+    int m_unload_counter;
 
 private accessors:
     // dom
-    auto get_compat_mode() const -> ext::string;
-    auto get_character_set() const -> ext::string;
-    same_obj auto get_doctype() const -> document_type*;
-    same_obj auto get_document_element() const -> element*;
+    [[nodiscard]] auto get_compat_mode() const -> ext::string;
+    [[nodiscard]] auto get_character_set() const -> ext::string;
+    [[nodiscard]] auto same_obj get_doctype() const -> document_type*;
+    [[nodiscard]] auto same_obj get_document_element() const -> element*;
 
     // html
-    auto get_dir() const -> ext::string;
-    auto get_design_mode() const -> ext::string;
-    auto get_default_view() const -> window_proxy*;
-    auto get_last_modified() const -> ext::string;
-    auto get_cookie() const -> ext::string;
-    same_obj auto get_body() const -> html::elements::html_body_element*;
-    same_obj auto get_head() const -> html::elements::html_head_element*;
-    auto get_title() const -> ext::string;
+    [[nodiscard]] auto get_dir() const -> ext::string;
+    [[nodiscard]] auto get_design_mode() const -> ext::string;
+    [[nodiscard]] auto get_default_view() const -> window_proxy*;
+    [[nodiscard]] auto get_last_modified() const -> ext::string;
+    [[nodiscard]] auto get_cookie() const -> ext::string;
+    [[nodiscard]] auto same_obj get_body() const -> html::elements::html_body_element*;
+    [[nodiscard]] auto same_obj get_head() const -> html::elements::html_head_element*;
+    [[nodiscard]] auto get_title() const -> ext::string;
 
-    new_obj auto get_images() -> ext::vector<html::elements::html_image_element*>;
-    new_obj auto get_links() -> ext::vector<html::elements::html_link_element*>;
-    new_obj auto get_forms() -> ext::vector<html::elements::html_form_element*>;
-    new_obj auto get_scripts() -> ext::vector<html::elements::html_script_element*>;
+    [[nodiscard]] auto new_obj get_images() -> ext::vector<html::elements::html_image_element*>;
+    [[nodiscard]] auto new_obj get_links() -> ext::vector<html::elements::html_link_element*>;
+    [[nodiscard]] auto new_obj get_forms() -> ext::vector<html::elements::html_form_element*>;
+    [[nodiscard]] auto new_obj get_scripts() -> ext::vector<html::elements::html_script_element*>;
 
     auto set_design_mode(const ext::string& val) -> void;
     auto set_title(const ext::string& val) -> void;
@@ -259,7 +280,7 @@ private accessors:
     auto set_ready_state(const ext::string& val) -> void;
 
     // cssom-view
-    same_obj auto get_scrolling_element() const -> element*;
+    [[nodiscard]] auto same_obj get_scrolling_element() const -> element*;
 };
 
 

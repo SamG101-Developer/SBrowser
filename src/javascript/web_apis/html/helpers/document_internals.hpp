@@ -94,6 +94,25 @@ struct html::helpers::document_internals {
     static auto discard_document(
             dom::nodes::document* document)
             -> void;
+
+    static auto prompt_to_unload(
+            dom::nodes::document* document,
+            bool recursive_flag = false)
+            -> ext::string;
+
+    static auto unload(
+            dom::nodes::document* new_document,
+            bool recursive_flag = false,
+            internal::document_unload_timing_information* unload_timing_info = nullptr)
+            -> void;
+
+    static auto abort_document(
+            dom::nodes::document* document)
+            -> void;
+
+    static auto stop_loading_document(
+            dom::nodes::document* document)
+            -> void;
 };
 
 

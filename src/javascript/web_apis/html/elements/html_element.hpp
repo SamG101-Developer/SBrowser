@@ -12,7 +12,7 @@
 
 namespace html::elements {class html_element;}
 namespace html::other {class element_internals;}
-namespace html::internal {enum class translation_mode;}
+namespace html::internal {enum class translation_mode_t;}
 
 
 class html::elements::html_element
@@ -64,15 +64,15 @@ private cpp_properties:
     bool m_attached_internals;
 
 private cpp_properties:
-    internal::translation_mode m_translation_mode;
+    internal::translation_mode_t m_translation_mode;
 
 private accessors:
     // html
-    auto get_autocapitalize() const -> ext::string;
-    auto get_inner_text() const -> ext::string;
-    auto get_outer_text() const -> ext::string;
-    auto get_lang() const -> ext::string;
-    auto get_translate() const -> ext::string;
+    [[nodiscard]] auto get_autocapitalize() const -> ext::string;
+    [[nodiscard]] auto get_inner_text() const -> ext::string;
+    [[nodiscard]] auto get_outer_text() const -> ext::string;
+    [[nodiscard]] auto get_lang() const -> ext::string;
+    [[nodiscard]] auto get_translate() const -> ext::string;
 
     auto set_inner_text(const ext::string& val) -> void;
     auto set_outer_text(const ext::string& val) -> void;

@@ -10,6 +10,7 @@ namespace dom::helpers {struct event_dispatching;}
 namespace dom::internal {struct event_path_struct;}
 namespace dom::nodes {class event_target;}
 namespace dom::nodes {class element;}
+namespace dom::nodes {class window;}
 namespace html::internal {struct drag_data_store;}
 
 
@@ -57,6 +58,12 @@ struct dom::helpers::event_dispatching final
             nodes::element* target,
             html::internal::drag_data_store* drag_data_store,
             nodes::event_target* related_target)
+            -> bool;
+
+    static auto fire_page_transition_event(
+            const ext::string& e,
+            nodes::window* target,
+            bool persisted)
             -> bool;
 };
 

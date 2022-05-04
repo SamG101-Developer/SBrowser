@@ -18,8 +18,8 @@ public js_methods:
     auto go(long delta = 0) -> void;
     auto back() -> void;
     auto forward() -> void;
-    auto push_state(const ext::any& data, const ext::string& unused, const ext::string& url = "");
-    auto replace_state(const ext::any& data, const ext::string& unused, const ext::string& url = "");
+    auto push_state(const ext::any& data, const ext::string& unused, const ext::string& url = "") -> void;
+    auto replace_state(const ext::any& data, const ext::string& unused, const ext::string& url = "") -> void;
 
 public js_properties:
     ext::html_property<ulong, _F> length;

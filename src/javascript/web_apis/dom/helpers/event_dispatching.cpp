@@ -5,13 +5,20 @@
 #include <javascript/environment/realms.hpp>
 
 #include <dom/events/event.hpp>
+
 #include <dom/helpers/event_listening.hpp>
 #include <dom/helpers/shadows.hpp>
+
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/node.hpp>
 #include <dom/nodes/shadow_root.hpp>
+#include <dom/nodes/window.hpp>
+
+#include <html/events/drag_event.hpp>
+#include <html/events/page_transition_event.hpp>
 
 #include <html/helpers/dragging_internals.hpp>
+
 #include <html/dragging/data_transfer.hpp>
 
 #include <QtGui/QGuiApplication>
@@ -28,7 +35,7 @@ auto dom::helpers::event_dispatching::append_to_event_path(
 {
     // get the invocation target (cast as a shadow root), and if the invocation target is in the shadow tree or the root
     // of a closed tree
-    auto* const invocation_target_as_shadow_root = dynamic_cast<const nodes::shadow_root*>(invocation_target);
+    const auto* const invocation_target_as_shadow_root = dynamic_cast<const nodes::shadow_root*>(invocation_target);
     const bool invocation_target_in_shadow_tree = shadows::is_root_shadow_root(dynamic_cast<const nodes::node*>(invocation_target));
     const bool root_of_closed_tree =
             shadows::is_shadow_root(dynamic_cast<const nodes::node*>(invocation_target))
@@ -56,7 +63,7 @@ auto dom::helpers::event_dispatching::invoke(
         -> void
 {
     // create a copy of the event path, upto the event path struct being invoked
-    ext::vector<internal::event_path_struct*> temp_vector {
+    ext::vector<internal::event_path_struct*> temp_vector{
         event->path->begin(),
         std::find(event->path->begin(), event->path->end(), event_path_struct)
     };
@@ -90,7 +97,7 @@ auto dom::helpers::event_dispatching::inner_invoke(
     using callback_t = std::function<void()>;
 
     // iterator over each event listener
-    for (auto& event_listener: event_listeners)
+    for (const auto& event_listener: event_listeners)
     {
         // continue if the event listener type doesn't match the event type
         if (event->type != event_listener.at("type").to<ext::string>())
@@ -187,7 +194,7 @@ auto dom::helpers::event_dispatching::fire_drag_and_drop_event(
         {"view", window},
         {"relatedTarget", related_target},
         {"dataTransfer", data_transfer},
-        {"cancelable", not ext::sting_vector{"dragleave", "dragend"}.contains(e)}}};
+        {"cancelable", not ext::string_vector{"dragleave", "dragend"}.contains(e)}}};
 
     // TODO : mouse and key attributes (in map above)
 
@@ -196,4 +203,15 @@ auto dom::helpers::event_dispatching::fire_drag_and_drop_event(
     if (data_drag_store_was_changed)
         drag_data_store->drag_data_store_mode = html::helpers::dragging_internals::drag_data_store_mode_t::PROTECTED;
     data_transfer->m_drag_data_store = nullptr;
+}
+
+
+auto dom::helpers::event_dispatching::fire_page_transition_event(
+        const ext::string& e,
+        nodes::window* target,
+        const bool persisted)
+        -> bool
+{
+    auto* event = new html::events::page_transition_event{e, {{"persisted", persisted}, {"cancelable", true}, {"bubbles", true}}};
+    return event_listening::dispatch(event, target);
 }
