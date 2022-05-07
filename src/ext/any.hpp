@@ -57,7 +57,7 @@ ext::any::any(const T& other)
 
 template <typename T>
 ext::any::any(T&& other) noexcept
-        : m_value(std::forward<T>(other))
+        : m_value(std::move(other.m_value))
 {
     // use the constructor to emplace the moved object into this optional value
 }
