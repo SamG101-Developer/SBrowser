@@ -40,7 +40,7 @@
 
 /* LISTLIKE<T> */
 template <typename T>
-struct v8pp::convert<T>
+struct v8pp::convert<ext::listlike<T>>
 {
     using from_type = ext::listlike<T>;
     using to_type = v8::Local<v8::Object>;
@@ -312,52 +312,68 @@ struct v8pp::convert<ext::any>
 
         // create the handle_scope and return the c++ object
         v8::HandleScope handle_scope{isolate};
-        if (v8_value->IsBoolean())
-            return from_type{v8pp::convert<bool>::from_v8(isolate, v8_value)};
 
-        else if (v8_value->IsNumber() or v8_value->IsBigInt())
-            return from_type{v8pp::convert<long double>::from_v8(isolate, v8_value)};
-
-        else if (v8_value->IsString())
-            return from_type{v8pp::convert<ext::string>::from_v8(isolate, v8_value)};
-
-        else if (v8_value->IsUndefined())
+        // undefined type maps to an empty any object
+        if (v8_value->IsUndefined())
             return from_type{};
 
-        else if (v8_value->IsNull())
-        {
-            auto f = from_type{};
-            f.emplace<void>();
-            return f;
-        }
+        // null type maps to an any object containing a nullptr
+        if (v8_value->IsNull())
+            return from_type{nullptr};
 
-        else
-            throw std::invalid_argument("Invalid type");
+        // boolean type maps to a primitive boolean type
+        if (v8_value->IsBoolean())
+            return from_type{v8pp::convert<bool>::from_v8(isolate, v8_value.As<v8::Boolean>())};
+
+        // number type maps to a primitive double type (64-bit decimal)
+        if (v8_value->IsNumber())
+            return from_type{v8pp::convert<double>::from_v8(isolate, v8_value.As<v8::Number>())};
+
+        // big int type maps to a primitive long long type TODO : accurate enough?
+        if (v8_value->IsBigInt())
+            return from_type{v8pp::convert<long long>::from_v8(isolate, v8_value.As<v8::BigInt>())};
+
+        // string type maps to an ext::string type
+        if (v8_value->IsString())
+            return from_type{v8pp::convert<ext::string>::from_v8(isolate, v8_value.As<v8::String>())};
+
+        // symbol type : TODO
+        if (v8_value->IsSymbol())
+            ; // TODO
+
+        // object type maps to a pointer to a dom_object type (base of every object)
+        if (v8_value->IsObject())
+            return from_type{v8pp::convert<dom_object*>::from_v8(isolate, v8_value.As<v8::Object>())};
+
+        // any unknown type throws an error
+        throw std::invalid_argument{"Unknown Javascript type being converted to C++"};
+
     }
 
     static auto to_v8(v8::Isolate* isolate, const from_type& cpp_value) -> to_type
     {
         // create the handle_scope and return the javascript number object (T operator invokes numeric conversion)
         v8::EscapableHandleScope escapable_handle_scope{isolate};
+
+        if (cpp_value.empty()) // UNDEFINED
+            return escapable_handle_scope.Escape(v8::Undefined(isolate));
+
+        if (cpp_value.type() == typeid(void)) // NULL
+            return escapable_handle_scope.Escape(v8::Null(isolate));
+
         if (cpp_value.type() == typeid(bool)) // BOOLEAN
             return escapable_handle_scope.Escape(v8pp::convert<bool>::to_v8(isolate, cpp_value.to<bool>()));
 
-        else if (cpp_value.is_numeric()) // NUMBER
+        if (cpp_value.is_numeric()) // NUMBER
             return escapable_handle_scope.Escape(v8pp::convert<double>::to_v8(isolate, cpp_value.to<double>()));
 
-        else if (cpp_value.type() == typeid(ext::string)) // STRING
+        if (cpp_value.type() == typeid(ext::string)) // STRING
             return escapable_handle_scope.Escape(v8pp::convert<ext::string>::to_v8(isolate, cpp_value.to<ext::string>()));
 
-        else if (cpp_value.type() == typeid(ext::vector<ext::any>)) // ARRAY TODO -> does this work?
+        if (cpp_value.type() == typeid(ext::vector<ext::any>)) // ARRAY TODO -> does this work?
             return escapable_handle_scope.Escape(v8pp::convert<ext::vector<ext::any>>::to_v8(isolate, cpp_value.to<ext::vector<ext::any>>()));
 
-        else if (cpp_value.empty()) // UNDEFINED
-            return escapable_handle_scope.Escape(v8::Undefined(isolate));
-
-        else if (cpp_value.type() == typeid(void)) // NULL
-            return escapable_handle_scope.Escape(v8::Null(isolate));
-
-        else // OBJECT
+        if (false) // OBJECT
             return escapable_handle_scope.Escape(v8::Object::New(isolate));
     }
 };

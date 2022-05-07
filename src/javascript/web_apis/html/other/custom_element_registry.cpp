@@ -77,11 +77,11 @@ auto html::other::custom_element_registry::define(
 
 auto html::other::custom_element_registry::get(
         const ext::string& name)
-        -> std::optional<html_element_constructor_t>
+        -> ext::optional<html_element_constructor_t>
 {
     auto definition = m_custom_element_definitions.filter([name](dom::internal::custom_element_definition* definition) {return definition->name == name;}).front();
     return definition
-            ? std::optional<html_element_constructor_t>{definition->constructor}
+            ? ext::optional<html_element_constructor_t>{definition->constructor}
             : std::nullopt;
 }
 
@@ -95,7 +95,7 @@ auto html::other::custom_element_registry::when_defined(
     if (dom::helpers::custom_elements::is_valid_custom_element_name(name))
         return promise.reject(dom::other::dom_exception("name must be a valid custom element name", SYNTAX_ERR));
 
-    if (std::optional<html_element_constructor_t> constructor = get(name); constructor.has_value())
+    if (ext::optional<html_element_constructor_t> constructor = get(name); constructor.has_value())
         promise.resolve(constructor.value()());
 
     if (not m_when_defined_promise_map.has_key(name))

@@ -13,8 +13,8 @@ template<typename T>
 class html::canvas::mixins::canvas_text : public virtual dom_object
 {
 public js_methods:
-    auto fill_text(const ext::string& text, double x, double y, std::optional<double> max_width) -> void;
-    auto stroke_text(const ext::string& text, double x, double y, std::optional<double> max_width) -> void;
+    auto fill_text(const ext::string& text, double x, double y, ext::optional<double> max_width) -> void;
+    auto stroke_text(const ext::string& text, double x, double y, ext::optional<double> max_width) -> void;
     new_obj auto measure_text(const ext::string& text) -> paint::text_metrics;
 
 public cpp_methods:

@@ -83,8 +83,8 @@ struct html::helpers::focus_internals
 
     static auto focusing_steps(
             focus_target_t focus_target,
-            std::optional<focus_target_t> fallback_target = null,
-            std::optional<ext::string> focus_trigger      = null)
+            ext::optional<focus_target_t> fallback_target = null,
+            ext::optional<ext::string> focus_trigger      = null)
             -> void;
 
     static auto unfocusing_steps(

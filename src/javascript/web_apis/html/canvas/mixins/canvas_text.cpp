@@ -15,7 +15,7 @@ auto html::canvas::mixins::canvas_text<T>::fill_text(
         const ext::string& text,
         const double x,
         const double y,
-        std::optional<double> max_width) -> void
+        ext::optional<double> max_width) -> void
 {
     if (ext::infinity<double>::is_inf_or_nan(x, y, max_width.has_value() ? max_width.value() : 0)) return;
 
@@ -32,7 +32,7 @@ auto html::canvas::mixins::canvas_text<T>::stroke_text(
         const ext::string& text,
         const double x,
         const double y,
-        std::optional<double> max_width) -> void
+        ext::optional<double> max_width) -> void
 {
     // TODO
 }

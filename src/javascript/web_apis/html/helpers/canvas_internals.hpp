@@ -53,7 +53,7 @@ struct html::helpers::canvas_internals
     static auto text_preparation_algorithm(
             const ext::string& text,
             canvas::mixins::canvas_text_drawing_styles<T>* target,
-            std::optional<int> max_width) -> ext::vector<internal::glyph>;
+            ext::optional<int> max_width) -> ext::vector<internal::glyph>;
 
     template <typename T>
     static auto ensure_there_is_subpath(

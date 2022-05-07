@@ -116,7 +116,7 @@ auto html::helpers::windows_internals::parse_boolean_feature(
     int parsed;
     TRY
         parsed = std::stoi(static_cast<std::string>(value));
-    CATCH
+    CATCH_ALL
         parsed = 0;
     END_TRY
     return parsed;

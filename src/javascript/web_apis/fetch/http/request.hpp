@@ -62,8 +62,8 @@ struct request_
 
     // request body and client information
     ext::string body;
-    std::optional<javascript::realms::settings_object_t> client;
-    std::optional<javascript::realms::settings_object_t> reserved_client;
+    ext::optional<javascript::realms::settings_object_t> client;
+    ext::optional<javascript::realms::settings_object_t> reserved_client;
     ext::string replaces_client_id;
     std::variant<ext::string, javascript::realms::settings_object_t> associated_window{ext::string{"client"}};
 

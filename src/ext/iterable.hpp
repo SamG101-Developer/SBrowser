@@ -9,6 +9,7 @@
 #include <queue>
 #include <numeric>
 #include <stdexcept>
+#include <type_traits>
 
 #include <ext/cpp_keywords.hpp>
 #include <ext/decorators.hpp>
@@ -37,7 +38,7 @@ public constructors:
     auto back() noexcept(false) -> T&;
     auto at(size_t i) const noexcept(false) -> const T&;
     auto at(size_t i) noexcept(false) -> T&;
-    auto at(const_iterator i) noexcept(false) -> T&;
+    auto at(const_iterator& i) noexcept(false) -> T&;
 
     auto begin() -> iterator;
     auto begin() const -> const_iterator ;
@@ -58,16 +59,29 @@ public constructors:
     auto sort() -> iterable<T, C>&;
     auto clean() -> iterable<T, C>& requires std::is_pointer_v<T>;
 
-    auto ltrim(T item) -> iterable<T, C>&;
-    auto rtrim(T item) -> iterable<T, C>&;
-    auto trim(T item) -> iterable<T, C>&;
+    template <typename ...args> auto ltrim(args&&... item) -> iterable<T, C>&;
+    template <typename ...args> auto rtrim(args&&... item) -> iterable<T, C>&;
+    template <typename ...args> auto trim(args&&... item) -> iterable<T, C>&;
 
     auto reversed() const -> iterable<T, C>;
     auto sorted() const -> iterable<T, C>;
 
-    auto find(const T& object, size_t offset = 0) const -> size_t;
-    auto count(const T& object) const -> size_t;
-    auto contains(const T& item) const -> bool;
+    auto find(const T& object, const_iterator& offset = nullptr) const -> iterator;
+
+    template <typename F      > auto find_first_that_is(const F& function) requires (std::is_invocable_v<F>);
+    template <typename ...args> auto find_first_that_is(const args&... object) -> iterator;
+
+    template <typename F      > auto find_first_that_isnt(const F& function) requires (std::is_invocable_v<F>);
+    template <typename ...args> auto find_first_that_isnt(const args&... object) -> iterator;
+
+    template <typename F      > auto find_last_that_is(const F& function) requires (std::is_invocable_v<F>);
+    template <typename ...args> auto find_last_that_is(const args&... object) -> iterator;
+
+    template <typename F      > auto find_last_that_isnt(const F& function) requires (std::is_invocable_v<F>);
+    template <typename ...args> auto find_last_that_isnt(const args&... object) -> iterator;
+
+    template <typename ...args> auto count(const args&... object) const -> size_t;
+    template <typename ...args> auto contains(const args&... item) const -> bool;
     auto print() const -> void;
 
 public operators:
@@ -128,7 +142,7 @@ auto ext::iterable<T, C>::at(const size_t i) noexcept(false) -> T&
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::at(const_iterator i) noexcept(false) -> T&
+auto ext::iterable<T, C>::at(const_iterator& i) noexcept(false) -> T&
 {
     // throws error if accessing the middle of an empty iterable
     if (empty())
@@ -322,29 +336,36 @@ auto ext::iterable<T, C>::clean() -> ext::iterable<T, C>& requires std::is_point
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::ltrim(T item) -> ext::iterable<T, C>&
+template <typename ...args>
+auto ext::iterable<T, C>::ltrim(args&&... item) -> ext::iterable<T, C>&
 {
     // remove all the items from the left-hand side of the iterable, and return the reference to the iterable
-    m_iterable.erase(begin(), begin() + std::distance(begin(), std::find_if_not(begin(), end(), [item](T element){return element == item;})));
+    (m_iterable.erase(
+            begin(),
+            begin() + std::distance(begin(), std::find_if_not(begin(), end(), [item](T element) {return element == item;}))), ...);
     return *this;
 }
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::rtrim(T item) -> ext::iterable<T, C>&
+template <typename ...args>
+auto ext::iterable<T, C>::rtrim(args&&... item) -> ext::iterable<T, C>&
 {
     // remove all the items from the right-hand side of the iterable, and return the reference to the iterable
-    m_iterable.erase(begin() + std::distance(rbegin(), std::find_if_not(rbegin(), rend(), [item](T element){return element == item;})), end());
+    (m_iterable.erase(
+            begin() + std::distance(rbegin(), std::find_if_not(rbegin(), rend(), [item](T element) {return element == item;})),
+            end()), ...);
     return *this;
 }
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::trim(T item) -> ext::iterable<T, C>&
+template <typename ...args>
+auto ext::iterable<T, C>::trim(args&&... item) -> ext::iterable<T, C>&
 {
     // remove all the items from both sides of the iterable, and return the reference to the iterable
-    ltrim(item);
-    rtrim(item);
+    ltrim(std::move(item));
+    rtrim(std::move(item));
     return *this;
 }
 
@@ -374,18 +395,20 @@ auto ext::iterable<T, C>::find(const T& object, const size_t offset) const -> si
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::count(const T& object) const -> size_t
+template <typename ...args>
+auto ext::iterable<T, C>::count(const args&... object) const -> size_t
 {
     // return the number of occurrences of an object
-    return std::count(m_iterable.begin(), m_iterable.end(), object);
+    return (std::count(m_iterable.begin(), m_iterable.end(), object) + ...);
 }
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::contains(const T& item) const -> bool
+template <typename ...args>
+auto ext::iterable<T, C>::contains(const args&... item) const -> bool
 {
     // check if the iterable contains an item by comparing its iterator location to the end iterator
-    return std::find(begin(), end(), item) != end();
+    return ((std::find(begin(), end(), item) != end()) or ...);
 }
 
 

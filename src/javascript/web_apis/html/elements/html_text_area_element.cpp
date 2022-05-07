@@ -70,8 +70,8 @@ auto html::elements::html_text_area_element::set_selection_range(
 
 auto html::elements::html_text_area_element::set_range_text(
         const ext::string& replacement,
-        std::optional<ulong> start,
-        std::optional<ulong> end,
+        ext::optional<ulong> start,
+        ext::optional<ulong> end,
         const ext::string& selection_mode)
         -> void
 {

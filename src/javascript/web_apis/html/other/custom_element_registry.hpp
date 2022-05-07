@@ -19,7 +19,7 @@ public aliases:
     
 public js_methods:
     auto define(const ext::string& name, const html_element_constructor_t& constructor, const ext::string_any_map& options = {}) -> void;
-    auto get(const ext::string& name) -> std::optional<html_element_constructor_t>;
+    auto get(const ext::string& name) -> ext::optional<html_element_constructor_t>;
     auto when_defined(const ext::string& name) -> webidl::types::promise<html_element_constructor_t>;
     auto upgrade(dom::nodes::node* root) -> void;
 

@@ -26,7 +26,7 @@ public constructors:
 public js_methods:
     auto select() -> void;
     auto set_selection_range(ulong start, ulong end, const ext::string& direction = "none") -> void;
-    auto set_range_text(const ext::string& replacement, std::optional<ulong> start, std::optional<ulong> end, const ext::string& selection_mode = "preserve") -> void;
+    auto set_range_text(const ext::string& replacement, ext::optional<ulong> start, ext::optional<ulong> end, const ext::string& selection_mode = "preserve") -> void;
 
 public js_properties:
     ext::html_property<ext::string, _T> autocomplete;

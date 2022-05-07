@@ -44,46 +44,46 @@ class html::helpers::script_internals
             javascript::realms::settings_object_t& settings,
             const ext::string& cors_setting,
             const ext::string& encoding)
-            -> std::optional<internal::classic_script&>;
+            -> ext::optional<internal::classic_script&>;
 
     static auto fetch_classic_worker_script(
             url::url& url_record,
             // TODO
             const ext::string& destination,
             javascript::realms::settings_object_t& settings)
-            -> std::optional<internal::classic_script&>;
+            -> ext::optional<internal::classic_script&>;
 
     static auto fetch_classic_worker_imported_script(
             url::url& url_record,
             javascript::realms::settings_object_t& settings)
-            -> std::optional<internal::classic_script&>;
+            -> ext::optional<internal::classic_script&>;
 
     static auto fetch_external_module_graph_script(
             url::url& url,
             javascript::realms::settings_object_t& settings,
             const ext::string_any_map& options)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_import_module_script_graph(
             v8::ModuleRequest& module_request,
             url::url& url_record,
             javascript::realms::settings_object_t& settings,
             const ext::string_any_map& options)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_modulepreload_script_graph(
             url::url& url_record,
             const ext::string& destination,
             javascript::realms::settings_object_t& settings,
             const ext::string_any_map& options)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_inline_script_graph(
             const ext::string& source,
             url::url& url_record,
             javascript::realms::settings_object_t& settings,
             const ext::string_any_map& options)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_module_worker_script_graph(
             url::url& url_record,
@@ -91,7 +91,7 @@ class html::helpers::script_internals
             const ext::string& desination,
             const ext::string& credentials_mode,
             const ext::string& module_map_settings_object) // TODO
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_worklet_script_graph(
             url::url& url_record,
@@ -100,7 +100,7 @@ class html::helpers::script_internals
             const ext::string& credentials_mode,
             const ext::string& module_map_settings_object,
             const ext::string& module_responses_map)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_worklet_or_module(
             url::url& url_record,
@@ -108,21 +108,21 @@ class html::helpers::script_internals
             const ext::string& destination,
             const ext::string& credentials_mode,
             const ext::string& module_map_settings_object)
-            -> std::optional<internal::module_script>;
+            -> ext::optional<internal::module_script>;
 
     static auto fetch_descendants_of_and_link_module_script(
             internal::module_script& module_script,
             // TODO
             const ext::string& destination,
             const visiting_set_t& visited_set)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_descendants_of_script(
             internal::module_script& module_script,
             // TODO
             const ext::string& destination,
             const visiting_set_t& visited_set)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto fetch_single_module_script(
             url::url& url_record,
@@ -133,7 +133,7 @@ class html::helpers::script_internals
             const ext::string& referrer,
             v8::ModuleRequest module_request,
             bool top_level_module_fetch_flag)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto internal_module_script_graph_fetching_procedure(
             v8::ModuleRequest& module_request,
@@ -143,7 +143,7 @@ class html::helpers::script_internals
             const ext::string& module_map_settings_object,
             const visiting_set_t& visited_set,
             const ext::string& referrer)
-            -> std::optional<internal::module_script&>;
+            -> ext::optional<internal::module_script&>;
 
     static auto find_first_parse_error(
             internal::module_script& module_script,

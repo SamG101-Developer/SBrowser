@@ -64,7 +64,7 @@ public constructors:
     ~vector() override;
 
 public js_methods:
-    auto slice(size_t front_index, size_t back_index) const -> vector<T>&;
+    auto slice(const iterator& front_index, const iterator& back_index) const -> vector<T>;
     auto item_before(const T& item) const -> T&;
     auto item_after(const T& item) const -> T&;
     template <typename F> auto first_match(const F& function) const -> T&;
@@ -72,9 +72,9 @@ public js_methods:
 
     auto reserve(size_t count) -> vector<T>&;
     auto shrink_to_fit() -> vector<T>&;
-    auto append(const T& item) -> vector<T>&;
-    auto prepend(const T& item) -> vector<T>&;
-    auto insert(const T& item, size_t index = -1) -> vector<T>&;
+    template <typename ...args> auto append(const args&... item) -> vector<T>&;
+    template <typename ...args> auto prepend(const args&... item) -> vector<T>&;
+    template <typename ...args> auto insert(const_iterator& index, const args&... item) -> vector<T>&;
     auto extend(const vector<T>& other, size_t index = -1) -> vector<T>&;
     auto pop(size_t index = -1) -> T&;
     auto clear() -> vector<T>& override;
@@ -174,10 +174,10 @@ ext::vector<T>::~vector()
 
 
 template <typename T>
-auto ext::vector<T>::slice(size_t front_index, size_t back_index) const -> ext::vector<T>&
+auto ext::vector<T>::slice(const iterator& front_index, const iterator& back_index) const -> ext::vector<T>
 {
     // slice the list by adding the front_index and back_index to the begin iterator
-    return vector<T>{this->begin() + front_index, this->begin() + back_index};
+    return vector<T>{front_index, back_index};
 }
 
 
@@ -230,13 +230,14 @@ template <typename T>
 auto ext::vector<T>::shrink_to_fit() -> vector <T>&
 {
     // shrink the empty reserved space around the number of objects in the veque, and return a reference to it
-    this->m_iterable->shrink_to_fit();
+    this->m_iterable.shrink_to_fit();
     return *this;
 }
 
 
 template <typename T>
-auto ext::vector<T>::append(const T& item) -> ext::vector<T>&
+template <typename ...args>
+auto ext::vector<T>::append(const args&... item) -> ext::vector<T>&
 {
     // append the item to the back of the veque, and return a reference to it
     this->m_iterable.emplace_back(item);
@@ -245,16 +246,18 @@ auto ext::vector<T>::append(const T& item) -> ext::vector<T>&
 
 
 template <typename T>
-auto ext::vector<T>::prepend(const T& item) -> ext::vector<T>&
+template <typename ...args>
+auto ext::vector<T>::prepend(const args&... item) -> ext::vector<T>&
 {
     // prepend the item to the front of the veque, and return a reference to it
-    this->m_iterable.emplace_front(this->begin(), item);
+    this->m_iterable.emplace_front(item);
     return *this;
 }
 
 
 template <typename T>
-auto ext::vector<T>::insert(const T& item, size_t index) -> ext::vector<T>&
+template <typename ...args>
+auto ext::vector<T>::insert(const_iterator& index, const args&... item) -> ext::vector<T>&
 {
     // insert the item in the middle of the veque, and return a reference to it
     this->m_iterable.emplace(this->begin() + index, item);
