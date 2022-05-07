@@ -88,5 +88,4 @@
  * javascript exposed: YES (through +, -, *, / operators etc) (but not overridable / explicitly callable)
  */
 
- 
 #endif //SBROWSER_DECORATORS_HPP
