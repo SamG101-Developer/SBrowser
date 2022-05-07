@@ -3,11 +3,11 @@
 
 template <typename ...Args, typename U>
 auto multi_cast(
-        U* cls)
--> bool
+        const U* const cls)
+        -> bool
 {
     // check if an object matches any of the types in Args
-    return (... ||(nullptr != dynamic_cast<Args>(cls)));
+    return ((dynamic_cast<Args>(cls)) || ...);
 }
 
 
