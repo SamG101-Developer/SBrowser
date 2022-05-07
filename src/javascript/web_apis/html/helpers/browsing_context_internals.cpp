@@ -91,7 +91,7 @@ auto html::helpers::browsing_context_internals::create_nested_browsing_context(
     auto* browsing_context = create_new_browsing_context(element->owner_document, element, group);
     element->m_nested_browsing_context = browsing_context;
 
-    JS_BLOCK_START
+    JS_BLOCK_ENTER
     auto v8_isolate   = v8::Isolate::GetCurrent();
     auto v8_attribute = v8pp::convert<ext::string>::to_v8(v8_isolate, "name");
     auto v8_object    = v8pp::convert<dom::nodes::element*>::to_v8(v8_isolate, element);
@@ -100,7 +100,7 @@ auto html::helpers::browsing_context_internals::create_nested_browsing_context(
         auto v8_name = v8_object->Get(v8_isolate->GetCurrentContext(), v8_attribute).ToLocalChecked();
         browsing_context->name = v8pp::convert<ext::string>::from_v8(v8_isolate, v8_name);
     }
-    JS_BLOCK_END
+    JS_BLOCK_EXIT
 }
 
 

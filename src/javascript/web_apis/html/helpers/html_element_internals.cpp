@@ -266,12 +266,12 @@ auto html::helpers::html_element_internals::ancestor_hidden_until_found_revealin
         {
             dom::helpers::event_dispatching::fire_event<>("beforematch", element);
 
-            JS_BLOCK_START
+            JS_BLOCK_ENTER
             auto v8_isolate = v8::Isolate::GetCurrent();
             auto v8_attribute = v8pp::convert<ext::string>::to_v8(v8_isolate, "hidden");
             auto v8_object = v8pp::convert<elements::html_element*>::to_v8(v8_isolate, element);
             v8_object->Delete(v8_isolate->GetCurrentContext(), v8_attribute);
-            JS_BLOCK_END
+            JS_BLOCK_EXIT
         }
     } while ((element = element->parent));
 }

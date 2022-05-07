@@ -13,7 +13,7 @@ class html::elements::html_track_element : public html_element
 public constructors:
     html_track_element();
 
-public static_constants:
+public js_static_constants:
     static const ushort NONE = 0;
     static const ushort LOADING = 1;
     static const ushort LOADED = 2;

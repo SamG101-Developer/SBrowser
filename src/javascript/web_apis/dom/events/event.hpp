@@ -30,7 +30,7 @@ public constructors:
 
     ~event() override;
 
-public static_constants:
+public js_static_constants:
     static constexpr unsigned short NONE = 0;
     static constexpr unsigned short CAPTURING_PHASE = 1;
     static constexpr unsigned short AT_TARGET = 2;

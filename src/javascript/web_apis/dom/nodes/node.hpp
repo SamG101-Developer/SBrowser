@@ -31,7 +31,7 @@ public constructors:
     node();
     ~node() override;
 
-public static_constants:
+public js_static_constants:
     static const ushort DOCUMENT_POSITION_DISCONNECTED = 0x01;
     static const ushort DOCUMENT_POSITION_PRECEDING = 0x02;
     static const ushort DOCUMENT_POSITION_FOLLOWING = 0x04;

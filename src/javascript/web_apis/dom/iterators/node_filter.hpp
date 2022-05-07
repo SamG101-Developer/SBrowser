@@ -14,7 +14,7 @@ struct dom::iterators::node_filter final : public virtual dom_object
 public constructors:
     node_filter();
 
-public static_constants:
+public js_static_constants:
     static const ushort FILTER_ACCEPT = 1;
     static const ushort FILTER_REJECT = 2;
     static const ushort FILTER_SKIP = 3;

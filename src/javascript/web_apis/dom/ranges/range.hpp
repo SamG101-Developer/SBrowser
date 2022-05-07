@@ -22,7 +22,7 @@ public friends:
 public constructors:
     range();
 
-public static_constants:
+public js_static_constants:
     static const short START_TO_START = 0;
     static const short START_TO_END = 1;
     static const short END_TO_END = 2;

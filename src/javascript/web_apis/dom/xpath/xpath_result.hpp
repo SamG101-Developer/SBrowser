@@ -18,7 +18,7 @@ class dom::xpath::xpath_result : public virtual dom_object
 public: constructors
     xpath_result();
 
-public: static_constants
+public: js_static_constants
     static const ushort ANY_TYPE = 0;
     static const ushort NUMBER_TYPE = 1;
     static const ushort STRING_TYPE = 2;
