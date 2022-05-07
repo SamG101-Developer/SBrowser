@@ -22,6 +22,7 @@ include_directories(src/javascript/web_apis)
 # Include the directories for the 3rd party header only libraries
 include_directories(third-party)
 include_directories(third-party/veque/include)
+include_directories(third-party/cppfs/source/cppfs/include)
 
 # Link V8
 include_directories(third-party/v8-v143-x64.9.8.177.4/include)
