@@ -30,6 +30,9 @@ public constructors:
     template <typename T> auto operator=(const T& other) -> any&;
     template <typename T> auto operator=(T&& other) noexcept -> any&;
 
+public operators:
+    auto operator==(const ext::any& other) const -> bool;
+
 public cpp_methods:
     // type information
     [[nodiscard]] auto type() const -> const type_info&;
@@ -80,6 +83,12 @@ auto ext::any::operator=(
 {
     // use the assignment operator to emplace the copied object into this optional value
     m_value = std::forward<T>(other);
+}
+
+
+auto ext::any::operator==(const ext::any& other) const -> bool
+{
+    return &m_value == &other.m_value;
 }
 
 
