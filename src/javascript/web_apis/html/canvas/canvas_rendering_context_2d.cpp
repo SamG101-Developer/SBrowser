@@ -2,7 +2,7 @@
 
 
 auto html::canvas::canvas_rendering_context_2d::get_context_attributes() const
-        -> const ext::string_any_map
+        -> const ext::string_any_map_t
 {
     // return the context attributes of the render context
     return

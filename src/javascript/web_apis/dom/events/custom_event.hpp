@@ -13,7 +13,7 @@ class dom::events::custom_event final : public event
 {
 public constructors:
     using event::event;
-    custom_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    custom_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::dom_property<ext::any> detail;

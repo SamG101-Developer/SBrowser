@@ -101,8 +101,8 @@ private aliases:
 
 public js_methods:
     // dom
-    new_obj auto create_element(const ext::string& local_name, const ext::string_any_map& options = {}) const -> element;
-    new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map& options = {}) const -> element;
+    new_obj auto create_element(const ext::string& local_name, const ext::string_any_map_t& options = {}) const -> element;
+    new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map_t& options = {}) const -> element;
     new_obj auto create_document_fragment() const -> document_fragment;
     new_obj auto create_text_node(const ext::string& data) const -> text;
     new_obj auto create_cdata_section_node(const ext::string& data) const -> cdata_section;

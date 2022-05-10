@@ -17,10 +17,10 @@ class html::mixins::html_or_svg_element : public virtual dom_object
 {
 public js_methods:
     auto blur() -> void;
-    auto focus(const ext::string_any_map& options) -> void;
+    auto focus(const ext::string_any_map_t& options) -> void;
 
 public js_properties:
-    ext::html_property<ext::string_string_map, _F> data_set;
+    ext::html_property<ext::string_string_map_t, _F> data_set;
     ext::html_property<ext::string, _F> nonce;
     ext::html_property<bool, _T> autofocus;
     ext::html_property<long, _T> tab_index;

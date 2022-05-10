@@ -76,7 +76,7 @@ public:
 struct dom::internal::registered_observer
 {
     mutations::mutation_observer* observer = nullptr;
-    ext::string_any_map options;
+    ext::string_any_map_t options;
 };
 
 

@@ -61,28 +61,28 @@ class html::helpers::script_internals
     static auto fetch_external_module_graph_script(
             url::url& url,
             javascript::realms::settings_object_t& settings,
-            const ext::string_any_map& options)
+            const ext::string_any_map_t& options)
             -> ext::optional<internal::module_script&>;
 
     static auto fetch_import_module_script_graph(
             v8::ModuleRequest& module_request,
             url::url& url_record,
             javascript::realms::settings_object_t& settings,
-            const ext::string_any_map& options)
+            const ext::string_any_map_t& options)
             -> ext::optional<internal::module_script&>;
 
     static auto fetch_modulepreload_script_graph(
             url::url& url_record,
             const ext::string& destination,
             javascript::realms::settings_object_t& settings,
-            const ext::string_any_map& options)
+            const ext::string_any_map_t& options)
             -> ext::optional<internal::module_script&>;
 
     static auto fetch_inline_script_graph(
             const ext::string& source,
             url::url& url_record,
             javascript::realms::settings_object_t& settings,
-            const ext::string_any_map& options)
+            const ext::string_any_map_t& options)
             -> ext::optional<internal::module_script&>;
 
     static auto fetch_module_worker_script_graph(
@@ -128,7 +128,7 @@ class html::helpers::script_internals
             url::url& url_record,
             // TODO
             const ext::string& destination,
-            const ext::string_any_map& options,
+            const ext::string_any_map_t& options,
             const ext::string& module_map_settings_object,
             const ext::string& referrer,
             v8::ModuleRequest module_request,
@@ -139,7 +139,7 @@ class html::helpers::script_internals
             v8::ModuleRequest& module_request,
             // TODO
             const ext::string& destination,
-            const ext::string_any_map& options,
+            const ext::string_any_map_t& options,
             const ext::string& module_map_settings_object,
             const visiting_set_t& visited_set,
             const ext::string& referrer)
@@ -155,7 +155,7 @@ class html::helpers::script_internals
             const ext::string& source,
             javascript::realms::settings_object_t& settings,
             const url::url& base_url,
-            const ext::string_any_map& options,
+            const ext::string_any_map_t& options,
             bool muted_errors = false)
             -> void;
 
@@ -163,7 +163,7 @@ class html::helpers::script_internals
             const ext::string& script,
             javascript::realms::settings_object_t& settings,
             const url::url& base_url,
-            const ext::string_any_map& options)
+            const ext::string_any_map_t& options)
             -> void;
 
     static auto create_css_module_script(
@@ -206,7 +206,7 @@ struct html::internal::script
     ext::string record;
     ext::string parse_error;
     ext::string error_to_rethrow;
-    ext::string_any_map script_fetch_options;
+    ext::string_any_map_t script_fetch_options;
     url::url& base_url;
 };
 

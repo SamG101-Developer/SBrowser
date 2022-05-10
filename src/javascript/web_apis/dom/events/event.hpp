@@ -26,7 +26,7 @@ public friends:
 
 public constructors:
     event();
-    event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
     ~event() override;
 

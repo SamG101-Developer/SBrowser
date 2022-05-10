@@ -112,11 +112,11 @@ auto html::helpers::html_element_internals::list_owner(
 
 auto html::helpers::html_element_internals::name_value_group(
         elements::html_dlist_element* element)
-        -> ext::vector<ext::string_string_map>
+        -> ext::vector<ext::string_string_map_t>
 {
     // create a list of string-string maps, a string-string map, and a bool seen_dd flag
-    ext::vector<ext::string_string_map> groups;
-    ext::string_string_map current;
+    ext::vector<ext::string_string_map_t> groups;
+    ext::string_string_map_t current;
     bool seen_dd = false;
 
     // get the first child, and set the current grandchild to nullptr
@@ -156,8 +156,8 @@ auto html::helpers::html_element_internals::name_value_group(
 
 auto html::helpers::html_element_internals::process_dt_or_dd(
         dom::nodes::node* node,
-        ext::vector<ext::string_string_map>& groups,
-        ext::string_string_map& current,
+        ext::vector<ext::string_string_map_t>& groups,
+        ext::string_string_map_t& current,
         bool& seen_dd)
         -> void
 {

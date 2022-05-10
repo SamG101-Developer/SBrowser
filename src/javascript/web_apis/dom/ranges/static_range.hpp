@@ -12,7 +12,7 @@ class dom::ranges::static_range : public abstract_range
 {
 public constructors:
     static_range();
-    explicit static_range(const ext::string_any_map& init);
+    explicit static_range(const ext::string_any_map_t& init);
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

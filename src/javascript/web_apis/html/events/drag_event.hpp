@@ -12,7 +12,7 @@ namespace html::events {class drag_event;}
 class html::events::drag_event : public ui_events::events::mouse_event
 {
 public constructors:
-    drag_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    drag_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     html::dragging::data_transfer* data_transfer = nullptr;

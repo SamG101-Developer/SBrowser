@@ -22,16 +22,16 @@ struct html::helpers::windows_internals
 
     static auto tokenize_features(
             const ext::string& features)
-            -> ext::string_string_map;
+            -> ext::string_string_map_t;
 
     static auto check_if_window_feature_set(
-            const ext::string_string_map& tokenized_features,
+            const ext::string_string_map_t& tokenized_features,
             const ext::string& feature_name,
             bool default_value)
             -> bool;
 
     static auto check_if_popup_window_requested(
-            ext::string_string_map& tokenized_features)
+            ext::string_string_map_t& tokenized_features)
             -> bool;
 
     static auto parse_boolean_feature(

@@ -13,7 +13,7 @@ auto html::canvas::mixins::canvas_image_data<T>::get_image_data(
         const long sy,
         const long sw,
         const long sh,
-        const ext::string_any_map& settings)
+        const ext::string_any_map_t& settings)
         -> paint::image_data
 {
     dom::helpers::exceptions::throw_v8_exception<SECURITY_ERR>(
@@ -32,7 +32,7 @@ template <typename T>
 auto html::canvas::mixins::canvas_image_data<T>::create_image_data(
         const long sw,
         const long sh,
-        const ext::string_any_map& settings)
+        const ext::string_any_map_t& settings)
         -> paint::image_data
 {
     paint::image_data new_image{static_cast<ulong>(sw), static_cast<ulong>(sh), settings};
@@ -57,7 +57,7 @@ auto html::canvas::mixins::canvas_image_data<T>::v8(
         v8::Isolate* isolate) const
         -> ext::any
 {
-    #define FUNC_T_1 paint::image_data(canvas_image_data<T>::*)(long, long, const ext::string_any_map&)
+    #define FUNC_T_1 paint::image_data(canvas_image_data<T>::*)(long, long, const ext::string_any_map_t&)
     #define FUNC_T_2 paint::image_data(canvas_image_data<T>::*)(paint::image_data*)
     #define FUNC_T_3 void(canvas_image_data<T>::*)(paint::image_data*, long, long)
     #define FUNC_T_4 void(canvas_image_data<T>::*)(paint::image_data*, long, long, long, long, long, long)

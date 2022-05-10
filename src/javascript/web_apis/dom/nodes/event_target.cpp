@@ -16,7 +16,7 @@ dom::nodes::event_target::~event_target()
 auto dom::nodes::event_target::add_event_listener(
         ext::string type,
         event_listener_callback&& callback,
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> void
 {
     // create an event listener that is the flattened options, and insert the callback and type
@@ -32,7 +32,7 @@ auto dom::nodes::event_target::add_event_listener(
 auto dom::nodes::event_target::remove_event_listener(
         ext::string type,
         event_listener_callback&& callback,
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> void
 {
     // create a dummy event listener that is the flattened options, and insert the callback and type

@@ -75,14 +75,14 @@ public js_methods:
     auto toggle_attribute_node(attr* attribute, bool force = false) -> attr*;
     auto toggle_attribute_node_ns(attr* attribute, bool force = false) -> attr*;
 
-    new_obj auto attach_shadow(const ext::string_any_map& options) -> shadow_root;
+    new_obj auto attach_shadow(const ext::string_any_map_t& options) -> shadow_root;
     same_obj auto closest(const ext::string& selectors) -> element*;
     same_obj auto matches(const ext::string& selectors) -> bool;
 
     // css-spatial-navigation
     auto get_spatial_navigation_container() -> node*;
-    auto spatial_navigation_search(const ext::string& direction, const ext::string_any_map& options = {}) -> node*;
-    auto focusable_areas(const ext::string_any_map& options = {}) -> ext::vector<node*>;
+    auto spatial_navigation_search(const ext::string& direction, const ext::string_any_map_t& options = {}) -> node*;
+    auto focusable_areas(const ext::string_any_map_t& options = {}) -> ext::vector<node*>;
 
     // css-pseudo
     // css::css_pseudo::elements::pseudo_element* pseudo(const ext::string& type); TODO
@@ -90,7 +90,7 @@ public js_methods:
     // cssom-view
     auto get_client_rects() const -> ext::vector<geometry::shapes::dom_rect>;
     auto get_bounding_client_rect() const -> geometry::shapes::dom_rect;
-    auto scroll_into_view(const ext::string_any_map& options = {}) -> void;
+    auto scroll_into_view(const ext::string_any_map_t& options = {}) -> void;
 
 public js_properties:
     // dom

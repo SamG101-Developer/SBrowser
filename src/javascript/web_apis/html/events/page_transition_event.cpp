@@ -3,7 +3,7 @@
 
 html::events::page_transition_event::page_transition_event(
         const ext::string& event_type,
-        const ext::string_any_map& event_init)
+        const ext::string_any_map_t& event_init)
 
         : dom::events::event(event_type, event_init)
 {

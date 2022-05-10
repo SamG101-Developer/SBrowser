@@ -101,7 +101,7 @@ auto html::helpers::image_internals::initialize_image(
         html::canvas::paint::image_data* image_data,
         const ulong width,
         const ulong height,
-        const ext::string_any_map& settings,
+        const ext::string_any_map_t& settings,
         ext::uint8_array* source,
         const ext::string& default_color_space)
         -> void

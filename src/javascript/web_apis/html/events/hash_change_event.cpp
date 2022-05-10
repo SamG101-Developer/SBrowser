@@ -3,7 +3,7 @@
 
 html::events::hash_change_event::hash_change_event(
         const ext::string& event_type,
-        const ext::string_any_map& event_init)
+        const ext::string_any_map_t& event_init)
 
         : dom::events::event(event_type, event_init)
 {
@@ -18,7 +18,7 @@ auto html::events::hash_change_event::v8(
         -> ext::any
 {
     return v8pp::class_<hash_change_event>{isolate}
-            .ctor<const ext::string&, const ext::string_any_map&>()
+            .ctor<const ext::string&, const ext::string_any_map_t&>()
             .inherit<dom::events::event>()
             .var("oldURL", &hash_change_event::old_url)
             .var("newURL", &hash_change_event::new_url)

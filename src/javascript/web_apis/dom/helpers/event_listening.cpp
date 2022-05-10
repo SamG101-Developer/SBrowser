@@ -16,30 +16,30 @@
 
 
 auto dom::helpers::event_listening::flatten_more(
-        std::variant<bool, ext::string_any_map> options)
-        -> ext::string_any_map
+        std::variant<bool, ext::string_any_map_t> options)
+        -> ext::string_any_map_t
 {
     // return {capture: true} if the options is a bool value, otherwise the map already being held in the variant
     return std::holds_alternative<bool>(options)
-           ? ext::string_any_map{std::make_pair("capture", std::get<bool>(options))}
-           : std::get<ext::string_any_map>(options);
+           ? ext::string_any_map_t{std::make_pair("capture", std::get<bool>(options))}
+           : std::get<ext::string_any_map_t>(options);
 }
 
 
 auto dom::helpers::event_listening::flatten(
-        std::variant<bool, ext::string_any_map> options)
+        std::variant<bool, ext::string_any_map_t> options)
         -> bool
 {
     // return the boolean if a boolean value is being stored in the variant, otherwise the capture option of the map
     return std::holds_alternative<bool>(options)
             ? std::get<bool>(options)
-            : std::get<ext::string_any_map>(options).at("capture").to<bool>();
+            : std::get<ext::string_any_map_t>(options).at("capture").to<bool>();
 }
 
 
 auto dom::helpers::event_listening::add_event_listener(
         nodes::event_target* const event_target,
-        ext::string_any_map& event_listener)
+        ext::string_any_map_t& event_listener)
         -> void
 {
     // get the abort signal from the event listener
@@ -68,7 +68,7 @@ auto dom::helpers::event_listening::add_event_listener(
 
 auto dom::helpers::event_listening::remove_event_listener(
         nodes::event_target* const event_target,
-        ext::string_any_map& event_listener)
+        ext::string_any_map_t& event_listener)
         -> void
 {
     // create a callback_t for casting
@@ -78,7 +78,7 @@ auto dom::helpers::event_listening::remove_event_listener(
     event_listener.at("removed") = true;
 
     // remove all event listeners that have a matching callback, type and capture attribute to event_listener
-    event_target->m_event_listeners.remove_if([event_listener](const ext::string_any_map& existing_listener)
+    event_target->m_event_listeners.remove_if([event_listener](const ext::string_any_map_t& existing_listener)
     {
         return existing_listener.at("callback").to<callback_t>() == event_listener.at("callback").to<callback_t>()
                 and existing_listener.at("type").to<ext::string>() == event_listener.at("type").to<ext::string>()
@@ -92,7 +92,7 @@ auto dom::helpers::event_listening::remove_all_event_listeners(
         -> void
 {
     // iterate over event listeners and remove them all
-    for (ext::string_any_map& event_listener: event_target->m_event_listeners)
+    for (ext::string_any_map_t& event_listener: event_target->m_event_listeners)
         remove_event_listener(event_target, event_listener);
 }
 

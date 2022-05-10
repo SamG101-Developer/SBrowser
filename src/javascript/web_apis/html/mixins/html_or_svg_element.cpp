@@ -16,7 +16,7 @@ auto html::mixins::html_or_svg_element<T>::blur()
 
 template <typename T>
 auto html::mixins::html_or_svg_element<T>::focus(
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> void
 {
     if (m_locked_for_focus) return;

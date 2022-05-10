@@ -8,7 +8,7 @@
 
 auto html::helpers::canvas_internals::_2d_context_creation_algorithm(
         elements::html_canvas_element* canvas_element,
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> canvas::canvas_rendering_context_2d*
 {
     // create the context and assign the canvas element to it

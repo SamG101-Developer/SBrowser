@@ -11,7 +11,7 @@ class html::events::hash_change_event : public dom::events::event
 {
 public constructors:
     hash_change_event() = default;
-    hash_change_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    hash_change_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::html_property<ext::string, _F> old_url;

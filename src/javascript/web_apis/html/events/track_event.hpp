@@ -12,7 +12,7 @@ class html::events::track_event : public dom::events::event
 {
 public constructors:
     track_event();
-    track_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    track_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::dom_property<media::abstract_track*> track;

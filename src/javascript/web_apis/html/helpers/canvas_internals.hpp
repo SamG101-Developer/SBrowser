@@ -32,7 +32,7 @@ struct html::helpers::canvas_internals
 
     static auto _2d_context_creation_algorithm(
             elements::html_canvas_element* canvas_element,
-            const ext::string_any_map& options)
+            const ext::string_any_map_t& options)
             -> canvas::canvas_rendering_context_2d*;
 
     static auto offscreen_2d_context_creation_algorithm(

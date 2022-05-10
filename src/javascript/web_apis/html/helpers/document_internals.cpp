@@ -193,7 +193,7 @@ auto html::helpers::document_internals::update_visibility_state(
     document->visibility_state = visibility_state;
     document->m_behaviour.page_visibility_steps(visibility_state);
 
-    dom::helpers::event_dispatching::fire_event<>("visibilitychange", document, ext::string_any_map{{"bubbles", true}});
+    dom::helpers::event_dispatching::fire_event<>("visibilitychange", document, ext::string_any_map_t{{"bubbles", true}});
 }
 
 

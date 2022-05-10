@@ -62,7 +62,7 @@ auto dom::helpers::mutation_observers::notify_mutation_observers()
     }
 
     for (auto* const slot: signal_slots_set)
-        event_dispatching::fire_event<>("slotChange", slot, ext::string_any_map{{"bubbles", true}});
+        event_dispatching::fire_event<>("slotChange", slot, ext::string_any_map_t{{"bubbles", true}});
 }
 
 

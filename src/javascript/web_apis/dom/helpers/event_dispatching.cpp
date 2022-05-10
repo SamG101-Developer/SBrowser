@@ -89,7 +89,7 @@ auto dom::helpers::event_dispatching::invoke(
 
 auto dom::helpers::event_dispatching::inner_invoke(
         events::event* const event,
-        const ext::vector<ext::string_any_map>& event_listeners,
+        const ext::vector<ext::string_any_map_t>& event_listeners,
         const unsigned char phase)
         -> void
 {
@@ -132,7 +132,7 @@ template <typename T>
 auto dom::helpers::event_dispatching::fire_event(
         const ext::string& e,
         nodes::event_target* target,
-        const ext::string_any_map& init)
+        const ext::string_any_map_t& init)
         -> bool // TODO : concept
 {
     // create a new event of type T and dispatch it through the event paths

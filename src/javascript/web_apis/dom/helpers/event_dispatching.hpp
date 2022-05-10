@@ -35,7 +35,7 @@ struct dom::helpers::event_dispatching final
 
     static auto inner_invoke(
             events::event* event,
-            const ext::vector<ext::string_any_map>& event_listeners,
+            const ext::vector<ext::string_any_map_t>& event_listeners,
             unsigned char phase)
             -> void;
 
@@ -44,7 +44,7 @@ struct dom::helpers::event_dispatching final
     static auto fire_event(
             const ext::string& e,
             nodes::event_target* target,
-            const ext::string_any_map& init = {})
+            const ext::string_any_map_t& init = {})
             -> bool;
 
     static auto fire_synthetic_pointer_event(

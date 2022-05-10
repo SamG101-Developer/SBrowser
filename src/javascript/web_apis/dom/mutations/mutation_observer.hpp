@@ -30,7 +30,7 @@ public constructors:
     mutation_observer(mutation_callback&& callback);
 
 public js_methods:
-    auto observe(const nodes::node* target, ext::string_any_map&& options = {}) -> void;
+    auto observe(const nodes::node* target, ext::string_any_map_t&& options = {}) -> void;
     auto disconnect() -> void;
     auto take_records() -> ext::vector<mutation_record*>;
 

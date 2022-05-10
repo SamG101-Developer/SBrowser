@@ -10,7 +10,7 @@ dom::ranges::static_range::static_range() = default;
 
 
 dom::ranges::static_range::static_range(
-        const ext::string_any_map& init)
+        const ext::string_any_map_t& init)
 {
     // if the start container or end container are attribute nodes, then throw an invalid node type error
     helpers::exceptions::throw_v8_exception<INVALID_NODE_TYPE_ERR>(
@@ -35,7 +35,7 @@ auto dom::ranges::static_range::v8(
         -> ext::any
 {
     return v8pp::class_<static_range>{isolate}
-            .ctor<const ext::string_any_map&>()
+            .ctor<const ext::string_any_map_t&>()
             .inherit<abstract_range>()
             .auto_wrap_objects();
 }

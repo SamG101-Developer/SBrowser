@@ -1,13 +1,13 @@
 #ifndef SBROWSER_EXCEPTION_HPP
 #define SBROWSER_EXCEPTION_HPP
 
-#include <stdexcept>
-#include <ext/string.hpp>
-
 namespace ext {class impossible_exception;}
 namespace ext {class invalid_enum_enumerator_exception;}
 namespace ext {class invalid_switch_case_exception;}
 namespace ext {class type_error;}
+
+#include <stdexcept>
+#include <ext/string.hpp>
 
 
 // base class for impossible exceptions

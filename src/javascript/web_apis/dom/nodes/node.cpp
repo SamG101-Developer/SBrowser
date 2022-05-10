@@ -275,7 +275,7 @@ auto dom::nodes::node::compare_document_position(
 
 
 auto dom::nodes::node::get_root_node(
-        const ext::string_any_map& options) const
+        const ext::string_any_map_t& options) const
         -> node*
 {
     // return the shadow root if the <composed> option is true, otherwise the exposed tree root

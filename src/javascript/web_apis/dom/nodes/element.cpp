@@ -268,7 +268,7 @@ auto dom::nodes::element::toggle_attribute_node_ns(
 
 
 auto dom::nodes::element::attach_shadow(
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> dom::nodes::shadow_root
 {
     // if the namespace is not html, then throw a not supported error

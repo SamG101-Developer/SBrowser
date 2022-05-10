@@ -27,8 +27,8 @@ public constructors:
     ~event_target() override;
 
 public js_methods:
-    auto add_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map& options) -> void;
-    auto remove_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map& options) -> void;
+    auto add_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map_t& options) -> void;
+    auto remove_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map_t& options) -> void;
     auto dispatch_event(events::event* event) -> bool;
 
 public cpp_methods:
@@ -38,7 +38,7 @@ protected cpp_methods:
     virtual auto get_the_parent(events::event* event) -> event_target*;
 
 private cpp_properties:
-    ext::vector<ext::string_any_map> m_event_listeners;
+    ext::vector<ext::string_any_map_t> m_event_listeners;
 };
 
 

@@ -103,7 +103,7 @@ dom::nodes::document::document()
 
 auto dom::nodes::document::create_element(
         const ext::string& local_name,
-        const ext::string_any_map& options) const
+        const ext::string_any_map_t& options) const
         -> element
 {
     // get the <is> option as a string
@@ -127,7 +127,7 @@ auto dom::nodes::document::create_element(
 auto dom::nodes::document::create_element_ns(
         const ext::string& namespace_,
         const ext::string& qualified_name,
-        const ext::string_any_map& options) const
+        const ext::string_any_map_t& options) const
         -> element
 {
     // get the <is> option as a string

@@ -8,7 +8,7 @@ dom::events::event::event() = default;
 
 dom::events::event::event(
         const ext::string& event_type,
-        const ext::string_any_map& event_init)
+        const ext::string_any_map_t& event_init)
 
         : dom_object()
         , type(event_type)
@@ -131,7 +131,7 @@ auto dom::events::event::v8(
         -> ext::any
 {
     return v8pp::class_<event>{isolate}
-            .ctor<const ext::string&, const ext::string_any_map&>()
+            .ctor<const ext::string&, const ext::string_any_map_t&>()
             .inherit<dom_object>()
             .static_("NONE", event::NONE, true)
             .static_("CAPTURING_PHASE", event::CAPTURING_PHASE, true)

@@ -11,7 +11,7 @@ class html::events::page_transition_event : public dom::events::event
 {
 public constructors:
     page_transition_event() = default;
-    page_transition_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    page_transition_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::html_property<bool, _F> persisted;

@@ -13,8 +13,8 @@ namespace html::canvas::paint {class image_data;}
 class html::canvas::paint::image_data : public virtual dom_object
 {
 public constructors:
-    image_data(unsigned long sw, unsigned long sh, const ext::string_any_map& settings = {});
-    image_data(ext::uint8_array data, unsigned long sw, unsigned long sh, const ext::string_any_map& settings = {});
+    image_data(unsigned long sw, unsigned long sh, const ext::string_any_map_t& settings = {});
+    image_data(ext::uint8_array data, unsigned long sw, unsigned long sh, const ext::string_any_map_t& settings = {});
 
 public js_properties:
     ext::html_property<unsigned long, _F> width;

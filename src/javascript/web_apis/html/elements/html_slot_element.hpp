@@ -22,8 +22,8 @@ public constructors:
     html_slot_element();
 
 public js_methods:
-    auto assigned_nodes(const ext::string_any_map& options = {}) -> ext::vector<dom::nodes::node*>*;
-    auto assigned_elements(const ext::string_any_map& options = {}) -> ext::vector<dom::nodes::element*>*;
+    auto assigned_nodes(const ext::string_any_map_t& options = {}) -> ext::vector<dom::nodes::node*>*;
+    auto assigned_elements(const ext::string_any_map_t& options = {}) -> ext::vector<dom::nodes::element*>*;
     template <typename ...Args> auto assign(Args... nodes) -> void;
 
 public js_properties:

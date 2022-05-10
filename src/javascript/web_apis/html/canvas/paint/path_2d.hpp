@@ -15,7 +15,7 @@ public constructors:
     path_2d(const ext::string& path);
 
 public js_methods:
-    auto add_path(path_2d* path, const ext::string_any_map& transform = {}) -> void;
+    auto add_path(path_2d* path, const ext::string_any_map_t& transform = {}) -> void;
 
 public cpp_methods:
     auto v8(v8::Isolate *isolate) const -> ext::any override;

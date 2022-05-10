@@ -10,7 +10,7 @@
 
 
 auto html::elements::html_slot_element::assigned_nodes(
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> ext::vector<dom::nodes::node*>*
 {
     // return the assigned nodes if the options haven't set the flatten option, otherwise find the flattened slottables
@@ -21,7 +21,7 @@ auto html::elements::html_slot_element::assigned_nodes(
 
 
 auto html::elements::html_slot_element::assigned_elements(
-        const ext::string_any_map& options)
+        const ext::string_any_map_t& options)
         -> ext::vector<dom::nodes::element*>*
 {
     // return the assigned nodes that are elements

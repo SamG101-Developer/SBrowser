@@ -20,22 +20,22 @@ struct dom::helpers::event_listening final
 {
     // flatten options
     static auto flatten_more(
-            std::variant<bool, ext::string_any_map> options)
-            -> ext::string_any_map;
+            std::variant<bool, ext::string_any_map_t> options)
+            -> ext::string_any_map_t;
 
     static auto flatten (
-            std::variant<bool, ext::string_any_map> options)
+            std::variant<bool, ext::string_any_map_t> options)
             -> bool;
 
     // mutate event listener list on an event target
     static auto add_event_listener(
             nodes::event_target* event_target,
-            ext::string_any_map& event_listener)
+            ext::string_any_map_t& event_listener)
             -> void;
 
     static auto remove_event_listener(
             nodes::event_target* event_target,
-            ext::string_any_map& event_listener)
+            ext::string_any_map_t& event_listener)
             -> void;
 
     static auto remove_all_event_listeners(

@@ -7,7 +7,7 @@
 html::canvas::paint::image_data::image_data(
         const unsigned long sw,
         const unsigned long sh,
-        const ext::string_any_map& settings)
+        const ext::string_any_map_t& settings)
 {
     dom::helpers::exceptions::throw_v8_exception<INDEX_SIZE_ERR>(
             "width or height can not be 0",
@@ -24,7 +24,7 @@ html::canvas::paint::image_data::image_data(
         ext::uint8_array data,
         const unsigned long sw,
         const unsigned long sh,
-        const ext::string_any_map& settings)
+        const ext::string_any_map_t& settings)
 {
     auto length = data.length();
     dom::helpers::exceptions::throw_v8_exception<INVALID_STATE_ERR>(
@@ -54,8 +54,8 @@ auto html::canvas::paint::image_data::v8(
         v8::Isolate* isolate) const
         -> ext::any
 {
-    #define CTOR_T_1 unsigned long, unsigned long, const ext::string_any_map&
-    #define CTOR_T_2 ext::uint8_array, unsigned long, unsigned long, const ext::string_any_map&
+    #define CTOR_T_1 unsigned long, unsigned long, const ext::string_any_map_t&
+    #define CTOR_T_2 ext::uint8_array, unsigned long, unsigned long, const ext::string_any_map_t&
 
     return v8pp::class_<image_data>{isolate}
             .ctor<CTOR_T_1>()

@@ -27,7 +27,7 @@ dom::mutations::mutation_observer::mutation_observer(
 
 auto dom::mutations::mutation_observer::observe(
         const nodes::node* const target,
-        ext::string_any_map&& options)
+        ext::string_any_map_t&& options)
         -> void
 {
     // extract the attribute filter as a vector of strings

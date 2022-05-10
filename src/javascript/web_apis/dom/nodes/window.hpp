@@ -44,7 +44,7 @@ public js_methods:
     auto alert(const ext::string& message = "") const -> void;
     auto confirm(const ext::string& message = "") const -> void;
     auto prompt(const ext::string& message="", const ext::string& default_ = "") const -> ext::string;
-    auto post_message(ext::string message, const ext::string_any_map& options = {}) -> void;
+    auto post_message(ext::string message, const ext::string_any_map_t& options = {}) -> void;
 
 public: js_methods
     new_obj auto get_computed_style(element* elem, const ext::string& pseudo_element) -> css::cssom::other::css_style_declaration*;

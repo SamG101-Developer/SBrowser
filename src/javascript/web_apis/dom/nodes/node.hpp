@@ -58,7 +58,7 @@ public js_methods:
     auto lookup_prefix(const ext::string& namespace_) const -> ext::string;
     auto lookup_namespace_uri(const ext::string& prefix) const -> ext::string;
     auto compare_document_position(node* other) const -> ushort;
-    auto get_root_node(const ext::string_any_map& options) const -> node*;
+    auto get_root_node(const ext::string_any_map_t& options) const -> node*;
     auto clone_node(bool deep = false) const -> node*;
     auto insert_before(node* new_node, node* child) -> node*;
     auto append_child(node* new_node) -> node*;

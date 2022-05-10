@@ -45,9 +45,9 @@ auto html::helpers::windows_internals::window_open_steps(
 
 auto html::helpers::windows_internals::tokenize_features(
         const ext::string& features)
-        -> ext::string_string_map
+        -> ext::string_string_map_t
 {
-    ext::string_string_map tokenized_features;
+    ext::string_string_map_t tokenized_features;
     auto position = features.begin();
 
     while (position != tokenized_features.end())
@@ -79,7 +79,7 @@ auto html::helpers::windows_internals::tokenize_features(
 
 
 auto html::helpers::windows_internals::check_if_window_feature_set(
-        const ext::string_string_map& tokenized_features,
+        const ext::string_string_map_t& tokenized_features,
         const ext::string& feature_name,
         const bool default_value)
         -> bool
@@ -91,7 +91,7 @@ auto html::helpers::windows_internals::check_if_window_feature_set(
 
 
 auto html::helpers::windows_internals::check_if_popup_window_requested(
-        ext::string_string_map& tokenized_features)
+        ext::string_string_map_t& tokenized_features)
         -> bool
 {
     if (tokenized_features.empty())

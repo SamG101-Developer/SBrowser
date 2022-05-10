@@ -19,7 +19,7 @@ public js_methods:
     auto transform(double a, double b, double c, double d, double e, double f) -> void;
 
     auto reset_transformation() -> void;
-    auto set_transform(const ext::string_any_map& options) -> void;
+    auto set_transform(const ext::string_any_map_t& options) -> void;
     new_obj auto get_transform() const -> geometry::abstract::dom_matrix;
 
 public cpp_methods:

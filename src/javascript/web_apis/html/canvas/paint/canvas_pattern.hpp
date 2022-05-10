@@ -13,7 +13,7 @@ namespace html::canvas::paint {class canvas_pattern;}
 class html::canvas::paint::canvas_pattern : public virtual dom_object
 {
 public js_methods:
-    auto set_transform(const ext::string_any_map& options = {}) -> void;
+    auto set_transform(const ext::string_any_map_t& options = {}) -> void;
 
 public operators:
     explicit operator QImage() const;

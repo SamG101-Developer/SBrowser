@@ -12,7 +12,7 @@ class html::events::submit_event : public dom::events::event
 {
 public constructors:
     submit_event();
-    submit_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    submit_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::dom_property<elements::html_element*, _F> submitter;

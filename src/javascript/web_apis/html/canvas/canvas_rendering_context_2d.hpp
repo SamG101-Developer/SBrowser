@@ -46,7 +46,7 @@ class html::canvas::canvas_rendering_context_2d
         , public mixins::canvas_path<canvas_rendering_context_2d>
 {
 public js_methods:
-    auto get_context_attributes() const -> const ext::string_any_map;
+    auto get_context_attributes() const -> const ext::string_any_map_t;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

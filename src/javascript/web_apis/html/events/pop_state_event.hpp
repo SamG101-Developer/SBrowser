@@ -11,7 +11,7 @@ class html::events::pop_state_event : public dom::events::event
 {
 public constructors:
     pop_state_event() = default;
-    pop_state_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    pop_state_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::html_property<ext::any, _F> state;

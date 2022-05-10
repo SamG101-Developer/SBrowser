@@ -65,12 +65,12 @@ struct html::helpers::html_element_internals
 
     static auto name_value_group(
             elements::html_dlist_element* element)
-            -> ext::vector<ext::string_string_map>;
+            -> ext::vector<ext::string_string_map_t>;
 
     static auto process_dt_or_dd(
             dom::nodes::node* node,
-            ext::vector<ext::string_string_map>& groups,
-            ext::string_string_map& current,
+            ext::vector<ext::string_string_map_t>& groups,
+            ext::string_string_map_t& current,
             bool& seen_dd)
             -> void;
 

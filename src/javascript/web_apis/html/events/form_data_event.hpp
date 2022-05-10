@@ -12,7 +12,7 @@ class html::events::form_data_event : public dom::events::event
 {
 public constructors:
     form_data_event();
-    form_data_event(const ext::string& event_type, const ext::string_any_map& event_init = {});
+    form_data_event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_properties:
     ext::dom_property<xhr::form_data*, _F> form_data;

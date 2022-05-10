@@ -21,7 +21,7 @@ public aliases:
     using request_info_t = std::variant<const ext::string&, request*>;
 
 public constructors:
-    request(request_info_t input, ext::string_any_map init = {});
+    request(request_info_t input, ext::string_any_map_t init = {});
 
 public js_methods:
     new_obj auto clone() -> request*;
