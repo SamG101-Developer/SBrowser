@@ -7,6 +7,9 @@ namespace ext {template <typename T> class optional;}
 #include <ext/type_traits.hpp>
 
 
+inline constexpr std::nullopt_t null{std::nullopt_t::_Tag{}};
+
+
 template <typename T>
 class ext::optional final
 {
@@ -18,10 +21,9 @@ public constructors:
     auto operator=(optional&&) noexcept -> optional& = delete;
     virtual ~optional() = default;
 
-    explicit optional(const T& value);
     explicit optional(T&& value) noexcept;
-    auto operator=(const T& other) -> optional&;
     auto operator=(T&& other) noexcept -> optional&;
+    auto operator=(std::nullopt_t nullopt) -> optional&;
 
 public js_methods:
     [[nodiscard]] constexpr auto empty() const -> bool;
@@ -37,29 +39,10 @@ private cpp_properties:
 
 template <typename T>
 ext::optional<T>::optional(
-        const T& value)
-{
-    // use the constructor to emplace the copied object into this optional value
-    m_value.template emplace(value);
-}
-
-
-template <typename T>
-ext::optional<T>::optional(
         T&& value) noexcept
 {
     // use the constructor to emplace the moved object into this optional value
-    m_value.template emplace(std::forward<T&>(value));
-}
-
-
-template <typename T>
-auto ext::optional<T>::operator=(
-        const T& other)
-        -> optional&
-{
-    // use the assignment operator to emplace the copied object into this optional value
-    m_value.template emplace(other);
+    m_value.template emplace(std::forward<T>(value));
 }
 
 
@@ -69,7 +52,18 @@ auto ext::optional<T>::operator=(
         -> optional&
 {
     // use the assignment operator to emplace the moved object into this optional value
-    m_value.template emplace(std::forward<T&>(other));
+    m_value.template emplace(std::forward<T>(other));
+    return *this;
+}
+
+
+template <typename T>
+auto ext::optional<T>::operator=(
+        std::nullopt_t nullopt)
+        -> optional<T>&
+{
+    m_value = null;
+    return *this;
 }
 
 
