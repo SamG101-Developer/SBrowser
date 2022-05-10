@@ -24,11 +24,11 @@ public constructors:
     auto operator=(T&& other) noexcept -> optional&;
 
 public js_methods:
-    constexpr auto empty() const -> bool;
-    constexpr auto has_value() const -> bool;
+    [[nodiscard]] constexpr auto empty() const -> bool;
+    [[nodiscard]] constexpr auto has_value() const -> bool;
     constexpr auto value() const -> T&;
     constexpr auto value_or(const T& other) const -> T&;
-    constexpr auto not_value_or(const T& other) const -> ext::optional<T&>;
+    constexpr auto not_value_or(const T& other) const -> optional&;
 
 private cpp_properties:
     std::optional<T> m_value;
@@ -56,7 +56,7 @@ ext::optional<T>::optional(
 template <typename T>
 auto ext::optional<T>::operator=(
         const T& other)
-        -> ext::optional<T>&
+        -> optional&
 {
     // use the assignment operator to emplace the copied object into this optional value
     m_value.template emplace(other);
@@ -66,7 +66,7 @@ auto ext::optional<T>::operator=(
 template <typename T>
 auto ext::optional<T>::operator=(
         T&& other) noexcept
-        -> ext::optional<T>&
+        -> optional&
 {
     // use the assignment operator to emplace the moved object into this optional value
     m_value.template emplace(std::forward<T&>(other));
@@ -117,7 +117,7 @@ constexpr auto ext::optional<T>::value_or(
 template <typename T>
 constexpr auto ext::optional<T>::not_value_or(
         const T& other) const
-        -> ext::optional<T&>
+        -> optional&
 {
     // return null if there is no value, otherwise the backup value
     return not has_value() ? null : other;
