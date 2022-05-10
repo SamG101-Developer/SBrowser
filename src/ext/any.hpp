@@ -1,17 +1,12 @@
 #ifndef SBROWSER_ANY_HPP
 #define SBROWSER_ANY_HPP
 
+namespace ext {class any;}
+
 #include <any>
 #include <string>
+
 #include <ext/decorators.hpp>
-
-
-//inline bool operator< (const std::any& first, const std::any& second) {return &first <  &second;}
-//inline bool operator> (const std::any& first, const std::any& second) {return &first >  &second;}
-//inline bool operator==(const std::any& first, const std::any& second) {return &first == &second;}
-
-
-namespace ext {class any;}
 
 
 class ext::any final
