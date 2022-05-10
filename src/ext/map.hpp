@@ -6,18 +6,18 @@
 #include <ranges>
 
 #include <ext/any.hpp>
+#include <ext/exception.hpp>
 #include <ext/iterable.hpp>
 #include <ext/string.hpp>
 
 
 namespace ext {template <typename K, typename V> class map;}
-namespace ext {template <typename K, typename V> using cmap = const map<K, V>;}
-namespace ext {using string_any_map = map<string, any>;}
-namespace ext {using string_string_map = map<string, string>;}
+namespace ext {using string_any_map_t = map<string, any>;}
+namespace ext {using string_string_map_t = map<string, string>;}
 
 
 template <typename K, typename V>
-class ext::map final: public ext::iterable<V, std::map<K, V>>
+class ext::map final : public ext::iterable<V, std::map<K, V>>
 {
 public aliases:
     using pair_t = std::pair<K, V>;
@@ -26,11 +26,12 @@ public constructors:
     map() = default;
     map(const map<K, V>&) = default;
     map(map<K, V>&&) noexcept = default;
-    map<K, V>& operator=(const map<K, V>&) = default;
-    map<K, V>& operator=(map<K, V>&&) noexcept = default;
+    auto operator=(const map<K, V>&) -> map<K, V>& = default;
+    auto operator=(map<K, V>&&) noexcept -> map<K, V>& = default;
+    ~map() override = default;
 
-    map(const std::initializer_list<pair_t>&& o);
-    map<K, V>& operator=(std::initializer_list<pair_t>&& o);
+    explicit map(const std::initializer_list<pair_t>&& that);
+    auto operator=(std::initializer_list<pair_t>&& that) -> map<K, V>&;
 
 public js_methods:
     auto insert(const K& key, const V& value) -> ext::map<K, V>&;
@@ -41,24 +42,38 @@ public js_methods:
     auto keys() -> ext::vector<K>;
     auto values() -> ext::vector<V>;
 
-    template <typename U> auto cast_all() -> map<K, U> requires std::is_same_v<V, ext::any>;
+    template <typename U> auto cast_all() -> map<K, U>;
+    template <typename U> auto cast_all() -> map<K, U> requires (std::is_same_v<V, ext::any>);
 
 public operators:
-    auto operator==(ext::cmap<K, V>& o) -> bool;
+    auto operator==(const ext::map<K, V>& that) -> bool;
 };
 
 
 template <typename K, typename V>
-ext::map<K, V>& ext::map<K, V>::operator=(std::initializer_list<pair_t>&& o)
+ext::map<K, V>::map(
+        const std::initializer_list<pair_t>&& that)
 {
-    // append the moved args (std::pair<K, V>)
-    for (const pair_t& pair: o)
-        this->insert(pair.first, pair.second);
+    // create the internal container from the initialization list
+    this->m_iterable = that;
 }
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::insert(const K& key, const V& value) -> ext::map<K, V>&
+auto ext::map<K, V>::operator=(
+        std::initializer_list<pair_t>&& that)
+        -> ext::map<K, V>&
+{
+    // create the internal container from the initialization list
+    this->m_iterable = std::move(that);
+}
+
+
+template <typename K, typename V>
+auto ext::map<K, V>::insert(
+        const K& key,
+        const V& value)
+        -> ext::map<K, V>&
 {
     // insert the key-value pair, and return the reference to the map
     this->m_iterable.emplace(key, value);
@@ -67,7 +82,9 @@ auto ext::map<K, V>::insert(const K& key, const V& value) -> ext::map<K, V>&
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::at(const K& key) const -> const V&
+auto ext::map<K, V>::at(
+        const K& key) const
+        -> const V&
 {
     // return the item in the middle of the map
     return this->m_iterable.at(key);
@@ -75,7 +92,9 @@ auto ext::map<K, V>::at(const K& key) const -> const V&
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::at(K& key) -> V&
+auto ext::map<K, V>::at(
+        K& key)
+        -> V&
 {
     // return the item in the middle of the map
     return this->m_iterable.at(key);
@@ -83,7 +102,9 @@ auto ext::map<K, V>::at(K& key) -> V&
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::has_key(const K& key) const -> bool
+auto ext::map<K, V>::has_key(
+        const K& key) const
+        -> bool
 {
     // check if the iterable contains a key by comparing its iterator location to the end iterator
     return this->m_iterable.find(key) != this->m_iterable.end();
@@ -91,7 +112,8 @@ auto ext::map<K, V>::has_key(const K& key) const -> bool
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::keys() -> ext::vector<K>
+auto ext::map<K, V>::keys()
+        -> ext::vector<K>
 {
     // return a vector of the keys
     auto keys = std::views::keys(this->m_iterable);
@@ -100,7 +122,8 @@ auto ext::map<K, V>::keys() -> ext::vector<K>
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::values() -> ext::vector<V>
+auto ext::map<K, V>::values()
+        -> ext::vector<V>
 {
     // return a vector of the values
     auto values = std::views::values(this->m_iterable);
@@ -110,14 +133,21 @@ auto ext::map<K, V>::values() -> ext::vector<V>
 
 template <typename K, typename V>
 template <typename U>
-auto ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext::any>
+auto ext::map<K, V>::cast_all()
+        -> map <K, U>
 {
-    // create an empty copy of the map
-    map<K, U> copy;
+    // throw an error as this non-specialized method cannot call objects that aren't of a callable type V
+    throw ext::type_error{"Type V must be the 'ext::any' type"};
+}
 
-    // add each element into the copy, and the ext::any_cast will automatically convert the value type
-    for (const auto& [key, value]: *this)
-        copy.at(key) = value;
+
+template <typename K, typename V>
+template <typename U>
+auto ext::map<K, V>::cast_all()
+        -> ext::map<K, U> requires (std::is_same_v<V, ext::any>)
+{
+    // create an empty copy of the map, ext::any should automatically cast from T -> V
+    map<K, U> copy {*this};
 
     // return the cast map
     return copy;
@@ -125,14 +155,14 @@ auto ext::map<K, V>::cast_all() -> ext::map<K, U> requires std::is_same_v<V, ext
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::operator==(ext::cmap<K, V>& o) -> bool
+auto ext::map<K, V>::operator==(const ext::map<K, V>& that) -> bool
 {
     // guard to check that the lengths match
-    if (this->length() != o.length())
+    if (this->length() != that.length())
         return false;
 
     // inequality check by comparing the items in the two iterables
-    return std::ranges::all_of(this->begin(), this->end(), [this, o](const K& key) {return at(key) == o.at(key);});
+    return std::ranges::all_of(this->begin(), this->end(), [this, that](const K& key) {return that.has_key(key) and at(key) == that.at(key);});
 }
 
 
