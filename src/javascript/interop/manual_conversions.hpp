@@ -74,8 +74,14 @@ struct v8pp::convert<ext::listlike<T>>
         // create the handle_scope and return the javascript object
         v8::EscapableHandleScope escapable_handle_scope{isolate};
         auto v8_value = v8::Object::New(isolate);
-        for (auto i = 0; i < cpp_value.length; ++i)
-            v8_value->Set(isolate->GetCurrentContext(), i, v8pp::convert<T>::to_v8(isolate, cpp_value[i]));
+        auto index = 0;
+        for (
+                auto iterator = cpp_value.m_linked_list->begin();
+                iterator != cpp_value.m_linked_list->end();
+                ++iterator, ++index)
+
+            // set the property to the JavaScript object by index ie 'object.0 = ...'
+            v8_value->Set(isolate->GetCurrentContext(), index, v8pp::convert<T>::to_v8(isolate, *iterator));
 
         return v8_value;
     }
