@@ -4,7 +4,10 @@
 
 namespace ext {template <typename T> class listlike;}
 
+#include <ext/property.hpp>
+
 namespace ext {template <typename T> class vector;}
+namespace v8pp {template <typename T> class convert;}
 
 
 template <typename T>
