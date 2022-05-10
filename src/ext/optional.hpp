@@ -60,9 +60,9 @@ auto ext::optional<T>::operator=(
 template <typename T>
 auto ext::optional<T>::operator=(
         std::nullopt_t nullopt)
-        -> optional<T>&
+        -> optional&
 {
-    m_value = null;
+    m_value = nullopt;
     return *this;
 }
 
