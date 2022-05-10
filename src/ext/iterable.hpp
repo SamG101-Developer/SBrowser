@@ -31,8 +31,8 @@ public constructors:
     iterable() = default;
     iterable(const iterable&) = default;
     iterable(iterable&&) noexcept = default;
-    auto operator=(const iterable&) -> iterable<T, C>& = default;
-    auto operator=(iterable&&) noexcept -> iterable<T, C>& = default;
+    auto operator=(const iterable&) -> iterable& = default;
+    auto operator=(iterable&&) noexcept -> iterable& = default;
     virtual ~iterable() = default;
 
     // iterator access
@@ -102,7 +102,7 @@ public constructors:
 
 public operators:
     virtual auto operator!() const -> bool;
-    auto operator==(const iterable<T, C>& o) const -> bool;
+    auto operator==(const iterable& that) const -> bool;
 
 protected cpp_properties:
     C m_iterable;
@@ -359,7 +359,7 @@ auto ext::iterable<T, C>::reversed() const
         -> iterable
 {
     // reverse a duplicate iterable, and return the reference to it
-    return iterable<T, C>{*this}.reverse();
+    return iterable{*this}.reverse();
 }
 
 
@@ -378,7 +378,7 @@ auto ext::iterable<T, C>::sorted() const
         -> iterable
 {
     // sort a duplicate iterable, and return the reference to it
-    return iterable<T, C>{*this}.sort();
+    return iterable{*this}.sort();
 }
 
 
@@ -505,7 +505,9 @@ auto ext::iterable<T, C>::find_last_that_isnt_if(
 
 template <typename T, typename C>
 template <typename ...args>
-auto ext::iterable<T, C>::count(const args&... item) const -> size_t
+auto ext::iterable<T, C>::count(
+        const args&... item) const
+        -> size_t
 {
     // return the number of occurrences of an item
     return (std::ranges::count(m_iterable.begin(), m_iterable.end(), item) + ...);
@@ -514,15 +516,18 @@ auto ext::iterable<T, C>::count(const args&... item) const -> size_t
 
 template <typename T, typename C>
 template <typename ...args>
-auto ext::iterable<T, C>::contains(const args&... item) const -> bool
+auto ext::iterable<T, C>::contains(
+        const args&... item) const
+        -> bool
 {
     // check if the iterable contains an item by comparing its iterator location to the end iterator
-    return ((std::find(begin(), end(), item) != cend()) or ...);
+    return ((std::find(begin(), end(), item) != cend()) || ...);
 }
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::operator!() const -> bool
+auto ext::iterable<T, C>::operator!() const
+        -> bool
 {
     // the iterable evaluates to false if the list is empty (inverse operator ie -> true)
     return empty();
@@ -530,18 +535,20 @@ auto ext::iterable<T, C>::operator!() const -> bool
 
 
 template <typename T, typename C>
-auto ext::iterable<T, C>::operator==(const iterable<T, C>& o) const -> bool
+auto ext::iterable<T, C>::operator==(
+        const iterable& that) const
+        -> bool
 {
     // guard to check that the lengths match
-    if (length() != o.length())
+    if (length() != that.length())
         return false;
 
     // determine the end iterator conditions
     auto a_end = end();
-    auto b_end = o.end();
+    auto b_end = that.end();
 
     // iterate and compare elements
-    for (auto a_iterator = begin(), b_iterator = o.begin(); a_iterator != a_end and b_iterator != b_end; ++a_iterator, ++b_iterator)
+    for (auto a_iterator = begin(), b_iterator = that.begin(); a_iterator != a_end and b_iterator != b_end; ++a_iterator, ++b_iterator)
     {
         if (*a_iterator != *b_iterator) return false;
     }

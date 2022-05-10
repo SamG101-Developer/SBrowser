@@ -1,23 +1,22 @@
 #ifndef SBROWSER_OPTIONAL_HPP
 #define SBROWSER_OPTIONAL_HPP
 
+namespace ext {template <typename T> class optional;}
+
 #include <optional>
 #include <ext/type_traits.hpp>
 
-namespace ext {template <typename T> class optional;}
-
 
 template <typename T>
-class ext::optional
+class ext::optional final
 {
 public constructors:
     optional() = default;
-    virtual ~optional() = default;
-
     optional(const optional&) = delete;
     optional(optional&&) noexcept = delete;
     auto operator=(const optional&) -> optional& = delete;
     auto operator=(optional&&) noexcept -> optional& = delete;
+    virtual ~optional() = default;
 
     explicit optional(const T& value);
     explicit optional(T&& value) noexcept;

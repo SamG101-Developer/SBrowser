@@ -2,6 +2,8 @@
 #ifndef SBROWSER_MAP_HPP
 #define SBROWSER_MAP_HPP
 
+namespace ext {template <typename K, typename V> class map;}
+
 #include <map>
 #include <ranges>
 
@@ -10,9 +12,7 @@
 #include <ext/iterable.hpp>
 #include <ext/string.hpp>
 
-
-namespace ext {template <typename K, typename V> class map;}
-namespace ext {using string_any_map_t = map<string, any>;}
+namespace ext {using string_any_map_t    = map<string, any   >;}
 namespace ext {using string_string_map_t = map<string, string>;}
 
 
@@ -24,17 +24,17 @@ public aliases:
 
 public constructors:
     map() = default;
-    map(const map<K, V>&) = default;
-    map(map<K, V>&&) noexcept = default;
-    auto operator=(const map<K, V>&) -> map<K, V>& = default;
-    auto operator=(map<K, V>&&) noexcept -> map<K, V>& = default;
+    map(const map&) = default;
+    map(map&&) noexcept = default;
+    auto operator=(const map&) -> map& = default;
+    auto operator=(map&&) noexcept -> map& = default;
     ~map() override = default;
 
     explicit map(const std::initializer_list<pair_t>&& that);
-    auto operator=(std::initializer_list<pair_t>&& that) -> map<K, V>&;
+    auto operator=(std::initializer_list<pair_t>&& that) -> map&;
 
 public js_methods:
-    auto insert(const K& key, const V& value) -> ext::map<K, V>&;
+    auto insert(const K& key, const V& value) -> map&;
     auto at(const K& key) const -> const V&;
     auto at(K& key) -> V&;
     auto has_key(const K& key) const -> bool;
@@ -46,7 +46,7 @@ public js_methods:
     template <typename U> auto cast_all() -> map<K, U> requires (std::is_same_v<V, ext::any>);
 
 public operators:
-    auto operator==(const ext::map<K, V>& that) -> bool;
+    auto operator==(const map& that) -> bool;
 };
 
 
@@ -62,7 +62,7 @@ ext::map<K, V>::map(
 template <typename K, typename V>
 auto ext::map<K, V>::operator=(
         std::initializer_list<pair_t>&& that)
-        -> ext::map<K, V>&
+        -> map&
 {
     // create the internal container from the initialization list
     this->m_iterable = std::move(that);
@@ -73,7 +73,7 @@ template <typename K, typename V>
 auto ext::map<K, V>::insert(
         const K& key,
         const V& value)
-        -> ext::map<K, V>&
+        -> map&
 {
     // insert the key-value pair, and return the reference to the map
     this->m_iterable.emplace(key, value);
@@ -86,6 +86,9 @@ auto ext::map<K, V>::at(
         const K& key) const
         -> const V&
 {
+    if (not has_key(key))
+        throw std::invalid_argument{"Map doesn't contain the key " + key};
+
     // return the item in the middle of the map
     return this->m_iterable.at(key);
 }
@@ -134,7 +137,7 @@ auto ext::map<K, V>::values()
 template <typename K, typename V>
 template <typename U>
 auto ext::map<K, V>::cast_all()
-        -> map <K, U>
+        -> map<K, U>
 {
     // throw an error as this non-specialized method cannot call objects that aren't of a callable type V
     throw ext::type_error{"Type V must be the 'ext::any' type"};
@@ -155,7 +158,9 @@ auto ext::map<K, V>::cast_all()
 
 
 template <typename K, typename V>
-auto ext::map<K, V>::operator==(const ext::map<K, V>& that) -> bool
+auto ext::map<K, V>::operator==(
+        const map& that)
+        -> bool
 {
     // guard to check that the lengths match
     if (this->length() != that.length())

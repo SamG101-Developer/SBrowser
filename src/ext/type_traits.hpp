@@ -11,11 +11,10 @@ namespace ext
     template <template <typename> typename T, typename U> inline constexpr bool is_mixin_base_of_v = is_mixin_base_of<T, U>::value;
 }
 
-namespace ext
-{
-    template <typename T, typename ...Args> struct is_invokable;
-    template <typename T, typename ...Args> inline constexpr bool is_invokable_v = is_invokable<T, Args...>::value;
-}
+
+namespace ext {template <typename ...Args> auto is_inf(Args&&... value) -> bool;}
+namespace ext {template <typename ...Args> auto is_nan(Args&&... value) -> bool;}
+namespace ext {template <typename ...Args> auto is_inf_or_nan(Args&&... value) -> bool;}
 
 
 template <template <typename> typename T, typename U>
@@ -31,17 +30,29 @@ public:
 };
 
 
-template <typename T, typename ...Args>
-struct ext::is_invokable
+template <typename ...Args>
+auto ext::is_inf(Args&&... value) -> bool
 {
-private:
-    template <typename U>
-    static auto test(U* p) -> decltype((*p)(std::declval<Args>()...), void(), std::true_type{});
-    static auto test(...) -> std::false_type;
+    // check if any of the values are infinity
+    return (std::isinf(std::forward<Args>(value)) || ...);
+}
 
-public:
-    static constexpr bool value = decltype(test<T>(0))::value;
-};
+
+template <typename ...Args>
+auto ext::is_nan(Args&&... value) -> bool
+{
+    // check if any of the values are NaNs
+    return (std::isnan(std::forward<Args>(value)) || ...);
+}
+
+
+template <typename ...Args>
+auto ext::is_inf_or_nan(Args&&... value) -> bool
+{
+    // check if any of the values are infinity or NaNs
+    return ((is_inf(value) or is_nan(value)) || ...);
+}
+
 
 // unsigned counterparts to the char/short/int/long/longlong primitives (not post-fixed with _t for consistency)
 using uchar     = unsigned char;
@@ -52,6 +63,14 @@ using ulonglong = unsigned long long;
 
 // syntactic sugar around std::nullopt
 inline constexpr std::nullopt_t null{std::nullopt_t::_Tag{}};
+
+
+// equality operators for types that don't ahev them defined
+auto operator==(const std::function<void()>& function_a, const std::function<void()>& function_b) -> bool
+{
+    // equality check by comparing the addresses of the two objects
+    return &function_a == &function_b;
+}
 
 
 #endif //SBROWSER_TYPE_TRAITS_HPP

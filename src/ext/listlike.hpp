@@ -5,9 +5,9 @@
 namespace ext {template <typename T> class listlike;}
 
 #include <ext/property.hpp>
+#include <ext/vector.hpp>
 
-namespace ext {template <typename T> class vector;}
-namespace v8pp {template <typename T> class convert;}
+namespace v8pp {template <typename T, typename Enable> class convert;}
 
 
 template <typename T>
@@ -48,8 +48,8 @@ auto ext::listlike<T>::operator[](
         const size_t index)
         -> T&
 {
-    // use the [size_t] operator as getting an item by index
-    return m_linked_list->at(index);
+    // get the indexth element in the list by iterator
+    return m_linked_list->at(m_linked_list->begin() + index);
 }
 
 
