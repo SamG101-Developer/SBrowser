@@ -14,6 +14,7 @@
 
 #include <ext/cpp_keywords.hpp>
 #include <ext/decorators.hpp>
+#include <ext/optional.hpp>
 
 namespace ext {template <typename T, typename C> class iterable;}
 
@@ -36,9 +37,9 @@ public constructors:
     virtual ~iterable() = default;
 
     // iterator access
-    auto front() noexcept(false) -> T&;
-    auto back() noexcept(false) -> T&;
-    auto at(iterator where) const noexcept(false) -> T&;
+    auto front() noexcept(false) -> optional<T>;
+    auto back() noexcept(false) -> optional<T>;
+    auto at(iterator where) const noexcept(false) -> optional<T>;
 
     // get begin and end iterators (forward, const, reverse, const-reverse)
     auto begin() -> iterator;
@@ -111,41 +112,29 @@ protected cpp_properties:
 
 template <typename T, typename C>
 auto ext::iterable<T, C>::front() noexcept(false)
-        -> T&
+        -> optional<T>
 {
-    // throws error if accessing the front of an empty iterable
-    if (empty())
-        throw std::out_of_range{"Cannot access front of an empty iterable"};
-
-    // return the item at the front of the iterable
-    return m_iterable.front();
+    // return the item at the font of the iterable, if it exists
+    return empty() ? null : m_iterable.front();
 }
 
 
 template <typename T, typename C>
 auto ext::iterable<T, C>::back() noexcept(false)
-        -> T&
+        -> optional<T>
 {
-    // throws error if accessing the back of an empty iterable
-    if (empty())
-        throw std::out_of_range{"Cannot access back of an empty iterable"};
-
-    // return the item at the back of the iterable
-    return m_iterable.back();
+    // return the item at the back of the iterable, if it exists
+    return empty() ? null : m_iterable.back();
 }
 
 
 template <typename T, typename C>
 auto ext::iterable<T, C>::at(
         const iterator where) const noexcept(false)
-        -> T&
+        -> optional<T>
 {
-    // throws error if accessing the middle of an empty iterable
-    if (empty())
-        throw std::out_of_range{"Cannot access nth-iterator item of an empty iterable"};
-
-    // return the item in the middle of the iterable
-    return *where;
+    // return the item in the middle of the iterable, if it exists
+    return empty() ? null : *where;
 }
 
 
@@ -418,7 +407,7 @@ auto ext::iterable<T, C>::find_if_not(
 template <typename T, typename C>
 template <typename ...args>
 auto ext::iterable<T, C>::find_first_that_is(
-        args&& ...items) const
+        args&&... items) const
         -> iterator
 {
     // find the first instance of a specific item
@@ -440,7 +429,7 @@ auto ext::iterable<T, C>::find_first_that_is_if(
 template <typename T, typename C>
 template <typename ...args>
 auto ext::iterable<T, C>::find_first_that_isnt(
-        args&& ...items) const
+        args&&... items) const
         -> iterator
 {
     // find the first non-instance of a specific item
@@ -462,7 +451,7 @@ auto ext::iterable<T, C>::find_first_that_isnt_if(
 template <typename T, typename C>
 template <typename ...args>
 auto ext::iterable<T, C>::find_last_that_is(
-        args&& ...items) const
+        args&&... items) const
         -> iterator
 {
     // find the last instance of a specific item
@@ -484,7 +473,7 @@ auto ext::iterable<T, C>::find_last_that_is_if(
 template <typename T, typename C>
 template <typename ...args>
 auto ext::iterable<T, C>::find_last_that_isnt(
-        args&& ...items) const
+        args&&... items) const
         -> iterator
 {
     // find the last non-instance of a specific item
@@ -548,16 +537,15 @@ auto ext::iterable<T, C>::operator==(
     auto b_end = that.end();
 
     // iterate and compare elements
-    for (auto a_iterator = begin(), b_iterator = that.begin(); a_iterator != a_end and b_iterator != b_end; ++a_iterator, ++b_iterator)
+    for (
+            auto a_iterator = begin(), b_iterator = that.begin();
+            a_iterator != a_end and b_iterator != b_end;
+            ++a_iterator, ++b_iterator)
     {
-        if (*a_iterator != *b_iterator) return false;
+        if (*a_iterator != *b_iterator)
+            return false;
     }
 }
-
-
-template class ext::iterable<int, std::vector<int>>;
-template class ext::iterable<int, std::deque<int>>;
-template class ext::iterable<std::string, std::vector<std::string>>;
 
 
 #endif //SBROWSER_ITERABLE_HPP

@@ -61,9 +61,6 @@ using uint      = unsigned int;
 using ulong     = unsigned long;
 using ulonglong = unsigned long long;
 
-// syntactic sugar around std::nullopt
-inline constexpr std::nullopt_t null{std::nullopt_t::_Tag{}};
-
 
 // equality operators for types that don't ahev them defined
 auto operator==(const std::function<void()>& function_a, const std::function<void()>& function_b) -> bool

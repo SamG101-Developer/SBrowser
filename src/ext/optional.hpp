@@ -21,8 +21,11 @@ public constructors:
     auto operator=(optional&&) noexcept -> optional& = delete;
     virtual ~optional() = default;
 
-    explicit optional(T&& value) noexcept;
+    optional(const T& value);
+    optional(T&& value) noexcept;
     auto operator=(T&& other) noexcept -> optional&;
+
+    optional(std::nullopt_t nullopt) -> optional&;
     auto operator=(std::nullopt_t nullopt) -> optional&;
 
 public js_methods:
@@ -35,6 +38,15 @@ public js_methods:
 private cpp_properties:
     std::optional<T> m_value;
 };
+
+
+template <typename T>
+ext::optional<T>::optional(
+        const T& value)
+{
+    // use the constructor to emplace the copied object into the optional value
+    m_value.template emplace(value);
+}
 
 
 template <typename T>

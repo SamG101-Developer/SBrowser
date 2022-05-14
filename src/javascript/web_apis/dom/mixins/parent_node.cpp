@@ -22,7 +22,7 @@ dom::mixins::parent_node<T>::parent_node()
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::parent_node<T>::prepend(
-        nodes_or_strings_t ...nodes)
+        nodes_or_strings_t... nodes)
         -> void
 {
     // get the class that this mixin is being mixed into, and the node
@@ -40,7 +40,7 @@ auto dom::mixins::parent_node<T>::prepend(
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::parent_node<T>::append(
-        nodes_or_strings_t ...nodes)
+        nodes_or_strings_t... nodes)
         -> void
 {
     // get the class that this mixin is being mixed into, and the node
@@ -58,7 +58,7 @@ auto dom::mixins::parent_node<T>::append(
 template <typename T>
 template <typename ...nodes_or_strings_t>
 auto dom::mixins::parent_node<T>::replace_children(
-        nodes_or_strings_t ...nodes)
+        nodes_or_strings_t... nodes)
         -> void
 {
     // get the class that this mixin is being mixed into, and the node
