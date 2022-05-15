@@ -4,11 +4,17 @@
 #include <dom/helpers/signal_aborting.hpp>
 
 
-dom::aborting::abort_controller::abort_controller() : dom_object()
+dom::aborting::abort_controller::abort_controller()
 {
-    // Creates a new AbortController object instance.
-    // Returns an AbortSignal object instance, which can be used to communicate with, or to abort, a DOM request.
+    // set the properties
     signal = new abort_signal{};
+}
+
+
+dom::aborting::abort_controller::~abort_controller()
+{
+    // delete the signal pointer
+    delete signal;
 }
 
 
@@ -16,7 +22,7 @@ auto dom::aborting::abort_controller::abort(
         const ext::any& reason) const
         -> void
 {
-    // The abort(reason) method steps are to signal abort on this’s signal with reason if it is given.
+    // abort the signal with the helper method
     helpers::signal_aborting::signal_abort(signal, reason);
 }
 
