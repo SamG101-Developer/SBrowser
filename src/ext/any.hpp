@@ -6,6 +6,7 @@ namespace ext {class any;}
 #include <any>
 #include <string>
 
+#include <ext/cpp_keywords.hpp>
 #include <ext/decorators.hpp>
 
 
@@ -20,13 +21,13 @@ public constructors:
     auto operator=(const any&) -> any& = default;
     auto operator=(any&&) noexcept -> any& = default;
 
-    template <typename T> explicit any(const T& other);
-    template <typename T> explicit any(T&& other) noexcept;
-    template <typename T> auto operator=(const T& other) -> any&;
-    template <typename T> auto operator=(T&& other) noexcept -> any&;
+    template <typename T> any(const T& that);
+    template <typename T> any(T&& that) noexcept;
+    template <typename T> auto operator=(const T& that) -> any&;
+    template <typename T> auto operator=(T&& that) noexcept -> any&;
 
 public operators:
-    auto operator==(const ext::any& other) const -> bool;
+    auto operator==(const ext::any& that) const -> bool;
 
 public cpp_methods:
     // type information
@@ -46,44 +47,44 @@ private cpp_properties:
 
 
 template <typename T>
-ext::any::any(const T& other)
-        : m_value(other)
+ext::any::any(const T& that)
 {
     // use the constructor to emplace the copied object into this any value
+    m_value.template emplace<T>(that);
 }
 
 
 template <typename T>
-ext::any::any(T&& other) noexcept
-        : m_value(std::move(other.m_value))
+ext::any::any(T&& that) noexcept
 {
     // use the constructor to emplace the moved object into this optional value
+    m_value.template emplace<T>(std::forward<T>(that));
 }
 
 
 template <typename T>
 auto ext::any::operator=(
-        const T& other)
+        const T& that)
         -> any&
 {
     // use the assignment operator to emplace the copied object into this optional value
-    m_value = other;
+    m_value.template emplace<T>(that);
 }
 
 
 template <typename T>
 auto ext::any::operator=(
-        T&& other) noexcept
+        T&& that) noexcept
         -> any&
 {
     // use the assignment operator to emplace the copied object into this optional value
-    m_value = std::forward<T>(other);
+    m_value.template emplace<T>(std::forward<T>(that));
 }
 
 
-auto ext::any::operator==(const ext::any& other) const -> bool
+auto ext::any::operator==(const ext::any& that) const -> bool
 {
-    return &m_value == &other.m_value;
+    return &m_value == &that.m_value;
 }
 
 
