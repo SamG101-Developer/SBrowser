@@ -4,8 +4,7 @@
 #include <ext/any.hpp>
 #include <ext/casting.hpp>
 #include <ext/decorators.hpp>
-#include <ext/equalities.hpp>
-#include <ext/html_property.hpp>
+#include <ext/property.hpp>
 #include <ext/string.hpp>
 #include <ext/type_traits.hpp>
 #include <ext/vector.hpp>
