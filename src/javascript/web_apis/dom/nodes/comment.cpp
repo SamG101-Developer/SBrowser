@@ -3,12 +3,12 @@
 #include <javascript/environment/realms.hpp>
 
 
-dom::nodes::comment::comment(const ext::string& new_data) : character_data()
+dom::nodes::comment::comment(const ext::string& new_data)
 {
     // set custom properties
-    node_type << COMMENT_NODE;
-    data << new_data;
-    owner_document << &javascript::realms::current_global_object().get<document&>("associated_document");
+    node_type      = COMMENT_NODE;
+    data           = new_data;
+    owner_document = &javascript::realms::current_realm(this).get<document&>("associated_document");
 }
 
 

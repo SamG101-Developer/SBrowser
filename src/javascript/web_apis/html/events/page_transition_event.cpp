@@ -7,6 +7,6 @@ html::events::page_transition_event::page_transition_event(
 
         : dom::events::event(event_type, event_init)
 {
-    // set the property values
+    // set the property's values
     persisted = event_init.has_key("persisted") ? event_init.at("persisted").to<bool>() : false;
 }

@@ -25,6 +25,7 @@ public constructors:
     template <typename T> any(T&& that) noexcept;
     template <typename T> auto operator=(const T& that) -> any&;
     template <typename T> auto operator=(T&& that) noexcept -> any&;
+    auto operator==(const ext::any& that) -> bool;
 
 public operators:
     auto operator==(const ext::any& that) const -> bool;
@@ -36,7 +37,7 @@ public cpp_methods:
 
     // state information / modification
     [[nodiscard]] auto empty() const -> bool;
-    template <typename T> auto to() const -> T&;
+    template <typename T> auto to() const -> T;
 
 private cpp_methods:
     template <typename T> [[nodiscard]] auto any_cast() const -> T;
@@ -48,17 +49,17 @@ private cpp_properties:
 
 template <typename T>
 ext::any::any(const T& that)
+        : m_value(that)
 {
     // use the constructor to emplace the copied object into this any value
-    m_value.template emplace<T>(that);
 }
 
 
 template <typename T>
 ext::any::any(T&& that) noexcept
+        // : m_value(std::forward<T>(that)) TODO
 {
     // use the constructor to emplace the moved object into this optional value
-    m_value.template emplace<T>(std::forward<T>(that));
 }
 
 
@@ -118,10 +119,10 @@ auto ext::any::is_numeric() const
 
 template <typename T>
 auto ext::any::to() const
-        -> T&
+        -> T
 {
     // cast the internal object wrapped to any type T
-    return any_cast<T>(m_value);
+    return any_cast<T>();
 }
 
 

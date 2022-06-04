@@ -20,15 +20,15 @@ class dom::nodes::event_target : public virtual dom_object
 public friends:
     friend struct helpers::event_dispatching;
     friend struct helpers::event_listening;
-    using event_listener_callback = std::function<void()>;
+    using event_listener_callback_t = std::function<void()>;
 
 public constructors:
     event_target() = default;
     ~event_target() override;
 
 public js_methods:
-    auto add_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map_t& options) -> void;
-    auto remove_event_listener(ext::string type, event_listener_callback&& callback, const ext::string_any_map_t& options) -> void;
+    auto add_event_listener(ext::string type, event_listener_callback_t&& callback, const ext::string_any_map_t& options) -> void;
+    auto remove_event_listener(ext::string type, event_listener_callback_t&& callback, const ext::string_any_map_t& options) -> void;
     auto dispatch_event(events::event* event) -> bool;
 
 public cpp_methods:

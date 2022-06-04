@@ -13,7 +13,7 @@ html::elements::html_canvas_element::html_canvas_element()
     width.template attach_qt_updater(&QWidget::setFixedWidth, m_rendered_widget);
     height.template attach_qt_updater(&QWidget::setFixedHeight, m_rendered_widget);
 
-    // set the property values
+    // set the property's values
     width << 300UL;
     height << 150UL;
 }

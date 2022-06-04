@@ -2,6 +2,8 @@
 #ifndef SBROWSER_ITERABLE_HPP
 #define SBROWSER_ITERABLE_HPP
 
+#include <ext/container_live_linker.hpp>
+
 #include <algorithm>
 #include <format>
 #include <iostream>
@@ -21,11 +23,12 @@ namespace ext {template <typename T, typename C> class iterable;}
 
 template <typename T, typename C>
 class ext::iterable
+        : public container_live_filter_linker<C, iterable<T, C>>
 {
 public aliases:
-    using iterator         = typename C::iterator;                     // points to item
-    using const_iterator   = typename C::const_iterator;               // points to const item (!= const iterator)
-    using reverse_iterator = typename C::reverse_iterator;             // points to item in reverse
+    using iterator               = typename C::iterator;               // points to item
+    using const_iterator         = typename C::const_iterator;         // points to const item (!= const iterator)
+    using reverse_iterator       = typename C::reverse_iterator;       // points to item in reverse
     using const_reverse_iterator = typename C::const_reverse_iterator; // points to const item in reverse
 
 public constructors:
@@ -62,7 +65,7 @@ public constructors:
 
     // removing items from the list
     virtual auto clear() -> iterable&;
-    auto clean() -> iterable& requires std::is_pointer_v<T>;
+    virtual auto clean() -> iterable&;
 
     template <bool all, typename ...args> auto remove(args&&... items) -> iterable&;
     template <bool all, class F> auto remove_if(F&& function) -> iterable&;
@@ -81,9 +84,9 @@ public constructors:
     auto sorted() const -> iterable;
 
     // get the iterator where the item is in the list
-    auto find(const T& item, const_iterator& offset = nullptr) const -> iterator;
-    template <typename F> auto find_if(F&& function, const_iterator& offset = nullptr) const -> iterator;
-    template <typename F> auto find_if_not(F&& function, const_iterator& offset = nullptr) const -> iterator;
+    auto find(const T& item, const_iterator offset = nullptr) const -> iterator;
+    template <typename F> auto find_if(F&& function, const iterator offset = nullptr) const -> iterator;
+    template <typename F> auto find_if_not(F&& function, const iterator offset = nullptr) const -> iterator;
 
     template <typename ...args> auto find_first_that_is(args&&... items) const -> iterator;
     template <typename F> auto find_first_that_is_if(F&& function) const -> iterator;
@@ -115,7 +118,9 @@ auto ext::iterable<T, C>::front() noexcept(false)
         -> optional<T>
 {
     // return the item at the font of the iterable, if it exists
-    return empty() ? null : m_iterable.front();
+    auto found_front_item = ext::optional<T>{};
+    if (not empty()) found_front_item.template emplace(m_iterable.front());
+    return found_front_item;
 }
 
 
@@ -124,7 +129,9 @@ auto ext::iterable<T, C>::back() noexcept(false)
         -> optional<T>
 {
     // return the item at the back of the iterable, if it exists
-    return empty() ? null : m_iterable.back();
+    auto found_last_item = ext::optional<T>{};
+    if (not empty()) found_last_item.template emplace(m_iterable.back());
+    return found_last_item;
 }
 
 
@@ -134,7 +141,9 @@ auto ext::iterable<T, C>::at(
         -> optional<T>
 {
     // return the item in the middle of the iterable, if it exists
-    return empty() ? null : *where;
+    auto found_at_item = ext::optional<T>{};
+    if (not empty() and where > begin() and where < end()) found_at_item.template emplace(*where);
+    return found_at_item;
 }
 
 
@@ -240,10 +249,11 @@ auto ext::iterable<T, C>::clear()
 
 template <typename T, typename C>
 auto ext::iterable<T, C>::clean()
-        -> iterable& requires std::is_pointer_v<T>
+        -> iterable&
 {
     // remove all the nullptr from the iterable, and return the reference to it
-    if constexpr(std::is_pointer_v<T>) remove(nullptr, true);
+    LIVE_FILTER_MUTABLE(clean);
+    if constexpr(std::is_pointer_v<T>) remove<true>(nullptr);
     return *this;
 }
 
@@ -254,7 +264,8 @@ auto ext::iterable<T, C>::remove(
         args&& ...items)
         -> iterable&
 {
-    return remove_if<all>([this, items...](const T& item) {return ((item == std::forward<args>(items)) || ...);});
+    // TODO LIVE_FILTER_MUTABLE(remove<all>, std::forward<args>(items)...);
+    return remove_if<all>([&items...](const T& item) {return ((item == std::forward<args>(items)) || ...);});
 }
 
 
@@ -264,7 +275,8 @@ auto ext::iterable<T, C>::remove_if(
         F&& function)
         -> iterable&
 {
-    do {std::remove_if(begin(), end(), function);} while (all and function());
+    // TODO do {std::remove_if(begin(), end(), function);} while (all and function());
+    // TODO LIVE_FILTER_MUTABLE
     return *this;
 }
 
@@ -276,6 +288,7 @@ auto ext::iterable<T, C>::replace(
         T&& new_item)
         -> iterable&
 {
+    // TODO LIVE_FILTER_MUTABLE
     return replace_if<all>([this, old_item = std::move(old_item)](const T& item) {return item == old_item;}, std::move(new_item));
 }
 
@@ -287,6 +300,7 @@ auto ext::iterable<T, C>::replace_if(
         T&& new_item)
         -> iterable&
 {
+    // TODO LIVE_FILTER_MUTABLE
     do {std::replace_if(begin(), end(), function, std::move(new_item));} while (all and function());
     return *this;
 }
@@ -299,6 +313,7 @@ auto ext::iterable<T, C>::ltrim(
         -> iterable&
 {
     // remove all the items from the left-hand side of the iterable, and return the reference to the iterable
+    LIVE_FILTER_MUTABLE(ltrim, std::forward<args>(item)...);
     (m_iterable.erase(
             begin(),
             begin() + std::distance(begin(), std::find_if_not(begin(), end(), [item = std::forward<args>(item)](T element) {return element == item;}))), ...);
@@ -313,6 +328,7 @@ auto ext::iterable<T, C>::rtrim(
         -> iterable&
 {
     // remove all the items from the right-hand side of the iterable, and return the reference to the iterable
+    LIVE_FILTER_MUTABLE(rtrim, std::forward<args>(item)...);
     (m_iterable.erase(
             begin() + std::distance(rbegin(), std::find_if_not(rbegin(), rend(), [item = std::forward<args>(item)](T element) {return element == item;})),
             end()), ...);
@@ -327,6 +343,7 @@ auto ext::iterable<T, C>::trim(
         -> iterable&
 {
     // remove all the items from both sides of the iterable, and return the reference to the iterable
+    LIVE_FILTER_MUTABLE(trim, std::forward<args>(item)...);
     ltrim(std::forward<args>(item)...);
     rtrim(std::forward<args>(item)...);
     return *this;
@@ -338,6 +355,7 @@ auto ext::iterable<T, C>::reverse()
         -> iterable&
 {
     // reverse the iterable, and return the reference to it
+    LIVE_FILTER_MUTABLE(reverse);
     std::ranges::reverse(m_iterable.begin(), m_iterable.end());
     return *this;
 }
@@ -357,7 +375,8 @@ auto ext::iterable<T, C>::sort()
         -> iterable&
 {
     // sort the iterable, and return the reference to it
-    std::ranges::sort(m_iterable.begin(), m_iterable.end());
+    LIVE_FILTER_MUTABLE(sort);
+    std::sort(m_iterable.begin(), m_iterable.end());
     return *this;
 }
 
@@ -374,11 +393,11 @@ auto ext::iterable<T, C>::sorted() const
 template <typename T, typename C>
 auto ext::iterable<T, C>::find(
         const T& item,
-        const_iterator& offset) const
+        const_iterator offset) const
         -> iterator
 {
     // return the index of an item in the iterable by comparing iterator positions
-    return std::find(begin() + offset, end(), item);
+    return std::find(offset, cend(), item);
 }
 
 
@@ -386,7 +405,7 @@ template <typename T, typename C>
 template <typename F>
 auto ext::iterable<T, C>::find_if(
         F&& function,
-        const_iterator& offset) const
+        const iterator offset) const
         -> iterator
 {
     return std::find_if(begin() + offset, end(), std::forward<T>(function));
@@ -397,7 +416,7 @@ template <typename T, typename C>
 template <typename F>
 auto ext::iterable<T, C>::find_if_not(
         F&& function,
-        const_iterator& offset) const
+        const iterator offset) const
         -> iterator
 {
     return std::find_if_not(begin() + offset, end(), std::forward<F>(function));
@@ -546,6 +565,15 @@ auto ext::iterable<T, C>::operator==(
             return false;
     }
 }
+
+
+class A{public: A(){}};
+
+
+template class ext::iterable<int, std::vector<int>>;
+template class ext::iterable<A  , std::vector<A>>;
+template class ext::iterable<A* , std::vector<A*>>;
+
 
 
 #endif //SBROWSER_ITERABLE_HPP

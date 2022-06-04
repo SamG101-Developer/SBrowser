@@ -4,7 +4,7 @@
 html::media::text_track_cue::text_track_cue()
         : dom::nodes::event_target()
 {
-    // set the property values
+    // set the property's values
     id = "";
     pause_on_exit = false;
 }

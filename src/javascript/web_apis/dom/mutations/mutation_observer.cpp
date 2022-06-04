@@ -5,23 +5,20 @@
 
 #include <dom/helpers/exceptions.hpp>
 #include <dom/helpers/mutation_observers.hpp>
+#include <dom/mutations/mutation_record.hpp>
 
 #include <dom/nodes/node.hpp>
 
-dom::mutations::mutation_observer::mutation_observer() : dom_object();
+dom::mutations::mutation_observer::mutation_observer() = default;
 
 
 dom::mutations::mutation_observer::mutation_observer(
         mutation_callback&& callback)
-
-        : dom_object()
-        , m_callback(std::move(callback))
+        : m_callback(std::forward<mutation_callback>(callback))
+        , m_node_list(make_smart<ext::vector<smart_pointer<nodes::node>>>())
+        , m_record_queue(make_smart<std::queue<smart_pointer<mutation_record>>>())
 {
-    // set the attribute values
-    m_node_list = new ext::vector<nodes::node*>{};
-    m_record_queue = new std::queue<mutation_record*>{};
-
-    javascript::realms::relevant_agent().get<ext::set<mutation_observer*>&>("mutationRecords").add(this);
+    // javascript::realms::relevant_agent().get<ext::set<mutation_observer*>&>("mutationRecords").add(this);
 }
 
 
@@ -63,13 +60,13 @@ auto dom::mutations::mutation_observer::observe(
             [options, &attribute_filter] {return not attribute_filter.empty() and not options.at("attributes").to<bool>();});
 
     // iterate over the registered observer list
-    for (const auto* registered: *target->m_registered_observer_list)
+    for (const auto* registered: target->m_registered_observer_list)
     {
         // only apply if the registered observer's observer is this mutation_observer
         if (registered->observer == this)
         {
             // iterate over each node that the observer is listening to
-            for (auto* node: *m_node_list)
+            for (smart_pointer<nodes::node> node: *m_node_list)
             {
                 // remove all the registered_observers whose source is
                 node->m_registered_observer_list

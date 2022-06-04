@@ -2,11 +2,10 @@
 #ifndef SBROWSER_CHILD_NODE_HPP
 #define SBROWSER_CHILD_NODE_HPP
 
-#include <ext/decorators.hpp>
-#include <javascript/interop/attribute_descriptors.hpp>
 #include <dom_object.hpp>
-
 namespace dom::mixins {template <typename T> class child_node;}
+
+#include <javascript/interop/attribute_descriptors.hpp>
 
 
 template <typename T>

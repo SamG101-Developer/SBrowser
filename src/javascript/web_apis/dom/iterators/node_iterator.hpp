@@ -21,8 +21,8 @@ public js_methods:
     auto previous_node() -> nodes::node*;
 
 public js_properties:
-    ext::dom_property<nodes::node*> reference_node;
-    ext::dom_property<bool> pointer_before_reference_node;
+    ext::property<smart_pointer<nodes::node>> reference_node;
+    ext::property<bool> pointer_before_reference_node;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

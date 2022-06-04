@@ -2,12 +2,11 @@
 #ifndef SBROWSER_ABSTRACT_ITERATOR_HPP
 #define SBROWSER_ABSTRACT_ITERATOR_HPP
 
-#include <ext/decorators.hpp>
-#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
 
-namespace dom::helpers {struct traversal;}
 namespace dom::iterators {class abstract_iterator;}
+
+namespace dom::helpers {struct traversal;}
 namespace dom::iterators {struct node_filter;}
 namespace dom::nodes {class node;}
 
@@ -21,9 +20,9 @@ public constructors:
     abstract_iterator();
 
 public js_properties:
-    ext::dom_property<nodes::node*> root;
-    ext::dom_property<node_filter*> filter;
-    ext::dom_property<ulong> what_to_show;
+    ext::property<smart_pointer<node_filter>> filter;
+    ext::property<smart_pointer<nodes::node>> root;
+    ext::property<ulong> what_to_show;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

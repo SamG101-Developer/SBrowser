@@ -13,7 +13,7 @@ dom::nodes::text::text(const ext::string& new_data)
 
     data.setter = [this](auto&& PH1) {set_data(std::forward<decltype(PH1)>(PH1));};
 
-    // set the property values
+    // set the property's values
     data      << new_data;
     node_type << TEXT_NODE;
 }

@@ -7,7 +7,7 @@ dom::other::dom_exception::dom_exception(
 
         : dom_object()
 {
-    // set the property values
+    // set the property's values
     this->message << message;
     this->type << type;
 }

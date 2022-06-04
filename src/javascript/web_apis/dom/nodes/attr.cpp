@@ -3,24 +3,24 @@
 #include <dom/helpers/attributes.hpp>
 
 
-dom::nodes::attr::attr() : node()
+dom::nodes::attr::attr()
 {
+    // set the property's values
+    node_type = ATTRIBUTE_NODE;
+
     // set the custom accessor methods
-    node_value.getter       = [this] {return get_node_value(); };
-    text_content.getter     = [this] {return get_text_content(); };
-    m_qualified_name.getter = [this] {return get_m_qualified_name(); };
+    bind_get(node_value, get_node_value);
+    bind_get(text_content, get_text_content);
+    bind_get(m_qualified_name, get_m_qualified_name);
 
-    value.setter        = [this](auto&& PH1) {set_value(std::forward<decltype(PH1)>(PH1));};
-    node_value.setter   = [this](auto&& PH1) {set_node_value(std::forward<decltype(PH1)>(PH1));};
-    text_content.setter = [this](auto&& PH1) {set_text_content(std::forward<decltype(PH1)>(PH1));};
-
-    // set the property values
-    node_type << ATTRIBUTE_NODE;
+    bind_set(value, set_value);
+    bind_set(node_value, set_node_value);
+    bind_set(text_content, set_text_content);
 }
 
 
 auto dom::nodes::attr::get_node_value() const
-        -> ext::string
+        -> ext::string&
 {
     // the node_value is the attribute's value
     return value;
@@ -28,7 +28,7 @@ auto dom::nodes::attr::get_node_value() const
 
 
 auto dom::nodes::attr::get_text_content() const
-        -> ext::string
+        -> ext::string&
 {
     // the text_content is the attribute's value
     return value;

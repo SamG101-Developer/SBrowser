@@ -14,12 +14,12 @@ public constructors:
     attr();
 
 public js_properties:
-    ext::dom_property<ext::string> namespace_uri;
-    ext::dom_property<ext::string> prefix;
-    ext::dom_property<ext::string> local_name;
-    ext::dom_property<ext::string> name;
-    ext::dom_property<ext::string> value;
-    ext::dom_property<element*> owner_element;
+    ext::property<ext::string> namespace_uri;
+    ext::property<ext::string> prefix;
+    ext::property<ext::string> local_name;
+    ext::property<ext::string> name;
+    ext::property<ext::string> value;
+    ext::property<smart_pointer<element>> owner_element;
 
 public: cpp_methods
     auto qt() const -> QWidget* override {return nullptr;}
@@ -29,9 +29,9 @@ protected cpp_properties:
     ext::property<ext::string> m_qualified_name;
 
 private accessors:
-    auto get_node_value() const -> ext::string override;
-    auto get_text_content() const -> ext::string override;
-    auto get_m_qualified_name() const -> ext::string;
+    [[nodiscard]] auto get_node_value() const -> ext::string& override;
+    [[nodiscard]] auto get_text_content() const -> ext::string& override;
+    [[nodiscard]] auto get_m_qualified_name() const -> ext::string;
 
     auto set_node_value(const ext::string& val) -> void override;
     auto set_text_content(const ext::string& val) -> void override;

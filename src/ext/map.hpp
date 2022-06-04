@@ -6,12 +6,10 @@ namespace ext {template <typename K, typename V> class map;}
 
 #include <map>
 #include <ranges>
-
 #include <ext/any.hpp>
 #include <ext/exception.hpp>
 #include <ext/iterable.hpp>
 #include <ext/string.hpp>
-
 namespace ext {using string_any_map_t    = map<string, any   >;}
 namespace ext {using string_string_map_t = map<string, string>;}
 
@@ -35,8 +33,8 @@ public constructors:
 
 public js_methods:
     auto insert(const K& key, const V& value) -> map&;
-    auto at(const K& key) const -> const V&;
-    auto at(K& key) -> V&;
+    auto at(const K& key) const -> ext::optional<V>;
+    auto at(K& key) -> ext::optional<V>;
     auto has_key(const K& key) const -> bool;
 
     auto keys() -> ext::vector<K>;
@@ -84,23 +82,24 @@ auto ext::map<K, V>::insert(
 template <typename K, typename V>
 auto ext::map<K, V>::at(
         const K& key) const
-        -> const V&
+        -> ext::optional<V>
 {
-    if (not has_key(key))
-        throw std::invalid_argument{"Map doesn't contain the key " + key};
-
     // return the item in the middle of the map
-    return this->m_iterable.at(key);
+    auto found_at_item = ext::optional<V>{};
+    if (has_key(key)) found_at_item.template emplace(this->m_iterable.at(key));
+    return found_at_item;
 }
 
 
 template <typename K, typename V>
 auto ext::map<K, V>::at(
         K& key)
-        -> V&
+        -> ext::optional<V>
 {
     // return the item in the middle of the map
-    return this->m_iterable.at(key);
+    auto found_at_item = ext::optional<V>{};
+    if (has_key(key)) found_at_item.template emplace(this->m_iterable.at(key));
+    return found_at_item;
 }
 
 

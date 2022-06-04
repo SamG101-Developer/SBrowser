@@ -10,36 +10,36 @@ template <typename T>
 dom::mixins::non_document_type_child_node<T>::non_document_type_child_node()
 {
     // set the custom accessor methods
-    previous_element_sibling.getter = [this] {return get_previous_element_sibling();};
-    next_element_sibling.getter = [this] {return get_next_element_sibling();};
+    bind_get(previous_element_sibling, get_previous_element_sibling);
+    bind_get(next_element_sibling, get_next_element_sibling);
 }
 
 
 template <typename T>
 auto dom::mixins::non_document_type_child_node<T>::get_previous_element_sibling() const
-        -> nodes::element*
+        -> smart_pointer<nodes::element>
 {
     // get the class that this mixin is being mixed into
     auto* base = static_cast<const T*>(this);
 
     // return the last node whose index precedes this node's
-    return base->child_nodes
-            ->template cast_all<nodes::element*>()
-            .template last_match([base](auto child) {return helpers::trees::index(child) < helpers::trees::index(base);});
+    auto comparison = [base](nodes::node* child) {return helpers::trees::index(child) < helpers::trees::index(base);};
+    auto last_match = base->child_nodes->cast_all<nodes::element*>().last_match(comparison);
+    return last_match.value_or(nullptr);
 }
 
 
 template <typename T>
 auto dom::mixins::non_document_type_child_node<T>::get_next_element_sibling() const
-        -> nodes::element*
+        -> smart_pointer<nodes::element>
 {
     // get the class that this mixin is being mixed into
     auto* base = static_cast<const T*>(this);
 
     // return the first node whose index succeeds this node's
-    return base->child_nodes
-            ->template cast_all<nodes::element*>()
-            .template first_match([base](auto* child) {return helpers::trees::index(child) > helpers::trees::index(base);});
+    auto comparison = [base](auto* child) {return helpers::trees::index(child) > helpers::trees::index(base);};
+    auto first_match = base->child_nodes->cast_all<nodes::element*>().first_match(comparison);
+    return first_match.value_or(nullptr);
 }
 
 
@@ -49,9 +49,9 @@ auto dom::mixins::non_document_type_child_node<T>::v8(
         -> ext::any
 {
     return v8pp::class_<non_document_type_child_node<T>>{isolate}
-            .inherit<dom_object>()
-            .var("previousElementSibling", &non_document_type_child_node<T>::previous_element_sibling)
-            .var("nextElementSibling", &non_document_type_child_node<T>::next_element_sibling)
+            .template inherit<dom_object>()
+            .template var("previousElementSibling", &non_document_type_child_node<T>::previous_element_sibling)
+            .template var("nextElementSibling", &non_document_type_child_node<T>::next_element_sibling)
             .auto_wrap_objects();
 }
 

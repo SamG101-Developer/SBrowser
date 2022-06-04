@@ -8,7 +8,7 @@
 html::elements::html_datalist_element::html_datalist_element()
         : html_element()
 {
-    // set the property values
+    // set the property's values
     options = new ext::vector<html_option_element*>{};
 
     // create the widget representation

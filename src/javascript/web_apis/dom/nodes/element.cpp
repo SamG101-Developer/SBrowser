@@ -36,13 +36,13 @@ dom::nodes::element::element()
     m_qualified_name.getter         = [this] {return get_m_qualified_name();};
     m_html_uppercase_qualified_name = [this] {return get_m_html_qualified_uppercase_name();};
 
-    // set the property values
+    // set the property's values
     node_type        << ELEMENT_NODE;
     shadow_root_node << nullptr;
     attributes       << new ext::vector<attr*>{};
     class_list       << new ext::string_vector{};
 
-    // set the attribute values
+    // set the attribute's values
     m_custom_element_reaction_queue = {};
 
     // create the widget representation

@@ -47,48 +47,43 @@
 
 
 dom::nodes::document::document()
-        : node()
-        , mixins::non_element_parent_node<document>()
-        , mixins::parent_node<document>()
-        , mixins::document_or_shadow_root<document>()
-        , mixins::document_or_element_node<document>()
-        , xpath::xpath_evaluator()
-        , ext::listlike<node*>()
+        : ext::listlike<smart_pointer<node>>(nullptr)
+
+        , url{make_smart<url::url>("about:blank")}
+        , implementation{make_smart<other::dom_implementation>()}
+        , content_type{"application/xml"}
+        , ready_state{"complete"}
 {
+    // set the property's values
+    node_type = DOCUMENT_NODE;
+    node_name = "#document";
+
     // set the custom accessor methods
-    compat_mode.getter      = [this] {return get_compat_mode();};
-    character_set.getter    = [this] {return get_character_set();};
-    doctype.getter          = [this] {return get_doctype();};
-    document_element.getter = [this] {return get_document_element();};
+    bind_get(compat_mode, get_compat_mode);
+    bind_get(character_set, get_character_set);
+    bind_get(doctype, get_doctype);
+    bind_get(document_element, get_document_element);
 
-    dir.getter           = [this] {return get_compat_mode();};
-    design_mode.getter   = [this] {return get_design_mode();};
-    last_modified.getter = [this] {return get_last_modified();};
-    cookie.getter        = [this] {return get_cookie();};
-    body.getter          = [this] {return get_body();};
-    head.getter          = [this] {return get_head();};
-    title.getter         = [this] {return get_title();};
-    images.getter        = [this] {return get_images();};
-    links.getter         = [this] {return get_links();};
-    forms.getter         = [this] {return get_forms();};
-    scripts.getter       = [this] {return get_scripts();};
+    bind_get(dir, get_dir);
+    bind_get(design_mode, get_design_mode);
+    bind_get(last_modified, get_last_modified);
+    bind_get(cookie, get_cookie);
+    bind_get(body, get_body);
+    bind_get(head, get_head);
+    bind_get(title, get_title);
+    bind_get(images, get_images);
+    bind_get(links, get_links);
+    bind_get(forms, get_forms);
+    bind_get(scripts, get_scripts);
 
-    design_mode.setter = [this](auto&& PH1) {set_design_mode(std::forward<decltype(PH1)>(PH1));};
-    title.setter       = [this](auto&& PH1) {set_title(std::forward<decltype(PH1)>(PH1));};
-    body.setter        = [this](auto&& PH1) {set_body(std::forward<decltype(PH1)>(PH1));};
-    cookie.setter      = [this](auto&& PH1) {set_cookie(std::forward<decltype(PH1)>(PH1));};
-    ready_state.setter = [this](auto&& PH1) {set_ready_state(std::forward<decltype(PH1)>(PH1));};
+    bind_set(design_mode, set_design_mode)
+    bind_set(title, set_title)
+    bind_set(body, set_body)
+    bind_set(cookie, set_cookie)
+    bind_set(ready_state, set_ready_state)
 
-    // set the property values
-    node_type      << DOCUMENT_NODE;
-    node_name      << "#document";
-    url            << "about:blank";
-    content_type   << "application/xml";
-    implementation << new other::dom_implementation{};
-    ready_state    << "complete";
-
-    // set the attribute values
-    m_origin = javascript::realms::surrounding_agent().get<const ext::string&>("origin");
+    // set the attribute's values
+    m_origin = javascript::realms::surrounding_agent(this).get<ext::string&>("origin");
     m_active_document_flags_set = html::internal::sandboxing_flags{};
 
     // create the widget representation
@@ -103,11 +98,11 @@ dom::nodes::document::document()
 
 auto dom::nodes::document::create_element(
         const ext::string& local_name,
-        const ext::string_any_map_t& options) const
+        ext::string_any_map_t&& options) const
         -> element
 {
     // get the <is> option as a string
-    auto is = options.at("is").to<ext::string>();
+    auto is = options.at("is").value_or("").to<ext::string>();
 
     // if the document type is html then set the html qualified name to lowercase
     const ext::string html_qualified_name = m_type == "html"
@@ -127,11 +122,11 @@ auto dom::nodes::document::create_element(
 auto dom::nodes::document::create_element_ns(
         const ext::string& namespace_,
         const ext::string& qualified_name,
-        const ext::string_any_map_t& options) const
+        ext::string_any_map_t&& options) const
         -> element
 {
     // get the <is> option as a string
-    auto is = options.at("is").to<ext::string>();
+    auto is = options.at("is").value_or("").to<ext::string>();
 
     // extract the namespace, prefix and local name from the namespace and qualified name
     auto [html_qualified_namespace, prefix, local_name] = helpers::namespaces::validate_and_extract(namespace_, qualified_name);
@@ -492,12 +487,12 @@ auto dom::nodes::document::get_the_parent(
         events::event* event)
         -> event_target*
 {
-    return event->type == "load" or not m_browsing_context ? nullptr : &javascript::realms::relevant_global_object();
+    return event->type == "load" or not m_browsing_context ? nullptr : &javascript::realms::relevant_realm(this).global_object;
 }
 
 
 auto dom::nodes::document::get_m_html_element() const
-        -> html::elements::html_html_element*
+        -> smart_pointer<html::elements::html_html_element>
 {
     // the html element is the document element that is a html_html_element type
     return ext::property_dynamic_cast<html::elements::html_html_element*>(document_element);
@@ -505,7 +500,7 @@ auto dom::nodes::document::get_m_html_element() const
 
 
 auto dom::nodes::document::get_m_head_element() const
-        -> html::elements::html_head_element*
+        -> smart_pointer<html::elements::html_head_element>
 {
     // the head element is the first html_head_element that is a child of the html element
     return get_m_html_element()->children->cast_all<html::elements::html_head_element*>().front();
@@ -513,7 +508,7 @@ auto dom::nodes::document::get_m_head_element() const
 
 
 auto dom::nodes::document::get_m_title_element() const
-        -> html::elements::html_title_element*
+        -> smart_pointer<html::elements::html_title_element>
 {
     // the title element is the first child of this document that is a html_title_element
     return helpers::trees::descendants(this).cast_all<html::elements::html_title_element*>().front();
@@ -521,7 +516,7 @@ auto dom::nodes::document::get_m_title_element() const
 
 
 auto dom::nodes::document::get_m_body_element() const
-        -> html::elements::html_body_element*
+        -> smart_pointer<html::elements::html_body_element>
 {
     // the body element is the first child of this document that is a html_body_element
     return children->cast_all<html::elements::html_body_element*>().front();
@@ -645,32 +640,36 @@ auto dom::nodes::document::get_title() const
 }
 
 
-auto dom::nodes::document::get_images()
-        -> ext::vector<html::elements::html_image_element*>
+auto dom::nodes::document::get_images(
+        ) const
+        -> smart_pointer<ext::vector<smart_pointer<html::elements::html_image_element>>>
 {
     // the images are the children of this document that are html_image_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_image_element*>();
 }
 
 
-auto dom::nodes::document::get_links()
-        -> ext::vector<html::elements::html_link_element*>
+auto dom::nodes::document::get_links(
+        ) const
+        -> smart_pointer<ext::vector<smart_pointer<html::elements::html_link_element>>>
 {
     // the links are the children of this document that are html_link_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_link_element*>();
 }
 
 
-auto dom::nodes::document::get_forms()
-        -> ext::vector<html::elements::html_form_element*>
+auto dom::nodes::document::get_forms(
+        ) const
+        -> smart_pointer<ext::vector<smart_pointer<html::elements::html_form_element>>>
 {
     // the forms are the children of this document that are html_form_element nodes
     return helpers::trees::descendants(this).cast_all<html::elements::html_form_element*>();
 }
 
 
-auto dom::nodes::document::get_scripts()
-        -> ext::vector<html::elements::html_script_element*>
+auto dom::nodes::document::get_scripts(
+        ) const
+        -> smart_pointer<ext::vector<smart_pointer<html::elements::html_script_element>>>
 {
     // the scripts are the children of this document that are html_script_element nodes which have the href attribute set
     return helpers::trees::descendants(this).cast_all<html::elements::html_script_element*>().filter([](auto* element) {return element->href;});

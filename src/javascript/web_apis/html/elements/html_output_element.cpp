@@ -13,7 +13,7 @@ html::elements::html_output_element::html_output_element()
     default_value.setter = [this](auto&& PH1) {set_default_value(std::forward<decltype(PH1)>(PH1));};
     value.setter = [this](auto&& PH1) {set_value(std::forward<decltype(PH1)>(PH1));};
 
-    // set the property values
+    // set the property's values
     type << "output";
 }
 

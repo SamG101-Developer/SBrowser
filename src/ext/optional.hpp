@@ -1,9 +1,9 @@
+ic:
 #ifndef SBROWSER_OPTIONAL_HPP
 #define SBROWSER_OPTIONAL_HPP
 
 namespace ext {template <typename T> class optional;}
 
-#include <optional>
 #include <ext/type_traits.hpp>
 
 
@@ -16,7 +16,7 @@ class ext::optional final
 public constructors:
     optional() = default;
     optional(const optional&) = delete;
-    optional(optional&&) noexcept = delete;
+    optional(optional&&) noexcept = default;
     auto operator=(const optional&) -> optional& = delete;
     auto operator=(optional&&) noexcept -> optional& = delete;
     virtual ~optional() = default;
@@ -25,15 +25,21 @@ public constructors:
     optional(T&& value) noexcept;
     auto operator=(T&& other) noexcept -> optional&;
 
-    optional(std::nullopt_t nullopt) -> optional&;
+    optional(std::nullopt_t nullopt);
     auto operator=(std::nullopt_t nullopt) -> optional&;
 
 public js_methods:
     [[nodiscard]] constexpr auto empty() const -> bool;
     [[nodiscard]] constexpr auto has_value() const -> bool;
+
+    constexpr auto value() -> T&;
     constexpr auto value() const -> T&;
+
+    constexpr auto value_or(const T& other) -> T&;
     constexpr auto value_or(const T& other) const -> T&;
+
     constexpr auto not_value_or(const T& other) const -> optional&;
+    template <typename ...args> auto emplace(args&&... values) -> optional&;
 
 private cpp_properties:
     std::optional<T> m_value;
@@ -70,11 +76,19 @@ auto ext::optional<T>::operator=(
 
 
 template <typename T>
+ext::optional<T>::optional(
+        std::nullopt_t nullopt)
+{
+    m_value.template emplace(nullopt);
+}
+
+
+template <typename T>
 auto ext::optional<T>::operator=(
         std::nullopt_t nullopt)
         -> optional&
 {
-    m_value = nullopt;
+    m_value.template emplace(nullopt);
     return *this;
 }
 

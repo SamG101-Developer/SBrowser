@@ -12,30 +12,32 @@ template <typename T>
 dom::mixins::document_or_shadow_root<T>::document_or_shadow_root()
 {
     // set the custom accessor methods
-    active_element.getter = [this] {return get_active_element();};
+    bind_get(active_element, get_active_element);
+
+    active_element._meta.getter = std::bind(&document_or_shadow_root<T>::get_active_element, this);
 }
 
 
 template <typename T>
 auto dom::mixins::document_or_shadow_root<T>::get_active_element() const
-        -> nodes::element*
+        -> smart_pointer<nodes::element>
 {
     nodes::element* candidate = nullptr; // TODO : from html::helpers::focus_internals
     dom::helpers::shadows::retarget(candidate, static_cast<const T*>(this));
 
     if (dom::helpers::trees::root(candidate) != static_cast<const T*>(this))
-        return nullptr;
+        return smart_pointer<nodes::element>(nullptr);
 
     if (not dynamic_cast<nodes::document*>(candidate))
-        return candidate;
+        return smart_pointer(candidate);
 
     if (nodes::element* body = dynamic_cast<nodes::document*>(candidate)->body)
-        return body;
+        return smart_pointer(body);
 
     if (nodes::element* document_element = dynamic_cast<nodes::document*>(candidate)->document_element)
-        return document_element;
+        return smart_pointer(document_element);
 
-    return nullptr;
+    return smart_pointer<nodes::element>(nullptr);
 }
 
 
@@ -45,10 +47,10 @@ auto dom::mixins::document_or_shadow_root<T>::v8(
         -> ext::any
 {
     return v8pp::class_<document_or_shadow_root<T>>{isolate}
-            .inherit<dom_object>()
-            .var("activeElement", &document_or_shadow_root<T>::active_element)
-            .var("styleSheets", &document_or_shadow_root<T>::style_sheets)
-            .var("adoptedStyleSheets", &document_or_shadow_root<T>::adopted_style_sheets)
+            .template inherit<dom_object>()
+            .template var("activeElement", &document_or_shadow_root<T>::active_element)
+            .template var("styleSheets", &document_or_shadow_root<T>::style_sheets)
+            .template var("adoptedStyleSheets", &document_or_shadow_root<T>::adopted_style_sheets)
             .auto_wrap_objects();
 }
 

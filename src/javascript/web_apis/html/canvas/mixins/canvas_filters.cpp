@@ -7,7 +7,7 @@
 template <typename T>
 html::canvas::mixins::canvas_filters<T>::canvas_filters()
 {
-    // set the property values
+    // set the property's values
     filter << "none";
 }
 

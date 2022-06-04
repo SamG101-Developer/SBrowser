@@ -16,7 +16,7 @@ html::canvas::mixins::canvas_image_smoothing<T>::canvas_image_smoothing()
     image_smoothing_enabled.template attach_qt_updater(&render::painting::painter::set_image_smoothing_enabled, static_cast<T*>(this)->m_painter);
     image_smoothing_quality.template attach_qt_updater(&render::painting::painter::set_image_smoothing_quality, static_cast<T*>(this)->m_painter);
 
-    // set the property values
+    // set the property's values
     image_smoothing_enabled = true;
     image_smoothing_quality = "low";
 }

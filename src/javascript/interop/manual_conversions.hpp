@@ -45,7 +45,7 @@ struct v8pp::convert<ext::listlike<T>>
     using from_type = ext::listlike<T>;
     using to_type = v8::Local<v8::Object>;
 
-    static auto is_valid(v8::Isolate*, v8::Local<v8::Value> value) -> bool
+    static auto is_valid(v8::Isolate* isolate, v8::Local<v8::Value> value) -> bool
     {
         // verify that the value is a non-empty object
         return not value.IsEmpty() and value->IsObject();

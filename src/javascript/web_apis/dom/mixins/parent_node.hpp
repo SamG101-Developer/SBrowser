@@ -2,11 +2,10 @@
 #ifndef SBROWSER_PARENT_NODE_HPP
 #define SBROWSER_PARENT_NODE_HPP
 
-#include <ext/vector.hpp>
-#include <ext/dom_property.hpp>
 #include <dom_object.hpp>
-
 namespace dom::mixins {template <typename T> class parent_node;}
+
+#include <ext/vector.hpp>
 namespace dom::nodes {class element;}
 namespace dom::nodes {class node;}
 
@@ -26,19 +25,18 @@ public js_methods:
     auto query_selector_all(ext::string selectors) -> ext::vector<nodes::node*>;
 
 public js_properties:
-    ext::dom_property<ext::vector<nodes::element*>*> children;
-    ext::dom_property<nodes::element*> first_element_child;
-    ext::dom_property<nodes::element*> last_element_child;
-    ext::dom_property<size_t> child_element_count;
+    ext::property<smart_pointer<ext::vector<smart_pointer<nodes::element>>>> children;
+    ext::property<smart_pointer<nodes::element>> first_element_child;
+    ext::property<smart_pointer<nodes::element>> last_element_child;
+    ext::property<size_t> child_element_count;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 private accessors:
-    auto get_children() const -> ext::vector<nodes::element*>*;
-    auto get_first_element_child() const -> nodes::element*;
-    auto get_last_element_child() const -> nodes::element*;
-    auto get_child_element_count() const -> size_t;
+    [[nodiscard]] auto get_first_element_child() const -> smart_pointer<nodes::element>;
+    [[nodiscard]] auto get_last_element_child() const -> smart_pointer<nodes::element>;
+    [[nodiscard]] auto get_child_element_count() const -> size_t;
 };
 
 

@@ -20,11 +20,11 @@ html::dragging::data_transfer::data_transfer()
     // constrain the property values
     effect_allowed.constrain_values({"none", "copy", "copyLink", "copyMove", "all", "link", "linkMove", "move", "uninitialized"});
 
-    // set the property values
+    // set the property's values
     drop_effect    = "none";
     effect_allowed = "none";
 
-    // set the attribute values
+    // set the attribute's values
     m_drag_data_store = new internal::drag_data_store{};
     m_drag_data_store->drag_data_store_mode = helpers::dragging_internals::drag_data_store_mode_t::READ_WRITE;
 }

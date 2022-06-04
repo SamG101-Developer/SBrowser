@@ -24,7 +24,7 @@ html::elements::html_text_area_element::html_text_area_element()
     selection_end.setter = [this](auto&& PH1) {set_selection_end(std::forward<decltype(PH1)>(PH1));};
     selection_direction.setter = [this](auto&& PH1) {set_selection_direction(std::forward<decltype(PH1)>(PH1));};
 
-    // set the attribute values
+    // set the attribute's values
     m_raw_value = "";
 
     // create the widget representation

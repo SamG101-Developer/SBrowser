@@ -2,17 +2,14 @@
 #ifndef SBROWSER_MUTATION_OBSERVER_HPP
 #define SBROWSER_MUTATION_OBSERVER_HPP
 
+#include <dom_object.hpp>
+namespace dom::mutations {class mutation_observer;}
+
 #include <functional>
 #include <queue>
-
-#include <ext/decorators.hpp>
 #include <ext/map.hpp>
 #include <ext/vector.hpp>
-
-#include <dom_object.hpp>
-
 namespace dom::helpers {class mutation_observers;}
-namespace dom::mutations {class mutation_observer;}
 namespace dom::mutations {struct mutation_record;}
 namespace dom::nodes {class node;}
 
@@ -39,8 +36,8 @@ public cpp_methods:
 
 private cpp_properties:
     mutation_callback m_callback;
-    ext::vector<nodes::node*>* m_node_list;
-    std::queue<mutation_record*>* m_record_queue;
+    smart_pointer<ext::vector<smart_pointer<nodes::node    >>> m_node_list;
+    smart_pointer<std::queue <smart_pointer<mutation_record>>> m_record_queue;
 };
 
 

@@ -7,7 +7,7 @@ html::events::pop_state_event::pop_state_event(
 
         : dom::events::event(event_type, event_init)
 {
-    // set the property values
+    // set the property's values
     state = event_init.has_key("state") ? event_init.at("state") : "";
 }
 

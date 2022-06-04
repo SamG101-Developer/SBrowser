@@ -4,9 +4,9 @@
 dom::nodes::cdata_section::cdata_section()
         : text()
 {
-    // set the property values
-    node_type << CDATA_SECTION_NODE;
-    node_name << "#cdata-section";
+    // set the property's values
+    node_type = CDATA_SECTION_NODE;
+    node_name = "#cdata-section";
 }
 
 

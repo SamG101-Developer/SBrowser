@@ -1,25 +1,29 @@
 #include "slottable.hpp"
 
+#include <dom/helpers/shadows.hpp>
 #include <dom/nodes/element.hpp>
 #include <dom/nodes/text.hpp>
 
-#include <dom/helpers/shadows.hpp>
+#include <html/elements/html_slot_element.hpp>
 
 
 template <typename T>
 dom::mixins::slottable<T>::slottable()
 {
     // set the custom accessor methods
-    assigned_slot.getter = [this] {return get_assigned_slot();};
+    bind_get(assigned_slot, get_assigned_slot);
 }
 
 
 template <typename T>
-auto dom::mixins::slottable<T>::get_assigned_slot() const
-        -> html::elements::html_slot_element*
+auto dom::mixins::slottable<T>::get_assigned_slot(
+        ) const
+        -> smart_pointer<html::elements::html_slot_element>
 {
     // return the found slot from the helper function find_slot, after converting this into a node pointer
-    return helpers::shadows::find_slot(static_cast<const T*>(this), true); // TODO : messy
+    auto* base = static_cast<const T*>(this);
+    auto* slot = helpers::shadows::find_slot(base, true);
+    return smart_pointer<html::elements::html_slot_element>(slot);
 }
 
 

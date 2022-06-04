@@ -14,7 +14,7 @@ html::elements::html_table_cell_element::html_table_cell_element()
     // set the custom accessor methods
     cell_index.getter = [this] {return get_cell_index();};
 
-    // set the property values
+    // set the property's values
     col_span << 1UL;
     row_span << 1UL;
 }

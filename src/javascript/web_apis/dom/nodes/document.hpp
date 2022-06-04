@@ -8,7 +8,6 @@
 #include <dom/mixins/non_element_parent_node.hpp>
 #include <dom/mixins/parent_node.hpp>
 #include <dom/xpath/xpath_evaluator.hpp>
-
 namespace dom::nodes {class document;}
 
 #include <variant>
@@ -78,7 +77,7 @@ class dom::nodes::document
         , public mixins::document_or_shadow_root<document>
         , public mixins::document_or_element_node<document>
         , public xpath::xpath_evaluator
-        , public ext::listlike<node*> {
+        , public ext::listlike<smart_pointer<node>> {
 
 public friends:
     friend struct dom::helpers::custom_elements;
@@ -94,22 +93,20 @@ public friends:
 public constructors:
     document();
 
-    ~document() override;
-
 private aliases:
-    using html_or_svg_script_element = std::variant<html::elements::html_script_element*, svg::elements::svg_script_element*>;
+    using html_or_svg_script_element = std::variant<smart_pointer<html::elements::html_script_element>, smart_pointer<svg::elements::svg_script_element>>;
 
 public js_methods:
     // dom
-    new_obj auto create_element(const ext::string& local_name, const ext::string_any_map_t& options = {}) const -> element;
-    new_obj auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, const ext::string_any_map_t& options = {}) const -> element;
-    new_obj auto create_document_fragment() const -> document_fragment;
-    new_obj auto create_text_node(const ext::string& data) const -> text;
-    new_obj auto create_cdata_section_node(const ext::string& data) const -> cdata_section;
-    new_obj auto create_comment(const ext::string& data) const -> comment;
-    new_obj auto create_processing_instruction(const ext::string& target, const ext::string& data) const -> processing_instruction;
-    new_obj auto create_attribute(const ext::string& local_name) const -> attr;
-    new_obj auto create_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name) const -> attr;
+    new_obj [[nodiscard]] auto create_element(const ext::string& local_name, ext::string_any_map_t&& options = {}) const -> element;
+    new_obj [[nodiscard]] auto create_element_ns(const ext::string& namespace_, const ext::string& qualified_name, ext::string_any_map_t&& options) const -> element;
+    new_obj [[nodiscard]] auto create_document_fragment() const -> document_fragment;
+    new_obj [[nodiscard]] auto create_text_node(const ext::string& data) const -> text;
+    new_obj [[nodiscard]] auto create_cdata_section_node(const ext::string& data) const -> cdata_section;
+    new_obj [[nodiscard]] auto create_comment(const ext::string& data) const -> comment;
+    new_obj [[nodiscard]] auto create_processing_instruction(const ext::string& target, const ext::string& data) const -> processing_instruction;
+    new_obj [[nodiscard]] auto create_attribute(const ext::string& local_name) const -> attr;
+    new_obj [[nodiscard]] auto create_attribute_ns(const ext::string& namespace_, const ext::string& qualified_name) const -> attr;
 
     new_obj auto create_range() -> ranges::range;
     new_obj auto create_node_iterator(node* root, ulong what_to_show = 0xFFFFFFFF, iterators::node_filter* filter = nullptr) -> iterators::node_iterator;
@@ -140,43 +137,43 @@ public js_methods:
 
 public js_properties:
     // dom
-    ext::dom_property<url::url*> url;
-    ext::dom_property<ext::string> compat_mode;
-    ext::dom_property<ext::string> character_set;
-    ext::dom_property<ext::string> content_type;
-    ext::dom_property<document_type*> doctype;
-    ext::dom_property<element*> document_element;
-    ext::dom_property<other::dom_implementation*> implementation;
+    ext::property<smart_pointer<url::url>> url;
+    ext::property<ext::string> compat_mode;
+    ext::property<ext::string> character_set;
+    ext::property<ext::string> content_type;
+    ext::property<document_type*> doctype;
+    ext::property<smart_pointer<element>> document_element;
+    ext::property<smart_pointer<other::dom_implementation>> implementation;
 
     // html
-    ext::dom_property<ext::string> domain;
-    ext::dom_property<ext::string> cookie;
-    ext::dom_property<ext::string> referrer;
-    ext::dom_property<ext::string> last_modified;
-    ext::dom_property<ext::string> ready_state;
-    ext::dom_property<ext::string> dir;
-    ext::dom_property<ext::string> design_mode;
-    ext::dom_property<ext::string> title;
+    ext::property<ext::string> domain;
+    ext::property<ext::string> cookie;
+    ext::property<ext::string> referrer;
+    ext::property<ext::string> last_modified;
+    ext::property<ext::string> ready_state;
+    ext::property<ext::string> dir;
+    ext::property<ext::string> design_mode;
+    ext::property<ext::string> title;
 
-    ext::dom_property<html::other::location*> location;
-    ext::dom_property<html::elements::html_body_element*> body;
-    ext::dom_property<html::elements::html_head_element*> head;
+    ext::property<smart_pointer<html::other::location>> location;
+    ext::property<smart_pointer<html::elements::html_body_element>> body;
+    ext::property<smart_pointer<html::elements::html_head_element>> head;
 
-    ext::dom_property<ext::vector<html::elements::html_image_element*>> images;
-    ext::dom_property<ext::vector<html::elements::html_link_element*>> links;
-    ext::dom_property<ext::vector<html::elements::html_form_element*>> forms;
-    ext::dom_property<ext::vector<html::elements::html_script_element*>> scripts;
+    ext::property<smart_pointer<ext::vector<smart_pointer<html::elements::html_image_element >>>> images;
+    ext::property<smart_pointer<ext::vector<smart_pointer<html::elements::html_link_element  >>>> links;
+    ext::property<smart_pointer<ext::vector<smart_pointer<html::elements::html_form_element  >>>> forms;
+    ext::property<smart_pointer<ext::vector<smart_pointer<html::elements::html_script_element>>>> scripts;
 
-    ext::dom_property<window_proxy*> default_view;
-    ext::dom_property<html_or_svg_script_element> current_script;
-    ext::dom_property<ext::string> visibility_state;
-    ext::dom_property<bool> hidden;
+    ext::property<smart_pointer<window_proxy>> default_view;
+    ext::property<html_or_svg_script_element> current_script;
+    ext::property<ext::string> visibility_state;
+    ext::property<bool> hidden;
 
     // cssom-view
-    ext::dom_property<element*> scrolling_element;
+    ext::property<smart_pointer<element>> scrolling_element;
 
     // css-regions
-    ext::dom_property<ext::map<ext::string, css::css_regions::elements::named_flow*>*> named_flows;
+    ext::property<ext::map<ext::string, css::css_regions::elements::named_flow*>*> named_flows; // TODO : ptr types, wait to impl spec
 
 public cpp_methods:
     auto qt() const -> QScrollArea* override;
@@ -186,31 +183,31 @@ protected cpp_methods:
     auto get_the_parent(events::event* event) -> event_target* override;
 
 private cpp_methods:
-    [[nodiscard]] auto get_m_html_element() const -> html::elements::html_html_element*;
-    [[nodiscard]] auto get_m_head_element() const -> html::elements::html_head_element*;
-    [[nodiscard]] auto get_m_title_element() const -> html::elements::html_title_element*;
-    [[nodiscard]] auto get_m_body_element() const -> html::elements::html_body_element*;
+    [[nodiscard]] auto get_m_html_element () const -> smart_pointer<html::elements::html_html_element >;
+    [[nodiscard]] auto get_m_head_element () const -> smart_pointer<html::elements::html_head_element >;
+    [[nodiscard]] auto get_m_title_element() const -> smart_pointer<html::elements::html_title_element>;
+    [[nodiscard]] auto get_m_body_element () const -> smart_pointer<html::elements::html_body_element >;
 
 private cpp_properties:
     // dom
-    encoding::encoding* m_encoding = nullptr;
+    smart_pointer<encoding::encoding> m_encoding = nullptr;
     ext::string m_type = "xml";
     ext::string m_mode = "no-quirks";
     ext::string m_origin;
 
     // html
-    html::internal::policy_container* m_policy_container = nullptr;
-    html::internal::permissions_policy* m_permissions_policy = nullptr;
-    html::internal::module_map* m_module_map = nullptr;
-    html::internal::cross_origin_opener_policy* m_cross_origin_opener_policy = nullptr;
-    html::internal::document_load_timing_information* m_load_timing_info = nullptr;
-    html::internal::document_unload_timing_information* m_unload_timing_info = nullptr;
+    smart_pointer<html::internal::policy_container> m_policy_container;
+    smart_pointer<html::internal::permissions_policy> m_permissions_policy;
+    smart_pointer<html::internal::module_map> m_module_map;
+    smart_pointer<html::internal::cross_origin_opener_policy> m_cross_origin_opener_policy;
+    smart_pointer<html::internal::document_load_timing_information> m_load_timing_info;
+    smart_pointer<html::internal::document_unload_timing_information> m_unload_timing_info;
 
     bool m_is_initial = false;
     bool m_will_declaratively_refresh = false;
     ext::string m_navigation_id = "";
 
-    ext::set<element*> m_render_blocking_elements {};
+    ext::set<smart_pointer<element>> m_render_blocking_elements {};
 
     html::internal::browsing_context* m_browsing_context = nullptr;
     ext::string m_fallback_base_url;
@@ -224,21 +221,21 @@ private cpp_properties:
     bool m_iframe_load_in_progress_flag = false;
     bool m_mute_iframe_load_flag = false;
 
-    ext::vector<html::elements::html_script_element*> m_list_of_scripts_that_will_execute_post_parsing;
-    ext::vector<html::elements::html_script_element*> m_list_of_scripts_that_will_execute_soon_as_possible;
+    ext::vector<smart_pointer<html::elements::html_script_element>> m_list_of_scripts_that_will_execute_post_parsing;
+    ext::vector<smart_pointer<html::elements::html_script_element>> m_list_of_scripts_that_will_execute_soon_as_possible;
     html::elements::html_script_element* m_pending_parsing_blocking_script;
 
     element* m_focused_area;
     element* m_sequential_focus_navigation_starting_point;
-    ext::vector<element*> m_sequential_focus_navigation_order;
+    ext::vector<smart_pointer<element>> m_sequential_focus_navigation_order;
 
-    ext::vector<element*> m_autofocus_candidates;
+    ext::vector<smart_pointer<element>> m_autofocus_candidates;
     bool m_autofocus_processed_flag;
 
     bool m_design_mode_enabled = false;
 
     html::internal::sandboxing_flags& m_active_document_flags_set;
-    html::internal::session_history_entry* m_latest_entry;
+    smart_pointer<html::internal::session_history_entry> m_latest_entry;
 
     element* m_target_element;
 
@@ -264,14 +261,14 @@ private accessors:
     [[nodiscard]] auto get_default_view() const -> window_proxy*;
     [[nodiscard]] auto get_last_modified() const -> ext::string;
     [[nodiscard]] auto get_cookie() const -> ext::string;
-    [[nodiscard]] auto same_obj get_body() const -> html::elements::html_body_element*;
-    [[nodiscard]] auto same_obj get_head() const -> html::elements::html_head_element*;
+    [[nodiscard]] auto same_obj get_body() const -> smart_pointer<html::elements::html_body_element>;
+    [[nodiscard]] auto same_obj get_head() const -> smart_pointer<html::elements::html_head_element>;
     [[nodiscard]] auto get_title() const -> ext::string;
 
-    [[nodiscard]] auto new_obj get_images() -> ext::vector<html::elements::html_image_element*>;
-    [[nodiscard]] auto new_obj get_links() -> ext::vector<html::elements::html_link_element*>;
-    [[nodiscard]] auto new_obj get_forms() -> ext::vector<html::elements::html_form_element*>;
-    [[nodiscard]] auto new_obj get_scripts() -> ext::vector<html::elements::html_script_element*>;
+    [[nodiscard]] auto new_obj get_images () const -> smart_pointer<ext::vector<smart_pointer<html::elements::html_image_element >>>;
+    [[nodiscard]] auto new_obj get_links  () const -> smart_pointer<ext::vector<smart_pointer<html::elements::html_link_element  >>>;
+    [[nodiscard]] auto new_obj get_forms  () const -> smart_pointer<ext::vector<smart_pointer<html::elements::html_form_element  >>>;
+    [[nodiscard]] auto new_obj get_scripts() const -> smart_pointer<ext::vector<smart_pointer<html::elements::html_script_element>>>;
 
     auto set_design_mode(const ext::string& val) -> void;
     auto set_title(const ext::string& val) -> void;

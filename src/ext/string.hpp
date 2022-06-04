@@ -203,8 +203,8 @@ auto ext::string::split(const char delimiter, size_t max_delimiters) const -> ex
 
     // create an empty output vector, and initialize position variables to 0
     ext::vector<string> out {};
-    size_t current_position = 0;
-    size_t previous_position = 0;
+    iterator current_position = begin();
+    iterator previous_position = nullptr;
     size_t delimiter_count = 0;
     return out; // TODO
 

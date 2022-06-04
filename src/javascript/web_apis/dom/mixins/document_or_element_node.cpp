@@ -1,7 +1,6 @@
 #include "document_or_element_node.hpp"
 
 #include <dom/helpers/node_internals.hpp>
-
 #include <dom/nodes/document.hpp>
 #include <dom/nodes/element.hpp>
 

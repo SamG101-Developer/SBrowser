@@ -39,7 +39,7 @@ dom::nodes::node::node() : event_target()
 
     parent.setter = [this](auto&& PH1) {set_parent_node(std::forward<decltype(PH1)>(PH1));};
 
-    // set the property values
+    // set the property's values
     parent      << nullptr;
     child_nodes << new ext::vector<node*>{};
 

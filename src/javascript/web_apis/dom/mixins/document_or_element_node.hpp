@@ -2,11 +2,11 @@
 #ifndef SBROWSER_DOCUMENT_OR_ELEMENT_NODE_HPP
 #define SBROWSER_DOCUMENT_OR_ELEMENT_NODE_HPP
 
+#include <dom_object.hpp>
+namespace dom::mixins {template <typename T> class document_or_element_node;}
+
 #include <ext/vector.hpp>
 #include <ext/string.hpp>
-#include <dom_object.hpp>
-
-namespace dom::mixins {template <typename T> class document_or_element_node;}
 namespace dom::nodes {class element;}
 
 

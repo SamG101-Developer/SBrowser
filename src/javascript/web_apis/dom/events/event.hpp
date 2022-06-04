@@ -3,22 +3,27 @@
 #define SBROWSER_EVENT_HPP
 
 #include <dom_object.hpp>
+
+namespace dom::events {class event;}
+
 #include <ext/map.hpp>
 #include <ext/decorators.hpp>
-#include <ext/dom_property.hpp>
 #include <performance/time/dom_high_res_timestamp.hpp>
 
 #include <veque.hpp>
 
-namespace dom::events {class event;}
-namespace dom::helpers {struct event_dispatching;}
-namespace dom::helpers {struct event_listening;}
+namespace dom::helpers  {struct event_dispatching;}
+namespace dom::helpers  {struct event_listening;}
 namespace dom::internal {struct event_path_struct;}
-namespace dom::nodes {class event_target;}
+namespace dom::nodes    {class event_target;}
 
 
 class dom::events::event : public virtual dom_object
 {
+private aliases:
+    using touch_targets_t = ext::vector<nodes::event_target*>;
+    using path_t          = ext::vector<internal::event_path_struct*>;
+
 public friends:
     friend class dom::nodes::event_target;
     friend struct dom::helpers::event_dispatching;
@@ -26,9 +31,7 @@ public friends:
 
 public constructors:
     event();
-    event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
-
-    ~event() override;
+    explicit event(const ext::string& event_type, const ext::string_any_map_t& event_init = {});
 
 public js_static_constants:
     static constexpr unsigned short NONE = 0;
@@ -41,24 +44,24 @@ public js_methods:
     auto stop_immediate_propagation() -> void;
     auto prevent_default() -> void;
 
-    new_obj auto composed_path() const -> ext::vector<nodes::event_target*>;
+    [[nodiscard]] new_obj auto composed_path() const -> ext::vector<nodes::event_target*>;
 
 public js_properties:
-    ext::dom_property<ext::string> type;
-    ext::dom_property<bool> bubbles;
-    ext::dom_property<bool> cancelable;
-    ext::dom_property<bool> composed;
+    ext::property<ext::string> type;
+    ext::property<bool> bubbles;
+    ext::property<bool> cancelable;
+    ext::property<bool> composed;
 
-    ext::dom_property<nodes::event_target*> target;
-    ext::dom_property<nodes::event_target*> current_target;
-    ext::dom_property<nodes::event_target*> related_target;
+    ext::property<smart_pointer<nodes::event_target>> target;
+    ext::property<smart_pointer<nodes::event_target>> current_target;
+    ext::property<smart_pointer<nodes::event_target>> related_target;
 
-    ext::dom_property<ushort> event_phase;
-    ext::dom_property<double> time_stamp = performance::time::dom_high_res_timestamp();
-    ext::dom_property<bool> is_trusted;
+    ext::property<ushort> event_phase;
+    ext::property<double> time_stamp;
+    ext::property<bool> is_trusted;
 
-    ext::dom_property<ext::vector<nodes::event_target        *>*> touch_targets;
-    ext::dom_property<ext::vector<internal::event_path_struct*>*> path;
+    ext::property<smart_pointer<touch_targets_t>> touch_targets;
+    ext::property<smart_pointer<path_t>>          path;
 
 public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;

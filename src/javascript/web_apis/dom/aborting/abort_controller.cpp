@@ -6,15 +6,7 @@
 
 dom::aborting::abort_controller::abort_controller()
 {
-    // set the properties
-    signal = new abort_signal{};
-}
-
-
-dom::aborting::abort_controller::~abort_controller()
-{
-    // delete the signal pointer
-    delete signal;
+    signal = nullptr;
 }
 
 

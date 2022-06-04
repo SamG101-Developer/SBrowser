@@ -8,12 +8,11 @@
 
 
 dom::nodes::character_data::character_data()
-        : node()
-        , mixins::child_node<dom::nodes::character_data>()
-        , mixins::non_document_type_child_node<dom::nodes::character_data>()
+        : data{""}
+        , length{0}
 {
     // set the custom accessor methods
-    length.getter = [this] {return get_length();};
+    bind_get(length, get_length);
 
     // create the widget representation
     auto widget = QPointer<QLabel>{};
@@ -74,23 +73,26 @@ auto dom::nodes::character_data::replace_data(
 }
 
 
-auto dom::nodes::character_data::get_node_value() const
-        -> ext::string
+auto dom::nodes::character_data::get_node_value(
+        ) const
+        -> ext::string&
 {
     // the node_value is the attribute's data
     return data;
 }
 
 
-auto dom::nodes::character_data::get_text_content() const
-        -> ext::string
+auto dom::nodes::character_data::get_text_content(
+        ) const
+        -> ext::string&
 {
     // the text_content is the attribute's data
     return data;
 }
 
 
-auto dom::nodes::character_data::get_length() const
+auto dom::nodes::character_data::get_length(
+        ) const
         -> ulong
 {
     // the length is the length of the data
@@ -98,7 +100,8 @@ auto dom::nodes::character_data::get_length() const
 }
 
 
-auto dom::nodes::character_data::set_node_value(const ext::string& val)
+auto dom::nodes::character_data::set_node_value(
+        const ext::string& val)
         -> void
 {
     // set the node_value by replacing the data with the val
@@ -106,7 +109,8 @@ auto dom::nodes::character_data::set_node_value(const ext::string& val)
 }
 
 
-auto dom::nodes::character_data::set_text_content(const ext::string& val)
+auto dom::nodes::character_data::set_text_content(
+        const ext::string& val)
         -> void
 {
     // set the text_content by replacing the data with the val
@@ -114,7 +118,8 @@ auto dom::nodes::character_data::set_text_content(const ext::string& val)
 }
 
 
-auto dom::nodes::character_data::qt() const
+auto dom::nodes::character_data::qt(
+        ) const
         -> QLabel*
 {
     return qobject_cast<QLabel*>(m_rendered_widget);

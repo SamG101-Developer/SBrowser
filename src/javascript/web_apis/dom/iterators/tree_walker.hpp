@@ -25,7 +25,7 @@ public cpp_methods:
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 public js_properties:
-    ext::dom_property<nodes::node*> current_node;
+    ext::property<smart_pointer<nodes::node>> current_node;
 };
 
 

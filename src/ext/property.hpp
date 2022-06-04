@@ -8,12 +8,14 @@
 #include <set>
 #include <utility>
 
+#include <ext/type_traits.hpp>
+
 namespace ext {template <typename T, bool ce_reactions> class property;}
 
 
-#define get_bind(method) [this] {return method();}
-#define set_bind(method) [this](auto&& that) {method(std::forward<decltype(that)>(that));}
-#define del_bind(method) [this] {method();}
+#define bind_get(p, method) p._meta.getter  = [this] -> typename decltype(p)::value_type {return method();}
+#define bind_set(p, method) p._meta.setter  = [this](auto&& that) {method(std::forward<decltype(that)>(that));}
+#define bind_del(p, method) p._meta.deleter = [this] {method();}
 
 #define unlock_property(property_name) property_name._meta.unlock(); {
 #define lock_property(property_name) } property_name._meta.lock();
@@ -34,7 +36,7 @@ class ext::property
 public:
     class meta
     {
-        using qt_method_t = std::function<void(T)>;
+        using qt_method_t     = std::function<void(T)>;
         using qt_method_set_t = std::set<qt_method_t>;
         friend class property<T>;
 
@@ -92,7 +94,7 @@ public:
             return std::tuple(true, that);
         }
 
-        auto check_filters(T that) -> std::tuple<bool, T> requires std::is_arithmetic_v<T>
+        auto check_filters(T that) -> std::tuple<bool, T> requires (std::is_arithmetic_v<T> and not std::is_same_v<T, bool>)
         {
             // constraint and clamp
             if (m_constraints.is and not m_constraints.values.contains(that)) return std::tuple(false, that);
@@ -102,10 +104,13 @@ public:
     };
 
 public:
+    using value_type = T;
+
+public:
     // constructors
     property() = default;
-    explicit property(T&& that) noexcept {_meta.m_value = std::move(that);}
-    explicit property(const T& that) {_meta.m_value = that;}
+    property(const T& that) {_meta.m_value = that;}
+    property(T&& that) noexcept {_meta.m_value = std::forward<T>(that);}
     ~property() {_meta.deleter();}
 
     property(const property&) = default;
@@ -115,11 +120,14 @@ public:
 
     // member access
     auto operator* () -> T& {VERIFY_LOCK return _meta.m_value;}
-    auto operator->() -> T  requires ( std::is_pointer_v<T>) {return  _meta.getter();}
-    auto operator->() -> T* requires (!std::is_pointer_v<T>) {return &_meta.getter();}
+    auto operator->() const -> auto requires (is_smart_ptr_v<T>) {return _meta.getter().get();}
+    auto operator->() const -> T  requires (std::is_pointer_v<T>) {return _meta.getter();}
+    auto operator->() const -> T* requires (!std::is_pointer_v<T> && !is_smart_ptr_v<T>) {return &_meta.getter();}
 
     // getter
-    operator T() const {return _meta.getter();}
+    operator T() const requires (!is_smart_ptr_v<T>) {return _meta.getter();}
+
+    template <typename U> operator U() const requires (is_smart_ptr_v<T>) {return _meta.getter().get();}
 
     // setter
     auto operator=(T&& that) -> property&
@@ -161,7 +169,7 @@ public:
     template <typename U> auto operator--(const int) const -> property {return property{_meta.m_value--};}
 
     // boolean operator
-    operator bool() const {return static_cast<bool>(_meta.getter());}
+    operator bool() const requires (not std::is_same_v<T, bool>) {return static_cast<bool>(_meta.getter());}
 
     meta _meta;
 };

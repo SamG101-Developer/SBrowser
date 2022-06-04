@@ -16,7 +16,7 @@ html::elements::html_image_element::html_image_element()
         : html_element{}
         , mixins::lazy_loading{}
 {
-    // set the attribute values
+    // set the attribute's values
     m_dimension_attribute_src = this;
 
     // set the custom accessor methods

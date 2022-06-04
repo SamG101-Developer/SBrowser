@@ -5,7 +5,10 @@
 #include <dom/iterators/node_filter.hpp>
 
 
-dom::iterators::tree_walker::tree_walker() = default;
+dom::iterators::tree_walker::tree_walker()
+{
+    current_node = nullptr;
+}
 
 
 auto dom::iterators::tree_walker::parent_node()
@@ -14,7 +17,8 @@ auto dom::iterators::tree_walker::parent_node()
     // TODO
     current_node = helpers::trees::ancestors(current_node)
             .filter([this](auto* node) {return helpers::traversal::filter(node, this) == node_filter::FILTER_ACCEPT;})
-            .front();
+            .front()
+            .value();
 
     return current_node;
 }

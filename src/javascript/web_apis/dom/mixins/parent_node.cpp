@@ -10,12 +10,12 @@
 
 template<typename T>
 dom::mixins::parent_node<T>::parent_node()
+        : children(static_cast<T*>(this)->child_nodes->attach_live_cast<nodes::element*>())
 {
     // set the custom accessor methods
-    children.getter = [this] {return get_children();};
-    first_element_child.getter = [this] {return get_first_element_child();};
-    last_element_child.getter = [this] {return get_last_element_child();};
-    child_element_count.getter = [this] {return get_child_element_count();};
+    bind_get(first_element_child, get_first_element_child);
+    bind_get(last_element_child, get_last_element_child);
+    bind_get(child_element_count, get_child_element_count);
 }
 
 
@@ -75,34 +75,28 @@ auto dom::mixins::parent_node<T>::replace_children(
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_children() const
-        -> ext::vector<dom::nodes::element*>*
-{
-    // return all the children that are element type nodes
-    return static_cast<const T*>(this)->child_nodes->template cast_all<nodes::element*>();
-}
-
-
-template <typename T>
-auto dom::mixins::parent_node<T>::get_first_element_child() const
-        -> dom::nodes::element*
+auto dom::mixins::parent_node<T>::get_first_element_child(
+        ) const
+        -> smart_pointer<nodes::element>
 {
     // return the first item from the element child list
-    return children->front();
+    return children->front().value_or(nullptr);
 }
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_last_element_child() const
-        -> dom::nodes::element*
+auto dom::mixins::parent_node<T>::get_last_element_child(
+        ) const
+        -> smart_pointer<nodes::element>
 {
     // return the last item from the element child list
-    return children->back();
+    return children->back().value_or(nullptr);
 }
 
 
 template <typename T>
-auto dom::mixins::parent_node<T>::get_child_element_count() const
+auto dom::mixins::parent_node<T>::get_child_element_count(
+        ) const
         -> size_t
 {
     // return the length of the element child list

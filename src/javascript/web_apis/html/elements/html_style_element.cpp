@@ -8,7 +8,7 @@ html::elements::html_style_element::html_style_element()
     disabled.getter = [this] {return get_disabled();};
     disabled.setter = [this](auto && PH1) {set_disabled(std::forward<decltype(PH1)>(PH1));};
 
-    // set the property values
+    // set the property's values
     media = "all";
 }
 

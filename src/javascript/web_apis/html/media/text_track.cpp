@@ -20,7 +20,7 @@ html::media::text_track::text_track()
     // set the custom accessor methods
     mode.setter = [this](auto&& PH1) {set_mode(std::forward<decltype(PH1)>(PH1));};
 
-    // set the attribute values
+    // set the attribute's values
     m_readiness_state = helpers::media_internals::track_readiness_state::NOT_LOADED;
 }
 

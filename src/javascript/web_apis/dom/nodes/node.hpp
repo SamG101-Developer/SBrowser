@@ -2,7 +2,6 @@
 #ifndef SBROWSER_NODE_HPP
 #define SBROWSER_NODE_HPP
 
-#include <ext/dom_property.hpp>
 #include <ext/map.hpp>
 
 #include <dom/nodes/event_target.hpp>
@@ -66,28 +65,28 @@ public js_methods:
     auto remove_child(node* old_node) -> node*;
 
 public js_properties:
-    ext::dom_property<ushort> node_type;
-    ext::dom_property<ext::string, _T> node_name;
-    ext::dom_property<ext::string, _T> node_value;
-    ext::dom_property<ext::string, _T> text_content;
-    ext::dom_property<ext::string> base_uri;
-    ext::dom_property<bool> is_connected;
-    ext::dom_property<ext::vector<node*>*> child_nodes;
-    ext::dom_property<node*> parent;
-    ext::dom_property<element*> parent_element;
-    ext::dom_property<document*> owner_document;
-    ext::dom_property<node*> first_child;
-    ext::dom_property<node*> last_child;
-    ext::dom_property<node*> previous_sibling;
-    ext::dom_property<node*> next_sibling;
+    ext::property<ushort> node_type;
+    ext::property<ext::string, _T> node_name;
+    ext::property<ext::string, _T> node_value;
+    ext::property<ext::string, _T> text_content;
+    ext::property<ext::string> base_uri;
+    ext::property<bool> is_connected;
+    ext::property<ext::vector<node*>*> child_nodes;
+    ext::property<node*> parent;
+    ext::property<element*> parent_element;
+    ext::property<document*> owner_document;
+    ext::property<node*> first_child;
+    ext::property<node*> last_child;
+    ext::property<node*> previous_sibling;
+    ext::property<node*> next_sibling;
 
 public cpp_methods:
     virtual auto qt() const -> QWidget* = 0 {return nullptr;};
     auto v8(v8::Isolate* isolate) const -> ext::any override;
 
 protected accessors:
-    virtual auto get_node_value() const -> ext::string;
-    virtual auto get_text_content() const -> ext::string;
+    virtual auto get_node_value() const -> ext::string&;
+    virtual auto get_text_content() const -> ext::string&;
 
     virtual auto set_node_value(const ext::string& val) -> void;
     virtual auto set_text_content(const ext::string& val) -> void;
@@ -101,7 +100,7 @@ protected accessors:
 
 private accessors:
     auto get_is_connected() const -> bool;
-    auto get_base_uri() const -> ext::string;
+    auto get_base_uri() const -> ext::string&;
     auto get_first_child() const -> node*;
     auto get_last_child() const -> node*;
     auto get_previous_sibling() const -> node*;

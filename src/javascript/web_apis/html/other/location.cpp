@@ -21,6 +21,6 @@ html::other::location::location()
     search.getter    = [this] {return get_search();};
     hash.getter      = [this] {return get_hash();};
 
-    // set the attribute values
+    // set the attribute's values
     m_relevant_document = javascript::realms::relevant_realm(this).global_object->document->m_browsing_context->active_document(); // TODO : handle null context
 }

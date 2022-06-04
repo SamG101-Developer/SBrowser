@@ -88,4 +88,10 @@
  * javascript exposed: YES (through +, -, *, / operators etc) (but not overridable / explicitly callable)
  */
 
+#define nested_class \
+/*
+ * nested class (private)
+ * javascript exposed: NO
+ */
+
 #endif //SBROWSER_DECORATORS_HPP

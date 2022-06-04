@@ -2,10 +2,10 @@
 #ifndef SBROWSER_NON_ELEMENT_PARENT_NODE_HPP
 #define SBROWSER_NON_ELEMENT_PARENT_NODE_HPP
 
-#include <ext/string.hpp>
 #include <dom_object.hpp>
-
 namespace dom::mixins {template <typename T> class non_element_parent_node;}
+
+#include <ext/string.hpp>
 namespace dom::nodes {class element;}
 
 

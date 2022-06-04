@@ -18,6 +18,6 @@ auto dom::events::custom_event::v8(
     return v8pp::class_<custom_event>{isolate}
             .ctor<const ext::string&, const ext::string_any_map_t&>()
             .inherit<event>()
-            .var("detail", &custom_event::detail)
+            .var("detail", &custom_event::detail, true)
             .auto_wrap_objects();
 }

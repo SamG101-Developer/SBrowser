@@ -7,7 +7,7 @@ html::events::hash_change_event::hash_change_event(
 
         : dom::events::event(event_type, event_init)
 {
-    // set the property values
+    // set the property's values
     old_url = event_init.has_key("oldURL") ? event_init.at("oldURL").to<ext::string>() : "";
     new_url = event_init.has_key("newURL") ? event_init.at("newURL").to<ext::string>() : "";
 }

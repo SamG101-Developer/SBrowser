@@ -3,8 +3,10 @@
 
 #include <ext/any.hpp>
 #include <ext/casting.hpp>
+#include <ext/cpp_keywords.hpp>
 #include <ext/decorators.hpp>
 #include <ext/property.hpp>
+#include <ext/smart_pointer.hpp>
 #include <ext/string.hpp>
 #include <ext/type_traits.hpp>
 #include <ext/vector.hpp>

@@ -13,7 +13,7 @@ html::canvas::mixins::canvas_shadow_styles<T>::canvas_shadow_styles()
     shadow_blur.template attach_qt_updater(&QGraphicsDropShadowEffect::setBlurRadius, static_cast<T*>(this)->m_painter.shadow_effect());
     shadow_color.template attach_qt_updater(&QGraphicsDropShadowEffect::setColor, static_cast<T*>(this)->m_painter.shadow_effect());
 
-    // set the property values
+    // set the property's values
     shadow_offset_x = 0.0;
     shadow_offset_y = 0.0;
     shadow_blur = 0.0;

@@ -1,7 +1,5 @@
 #include "child_node.hpp"
 
-#include <ext/dom_property.hpp>
-
 #include <dom/nodes/character_data.hpp>
 #include <dom/nodes/document_type.hpp>
 #include <dom/nodes/element.hpp>
@@ -29,7 +27,7 @@ auto dom::mixins::child_node<T>::before(nodes_or_strings_t... nodes) -> void
 
         // if there is no viable previous sibling then use the first sibling, otherwise the sibling after the viable
         viable_previous_sibling = not viable_previous_sibling
-                ? parent->child_nodes->front()
+                ? parent->child_nodes->front().value()
                 : viable_previous_sibling->next_sibling;
 
         // pre-insert the node before the viable next sibling
@@ -103,7 +101,7 @@ auto dom::mixins::child_node<T>::remove() -> void
         helpers::mutation_algorithms::remove(base);
 
     // custom element reactions
-    handle_ce_reactions(&child_node<T>::remove);
+    ce_reactions(&child_node<T>::remove);
 }
 
 

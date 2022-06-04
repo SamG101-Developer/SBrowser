@@ -10,7 +10,7 @@ dom::nodes::shadow_root::shadow_root()
         : document_fragment()
         , mixins::document_or_shadow_root<dom::nodes::shadow_root>()
 {
-    // set the property values
+    // set the property's values
     delegates_focus << false;
 }
 

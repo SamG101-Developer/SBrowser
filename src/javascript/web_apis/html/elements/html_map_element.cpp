@@ -4,7 +4,7 @@
 html::elements::html_map_element::html_map_element()
         : html_element()
 {
-    // set the property values
+    // set the property's values
     areas = new ext::vector<dom::nodes::element*>{};
 }
 

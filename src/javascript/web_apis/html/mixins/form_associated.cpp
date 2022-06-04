@@ -9,7 +9,7 @@ html::mixins::form_associated<T>::form_associated()
     // attach the qt functions
     disabled.template attach_qt_updater(&QWidget::setDisabled, static_cast<T*>(this));
 
-    // set the property values
+    // set the property's values
     form = nullptr;
 }
 

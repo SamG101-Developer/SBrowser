@@ -11,7 +11,7 @@ html::canvas::mixins::canvas_compositing<T>::canvas_compositing()
     global_alpha.clamp_values(0.0, 1.0);
     global_compositing_operation.constrain_values(static_cast<T*>(this)->m_painter.translate_composition_mode.keys());
 
-    // set the property values
+    // set the property's values
     global_alpha = 1.0;
     global_compositing_operation = "source-over";
 }

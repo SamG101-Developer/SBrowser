@@ -20,7 +20,7 @@ html::canvas::mixins::canvas_path_drawing_styles<T>::canvas_path_drawing_styles(
     line_cap.template attach_qt_updater(&render::painting::pen::set_cap_style, m_pen);
     line_join.template attach_qt_updater(&render::painting::pen::set_join_style, m_pen);
 
-    // set the property values
+    // set the property's values
     line_width = 1.0;
     miter_limit = 10.0;
     line_cap = "butt";
